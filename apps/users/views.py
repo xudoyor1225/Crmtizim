@@ -9,13 +9,15 @@ from .forms import UserForm, StudentForm, TeacherForm, StaffForm
 
 
 @login_required
-def user_list(request):
+def user_list(request, role=None):
     users = User.objects.filter(is_deleted=False).select_related('organization', 'branch').order_by('-date_joined')
 
     if request.user.role != 'super_admin' and request.user.organization:
         users = users.filter(organization=request.user.organization)
 
-    role = request.GET.get('role')
+    # Role from URL kwargs or GET parameter
+    if not role:
+        role = request.GET.get('role')
     if role:
         users = users.filter(role=role)
 

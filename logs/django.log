@@ -408,3 +408,35 @@ INFO 2026-01-23 17:36:08,940 log "GET /finance/receipts/pending/ HTTP/1.1" 200 2
 INFO 2026-01-23 17:36:13,268 log "GET /core/settings/ HTTP/1.1" 200 41086
 INFO 2026-01-23 17:40:09,244 autoreload Watching for file changes with StatReloader
 INFO 2026-01-23 17:41:42,502 log "GET /core/settings/ HTTP/1.1" 200 47260
+INFO 2026-01-23 17:52:42,214 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:52:45,008 log "GET / HTTP/1.1" 200 23974
+INFO 2026-01-23 17:52:50,507 log "GET /core/settings/ HTTP/1.1" 200 47260
+INFO 2026-01-23 17:53:10,011 log "GET /groups/add/ HTTP/1.1" 200 24963
+INFO 2026-01-23 17:53:16,793 log "GET /rooms/ HTTP/1.1" 200 17759
+INFO 2026-01-23 17:53:21,418 log "GET /users/ HTTP/1.1" 200 88404
+ERROR 2026-01-23 17:53:25,335 log "GET /users/teachers/ HTTP/1.1" 500 70050
+ERROR 2026-01-23 17:53:33,473 log "GET /users/teachers/ HTTP/1.1" 500 70050
+INFO 2026-01-23 17:54:07,354 log "GET /finance/reports/ HTTP/1.1" 200 18738
+INFO 2026-01-23 17:54:17,103 log "GET /finance/transactions/income/ HTTP/1.1" 200 19129
+INFO 2026-01-23 17:55:28,954 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 17:55:28,976 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 17:55:29,364 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 17:55:29,604 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 17:55:29,624 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 17:55:29,888 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 17:55:29,993 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 17:55:30,000 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 17:55:30,079 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 17:55:29,997 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 17:55:30,075 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 17:55:33,415 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:55:34,149 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:55:34,793 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:55:34,897 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:55:34,938 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:55:35,201 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:55:35,205 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:55:35,250 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:55:35,356 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:55:35,584 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:55:36,089 autoreload Watching for file changes with StatReloader
