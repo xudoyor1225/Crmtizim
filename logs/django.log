@@ -440,3 +440,11 @@ INFO 2026-01-23 17:55:35,250 autoreload Watching for file changes with StatReloa
 INFO 2026-01-23 17:55:35,356 autoreload Watching for file changes with StatReloader
 INFO 2026-01-23 17:55:35,584 autoreload Watching for file changes with StatReloader
 INFO 2026-01-23 17:55:36,089 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:57:04,807 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:57:07,191 log "GET / HTTP/1.1" 200 23974
+INFO 2026-01-23 17:57:13,942 log "GET /core/settings/ HTTP/1.1" 200 47260
+INFO 2026-01-23 17:57:19,039 log "GET /users/teachers/ HTTP/1.1" 200 47605
+INFO 2026-01-23 17:57:47,974 log "GET /core/settings/ HTTP/1.1" 200 47260
+INFO 2026-01-23 17:57:52,241 log "GET /crm/sources/ HTTP/1.1" 200 17194
+INFO 2026-01-23 17:57:54,100 log "GET /groups/ HTTP/1.1" 200 36186
+INFO 2026-01-23 17:57:56,749 log "GET /rooms/ HTTP/1.1" 200 17759
