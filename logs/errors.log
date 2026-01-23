@@ -1895,3 +1895,30 @@ Traceback (most recent call last):
   File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
     return view_func(request, *args, **kwargs)
 TypeError: user_list() got an unexpected keyword argument 'role'
+ERROR 2026-01-23 17:35:28,013 log Internal Server Error: /users/students/
+Traceback (most recent call last):
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+TypeError: user_list() got an unexpected keyword argument 'role'
+ERROR 2026-01-23 17:35:42,685 log Internal Server Error: /users/students/
+Traceback (most recent call last):
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+TypeError: user_list() got an unexpected keyword argument 'role'
+ERROR 2026-01-23 17:35:46,368 log Internal Server Error: /users/staff/
+Traceback (most recent call last):
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+TypeError: user_list() got an unexpected keyword argument 'role'

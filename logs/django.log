@@ -397,3 +397,14 @@ INFO 2026-01-23 17:23:14,941 log "GET / HTTP/1.1" 200 23974
 INFO 2026-01-23 17:23:22,262 log "GET /core/settings/ HTTP/1.1" 200 28621
 ERROR 2026-01-23 17:29:51,370 log "GET /users/staff/ HTTP/1.1" 500 70016
 INFO 2026-01-23 17:34:30,711 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:35:04,555 log "GET /core/settings/ HTTP/1.1" 200 41086
+ERROR 2026-01-23 17:35:28,015 log "GET /users/students/ HTTP/1.1" 500 70050
+INFO 2026-01-23 17:35:32,747 log "GET /finance/categories/ HTTP/1.1" 200 18911
+INFO 2026-01-23 17:35:38,958 log "GET /finance/payroll/ HTTP/1.1" 200 38090
+ERROR 2026-01-23 17:35:42,687 log "GET /users/students/ HTTP/1.1" 500 70050
+ERROR 2026-01-23 17:35:46,369 log "GET /users/staff/ HTTP/1.1" 500 70016
+INFO 2026-01-23 17:35:50,347 log "GET /courses/ HTTP/1.1" 200 17525
+INFO 2026-01-23 17:36:08,940 log "GET /finance/receipts/pending/ HTTP/1.1" 200 23285
+INFO 2026-01-23 17:36:13,268 log "GET /core/settings/ HTTP/1.1" 200 41086
+INFO 2026-01-23 17:40:09,244 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:41:42,502 log "GET /core/settings/ HTTP/1.1" 200 47260
