@@ -11,7 +11,7 @@
             <h1 class="text-2xl font-bold text-gray-800">Voronka Bosqichlari</h1>
             <p class="text-gray-500">Sotuv voronkasi bosqichlarini boshqaring</p>
         </div>
-        <a href="{% url 'stage_create' %}"
+        <a href="{% url 'crm:stage_create' %}"
             class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-indigo-700 shadow-sm flex items-center gap-2">
             <i class="ph ph-plus"></i> Yangi bosqich
         </a>
@@ -61,11 +61,11 @@
                     </td>
                     <td class="p-4 text-right">
                         <div class="flex items-center justify-end gap-2">
-                            <a href="{% url 'stage_edit' stage.id %}"
+                            <a href="{% url 'crm:stage_edit' stage.id %}"
                                 class="p-2 text-gray-500 hover:text-blue-600 bg-gray-100 rounded-lg hover:bg-blue-50 transition">
                                 <i class="ph ph-pencil-simple"></i>
                             </a>
-                            <a href="{% url 'stage_delete' stage.id %}"
+                            <a href="{% url 'crm:stage_delete' stage.id %}"
                                 class="p-2 text-gray-500 hover:text-red-600 bg-gray-100 rounded-lg hover:bg-red-50 transition">
                                 <i class="ph ph-trash"></i>
                             </a>

@@ -25,17 +25,17 @@
 {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' or request.user.role == 'manager' %}
 <p class="sidebar-section">Sotuv & CRM</p>
 
-<a href="{% url 'pipeline' %}" class="sidebar-link {% if 'pipeline' in request.path %}active{% endif %}">
+<a href="{% url 'crm:pipeline' %}" class="sidebar-link {% if 'pipeline' in request.path %}active{% endif %}">
     <i class="ph-fill ph-kanban"></i>
     <span>Voronka</span>
 </a>
 
-<a href="{% url 'stage_list' %}" class="sidebar-link {% if 'stages' in request.path %}active{% endif %}">
+<a href="{% url 'crm:stage_list' %}" class="sidebar-link {% if 'stages' in request.path %}active{% endif %}">
     <i class="ph-fill ph-rows"></i>
     <span>Bosqichlar</span>
 </a>
 
-<a href="{% url 'source_list' %}" class="sidebar-link {% if 'sources' in request.path %}active{% endif %}">
+<a href="{% url 'crm:source_list' %}" class="sidebar-link {% if 'sources' in request.path %}active{% endif %}">
     <i class="ph-fill ph-megaphone"></i>
     <span>Manbalar</span>
 </a>

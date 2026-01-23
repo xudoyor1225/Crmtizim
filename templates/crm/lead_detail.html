@@ -15,7 +15,7 @@
 
         <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div class="flex items-center gap-6">
-                <a href="{% url 'pipeline' %}"
+                <a href="{% url 'crm:pipeline' %}"
                     class="group p-3 bg-white dark:bg-dark-700 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-600 hover:shadow-md hover:scale-105 transition-all duration-300">
                     <i
                         class="ph ph-arrow-left text-xl text-gray-500 group-hover:text-primary-600 dark:text-gray-400"></i>
@@ -38,11 +38,11 @@
             </div>
 
             <div class="flex items-center gap-3 w-full md:w-auto">
-                <a href="{% url 'lead_edit' lead.pk %}"
+                <a href="{% url 'crm:lead_edit' lead.pk %}"
                     class="flex-1 md:flex-none justify-center px-6 py-3 bg-white dark:bg-dark-700 text-gray-700 dark:text-gray-200 font-medium rounded-2xl border border-gray-200 dark:border-gray-600 shadow-sm hover:shadow-md hover:bg-gray-50 dark:hover:bg-dark-600 transition-all duration-300 flex items-center gap-2">
                     <i class="ph ph-pencil-simple text-lg"></i> Tahrirlash
                 </a>
-                <a href="{% url 'lead_convert' lead.pk %}"
+                <a href="{% url 'crm:lead_convert' lead.pk %}"
                     class="flex-1 md:flex-none justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-medium rounded-2xl shadow-lg shadow-green-500/20 hover:shadow-xl hover:shadow-green-500/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2">
                     <i class="ph-bold ph-student text-lg"></i> O'quvchiga o'tkazish
                 </a>
@@ -82,7 +82,7 @@
                     <div class="grid grid-cols-2 gap-2">
                         {% for stage in stages %}
                         {% if stage.id != lead.stage.id %}
-                        <form method="POST" action="{% url 'update_lead_stage' lead.id %}" class="w-full">
+                        <form method="POST" action="{% url 'crm:update_lead_stage' lead.id %}" class="w-full">
                             {% csrf_token %}
                             <button type="button" onclick="updateStage({{ lead.id }}, {{ stage.id }})"
                                 class="w-full text-left px-4 py-3 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-dark-700 transition-all duration-200 group flex items-center gap-2 relative overflow-hidden">
@@ -192,7 +192,7 @@
                 </div>
 
                 <!-- Add Activity -->
-                <form method="POST" action="{% url 'add_lead_activity' lead.pk %}"
+                <form method="POST" action="{% url 'crm:add_lead_activity' lead.pk %}"
                     class="mb-10 bg-gray-50 dark:bg-dark-700/30 p-2 rounded-[24px] border border-gray-100 dark:border-gray-700 focus-within:ring-4 focus-within:ring-primary-100 dark:focus-within:ring-primary-900/30 transition-all duration-300">
                     {% csrf_token %}
                     <div class="flex flex-col sm:flex-row gap-2">

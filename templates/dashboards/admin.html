@@ -27,7 +27,7 @@
                 class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded-xl font-medium shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all hover:-translate-y-0.5">
                 <i class="ph ph-user-gear"></i> Xodim
             </a>
-            <a href="{% url 'lead_create' %}"
+            <a href="{% url 'crm:lead_create' %}"
                 class="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200 transition">
                 <i class="ph ph-funnel"></i> Lid
             </a>
@@ -349,7 +349,7 @@
                     <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
                         <i class="ph ph-sparkle text-yellow-500"></i> So'nggi Lidlar
                     </h3>
-                    <a href="{% url 'pipeline' %}" class="text-sm text-primary-600 hover:text-primary-700">Voronka</a>
+                    <a href="{% url 'crm:pipeline' %}" class="text-sm text-primary-600 hover:text-primary-700">Voronka</a>
                 </div>
 
                 <div class="space-y-4 flex-1 overflow-y-auto max-h-[400px] scrollbar-hide">
@@ -376,7 +376,7 @@
                     {% endfor %}
                 </div>
 
-                <a href="{% url 'lead_create' %}"
+                <a href="{% url 'crm:lead_create' %}"
                     class="w-full mt-6 py-3 text-sm font-semibold text-center text-white bg-primary-600 rounded-xl hover:bg-primary-700 shadow-lg shadow-primary-600/30 transition-all active:scale-95 flex items-center justify-center gap-2">
                     <i class="ph ph-plus-circle text-lg"></i> Yangi Lid
                 </a>

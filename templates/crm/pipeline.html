@@ -13,11 +13,11 @@
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Sotuv Voronkasi</h1>
         <div class="flex gap-3">
-            <a href="{% url 'stage_list' %}"
+            <a href="{% url 'crm:stage_list' %}"
                 class="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition">
                 <i class="ph ph-gear"></i> Bosqichlar
             </a>
-            <a href="{% url 'lead_create' %}"
+            <a href="{% url 'crm:lead_create' %}"
                 class="bg-primary hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm">
                 <i class="ph ph-plus"></i> Yangi Lid
             </a>
@@ -58,7 +58,7 @@
                         <h4 class="font-bold text-gray-800 dark:text-gray-100 truncate pr-2 capitalize">{{
                             lead.full_name }}</h4>
                         <!-- Edit Button -->
-                        <a href="{% url 'lead_detail' lead.id %}"
+                        <a href="{% url 'crm:lead_detail' lead.id %}"
                             class="text-gray-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition p-1 hover:bg-blue-50 rounded">
                             <i class="ph ph-pencil-simple"></i>
                         </a>

@@ -389,3 +389,6 @@ INFO 2026-01-23 17:04:23,251 autoreload C:\Users\shona\PycharmProjects\Crmtizim\
 INFO 2026-01-23 17:04:24,955 autoreload Watching for file changes with StatReloader
 INFO 2026-01-23 17:04:24,956 autoreload Watching for file changes with StatReloader
 INFO 2026-01-23 17:04:24,959 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:13:14,272 autoreload Watching for file changes with StatReloader
+ERROR 2026-01-23 17:16:36,860 log "GET / HTTP/1.1" 500 254199
+INFO 2026-01-23 17:20:52,247 autoreload Watching for file changes with StatReloader
