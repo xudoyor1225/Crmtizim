@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+
+{% block title %}Sozlamalar{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- SARLAVHA -->
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                <i class="ph ph-gear text-indigo-500"></i>
+                Sozlamalar
+            </h1>
+            <p class="text-gray-500 dark:text-gray-400">Tizim va tashkilot sozlamalari</p>
+        </div>
+    </div>
+
+    <!-- SOZLAMALAR BO'LIMLARI -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Moliya Sozlamalari -->
+        <div class="glass-panel rounded-2xl border border-gray-100 dark:border-gray-800 p-6 hover:shadow-lg transition">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center">
+                    <i class="ph-fill ph-currency-circle-dollar text-white text-2xl"></i>
+                </div>
+                <span class="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-xs font-bold rounded-full">
+                    {{ stats.categories_count }} kategoriya
+                </span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Moliya</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                Kategoriyalar, kassalar va moliyaviy sozlamalar
+            </p>
+            <div class="space-y-2">
+                <a href="{% url 'finance:category_list' %}"
+                    class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <i class="ph ph-folders mr-2"></i>Kategoriyalar
+                    </span>
+                    <i class="ph ph-caret-right text-gray-400"></i>
+                </a>
+                <a href="{% url 'finance:account_list' %}"
+                    class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <i class="ph ph-vault mr-2"></i>Kassalar ({{ stats.accounts_count }})
+                    </span>
+                    <i class="ph ph-caret-right text-gray-400"></i>
+                </a>
+                <a href="{% url 'finance:payroll_list' %}"
+                    class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <i class="ph ph-user-circle-dollar mr-2"></i>Oylik sozlamalari
+                    </span>
+                    <i class="ph ph-caret-right text-gray-400"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Foydalanuvchilar -->
+        <div class="glass-panel rounded-2xl border border-gray-100 dark:border-gray-800 p-6 hover:shadow-lg transition">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center">
+                    <i class="ph-fill ph-users text-white text-2xl"></i>
+                </div>
+                <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-bold rounded-full">
+                    {{ stats.users_count }} foydalanuvchi
+                </span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Foydalanuvchilar</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                Xodimlar, o'qituvchilar va o'quvchilar boshqaruvi
+            </p>
+            <div class="space-y-2">
+                <a href="{% url 'users:staff_list' %}"
+                    class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <i class="ph ph-briefcase mr-2"></i>Xodimlar
+                    </span>
+                    <i class="ph ph-caret-right text-gray-400"></i>
+                </a>
+                <a href="{% url 'users:teacher_list' %}"
+                    class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <i class="ph ph-chalkboard-teacher mr-2"></i>O'qituvchilar
+                    </span>
+                    <i class="ph ph-caret-right text-gray-400"></i>
+                </a>
+                <a href="{% url 'users:student_list' %}"
+                    class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <i class="ph ph-student mr-2"></i>O'quvchilar
+                    </span>
+                    <i class="ph ph-caret-right text-gray-400"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Ta'lim Sozlamalari -->
+        <div class="glass-panel rounded-2xl border border-gray-100 dark:border-gray-800 p-6 hover:shadow-lg transition">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
+                    <i class="ph-fill ph-graduation-cap text-white text-2xl"></i>
+                </div>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Ta'lim</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                Kurslar, xonalar va o'quv materiallari
+            </p>
+            <div class="space-y-2">
+                <a href="{% url 'course_list' %}"
+                    class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <i class="ph ph-book-open mr-2"></i>Kurslar
+                    </span>
+                    <i class="ph ph-caret-right text-gray-400"></i>
+                </a>
+                <a href="{% url 'room_list' %}"
+                    class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <i class="ph ph-door mr-2"></i>Xonalar
+                    </span>
+                    <i class="ph ph-caret-right text-gray-400"></i>
+                </a>
+                <a href="{% url 'material_category_list' %}"
+                    class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <i class="ph ph-folders mr-2"></i>Material kategoriyalari
+                    </span>
+                    <i class="ph ph-caret-right text-gray-400"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Tizim Sozlamalari -->
+        {% if request.user.role == 'super_admin' or request.user.role == 'owner' %}
+        <div class="glass-panel rounded-2xl border border-gray-100 dark:border-gray-800 p-6 hover:shadow-lg transition">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center">
+                    <i class="ph-fill ph-gear-six text-white text-2xl"></i>
+                </div>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">Tizim</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                Tashkilot va tizim sozlamalari
+            </p>
+            <div class="space-y-2">
+                <a href="{% url 'core:history_list' %}"
+                    class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <i class="ph ph-clock-counter-clockwise mr-2"></i>Tizim tarixi
+                    </span>
+                    <i class="ph ph-caret-right text-gray-400"></i>
+                </a>
+                {% if request.user.role == 'super_admin' %}
+                <a href="/admin/"
+                    class="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <i class="ph ph-shield-checkered mr-2"></i>Admin panel
+                    </span>
+                    <i class="ph ph-caret-right text-gray-400"></i>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <!-- Tezkor Amallar -->
+    <div class="glass-panel rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
+        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4">
+            <i class="ph ph-lightning text-amber-500"></i> Tezkor Amallar
+        </h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <a href="{% url 'finance:category_create' %}"
+                class="flex flex-col items-center gap-3 p-4 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 rounded-xl hover:shadow-md transition">
+                <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center">
+                    <i class="ph-fill ph-plus text-white text-xl"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">Kategoriya qo'shish</span>
+            </a>
+            <a href="{% url 'finance:account_create' %}"
+                class="flex flex-col items-center gap-3 p-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-xl hover:shadow-md transition">
+                <div class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center">
+                    <i class="ph-fill ph-vault text-white text-xl"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">Kassa qo'shish</span>
+            </a>
+            <a href="{% url 'course_create' %}"
+                class="flex flex-col items-center gap-3 p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-800 rounded-xl hover:shadow-md transition">
+                <div class="w-12 h-12 rounded-full bg-purple-500 flex items-center justify-center">
+                    <i class="ph-fill ph-book-open text-white text-xl"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">Kurs qo'shish</span>
+            </a>
+            <a href="{% url 'room_create' %}"
+                class="flex flex-col items-center gap-3 p-4 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border border-orange-200 dark:border-orange-800 rounded-xl hover:shadow-md transition">
+                <div class="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center">
+                    <i class="ph-fill ph-door text-white text-xl"></i>
+                </div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">Xona qo'shish</span>
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

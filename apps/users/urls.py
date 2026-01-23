@@ -1,0 +1,17 @@
+from django.urls import path
+from . import views
+
+app_name = 'users'
+
+urlpatterns = [
+    path('', views.user_list, name='user_list'),
+    path('add/', views.user_create, name='user_create'),
+    path('students/', views.user_list, {'role': 'student'}, name='student_list'),
+    path('students/add/', views.student_create, name='student_create'),
+    path('teachers/', views.user_list, {'role': 'teacher'}, name='teacher_list'),
+    path('teachers/add/', views.teacher_create, name='teacher_create'),
+    path('staff/', views.user_list, {'role': 'staff'}, name='staff_list'),
+    path('staff/add/', views.staff_create, name='staff_create'),
+    path('<int:pk>/edit/', views.user_update, name='user_update'),
+    path('<int:pk>/delete/', views.user_delete, name='user_delete'),
+]

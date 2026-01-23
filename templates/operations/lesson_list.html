@@ -1,0 +1,157 @@
+hilis?{% extends 'base.html' %}
+
+{% block title %}Bugungi Darslar{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">Bugungi Darslar</h1>
+            <p class="text-gray-500">Kunlik darslar jadvali va davomat</p>
+        </div>
+        <div class="flex gap-3">
+            <a href="{% url 'operations:schedule' %}"
+                class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center gap-2">
+                <i class="ph ph-calendar"></i> Haftalik jadval
+            </a>
+            {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' or request.user.role == 'teacher' %}
+            <a href="{% url 'operations:lesson_add' %}"
+                class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-indigo-700 shadow-sm flex items-center gap-2">
+                <i class="ph ph-plus"></i> Yangi dars
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+        <form method="GET" class="flex flex-wrap gap-4 items-end">
+            <div>
+                <label class="block text-xs text-gray-500 mb-1">Sana</label>
+                <input type="date" name="date" value="{{ date_filter }}"
+                    class="px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div>
+                <label class="block text-xs text-gray-500 mb-1">Guruh</label>
+                <select name="group"
+                    class="px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="">Barchasi</option>
+                    {% for group in groups %}
+                    <option value="{{ group.id }}" {% if group_filter == group.id|stringformat:"s" %}selected{% endif %}>
+                        {{ group.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs text-gray-500 mb-1">Holat</label>
+                <select name="status"
+                    class="px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="">Barchasi</option>
+                    <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Rejalashtirilgan
+                    </option>
+                    <option value="started" {% if status_filter == 'started' %}selected{% endif %}>Darsda</option>
+                    <option value="finished" {% if status_filter == 'finished' %}selected{% endif %}>Yakunlangan</option>
+                </select>
+            </div>
+            <button type="submit" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                <i class="ph ph-funnel"></i> Filtrlash
+            </button>
+        </form>
+    </div>
+
+    <!-- Lessons List -->
+    <div class="space-y-4">
+        {% for item in lessons_data %}
+        {% with lesson=item.lesson %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition">
+            <div class="flex items-center gap-4">
+                <!-- Vaqt -->
+                <div class="w-20 text-center">
+                    <p class="text-xl font-bold text-gray-800">{{ lesson.start_time|time:"H:i" }}</p>
+                    <p class="text-xs text-gray-500">{{ lesson.end_time|time:"H:i" }}</p>
+                </div>
+
+                <!-- Status indikator -->
+                <div class="w-1 h-16 rounded-full
+                    {% if lesson.status == 'started' %}bg-blue-500 animate-pulse
+                    {% elif lesson.status == 'finished' %}bg-green-500
+                    {% elif lesson.status == 'cancelled' %}bg-red-500
+                    {% else %}bg-gray-300{% endif %}"></div>
+
+                <!-- Ma'lumot -->
+                <div class="flex-1">
+                    <h3 class="text-lg font-bold text-gray-800">{{ lesson.group.name }}</h3>
+                    <div class="flex items-center gap-4 text-sm text-gray-500 mt-1">
+                        <span><i class="ph ph-user"></i> {{ lesson.teacher.first_name }} {{ lesson.teacher.last_name }}</span>
+                        <span><i class="ph ph-door"></i> {{ lesson.room.name|default:"-" }}</span>
+                        {% if lesson.topic %}
+                        <span><i class="ph ph-book-open"></i> {{ lesson.topic }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Davomat holati -->
+                {% if item.attendance_taken %}
+                <div class="text-center px-3">
+                    <span
+                        class="inline-flex items-center gap-1 px-3 py-1 text-xs font-bold rounded-full text-green-700 bg-green-100">
+                        <i class="ph ph-check-circle"></i> Davomat olingan
+                    </span>
+                    <p class="text-xs text-gray-400 mt-1">{{ item.present_count }}/{{ item.attendance_count }} kelgan
+                    </p>
+                </div>
+                {% else %}
+                <span class="px-3 py-1 text-xs font-bold rounded-full text-orange-700 bg-orange-100">
+                    <i class="ph ph-warning"></i> Davomat olinmagan
+                </span>
+                {% endif %}
+
+                <!-- Status badge -->
+                <span class="px-3 py-1 text-xs font-bold rounded-full
+                    {% if lesson.status == 'started' %}text-blue-700 bg-blue-100
+                    {% elif lesson.status == 'finished' %}text-green-700 bg-green-100
+                    {% elif lesson.status == 'cancelled' %}text-red-700 bg-red-100
+                    {% else %}text-gray-600 bg-gray-100{% endif %}">
+                    {{ lesson.get_status_display }}
+                </span>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-2">
+                    {% if lesson.status == 'scheduled' %}
+                    <a href="{% url 'operations:start_lesson' lesson.pk %}"
+                        class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm flex items-center gap-1">
+                        <i class="ph ph-play"></i> Boshlash
+                    </a>
+                    {% elif lesson.status == 'started' %}
+                    <a href="{% url 'operations:take_attendance' lesson.pk %}"
+                        class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm flex items-center gap-1">
+                        <i class="ph ph-check-circle"></i> Davomat
+                    </a>
+                    {% else %}
+                    <a href="{% url 'operations:lesson_detail' lesson.pk %}"
+                        class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition text-sm flex items-center gap-1">
+                        <i class="ph ph-eye"></i> Ko'rish
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endwith %}
+        {% empty %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+            <i class="ph ph-calendar-blank text-5xl text-gray-300 mb-4"></i>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Darslar topilmadi</h3>
+            <p class="text-gray-500 mb-4">Tanlangan sana uchun darslar mavjud emas</p>
+            <p class="text-sm text-gray-400">
+                Darslar avtomatik yaratilishi uchun
+                <a href="{% url 'operations:schedule' %}" class="text-indigo-600 hover:underline">haftalik jadval</a>
+                dan foydalaning
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

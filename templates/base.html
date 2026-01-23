@@ -1,0 +1,258 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz" x-data="{ 
+    darkMode: localStorage.getItem('darkMode') === 'true',
+    sidebarOpen: window.innerWidth >= 1024
+}" :class="{ 'dark': darkMode }">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %} | Smart Edu</title>
+    <link rel="icon" href="data:,">
+
+    <!-- FONTS & ICONS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- CUSTOM PREMIUM CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        primary: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+                        dark: { 800: '#1e293b', 900: '#0f172a' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body class="bg-[#0a1628] text-slate-100 font-sans antialiased overflow-hidden">
+
+    <div class="flex h-screen w-full">
+
+        <!-- SIDEBAR -->
+        <aside
+            class="flex-shrink-0 w-64 sidebar-dark flex flex-col transition-all duration-300 transform lg:transform-none z-50 absolute lg:relative h-full"
+            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
+
+            <!-- Logo -->
+            <div class="h-16 flex items-center justify-center border-b border-[#152642]">
+                <span class="text-xl font-bold text-gradient flex items-center gap-2">
+                    <i class="ph-fill ph-graduation-cap text-2xl"></i>
+                    Smart Edu
+                </span>
+            </div>
+
+            <!-- Navigation -->
+            <div id="sidebar-nav" class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+                {% include 'components/sidebar.html' %}
+            </div>
+
+            <script>
+                // Save sidebar scroll position
+                document.addEventListener('DOMContentLoaded', function () {
+                    const sidebar = document.getElementById('sidebar-nav');
+                    const savedPos = localStorage.getItem('sidebarScrollPos');
+
+                    // Restore scroll position
+                    if (savedPos && sidebar) {
+                        sidebar.scrollTop = parseInt(savedPos);
+                    }
+
+                    // Save scroll position before navigation
+                    sidebar.addEventListener('click', function (e) {
+                        const link = e.target.closest('a');
+                        if (link) {
+                            localStorage.setItem('sidebarScrollPos', sidebar.scrollTop);
+                        }
+                    });
+
+                    // Also save on scroll
+                    sidebar.addEventListener('scroll', function () {
+                        localStorage.setItem('sidebarScrollPos', sidebar.scrollTop);
+                    });
+                });
+            </script>
+
+            <!-- User Profile -->
+            <div class="p-4 border-t border-[#152642] bg-[#0f1f35]/50">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 text-white flex items-center justify-center font-bold shadow-lg shadow-blue-500/20">
+                        {{ request.user.first_name|first }}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-white truncate">{{ request.user.first_name }}</p>
+                        <p class="text-xs text-slate-400 truncate">{{ request.user.get_role_display }}</p>
+                    </div>
+                    <a href="{% url 'logout' %}"
+                        class="text-slate-400 hover:text-red-400 transition p-2 hover:bg-red-500/10 rounded-lg">
+                        <i class="ph-fill ph-sign-out text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="flex-1 flex flex-col h-screen min-w-0 overflow-hidden">
+
+            <!-- Header -->
+            <header class="h-16 header-dark flex items-center justify-between px-6 z-40">
+                <button @click="sidebarOpen = !sidebarOpen"
+                    class="text-slate-400 hover:text-blue-400 focus:outline-none transition p-2 hover:bg-[#152642] rounded-lg lg:hidden">
+                    <i class="ph ph-list text-2xl"></i>
+                </button>
+
+                <h1 class="text-lg font-bold text-gradient hidden sm:block">
+                    {{ organization.name|default:"Smart Edu Center" }}
+                </h1>
+
+                <div class="flex items-center gap-2" x-data="{ notifOpen: false, logoutOpen: false }">
+                    <!-- Notification Dropdown -->
+                    <div class="relative">
+                        <button @click="notifOpen = !notifOpen"
+                            class="relative p-2.5 text-slate-400 hover:text-amber-400 hover:bg-[#152642] rounded-xl transition">
+                            <i class="ph ph-bell text-xl"></i>
+                            <span class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full animate-pulse"></span>
+                        </button>
+
+                        <!-- Dropdown -->
+                        <div x-show="notifOpen" @click.away="notifOpen = false" x-transition
+                            class="absolute right-0 mt-2 w-80 bg-[#152642] border border-[#1c3255] rounded-xl shadow-2xl z-50"
+                            x-cloak>
+                            <div class="p-4 border-b border-[#1c3255] flex items-center justify-between">
+                                <h3 class="font-bold text-white flex items-center gap-2">
+                                    <i class="ph-fill ph-bell text-amber-400"></i> Bildirishnomalar
+                                </h3>
+                                <span class="text-xs text-slate-500">Yangi: 3</span>
+                            </div>
+                            <div class="max-h-64 overflow-y-auto">
+                                <a href="#"
+                                    class="flex items-start gap-3 p-4 hover:bg-[#1c3255] transition border-b border-[#1c3255]/50">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0">
+                                        <i class="ph-fill ph-user-plus"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm text-white font-medium">Yangi o'quvchi qo'shildi</p>
+                                        <p class="text-xs text-slate-400 mt-0.5">Ali Valiyev guruhga qo'shildi</p>
+                                        <p class="text-xs text-slate-500 mt-1">5 daqiqa oldin</p>
+                                    </div>
+                                </a>
+                                <a href="#"
+                                    class="flex items-start gap-3 p-4 hover:bg-[#1c3255] transition border-b border-[#1c3255]/50">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center flex-shrink-0">
+                                        <i class="ph-fill ph-money"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm text-white font-medium">To'lov qabul qilindi</p>
+                                        <p class="text-xs text-slate-400 mt-0.5">500,000 so'm tushdi</p>
+                                        <p class="text-xs text-slate-500 mt-1">1 soat oldin</p>
+                                    </div>
+                                </a>
+                                <a href="#" class="flex items-start gap-3 p-4 hover:bg-[#1c3255] transition">
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
+                                        <i class="ph-fill ph-warning"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm text-white font-medium">Davomat belgilanmagan</p>
+                                        <p class="text-xs text-slate-400 mt-0.5">IELTS-A guruhida</p>
+                                        <p class="text-xs text-slate-500 mt-1">2 soat oldin</p>
+                                    </div>
+                                </a>
+                            </div>
+                            <a href="#"
+                                class="block p-3 text-center text-sm text-blue-400 hover:bg-[#1c3255] transition border-t border-[#1c3255]">
+                                Barchasini ko'rish →
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Settings -->
+                    <button class="p-2.5 text-slate-400 hover:text-blue-400 hover:bg-[#152642] rounded-xl transition">
+                        <i class="ph ph-gear text-xl"></i>
+                    </button>
+
+                    <!-- Logout Button -->
+                    <div class="relative">
+                        <button @click="logoutOpen = true"
+                            class="p-2.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition">
+                            <i class="ph ph-sign-out text-xl"></i>
+                        </button>
+
+                        <!-- Logout Confirmation Modal -->
+                        <div x-show="logoutOpen" x-transition
+                            class="fixed inset-0 z-50 flex items-center justify-center" x-cloak>
+                            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="logoutOpen = false">
+                            </div>
+                            <div
+                                class="relative bg-[#152642] border border-[#1c3255] rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6">
+                                <div class="text-center">
+                                    <div
+                                        class="w-16 h-16 bg-rose-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i class="ph-fill ph-sign-out text-3xl text-rose-400"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-2">Chiqishni tasdiqlang</h3>
+                                    <p class="text-slate-400 text-sm mb-6">Tizimdan chiqmoqchimisiz?</p>
+                                    <div class="flex gap-3">
+                                        <button @click="logoutOpen = false"
+                                            class="flex-1 px-4 py-2.5 bg-[#1c3255] text-slate-300 rounded-xl font-medium hover:bg-[#234069] transition">
+                                            Bekor qilish
+                                        </button>
+                                        <a href="{% url 'logout' %}"
+                                            class="flex-1 px-4 py-2.5 bg-gradient-to-r from-rose-500 to-red-600 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-rose-500/30 transition text-center">
+                                            Ha, chiqish
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto bg-[#0a1628] p-6">
+                {% if messages %}
+                <div class="mb-6 space-y-3">
+                    {% for message in messages %}
+                    <div class="p-4 rounded-xl flex items-center gap-3 animate-fadeIn
+                        {% if message.tags == 'error' %}bg-rose-500/10 text-rose-400 border border-rose-500/30
+                        {% else %}bg-emerald-500/10 text-emerald-400 border border-emerald-500/30{% endif %}">
+                        <i
+                            class="ph {% if message.tags == 'error' %}ph-warning-circle{% else %}ph-check-circle{% endif %} text-xl"></i>
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+
+        <!-- Overlay -->
+        <div x-show="sidebarOpen && window.innerWidth < 1024" @click="sidebarOpen = false" x-transition.opacity
+            class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" x-cloak></div>
+    </div>
+</body>
+
+</html>

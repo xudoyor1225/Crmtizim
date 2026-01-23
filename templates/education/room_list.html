@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Xonalar{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">Xonalar</h1>
+            <p class="text-gray-500">O'quv markaz xonalari</p>
+        </div>
+        <a href="{% url 'room_create' %}"
+            class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-indigo-700 shadow-sm flex items-center gap-2">
+            <i class="ph ph-plus"></i> Yangi Xona
+        </a>
+    </div>
+
+    <!-- Rooms Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for room in rooms %}
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center text-2xl">
+                    <i class="ph ph-door"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-gray-800">{{ room.name }}</h3>
+                    <p class="text-xs text-gray-500">{{ room.capacity }} o'rinli</p>
+                </div>
+            </div>
+            <div class="flex items-center justify-between text-sm text-gray-500 border-t pt-4">
+                <span><i class="ph ph-users-three"></i> Guruhlar: {{ room.groups.count }}</span>
+                <a href="#" class="text-primary hover:underline">Tahrirlash</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-4 bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+            <i class="ph ph-door text-5xl text-gray-300 mb-4"></i>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">Xonalar topilmadi</h3>
+            <p class="text-gray-500">Yangi xona qo'shish uchun tugmani bosing</p>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

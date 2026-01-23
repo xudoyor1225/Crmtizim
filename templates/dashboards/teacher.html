@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+
+{% block title %}O'qituvchi Paneli{% endblock %}
+
+{% block content %}
+<div class="space-y-8 animate-fadeIn">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-white flex items-center gap-3">
+                Salom, {{ request.user.first_name }}! 📚
+                <span class="icon-box-lg icon-purple">
+                    <i class="ph-fill ph-chalkboard-teacher"></i>
+                </span>
+            </h1>
+            <p class="text-slate-400 mt-1">O'qituvchi boshqaruv paneli</p>
+        </div>
+        <div class="px-4 py-2 bg-[#152642] rounded-xl text-sm font-medium text-slate-300 border border-[#1c3255]">
+            {% now "d F Y, l" %}
+        </div>
+    </div>
+
+    <!-- Tezkor Statistika -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="stat-card hover-lift">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-slate-400 text-sm font-medium uppercase">Mening Guruhlarim</p>
+                    <p class="text-4xl font-bold text-white mt-2">{{ my_groups.count }}</p>
+                </div>
+                <div class="icon-box-lg icon-blue">
+                    <i class="ph-fill ph-users-three"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card hover-lift">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-slate-400 text-sm font-medium uppercase">Bugungi Darslar</p>
+                    <p class="text-4xl font-bold text-white mt-2">{{ today_lessons.count }}</p>
+                </div>
+                <div class="icon-box-lg icon-green">
+                    <i class="ph-fill ph-chalkboard"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="stat-card hover-lift">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-slate-400 text-sm font-medium uppercase">Jami O'quvchilar</p>
+                    <p class="text-4xl font-bold text-white mt-2">{{ total_students }}</p>
+                </div>
+                <div class="icon-box-lg icon-purple">
+                    <i class="ph-fill ph-student"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI Statistikasi -->
+    <div class="card">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                <i class="ph-fill ph-chart-line-up text-blue-400"></i> Oylik KPI
+            </h3>
+            <span class="badge badge-blue">{{ today|date:"F Y" }}</span>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <!-- Dars Bajarish -->
+            <div class="p-4 bg-[#152642] rounded-xl border border-[#1c3255]">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-semibold text-emerald-400 uppercase">Dars bajarish</span>
+                    <div class="icon-box icon-green">
+                        <i class="ph-fill ph-check-circle"></i>
+                    </div>
+                </div>
+                <p class="text-3xl font-bold text-emerald-400">{{ lesson_completion_rate }}%</p>
+                <p class="text-xs text-slate-500 mt-1">{{ completed_lessons }}/{{ total_monthly_lessons }} dars</p>
+            </div>
+
+            <!-- O'quvchilar Davomati -->
+            <div class="p-4 bg-[#152642] rounded-xl border border-[#1c3255]">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-semibold text-blue-400 uppercase">O'quvchi davomati</span>
+                    <div class="icon-box icon-blue">
+                        <i class="ph-fill ph-users"></i>
+                    </div>
+                </div>
+                <p class="text-3xl font-bold text-blue-400">{{ student_attendance_rate }}%</p>
+                <div class="w-full bg-[#0f1f35] rounded-full h-1.5 mt-2">
+                    <div class="bg-blue-500 h-1.5 rounded-full" style="width: {{ student_attendance_rate }}%"></div>
+                </div>
+            </div>
+
+            <!-- O'rtacha Baho -->
+            <div class="p-4 bg-[#152642] rounded-xl border border-[#1c3255]">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-semibold text-amber-400 uppercase">O'rtacha baho</span>
+                    <div class="icon-box icon-amber">
+                        <i class="ph-fill ph-star"></i>
+                    </div>
+                </div>
+                <p class="text-3xl font-bold text-amber-400">{{ avg_grade_given }}</p>
+                <div class="flex gap-0.5 mt-2 text-amber-400 text-xs">
+                    <i class="ph-fill ph-star"></i>
+                    <i class="ph-fill ph-star"></i>
+                    <i class="ph-fill ph-star"></i>
+                    <i class="ph-fill ph-star-half"></i>
+                    <i class="ph ph-star"></i>
+                </div>
+            </div>
+
+            <!-- XP Berilgan -->
+            <div class="p-4 bg-[#152642] rounded-xl border border-[#1c3255]">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-semibold text-purple-400 uppercase">XP berilgan</span>
+                    <div class="icon-box icon-purple">
+                        <i class="ph-fill ph-lightning"></i>
+                    </div>
+                </div>
+                <p class="text-3xl font-bold text-purple-400">{{ total_xp_given }}</p>
+                <p class="text-xs text-slate-500 mt-1">Bu oyda</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bugungi Darslar -->
+    <div class="card">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                <i class="ph-fill ph-calendar-check text-green-400"></i> Bugungi Darslarim
+            </h3>
+            <span class="badge badge-green">{{ today|date:"d F Y" }}</span>
+        </div>
+
+        {% if today_lessons %}
+        <div class="grid grid-cols-1 gap-4">
+            {% for lesson in today_lessons %}
+            <div
+                class="flex flex-col md:flex-row items-start md:items-center p-5 bg-[#152642] rounded-xl border border-[#1c3255] hover:border-blue-500/50 transition group">
+                <!-- Vaqt -->
+                <div class="flex items-center gap-4 md:w-32 mb-4 md:mb-0">
+                    <div class="w-16 text-center bg-[#0f1f35] rounded-lg py-2 border border-[#1c3255]">
+                        <span class="block text-lg font-bold text-white">{{ lesson.start_time|time:"H:i" }}</span>
+                        <span class="block text-xs text-slate-500">{{ lesson.end_time|time:"H:i" }}</span>
+                    </div>
+                </div>
+
+                <!-- Chiziq -->
+                <div class="hidden md:block w-px h-12 bg-[#1c3255] mx-6 relative">
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full 
+                        {% if lesson.status == 'started' %}bg-blue-500 ring-4 ring-blue-500/30
+                        {% elif lesson.status == 'finished' %}bg-green-500 ring-4 ring-green-500/30
+                        {% else %}bg-slate-400 ring-4 ring-slate-500/30{% endif %}"></div>
+                </div>
+
+                <!-- Ma'lumot -->
+                <div class="flex-1 min-w-0">
+                    <h4 class="font-bold text-white text-lg group-hover:text-blue-400 transition">{{ lesson.group.name }}</h4>
+                    <p class="text-sm text-slate-400 flex items-center gap-4 mt-1">
+                        <span class="flex items-center gap-1.5"><i class="ph ph-door"></i> {{ lesson.room.name|default:"Xona belgilanmagan" }}</span>
+                    </p>
+                </div>
+
+                <!-- Status va Amal -->
+                <div class="flex items-center gap-3 mt-4 md:mt-0">
+                    <span class="px-3 py-1.5 text-xs font-bold rounded-full
+                        {% if lesson.status == 'started' %}bg-blue-500/20 text-blue-400 border border-blue-500/30
+                        {% elif lesson.status == 'finished' %}bg-green-500/20 text-green-400 border border-green-500/30
+                        {% else %}bg-slate-500/20 text-slate-400 border border-slate-500/30{% endif %}">
+                        {{ lesson.get_status_display }}
+                    </span>
+
+                    {% if lesson.status == 'scheduled' or lesson.status == 'started' %}
+                    <a href="#" class="btn btn-primary">
+                        <i class="ph-fill ph-check-circle"></i> Davomat
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-16 text-slate-400 bg-[#152642] rounded-2xl border border-dashed border-[#1c3255]">
+            <div class="w-20 h-20 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="ph-fill ph-sun text-4xl text-amber-400"></i>
+            </div>
+            <p class="text-lg font-medium text-white">Bugun darslaringiz yo'q!</p>
+            <p class="text-sm mt-1">Dam oling yoki keyingi darsga tayyorlaning</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Guruhlarim va Kutilayotgan Davomatlar -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Mening Guruhlarim -->
+        <div class="card flex flex-col h-full">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <i class="ph-fill ph-users text-blue-400"></i> Mening Guruhlarim
+            </h3>
+            <div class="space-y-4 flex-1">
+                {% for group in my_groups %}
+                <div
+                    class="flex items-center justify-between p-4 bg-[#152642] border border-[#1c3255] hover:border-blue-500/50 rounded-xl transition cursor-pointer group">
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                            {{ group.name|first }}
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white group-hover:text-blue-400 transition">{{ group.name }}</h4>
+                            <p
+                                class="text-xs text-slate-500 font-medium bg-[#0f1f35] px-2 py-0.5 rounded-md inline-block mt-1">
+                                {{ group.course.name }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xl font-bold text-white">{{ group.student_count }}</p>
+                        <p class="text-[10px] text-slate-500 font-medium uppercase tracking-wide">o'quvchi</p>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="flex-1 flex items-center justify-center text-slate-400 py-8">
+                    <p>Hozircha guruhlar yo'q</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Kutilayotgan Davomatlar -->
+        <div class="card flex flex-col h-full">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <i class="ph-fill ph-clock-counter-clockwise text-amber-400"></i> Davomat kutilmoqda
+            </h3>
+            <div class="space-y-4 flex-1">
+                {% for lesson in pending_attendance %}
+                <div
+                    class="flex items-center justify-between p-4 bg-amber-500/10 rounded-xl border border-amber-500/30">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 bg-amber-500/20 text-amber-400 rounded-lg flex items-center justify-center text-xl">
+                            <i class="ph-fill ph-warning-circle"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white">{{ lesson.group.name }}</h4>
+                            <p class="text-xs text-slate-400 font-medium">{{ lesson.date|date:"d M Y" }}</p>
+                        </div>
+                    </div>
+                    <a href="#" class="btn btn-ghost hover:bg-amber-500 hover:text-white hover:border-amber-500">
+                        Belgilash
+                    </a>
+                </div>
+                {% empty %}
+                <div class="flex-1 flex flex-col items-center justify-center text-slate-400 py-8">
+                    <div class="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mb-3">
+                        <i class="ph-fill ph-check-circle text-3xl text-green-400"></i>
+                    </div>
+                    <p class="font-medium text-white">Barcha davomatlar belgilangan!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyingi Darslar -->
+    {% if upcoming_lessons %}
+    <div class="card">
+        <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+            <i class="ph-fill ph-calendar text-blue-400"></i> Keyingi Darslar
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {% for lesson in upcoming_lessons %}
+            <div class="p-5 bg-[#152642] border border-[#1c3255] rounded-xl hover:border-blue-500/50 transition">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="text-sm font-bold text-blue-400 bg-blue-500/10 px-2 py-1 rounded-lg">{{ lesson.date|date:"d M" }}</span>
+                    <span class="text-xs text-slate-500 font-medium flex items-center gap-1"><i class="ph ph-clock"></i> {{ lesson.start_time|time:"H:i" }}</span>
+                </div>
+                <h4 class="font-bold text-white text-lg mb-1">{{ lesson.group.name }}</h4>
+                <p class="text-xs text-slate-500 flex items-center gap-1">
+                    <i class="ph ph-door"></i> {{ lesson.room.name|default:"-" }}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

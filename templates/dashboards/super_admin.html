@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block title %}Super Admin Panel{% endblock %}
+
+{% block content %}
+<div class="space-y-8 animate-fadeIn">
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+                Super Admin Panel
+                <span class="icon-box-lg icon-blue">
+                    <i class="ph-fill ph-shield-check"></i>
+                </span>
+            </h2>
+            <p class="text-slate-400 text-sm mt-1 flex items-center gap-2">
+                <i class="ph ph-calendar-dots"></i>
+                Butun tizim statistikasi - {% now "d F Y" %}
+            </p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+            <a href="{% url 'users:student_create' %}" class="btn btn-success">
+                <i class="ph-fill ph-student"></i> O'quvchi
+            </a>
+            <a href="{% url 'users:teacher_create' %}" class="btn btn-primary">
+                <i class="ph-fill ph-chalkboard-teacher"></i> O'qituvchi
+            </a>
+            <a href="{% url 'users:staff_create' %}" class="btn btn-ghost">
+                <i class="ph-fill ph-user-gear"></i> Xodim
+            </a>
+            <a href="{% url 'lead_create' %}" class="btn btn-ghost">
+                <i class="ph-fill ph-funnel"></i> Lid
+            </a>
+        </div>
+    </div>
+
+    <!-- Period Toggle -->
+    <div class="flex items-center justify-between">
+        <h3 class="text-lg font-semibold text-white flex items-center gap-2">
+            <span class="w-1 h-6 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></span>
+            Moliya Statistikasi
+        </h3>
+        <div class="flex gap-1 bg-[#152642] p-1 rounded-xl">
+            <a href="?period=weekly"
+                class="px-4 py-2 rounded-lg text-sm font-medium transition {% if period == 'weekly' %}bg-blue-500 text-white{% else %}text-slate-400 hover:text-white{% endif %}">
+                Haftalik
+            </a>
+            <a href="?period=monthly"
+                class="px-4 py-2 rounded-lg text-sm font-medium transition {% if period != 'weekly' %}bg-blue-500 text-white{% else %}text-slate-400 hover:text-white{% endif %}">
+                Oylik
+            </a>
+        </div>
+    </div>
+
+    <!-- Financial Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Income Card -->
+        <div class="stat-card hover-lift">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <p class="text-slate-400 text-sm font-medium uppercase tracking-wide">Bugungi Kirim</p>
+                    <h3 class="text-3xl font-bold text-white mt-2">{{ today_income|floatformat:0|default:"0" }}</h3>
+                    <p class="text-xs text-slate-500 mt-1">so'm</p>
+                </div>
+                <div class="icon-box-lg icon-green">
+                    <i class="ph-fill ph-arrow-down-left"></i>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 text-emerald-400 text-sm">
+                <i class="ph-fill ph-trend-up"></i>
+                Tushum
+            </div>
+        </div>
+
+        <!-- Expense Card -->
+        <div class="stat-card hover-lift">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <p class="text-slate-400 text-sm font-medium uppercase tracking-wide">Bugungi Chiqim</p>
+                    <h3 class="text-3xl font-bold text-white mt-2">{{ today_expense|floatformat:0|default:"0" }}</h3>
+                    <p class="text-xs text-slate-500 mt-1">so'm</p>
+                </div>
+                <div class="icon-box-lg icon-rose">
+                    <i class="ph-fill ph-arrow-up-right"></i>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 text-rose-400 text-sm">
+                <i class="ph-fill ph-trend-down"></i>
+                Xarajat
+            </div>
+        </div>
+
+        <!-- Net Profit Card -->
+        <div class="stat-card hover-lift">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <p class="text-slate-400 text-sm font-medium uppercase tracking-wide">Oylik Sof Foyda</p>
+                    <h3 class="text-3xl font-bold text-white mt-2">{{ net_profit|floatformat:0|default:"0" }}</h3>
+                    <p class="text-xs text-slate-500 mt-1">so'm</p>
+                </div>
+                <div class="icon-box-lg icon-blue">
+                    <i class="ph-fill ph-chart-line-up"></i>
+                </div>
+            </div>
+            <div class="flex gap-2 text-xs">
+                <span class="badge badge-green">+{{ period_income|floatformat:0 }}</span>
+                <span class="badge badge-rose">-{{ period_expense|floatformat:0 }}</span>
+            </div>
+        </div>
+
+        <!-- Debt Card -->
+        <a href="{% url 'users:user_list' %}?filter=debtors" class="stat-card hover-lift cursor-pointer group">
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <p class="text-slate-400 text-sm font-medium uppercase tracking-wide">Qarzdorlik</p>
+                    <h3 class="text-3xl font-bold text-amber-400 mt-2">{{ total_debt|floatformat:0|default:"0" }}</h3>
+                    <p class="text-xs text-slate-500 mt-1">so'm</p>
+                </div>
+                <div class="icon-box-lg icon-amber animate-pulse-glow">
+                    <i class="ph-fill ph-warning-circle"></i>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 text-amber-400 text-sm">
+                <i class="ph-fill ph-users"></i>
+                {{ debtors_count|default:"0" }} nafar qarzdor
+            </div>
+        </a>
+    </div>
+
+    <!-- Secondary Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Students Card -->
+        <div class="premium-card hover-lift">
+            <div class="flex justify-between items-center mb-6">
+                <h4 class="text-lg font-semibold text-white">O'quvchilar</h4>
+                <div class="icon-box-lg icon-purple">
+                    <i class="ph-fill ph-student"></i>
+                </div>
+            </div>
+            <h2 class="text-4xl font-bold text-gradient-purple mb-4">{{ total_students|default:"0" }}</h2>
+            <div class="flex gap-3 text-sm">
+                <span class="badge badge-green">
+                    <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1.5 animate-pulse"></span>
+                    {{ active_students|default:"0" }} faol
+                </span>
+                <span class="badge badge-blue">
+                    <span class="w-1.5 h-1.5 bg-blue-400 rounded-full mr-1.5"></span>
+                    {{ frozen_students|default:"0" }} muzlatilgan
+                </span>
+            </div>
+        </div>
+
+        <!-- Groups Card -->
+        <div class="premium-card hover-lift">
+            <div class="flex justify-between items-center mb-6">
+                <h4 class="text-lg font-semibold text-white">Guruhlar</h4>
+                <div class="icon-box-lg icon-blue">
+                    <i class="ph-fill ph-users-three"></i>
+                </div>
+            </div>
+            <h2 class="text-4xl font-bold text-gradient mb-4">{{ total_groups|default:"0" }}</h2>
+            <span class="badge badge-green">
+                <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1.5 animate-pulse"></span>
+                {{ active_groups|default:"0" }} faol guruh
+            </span>
+        </div>
+
+        <!-- Attendance Card -->
+        <div class="premium-card hover-lift">
+            <div class="flex justify-between items-center mb-6">
+                <h4 class="text-lg font-semibold text-white">Bugungi Davomat</h4>
+                <div class="icon-box-lg icon-green">
+                    <i class="ph-fill ph-check-circle"></i>
+                </div>
+            </div>
+            <h2 class="text-4xl font-bold text-emerald-400 mb-4">{{ attendance_rate|default:"0" }}%</h2>
+            <p class="text-sm text-slate-400">
+                <i class="ph ph-chalkboard-teacher mr-1"></i>
+                {{ finished_lessons|default:"0" }}/{{ total_today_lessons|default:"0" }} dars o'tildi
+            </p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

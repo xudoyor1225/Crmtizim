@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block title %}Do'kon 🛍️{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- SARLAVHA -->
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Do'kon 🛍️</h1>
+            <p class="text-gray-500 dark:text-gray-400">Coinlaringizga sovg'alar oling!</p>
+        </div>
+
+        <!-- COIN BALANS -->
+        <div class="flex items-center gap-4">
+            <div
+                class="px-6 py-3 bg-gradient-to-r from-amber-400 to-orange-500 rounded-2xl shadow-lg shadow-amber-500/30">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl">💰</span>
+                    <div>
+                        <span class="text-xs text-amber-100">Sizning balansingiz</span>
+                        <p class="text-2xl font-bold text-white">{{ user_coins }}</p>
+                    </div>
+                </div>
+            </div>
+            <a href="{% url 'operations:purchase_history' %}"
+                class="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                <i class="ph ph-clock-counter-clockwise mr-1"></i> Xaridlar tarixi
+            </a>
+        </div>
+    </div>
+
+    <!-- FEATURED ITEMS -->
+    {% if featured %}
+    <div class="mb-8">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+            <i class="ph ph-star text-amber-500"></i> Tavsiya etilgan
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {% for item in featured %}
+            <div
+                class="glass-panel rounded-2xl border-2 border-amber-200 dark:border-amber-900/50 overflow-hidden hover:shadow-xl hover:shadow-amber-500/20 transition-all hover:-translate-y-1">
+                {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-40 object-cover">
+                {% else %}
+                <div
+                    class="w-full h-40 bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 flex items-center justify-center">
+                    <span class="text-6xl">🎁</span>
+                </div>
+                {% endif %}
+                <div class="p-4">
+                    <h3 class="font-semibold text-gray-800 dark:text-white">{{ item.name }}</h3>
+                    <p class="text-sm text-gray-500 truncate">{{ item.description|default:"Premium mahsulot" }}</p>
+                    <div class="flex items-center justify-between mt-3">
+                        <span class="text-lg font-bold text-amber-600 dark:text-amber-400">{{ item.coin_price }}
+                            💰</span>
+                        {% if item.is_in_stock %}
+                        {% if user_coins >= item.coin_price %}
+                        <a href="{% url 'operations:purchase_item' item.id %}"
+                            onclick="return confirm('{{ item.name }} sotib olmoqchimisiz?')"
+                            class="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl text-sm font-medium shadow-lg shadow-green-500/25 hover:shadow-green-500/40 transition">
+                            Olish
+                        </a>
+                        {% else %}
+                        <span class="px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-400 rounded-xl text-sm">
+                            Yetmaydi
+                        </span>
+                        {% endif %}
+                        {% else %}
+                        <span class="px-4 py-2 bg-red-50 dark:bg-red-900/30 text-red-500 rounded-xl text-sm">
+                            Tugagan
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- KATEGORIYALAR VA MAHSULOTLAR -->
+    {% for category in categories %}
+    <div class="mb-8">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+            {{ category.icon }} {{ category.name }}
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {% for item in items %}
+            {% if item.category == category %}
+            <div
+                class="glass-panel rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-lg transition-shadow">
+                {% if item.image %}
+                <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-28 object-cover">
+                {% else %}
+                <div
+                    class="w-full h-28 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 flex items-center justify-center">
+                    <span class="text-4xl">📦</span>
+                </div>
+                {% endif %}
+                <div class="p-3">
+                    <h4 class="font-medium text-gray-800 dark:text-white text-sm truncate">{{ item.name }}</h4>
+                    <div class="flex items-center justify-between mt-2">
+                        <span class="text-sm font-bold text-amber-600 dark:text-amber-400">{{ item.coin_price }}
+                            💰</span>
+                        <span class="text-xs text-gray-400">{{ item.available_stock }} ta</span>
+                    </div>
+                    {% if item.is_in_stock and user_coins >= item.coin_price %}
+                    <a href="{% url 'operations:purchase_item' item.id %}"
+                        onclick="return confirm('{{ item.name }} sotib olmoqchimisiz?')"
+                        class="block w-full mt-2 px-3 py-1.5 bg-green-500 text-white rounded-lg text-xs text-center font-medium hover:bg-green-600 transition">
+                        Sotib olish
+                    </a>
+                    {% elif not item.is_in_stock %}
+                    <span
+                        class="block w-full mt-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-400 rounded-lg text-xs text-center">
+                        Tugagan
+                    </span>
+                    {% else %}
+                    <span
+                        class="block w-full mt-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-400 rounded-lg text-xs text-center">
+                        Mablag' yetarli emas
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% empty %}
+    <div class="glass-panel p-12 rounded-2xl border border-gray-100 dark:border-gray-800 text-center">
+        <div class="w-20 h-20 mx-auto mb-4 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+            <span class="text-4xl">🛒</span>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-2">Do'kon bo'sh</h3>
+        <p class="text-gray-500">Hozircha mahsulotlar qo'shilmagan</p>
+    </div>
+    {% endfor %}
+
+    <!-- KATEGORIYASIZ MAHSULOTLAR -->
+    {% for item in items %}
+    {% if not item.category %}
+    <div class="glass-panel rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-lg transition-shadow"
+        style="max-width: 200px;">
+        <div class="p-3">
+            <h4 class="font-medium text-gray-800 dark:text-white text-sm truncate">{{ item.name }}</h4>
+            <span class="text-sm font-bold text-amber-600">{{ item.coin_price }} 💰</span>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+
+</div>
+{% endblock %}

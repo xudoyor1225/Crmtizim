@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}Tranzaksiyalar{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">Kirim-Chiqim 💸</h1>
+            <p class="text-gray-500">Barcha moliyaviy operatsiyalar</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <a href="{% url 'finance:category_list' %}"
+                class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center gap-2">
+                <i class="ph ph-folders"></i> Kategoriyalar
+            </a>
+            <a href="{% url 'finance:account_list' %}"
+                class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center gap-2">
+                <i class="ph ph-vault"></i> Kassalar
+            </a>
+            <a href="{% url 'finance:add_income' %}"
+                class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition flex items-center gap-2">
+                <i class="ph ph-arrow-down"></i> Kirim
+            </a>
+            <a href="{% url 'finance:add_expense' %}"
+                class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition flex items-center gap-2">
+                <i class="ph ph-arrow-up"></i> Chiqim
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-green-50 border border-green-200 rounded-xl p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-green-600 text-sm">Kirim</p>
+                    <p class="text-2xl font-bold text-green-700 mt-1">+{{ income|floatformat:0 }}</p>
+                </div>
+                <i class="ph ph-arrow-down-right text-3xl text-green-400"></i>
+            </div>
+        </div>
+        <div class="bg-red-50 border border-red-200 rounded-xl p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-red-600 text-sm">Chiqim</p>
+                    <p class="text-2xl font-bold text-red-700 mt-1">-{{ expense|floatformat:0 }}</p>
+                </div>
+                <i class="ph ph-arrow-up-right text-3xl text-red-400"></i>
+            </div>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-blue-600 text-sm">Balans</p>
+                    <p
+                        class="text-2xl font-bold {% if balance < 0 %}text-red-700{% else %}text-blue-700{% endif %} mt-1">
+                        {{ balance|floatformat:0 }}
+                    </p>
+                </div>
+                <i class="ph ph-equals text-3xl text-blue-400"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+        <form method="GET" class="flex flex-wrap gap-4 items-end">
+            <div>
+                <label class="block text-xs text-gray-500 mb-1">Boshlanish</label>
+                <input type="date" name="date_from" value="{{ date_from }}"
+                    class="px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div>
+                <label class="block text-xs text-gray-500 mb-1">Tugash</label>
+                <input type="date" name="date_to" value="{{ date_to }}"
+                    class="px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div>
+                <label class="block text-xs text-gray-500 mb-1">Turi</label>
+                <select name="type"
+                    class="px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="">Barchasi</option>
+                    <option value="income" {% if trans_type == 'income' %}selected{% endif %}>Kirim</option>
+                    <option value="expense" {% if trans_type == 'expense' %}selected{% endif %}>Chiqim</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs text-gray-500 mb-1">Holat</label>
+                <select name="status"
+                    class="px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="">Barchasi</option>
+                    <option value="pending" {% if status == 'pending' %}selected{% endif %}>Kutilmoqda</option>
+                    <option value="confirmed" {% if status == 'confirmed' %}selected{% endif %}>Tasdiqlangan</option>
+                    <option value="rejected" {% if status == 'rejected' %}selected{% endif %}>Rad etilgan</option>
+                </select>
+            </div>
+            <button type="submit" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                <i class="ph ph-funnel"></i> Filtrlash
+            </button>
+        </form>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <table class="w-full">
+            <thead class="bg-gray-50 text-gray-600 uppercase text-xs font-semibold">
+                <tr>
+                    <th class="p-4 text-left">Sana</th>
+                    <th class="p-4 text-left">Turi</th>
+                    <th class="p-4 text-left">Kategoriya</th>
+                    <th class="p-4 text-left">Kassa</th>
+                    <th class="p-4 text-left">Bog'liq</th>
+                    <th class="p-4 text-right">Summa</th>
+                    <th class="p-4 text-center">Holat</th>
+                    <th class="p-4 text-right">Amallar</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for trans in transactions %}
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="p-4 text-sm text-gray-600">
+                        {{ trans.created_at|date:"d.m.Y H:i" }}
+                    </td>
+                    <td class="p-4">
+                        {% if trans.transaction_type == 'income' %}
+                        <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full">Kirim</span>
+                        {% else %}
+                        <span class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded-full">Chiqim</span>
+                        {% endif %}
+                    </td>
+                    <td class="p-4 text-sm text-gray-600">{{ trans.category.name|default:"-" }}</td>
+                    <td class="p-4 text-sm text-gray-600">{{ trans.account.name }}</td>
+                    <td class="p-4 text-sm">
+                        {% if trans.student %}
+                        <span class="text-blue-600">{{ trans.student.first_name }}</span>
+                        {% elif trans.staff %}
+                        <span class="text-purple-600">{{ trans.staff.first_name }}</span>
+                        {% else %}
+                        <span class="text-gray-400">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="p-4 text-right font-bold 
+                        {% if trans.transaction_type == 'income' %}text-green-600{% else %}text-red-600{% endif %}">
+                        {% if trans.transaction_type == 'income' %}+{% else %}-{% endif %}{{ trans.amount|floatformat:0 }}
+                    </td>
+                    <td class="p-4 text-center">
+                        <span class="px-2 py-1 text-xs rounded-full font-medium
+                            {% if trans.status == 'confirmed' %}bg-green-100 text-green-700
+                            {% elif trans.status == 'pending' %}bg-yellow-100 text-yellow-700
+                            {% else %}bg-red-100 text-red-700{% endif %}">
+                            {{ trans.get_status_display }}
+                        </span>
+                    </td>
+                    <td class="p-4 text-right">
+                        {% if trans.status == 'pending' %}
+                        <div class="flex items-center justify-end gap-2">
+                            <a href="{% url 'finance:confirm_transaction' trans.pk %}"
+                                class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition">
+                                <i class="ph ph-check"></i>
+                            </a>
+                            <a href="{% url 'finance:reject_transaction' trans.pk %}"
+                                class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition">
+                                <i class="ph ph-x"></i>
+                            </a>
+                        </div>
+                        {% else %}
+                        <span class="text-gray-400 text-xs">{{ trans.confirmed_by.first_name|default:"-" }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="p-12 text-center text-gray-500">
+                        <i class="ph ph-receipt text-5xl mb-4"></i>
+                        <p>Tranzaksiyalar topilmadi</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}
