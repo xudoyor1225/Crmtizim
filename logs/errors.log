@@ -1886,3 +1886,12 @@ Traceback (most recent call last):
   File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\urls\resolvers.py", line 842, in _reverse_with_prefix
     raise NoReverseMatch(msg)
 django.urls.exceptions.NoReverseMatch: Reverse for 'pipeline' not found. 'pipeline' is not a valid view function or pattern name.
+ERROR 2026-01-23 17:29:51,369 log Internal Server Error: /users/staff/
+Traceback (most recent call last):
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+TypeError: user_list() got an unexpected keyword argument 'role'

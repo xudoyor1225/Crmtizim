@@ -392,3 +392,7 @@ INFO 2026-01-23 17:04:24,959 autoreload Watching for file changes with StatReloa
 INFO 2026-01-23 17:13:14,272 autoreload Watching for file changes with StatReloader
 ERROR 2026-01-23 17:16:36,860 log "GET / HTTP/1.1" 500 254199
 INFO 2026-01-23 17:20:52,247 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:23:12,239 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 17:23:14,941 log "GET / HTTP/1.1" 200 23974
+INFO 2026-01-23 17:23:22,262 log "GET /core/settings/ HTTP/1.1" 200 28621
+ERROR 2026-01-23 17:29:51,370 log "GET /users/staff/ HTTP/1.1" 500 70016
