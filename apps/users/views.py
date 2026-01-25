@@ -73,7 +73,7 @@ def user_create(request):
 
             user.save()
             messages.success(request, f"{user.first_name} muvaffaqiyatli qo'shildi!")
-            return redirect('user_list')
+            return redirect('users:user_list')
     else:
         form = UserForm()
     return render(request, 'users/user_form.html', {'form': form, 'title': "Yangi foydalanuvchi"})
@@ -128,7 +128,7 @@ def student_create(request):
             )
             
             messages.success(request, f"✅ {student.full_name} muvaffaqiyatli qo'shildi! Ota-ona: {parent.full_name}")
-            return redirect('user_list')
+            return redirect('users:user_list')
     else:
         form = StudentForm()
     
@@ -151,7 +151,7 @@ def teacher_create(request):
             teacher.save()
             
             messages.success(request, f"✅ O'qituvchi {teacher.full_name} muvaffaqiyatli qo'shildi!")
-            return redirect('user_list')
+            return redirect('users:user_list')
     else:
         form = TeacherForm()
     
@@ -174,7 +174,7 @@ def staff_create(request):
             staff.save()
             
             messages.success(request, f"✅ Xodim {staff.full_name} muvaffaqiyatli qo'shildi!")
-            return redirect('user_list')
+            return redirect('users:user_list')
     else:
         form = StaffForm()
     
@@ -192,7 +192,7 @@ def user_update(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, "Ma'lumotlar yangilandi.")
-            return redirect('user_list')
+            return redirect('users:user_list')
     else:
         form = UserForm(instance=user)
     return render(request, 'users/user_form.html', {'form': form, 'title': "Tahrirlash"})

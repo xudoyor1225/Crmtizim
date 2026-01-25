@@ -42,58 +42,28 @@
 
 /* ============================================
    LIGHT MODE STYLES
-   Modern, Clean & Professional White Theme
+   Clean, modern cream/ivory theme
    ============================================ */
 
 :root {
-    /* Light Mode - Premium White Colors */
-    --light-bg: #f8fafc;
-    --light-bg-secondary: #f1f5f9;
+    /* Light Mode - White Colors */
+    --light-bg: #ffffff;
+    --light-bg-secondary: #f8fafc;
     --light-surface: #ffffff;
-    --light-surface-hover: #fafbfc;
-    --light-border: #e5e7eb;
-    --light-border-hover: #d1d5db;
-    --light-text-primary: #111827;
-    --light-text-secondary: #4b5563;
-    --light-text-muted: #6b7280;
-    --light-text-dim: #9ca3af;
-    --light-hover: #f3f4f6;
-    --light-active: #e5e7eb;
-
-    /* Light Mode Accent Colors */
-    --light-accent: #6366f1;
-    --light-accent-hover: #4f46e5;
-    --light-accent-light: #eef2ff;
-    --light-accent-lighter: #f5f7ff;
-
-    /* Light Mode Shadows */
-    --light-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
-    --light-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-    --light-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-    --light-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
-    --light-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
-
-    /* Status Colors for Light Mode */
-    --light-success-bg: #ecfdf5;
-    --light-success-border: #a7f3d0;
-    --light-success-text: #047857;
-    --light-warning-bg: #fffbeb;
-    --light-warning-border: #fde68a;
-    --light-warning-text: #b45309;
-    --light-error-bg: #fef2f2;
-    --light-error-border: #fecaca;
-    --light-error-text: #b91c1c;
-    --light-info-bg: #eff6ff;
-    --light-info-border: #bfdbfe;
-    --light-info-text: #1d4ed8;
+    --light-border: #e2e8f0;
+    --light-border-hover: #cbd5e1;
+    --light-text-primary: #0f172a;
+    --light-text-secondary: #475569;
+    --light-text-muted: #64748b;
+    --light-hover: #f1f5f9;
+    --light-active: #e0e7ff;
 }
 
 /* Light mode glass panel */
 html:not(.dark) .glass-panel {
     background: var(--light-surface);
     border: 1px solid var(--light-border);
-    box-shadow: var(--light-shadow-sm);
-    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 /* Light mode inputs */
@@ -104,87 +74,57 @@ html:not(.dark) textarea {
     border: 1px solid var(--light-border);
     color: var(--light-text-primary);
     border-radius: 10px;
-    padding: 0.625rem 0.875rem;
-    font-size: 0.875rem;
-    transition: all 0.15s ease;
 }
 
 html:not(.dark) input::placeholder,
 html:not(.dark) textarea::placeholder {
-    color: var(--light-text-dim);
-}
-
-html:not(.dark) input:hover,
-html:not(.dark) select:hover,
-html:not(.dark) textarea:hover {
-    border-color: var(--light-border-hover);
+    color: var(--light-text-muted);
 }
 
 html:not(.dark) input:focus,
 html:not(.dark) select:focus,
 html:not(.dark) textarea:focus {
-    border-color: var(--light-accent);
-    box-shadow: 0 0 0 4px var(--light-accent-light);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     outline: none;
     background: #fff;
 }
 
 /* Light mode tables */
-html:not(.dark) table {
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px var(--light-shadow);
-}
-
 html:not(.dark) table thead {
-    background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
-}
-
-html:not(.dark) table thead th {
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    color: var(--light-text-secondary);
-    padding: 1rem 1.25rem;
+    background: var(--light-bg-secondary);
 }
 
 html:not(.dark) table tbody tr {
     background: var(--light-surface);
-    transition: all 0.15s ease;
 }
 
 html:not(.dark) table tbody tr:hover {
-    background: var(--light-accent-light);
+    background: var(--light-hover);
 }
 
 html:not(.dark) table th,
 html:not(.dark) table td {
     border-color: var(--light-border);
     color: var(--light-text-primary);
-    padding: 1rem 1.25rem;
 }
 
 /* Light mode labels */
 html:not(.dark) label {
     color: var(--light-text-primary);
-    font-weight: 500;
-    font-size: 0.875rem;
 }
 
 /* Light mode scrollbar */
 html:not(.dark) ::-webkit-scrollbar-track {
     background: var(--light-bg-secondary);
-    border-radius: 10px;
 }
 
 html:not(.dark) ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%);
-    border-radius: 10px;
+    background: #cbd5e1;
 }
 
 html:not(.dark) ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+    background: #94a3b8;
 }
 
 /* ============================================
@@ -275,44 +215,32 @@ html:not(.dark) ::-webkit-scrollbar-thumb:hover {
 html:not(.dark) .card {
     background: var(--light-surface);
     border: 1px solid var(--light-border);
-    border-radius: 20px;
+    border-radius: 16px;
     padding: 1.5rem;
-    box-shadow: 0 1px 3px var(--light-shadow), 0 4px 6px rgba(0, 0, 0, 0.02);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all var(--transition);
 }
 
 html:not(.dark) .card:hover {
-    border-color: var(--light-accent);
-    box-shadow: 0 10px 40px rgba(79, 70, 229, 0.12), 0 4px 12px rgba(0, 0, 0, 0.05);
-    transform: translateY(-4px);
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    transform: translateY(-2px);
 }
 
 html:not(.dark) .stat-card {
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    background: var(--light-surface);
     border: 1px solid var(--light-border);
-    border-radius: 20px;
+    border-radius: 16px;
     padding: 1.5rem;
     position: relative;
     overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-html:not(.dark) .stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 120px;
-    height: 120px;
-    background: radial-gradient(circle, rgba(79, 70, 229, 0.08), transparent 70%);
-    border-radius: 50%;
-    transform: translate(30%, -30%);
+    transition: all var(--transition);
 }
 
 html:not(.dark) .stat-card:hover {
-    border-color: var(--light-accent);
-    box-shadow: 0 10px 40px rgba(79, 70, 229, 0.15), 0 4px 12px rgba(0, 0, 0, 0.05);
-    transform: translateY(-4px);
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    transform: translateY(-3px);
 }
 
 /* Dark mode cards */
@@ -561,46 +489,32 @@ html:not(.dark) .sidebar-link {
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 1rem;
-    color: #4b5563;
+    color: var(--light-text-secondary);
     border-radius: 10px;
-    transition: all 0.15s ease;
+    transition: all var(--transition);
     text-decoration: none;
-    font-weight: 500;
-    font-size: 0.875rem;
 }
 
 html:not(.dark) .sidebar-link:hover {
-    background: #f3f4f6;
-    color: #111827;
+    background: var(--light-hover);
+    color: var(--light-text-primary);
 }
 
 html:not(.dark) .sidebar-link.active {
-    background: #eef2ff;
-    color: #4f46e5;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.05));
+    color: #3b82f6;
+    border-left: 3px solid #3b82f6;
     font-weight: 600;
-}
-
-html:not(.dark) .sidebar-link.active i {
-    color: #4f46e5;
-}
-
-html:not(.dark) .sidebar-link i {
-    color: #9ca3af;
-}
-
-html:not(.dark) .sidebar-link:hover i {
-    color: #6366f1;
 }
 
 html:not(.dark) .sidebar-section {
     padding: 0.5rem 1rem;
     margin-top: 1.5rem;
-    margin-bottom: 0.25rem;
     font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #9ca3af;
+    color: var(--light-text-muted);
 }
 
 /* Dark mode sidebar links */
@@ -810,12 +724,12 @@ html:not(.dark) .sidebar-section {
 
 /* ============================================
    LIGHT MODE ADDITIONAL STYLES
-   Premium White Theme Extended
+   Cream/Ivory Theme
    ============================================ */
 
 /* Light mode body background */
 html:not(.dark) body {
-    background: linear-gradient(135deg, var(--light-bg) 0%, var(--light-bg-secondary) 100%);
+    background-color: var(--light-bg-secondary);
 }
 
 /* Light mode main text */
@@ -826,12 +740,10 @@ html:not(.dark) h4,
 html:not(.dark) h5,
 html:not(.dark) h6 {
     color: var(--light-text-primary);
-    font-weight: 600;
 }
 
 html:not(.dark) p {
     color: var(--light-text-secondary);
-    line-height: 1.6;
 }
 
 /* Light mode dropdowns */
@@ -1226,46 +1138,38 @@ html:not(.dark) .logo-text {
 /* Light mode icon colors in sidebar */
 html:not(.dark) .sidebar-link i {
     color: var(--light-text-muted);
-    transition: all 0.2s ease;
 }
 
 html:not(.dark) .sidebar-link:hover i {
-    color: var(--light-accent);
-    transform: scale(1.1);
+    color: #3b82f6;
 }
 
 html:not(.dark) .sidebar-link.active i {
-    color: var(--light-accent);
+    color: #3b82f6;
 }
 
 /* Light mode header icon buttons */
 html:not(.dark) .header-btn {
     color: var(--light-text-muted);
     background: transparent;
-    border-radius: 12px;
-    padding: 0.5rem;
-    transition: all 0.2s ease;
 }
 
 html:not(.dark) .header-btn:hover {
-    color: var(--light-accent);
-    background: var(--light-accent-light);
-    transform: scale(1.05);
+    color: #3b82f6;
+    background: var(--light-hover);
 }
 
 /* Light mode quick action cards */
 html:not(.dark) .quick-action {
     background: var(--light-surface);
     border: 1px solid var(--light-border);
-    border-radius: 16px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html:not(.dark) .quick-action:hover {
-    background: linear-gradient(135deg, #ffffff 0%, var(--light-accent-light) 100%);
-    border-color: var(--light-accent);
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 40px rgba(79, 70, 229, 0.15);
+    background: var(--light-bg-secondary);
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
 }
 
 /* Light mode DataTable styles */

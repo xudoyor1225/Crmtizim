@@ -7,58 +7,58 @@
 
     <!-- Sarlavha -->
     <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-gray-800">Xush kelibsiz, {{ request.user.first_name }}! 👋</h1>
-        <div class="text-sm text-gray-500">Bugun: {% now "d F Y" %}</div>
+        <h1 class="text-2xl font-bold text-white">Xush kelibsiz, {{ request.user.first_name }}! 👋</h1>
+        <div class="text-sm text-slate-400">Bugun: {% now "d F Y" %}</div>
     </div>
 
     <!-- STATISTIKA VIDJETLARI (Cards) -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         
         <!-- O'quvchilar -->
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+        <div class="stat-card p-6 rounded-2xl flex items-center justify-between bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255]">
             <div>
-                <p class="text-sm font-medium text-gray-500">Jami O'quvchilar</p>
-                <p class="text-2xl font-bold text-gray-800 mt-1">1,245</p>
-                <span class="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full font-medium">+12% o'sish</span>
+                <p class="text-sm font-medium text-slate-400">Jami O'quvchilar</p>
+                <p class="text-2xl font-bold mt-1 text-white">{{ total_students|default:"0" }}</p>
+                <span class="text-xs px-2 py-1 rounded-full font-medium text-emerald-400 bg-emerald-500/20">+12% o'sish</span>
             </div>
-            <div class="p-3 bg-blue-50 rounded-lg text-blue-600">
-                <i class="ph ph-student text-2xl"></i>
+            <div class="p-3 rounded-xl bg-blue-500/20 text-blue-400">
+                <i class="ph-fill ph-student text-2xl"></i>
             </div>
         </div>
 
         <!-- Lidlar -->
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+        <div class="stat-card p-6 rounded-2xl flex items-center justify-between bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255]">
             <div>
-                <p class="text-sm font-medium text-gray-500">Yangi Lidlar</p>
-                <p class="text-2xl font-bold text-gray-800 mt-1">86</p>
-                <span class="text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded-full font-medium">Bu oy</span>
+                <p class="text-sm font-medium text-slate-400">Yangi Lidlar</p>
+                <p class="text-2xl font-bold mt-1 text-white">{{ total_leads|default:"0" }}</p>
+                <span class="text-xs px-2 py-1 rounded-full font-medium text-amber-400 bg-amber-500/20">Bu oy</span>
             </div>
-            <div class="p-3 bg-orange-50 rounded-lg text-orange-600">
-                <i class="ph ph-funnel text-2xl"></i>
+            <div class="p-3 rounded-xl bg-amber-500/20 text-amber-400">
+                <i class="ph-fill ph-funnel text-2xl"></i>
             </div>
         </div>
 
         <!-- Tushum -->
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+        <div class="stat-card p-6 rounded-2xl flex items-center justify-between bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255]">
             <div>
-                <p class="text-sm font-medium text-gray-500">Oylik Tushum</p>
-                <p class="text-2xl font-bold text-gray-800 mt-1">45.2 M</p>
-                <span class="text-xs text-gray-400">UZS</span>
+                <p class="text-sm font-medium text-slate-400">Oylik Tushum</p>
+                <p class="text-2xl font-bold mt-1 text-white">{{ monthly_income|default:"0" }}</p>
+                <span class="text-xs text-slate-500">UZS</span>
             </div>
-            <div class="p-3 bg-green-50 rounded-lg text-green-600">
-                <i class="ph ph-wallet text-2xl"></i>
+            <div class="p-3 rounded-xl bg-emerald-500/20 text-emerald-400">
+                <i class="ph-fill ph-wallet text-2xl"></i>
             </div>
         </div>
 
         <!-- Qarzdorlik -->
-        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+        <div class="stat-card p-6 rounded-2xl flex items-center justify-between bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255]">
             <div>
-                <p class="text-sm font-medium text-gray-500">Qarzdorlik</p>
-                <p class="text-2xl font-bold text-red-600 mt-1">3.5 M</p>
-                <span class="text-xs text-red-600 bg-red-50 px-2 py-1 rounded-full font-medium">Talab qilinadi</span>
+                <p class="text-sm font-medium text-slate-400">Qarzdorlik</p>
+                <p class="text-2xl font-bold mt-1 text-rose-400">{{ total_debt|default:"0" }}</p>
+                <span class="text-xs px-2 py-1 rounded-full font-medium text-rose-400 bg-rose-500/20">Talab qilinadi</span>
             </div>
-            <div class="p-3 bg-red-50 rounded-lg text-red-600">
-                <i class="ph ph-warning-circle text-2xl"></i>
+            <div class="p-3 rounded-xl bg-rose-500/20 text-rose-400">
+                <i class="ph-fill ph-warning-circle text-2xl"></i>
             </div>
         </div>
 
@@ -68,77 +68,71 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- Chap tomon: Dars Jadvali -->
-        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div class="lg:col-span-2 rounded-2xl p-6 bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255]">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-gray-800">Bugungi Darslar</h3>
-                <a href="#" class="text-sm text-primary hover:underline">To'liq ko'rish</a>
+                <h3 class="font-bold text-white">Bugungi Darslar</h3>
+                <a href="{% url 'operations:schedule' %}" class="text-sm hover:underline text-blue-400">To'liq ko'rish</a>
             </div>
             
             <div class="space-y-4">
+                {% for lesson in today_lessons %}
                 <!-- Dars item -->
-                <div class="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-100">
+                <div class="flex items-center p-4 rounded-xl border bg-[#0f1f35] border-[#1c3255] hover:border-blue-500/50 transition">
                     <div class="w-16 text-center">
-                        <span class="block text-sm font-bold text-gray-800">14:00</span>
-                        <span class="block text-xs text-gray-500">15:30</span>
+                        <span class="block text-sm font-bold text-white">{{ lesson.start_time|time:"H:i" }}</span>
+                        <span class="block text-xs text-slate-500">{{ lesson.end_time|time:"H:i" }}</span>
                     </div>
-                    <div class="w-1 h-10 bg-blue-500 rounded-full mx-4"></div>
-                    <div>
-                        <h4 class="font-bold text-gray-800">General English (Beginner)</h4>
-                        <p class="text-sm text-gray-500">Xona: 3-xona • O'qituvchi: Aziza Rahimova</p>
+                    <div class="w-1 h-10 rounded-full mx-4 {% if lesson.status == 'in_progress' %}bg-blue-500{% elif lesson.status == 'completed' %}bg-green-500{% else %}bg-gray-500{% endif %}"></div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-white">{{ lesson.group.name }}</h4>
+                        <p class="text-sm text-slate-400">
+                            Xona: {{ lesson.room.name }} • O'qituvchi: {{ lesson.teacher.get_full_name }}
+                        </p>
                     </div>
                     <div class="ml-auto">
-                        <span class="px-3 py-1 text-xs font-bold text-blue-700 bg-blue-100 rounded-full">Darsda</span>
+                        {% if lesson.status == 'in_progress' %}
+                        <span class="px-3 py-1 text-xs font-bold rounded-full text-blue-400 bg-blue-500/20">Darsda</span>
+                        {% elif lesson.status == 'completed' %}
+                        <span class="px-3 py-1 text-xs font-bold rounded-full text-emerald-400 bg-emerald-500/20">Tugadi</span>
+                        {% else %}
+                        <span class="px-3 py-1 text-xs font-bold rounded-full text-slate-400 bg-slate-500/20">Kutilmoqda</span>
+                        {% endif %}
                     </div>
                 </div>
-
-                <div class="flex items-center p-3 bg-white rounded-lg border border-gray-100 hover:bg-gray-50">
-                    <div class="w-16 text-center">
-                        <span class="block text-sm font-bold text-gray-800">16:00</span>
-                        <span class="block text-xs text-gray-500">17:30</span>
-                    </div>
-                    <div class="w-1 h-10 bg-green-500 rounded-full mx-4"></div>
-                    <div>
-                        <h4 class="font-bold text-gray-800">IELTS Foundation</h4>
-                        <p class="text-sm text-gray-500">Xona: 5-xona • O'qituvchi: Bobur Aliyev</p>
-                    </div>
-                    <div class="ml-auto">
-                        <span class="px-3 py-1 text-xs font-bold text-gray-600 bg-gray-100 rounded-full">Kutilmoqda</span>
-                    </div>
+                {% empty %}
+                <div class="text-center py-8">
+                    <i class="ph ph-calendar-blank text-4xl mb-2 text-slate-600"></i>
+                    <p class="text-slate-500">Bugun darslar yo'q</p>
                 </div>
+                {% endfor %}
             </div>
         </div>
 
         <!-- O'ng tomon: Yangi Lidlar -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 class="font-bold text-gray-800 mb-4">So'nggi Lidlar</h3>
+        <div class="rounded-2xl p-6 bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255]">
+            <h3 class="font-bold mb-4 text-white">So'nggi Lidlar</h3>
             <div class="space-y-4">
-                
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-bold">
-                        S
+                {% for lead in recent_leads %}
+                <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-[#1c3255] transition">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold bg-purple-500/20 text-purple-400">
+                        {{ lead.full_name|slice:":1" }}
                     </div>
-                    <div>
-                        <h4 class="text-sm font-bold text-gray-800">Sardor Komilov</h4>
-                        <p class="text-xs text-gray-500">+998 90 123 45 67</p>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-white">{{ lead.full_name }}</h4>
+                        <p class="text-xs text-slate-500">{{ lead.phone }}</p>
                     </div>
-                    <div class="ml-auto text-xs text-gray-400">15 daq</div>
+                    <div class="text-xs text-slate-600">{{ lead.created_at|timesince }} oldin</div>
                 </div>
-
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
-                        M
-                    </div>
-                    <div>
-                        <h4 class="text-sm font-bold text-gray-800">Madina Karimova</h4>
-                        <p class="text-xs text-gray-500">Instagram</p>
-                    </div>
-                    <div class="ml-auto text-xs text-gray-400">1 soat</div>
+                {% empty %}
+                <div class="text-center py-4">
+                    <p class="text-slate-500">Yangi lidlar yo'q</p>
                 </div>
-
+                {% endfor %}
             </div>
-            <button class="w-full mt-6 py-2 text-sm text-center text-primary border border-primary rounded-lg hover:bg-primary hover:text-white transition-colors">
+            <a href="{% url 'crm:pipeline' %}"
+               class="block w-full mt-6 py-2.5 text-sm text-center rounded-xl font-medium transition text-blue-400 border border-blue-500/50 hover:bg-blue-500/20">
                 Barchasini ko'rish
-            </button>
+            </a>
         </div>
 
     </div>

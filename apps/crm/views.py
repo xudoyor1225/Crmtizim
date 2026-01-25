@@ -203,7 +203,7 @@ def lead_convert(request, pk):
                            changes={'converted_from_lead': lead.id}, request=request)
             
             messages.success(request, f"O'quvchi muvaffaqiyatli yaratildi! Parol: {password}")
-            return redirect('user_list')
+            return redirect('users:user_list')
     else:
         # Formani lead ma'lumotlari bilan to'ldirish
         name_parts = lead.full_name.split(' ', 1)

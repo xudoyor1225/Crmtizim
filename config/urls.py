@@ -2,17 +2,17 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from apps.core.views import dashboard_view
+from apps.core.views import dashboard_view, logout_view
 from apps.core.export_views import export_transactions, api_chart_data, global_search
-from django.contrib.auth.views import LogoutView, LoginView
+from django.contrib.auth.views import LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     
     # Auth (Kirish/Chiqish)
     path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
-    
+    path('logout/', logout_view, name='logout'),
+
     # Dashboard (Bosh sahifa)
     path('', dashboard_view, name='dashboard'),
     

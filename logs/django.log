@@ -448,3 +448,543 @@ INFO 2026-01-23 17:57:47,974 log "GET /core/settings/ HTTP/1.1" 200 47260
 INFO 2026-01-23 17:57:52,241 log "GET /crm/sources/ HTTP/1.1" 200 17194
 INFO 2026-01-23 17:57:54,100 log "GET /groups/ HTTP/1.1" 200 36186
 INFO 2026-01-23 17:57:56,749 log "GET /rooms/ HTTP/1.1" 200 17759
+INFO 2026-01-23 18:07:28,732 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 18:21:23,989 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 18:21:29,376 log "GET / HTTP/1.1" 200 25587
+INFO 2026-01-23 18:23:56,096 log "GET / HTTP/1.1" 200 25587
+INFO 2026-01-23 18:23:58,461 log "GET / HTTP/1.1" 200 25587
+INFO 2026-01-23 18:29:04,722 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 18:33:49,847 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 18:40:50,252 log "HEAD / HTTP/1.1" 302 0
+INFO 2026-01-23 18:40:50,349 log "HEAD /login/?next=/ HTTP/1.1" 200 0
+INFO 2026-01-23 18:41:05,749 log "GET /users/teachers/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:41:05,765 log "GET /login/?next=/users/teachers/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:41:40,864 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-23 18:41:40,872 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:41:40,914 log "GET /users/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:41:40,919 log "GET /login/?next=/users/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:41:40,951 log "GET /users/teachers/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:41:40,957 log "GET /login/?next=/users/teachers/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:41:40,985 log "GET /users/students/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:41:40,989 log "GET /login/?next=/users/students/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:41:41,027 log "GET /core/settings/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:41:41,032 log "GET /login/?next=/core/settings/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:41:41,060 log "GET /finance/payroll/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:41:41,067 log "GET /login/?next=/finance/payroll/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:43:06,520 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-23 18:43:06,529 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:43:06,560 log "GET /users/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:43:06,565 log "GET /login/?next=/users/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:43:06,586 log "GET /users/teachers/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:43:06,592 log "GET /login/?next=/users/teachers/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:43:06,624 log "GET /users/students/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:43:06,629 log "GET /login/?next=/users/students/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:43:06,655 log "GET /core/settings/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:43:06,659 log "GET /login/?next=/core/settings/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:43:06,692 log "GET /finance/payroll/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:43:06,698 log "GET /login/?next=/finance/payroll/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:43:06,729 log "GET /finance/accounts/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:43:06,734 log "GET /login/?next=/finance/accounts/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:43:06,768 log "GET /finance/categories/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:43:06,773 log "GET /login/?next=/finance/categories/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:43:06,798 log "GET /finance/transactions/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:43:06,802 log "GET /login/?next=/finance/transactions/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:43:06,826 log "GET /operations/lessons/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:43:06,830 log "GET /login/?next=/operations/lessons/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:43:06,860 log "GET /operations/schedule/ HTTP/1.1" 302 0
+INFO 2026-01-23 18:43:06,866 log "GET /login/?next=/operations/schedule/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:44:00,183 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 18:44:05,765 log "GET / HTTP/1.1" 200 25604
+INFO 2026-01-23 18:44:17,155 log "GET /finance/hr/attendance/ HTTP/1.1" 200 39599
+INFO 2026-01-23 18:44:19,724 log "GET /finance/supplies/ HTTP/1.1" 200 28758
+INFO 2026-01-23 18:44:21,656 log "GET /finance/receipts/pending/ HTTP/1.1" 200 24915
+INFO 2026-01-23 18:51:34,969 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 18:54:31,293 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-23 18:54:31,307 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-23 18:54:51,741 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-23 18:54:51,746 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:02:19,162 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 19:04:09,987 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 19:04:19,319 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-23 19:04:19,332 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:06:32,722 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 19:06:35,170 log "GET / HTTP/1.1" 200 25592
+INFO 2026-01-23 19:06:47,049 log "GET /finance/accounts/ HTTP/1.1" 200 19723
+INFO 2026-01-23 19:06:49,435 log "GET / HTTP/1.1" 200 25592
+INFO 2026-01-23 19:06:52,569 log "GET /finance/receipts/pending/ HTTP/1.1" 200 24903
+INFO 2026-01-23 19:16:04,650 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 19:16:15,340 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-23 19:16:15,359 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:18:16,503 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 19:18:20,137 log "GET / HTTP/1.1" 200 25732
+INFO 2026-01-23 19:27:07,383 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 19:29:11,305 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-23 19:29:11,318 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:29:42,768 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-23 19:29:42,776 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:29:42,820 log "GET /users/ HTTP/1.1" 302 0
+INFO 2026-01-23 19:29:42,831 log "GET /login/?next=/users/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:29:42,868 log "GET /finance/transactions/ HTTP/1.1" 302 0
+INFO 2026-01-23 19:29:42,880 log "GET /login/?next=/finance/transactions/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:29:42,939 log "GET /operations/schedule/ HTTP/1.1" 302 0
+INFO 2026-01-23 19:29:42,949 log "GET /login/?next=/operations/schedule/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:29:43,002 log "GET /core/settings/ HTTP/1.1" 302 0
+INFO 2026-01-23 19:29:43,011 log "GET /login/?next=/core/settings/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:30:34,741 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 19:30:37,068 log "GET / HTTP/1.1" 200 25732
+INFO 2026-01-23 19:30:44,534 log "GET /users/ HTTP/1.1" 200 90162
+INFO 2026-01-23 19:30:46,259 log "GET /automation/templates/ HTTP/1.1" 200 19301
+INFO 2026-01-23 19:30:47,916 log "GET /crm/pipeline/ HTTP/1.1" 200 22242
+INFO 2026-01-23 19:30:49,842 log "GET / HTTP/1.1" 200 25732
+INFO 2026-01-23 19:30:54,893 log "GET /automation/templates/ HTTP/1.1" 200 19301
+INFO 2026-01-23 19:30:56,185 log "GET /users/ HTTP/1.1" 200 90162
+INFO 2026-01-23 19:30:57,495 log "GET /crm/pipeline/ HTTP/1.1" 200 22242
+INFO 2026-01-23 19:30:58,798 log "GET /crm/stages/ HTTP/1.1" 200 21301
+INFO 2026-01-23 19:31:01,645 log "GET /crm/sources/ HTTP/1.1" 200 18952
+INFO 2026-01-23 19:31:05,271 log "GET /groups/ HTTP/1.1" 200 37944
+INFO 2026-01-23 19:32:02,831 log "GET /groups/ HTTP/1.1" 200 37944
+INFO 2026-01-23 19:32:05,068 log "GET / HTTP/1.1" 200 25732
+INFO 2026-01-23 19:39:27,998 log "GET / HTTP/1.1" 200 25732
+INFO 2026-01-23 19:39:30,564 log "GET / HTTP/1.1" 200 25732
+INFO 2026-01-23 19:43:38,689 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-23 19:43:38,702 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:43:38,794 log "GET /users/ HTTP/1.1" 302 0
+INFO 2026-01-23 19:43:38,804 log "GET /login/?next=/users/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:43:38,883 log "GET /finance/transactions/ HTTP/1.1" 302 0
+INFO 2026-01-23 19:43:38,893 log "GET /login/?next=/finance/transactions/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:43:38,946 log "GET /operations/lessons/ HTTP/1.1" 302 0
+INFO 2026-01-23 19:43:38,956 log "GET /login/?next=/operations/lessons/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:43:39,028 log "GET /operations/schedule/ HTTP/1.1" 302 0
+INFO 2026-01-23 19:43:39,039 log "GET /login/?next=/operations/schedule/ HTTP/1.1" 200 5409
+WARNING 2026-01-23 19:43:39,188 log "GET /education/groups/ HTTP/1.1" 404 10111
+INFO 2026-01-23 19:43:39,272 log "GET /core/settings/ HTTP/1.1" 302 0
+INFO 2026-01-23 19:43:39,280 log "GET /login/?next=/core/settings/ HTTP/1.1" 200 5409
+WARNING 2026-01-23 19:43:53,070 log "GET /edu/groups/ HTTP/1.1" 404 10093
+INFO 2026-01-23 19:44:49,796 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 19:44:52,959 log "GET / HTTP/1.1" 200 25798
+INFO 2026-01-23 19:53:57,935 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-23 19:53:57,960 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:53:58,028 log "GET /users/ HTTP/1.1" 302 0
+INFO 2026-01-23 19:53:58,037 log "GET /login/?next=/users/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:53:58,087 log "GET /finance/transactions/ HTTP/1.1" 302 0
+INFO 2026-01-23 19:53:58,094 log "GET /login/?next=/finance/transactions/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:53:58,123 log "GET /operations/lessons/ HTTP/1.1" 302 0
+INFO 2026-01-23 19:53:58,133 log "GET /login/?next=/operations/lessons/ HTTP/1.1" 200 5409
+INFO 2026-01-23 19:53:58,173 log "GET /core/settings/ HTTP/1.1" 302 0
+INFO 2026-01-23 19:53:58,181 log "GET /login/?next=/core/settings/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:03:50,821 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-23 20:03:50,837 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:03:50,905 log "GET /users/ HTTP/1.1" 302 0
+INFO 2026-01-23 20:03:50,915 log "GET /login/?next=/users/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:03:50,977 log "GET /finance/transactions/ HTTP/1.1" 302 0
+INFO 2026-01-23 20:03:50,988 log "GET /login/?next=/finance/transactions/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:03:51,052 log "GET /operations/lessons/ HTTP/1.1" 302 0
+INFO 2026-01-23 20:03:51,061 log "GET /login/?next=/operations/lessons/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:03:51,107 log "GET /core/settings/ HTTP/1.1" 302 0
+INFO 2026-01-23 20:03:51,114 log "GET /login/?next=/core/settings/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:03:51,172 log "GET /crm/pipeline/ HTTP/1.1" 302 0
+INFO 2026-01-23 20:03:51,180 log "GET /login/?next=/crm/pipeline/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:04:39,193 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 20:04:43,314 log "GET / HTTP/1.1" 200 25574
+INFO 2026-01-23 20:12:37,264 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-23 20:12:37,281 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:12:37,343 log "GET /users/ HTTP/1.1" 302 0
+INFO 2026-01-23 20:12:37,353 log "GET /login/?next=/users/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:12:37,402 log "GET /finance/transactions/ HTTP/1.1" 302 0
+INFO 2026-01-23 20:12:37,415 log "GET /login/?next=/finance/transactions/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:12:37,455 log "GET /operations/lessons/ HTTP/1.1" 302 0
+INFO 2026-01-23 20:12:37,463 log "GET /login/?next=/operations/lessons/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:12:37,499 log "GET /core/settings/ HTTP/1.1" 302 0
+INFO 2026-01-23 20:12:37,506 log "GET /login/?next=/core/settings/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:14:05,498 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 20:14:09,228 log "GET / HTTP/1.1" 200 24109
+INFO 2026-01-23 20:14:16,003 log "GET / HTTP/1.1" 200 24109
+INFO 2026-01-23 20:14:18,071 log "GET /users/ HTTP/1.1" 200 88539
+INFO 2026-01-23 20:14:19,850 log "GET /automation/templates/ HTTP/1.1" 200 17678
+INFO 2026-01-23 20:14:22,464 log "GET /users/ HTTP/1.1" 200 88539
+INFO 2026-01-23 20:18:07,979 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-23 20:18:07,988 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:18:08,042 log "GET /users/ HTTP/1.1" 302 0
+INFO 2026-01-23 20:18:08,050 log "GET /login/?next=/users/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:18:08,107 log "GET /finance/transactions/ HTTP/1.1" 302 0
+INFO 2026-01-23 20:18:08,116 log "GET /login/?next=/finance/transactions/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:18:08,166 log "GET /operations/lessons/ HTTP/1.1" 302 0
+INFO 2026-01-23 20:18:08,175 log "GET /login/?next=/operations/lessons/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:18:08,245 log "GET /core/settings/ HTTP/1.1" 302 0
+INFO 2026-01-23 20:18:08,262 log "GET /login/?next=/core/settings/ HTTP/1.1" 200 5409
+INFO 2026-01-23 20:18:08,320 log "GET /crm/pipeline/ HTTP/1.1" 302 0
+INFO 2026-01-23 20:18:08,327 log "GET /login/?next=/crm/pipeline/ HTTP/1.1" 200 5409
+INFO 2026-01-23 22:33:31,880 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 22:33:36,578 log "GET / HTTP/1.1" 200 23932
+INFO 2026-01-23 22:34:46,055 log "GET / HTTP/1.1" 200 23932
+INFO 2026-01-23 22:34:51,390 log "GET /users/ HTTP/1.1" 200 88362
+INFO 2026-01-23 22:34:52,963 log "GET /automation/templates/ HTTP/1.1" 200 17501
+INFO 2026-01-23 22:34:55,502 log "GET /crm/pipeline/ HTTP/1.1" 200 20442
+INFO 2026-01-23 22:34:59,980 log "GET /finance/hr/attendance/ HTTP/1.1" 200 37927
+INFO 2026-01-23 22:35:03,355 log "GET /finance/supplies/ HTTP/1.1" 200 27086
+INFO 2026-01-23 22:35:09,160 log "GET /finance/receipts/pending/ HTTP/1.1" 200 23243
+INFO 2026-01-23 22:35:16,898 log "GET /core/settings/ HTTP/1.1" 200 47218
+INFO 2026-01-23 22:35:22,455 log "GET /core/history/ HTTP/1.1" 200 101767
+INFO 2026-01-23 22:39:12,296 log "GET /core/history/ HTTP/1.1" 302 0
+INFO 2026-01-23 22:39:12,306 log "GET /login/?next=/core/history/ HTTP/1.1" 200 5409
+INFO 2026-01-23 23:26:36,854 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:26:42,684 log "GET / HTTP/1.1" 200 23932
+INFO 2026-01-23 23:26:42,944 log "GET /static/css/style.css HTTP/1.1" 200 32875
+INFO 2026-01-23 23:26:51,716 log "GET /users/ HTTP/1.1" 200 88362
+INFO 2026-01-23 23:26:53,249 log "GET /automation/templates/ HTTP/1.1" 200 17501
+INFO 2026-01-23 23:26:54,859 log "GET /crm/pipeline/ HTTP/1.1" 200 20442
+INFO 2026-01-23 23:26:57,209 log "GET /crm/stages/ HTTP/1.1" 200 19501
+INFO 2026-01-23 23:27:02,721 log "GET /crm/sources/ HTTP/1.1" 200 17152
+INFO 2026-01-23 23:27:04,843 log "GET /groups/ HTTP/1.1" 200 36144
+INFO 2026-01-23 23:27:07,577 log "GET /courses/ HTTP/1.1" 200 17483
+INFO 2026-01-23 23:27:09,427 log "GET /rooms/ HTTP/1.1" 200 17717
+INFO 2026-01-23 23:27:10,747 log "GET /edu/materials/ HTTP/1.1" 200 22240
+WARNING 2026-01-23 23:27:11,114 log "GET /favicon.ico HTTP/1.1" 404 10093
+INFO 2026-01-23 23:27:13,292 log "GET /operations/lessons/ HTTP/1.1" 200 30558
+INFO 2026-01-23 23:27:17,133 log "GET /operations/schedule/ HTTP/1.1" 200 67821
+INFO 2026-01-23 23:27:19,280 log "GET /operations/ratings/teachers/ HTTP/1.1" 200 17341
+INFO 2026-01-23 23:27:22,766 log "GET /operations/ratings/teachers/ HTTP/1.1" 200 17341
+INFO 2026-01-23 23:27:23,829 log "GET /operations/ratings/teachers/ HTTP/1.1" 200 17341
+INFO 2026-01-23 23:27:26,015 log "GET /operations/ratings/students/ HTTP/1.1" 200 17987
+INFO 2026-01-23 23:27:28,760 log "GET /operations/shop/ HTTP/1.1" 200 18144
+INFO 2026-01-23 23:27:31,590 log "GET /finance/accounts/ HTTP/1.1" 200 18063
+INFO 2026-01-23 23:27:33,630 log "GET /finance/categories/ HTTP/1.1" 200 18869
+INFO 2026-01-23 23:27:36,163 log "GET /finance/transactions/ HTTP/1.1" 200 24359
+INFO 2026-01-23 23:27:38,187 log "GET /finance/reports/ HTTP/1.1" 200 18696
+INFO 2026-01-23 23:27:40,136 log "GET /finance/payroll/ HTTP/1.1" 200 38048
+INFO 2026-01-23 23:27:42,037 log "GET /finance/hr/attendance/ HTTP/1.1" 200 37927
+INFO 2026-01-23 23:27:44,657 log "GET /finance/supplies/ HTTP/1.1" 200 27086
+INFO 2026-01-23 23:27:46,733 log "GET /finance/payroll/ HTTP/1.1" 200 38048
+INFO 2026-01-23 23:27:48,192 log "GET /finance/reports/ HTTP/1.1" 200 18696
+INFO 2026-01-23 23:28:04,495 log "GET /finance/transactions/ HTTP/1.1" 200 24359
+INFO 2026-01-23 23:28:06,428 log "GET /finance/categories/ HTTP/1.1" 200 18869
+INFO 2026-01-23 23:28:15,373 log "GET /finance/accounts/ HTTP/1.1" 200 18063
+INFO 2026-01-23 23:28:18,554 log "GET /operations/shop/ HTTP/1.1" 200 18144
+INFO 2026-01-23 23:28:19,837 log "GET /finance/accounts/ HTTP/1.1" 200 18063
+INFO 2026-01-23 23:28:28,211 log "GET /operations/shop/ HTTP/1.1" 200 18144
+INFO 2026-01-23 23:28:29,991 log "GET /operations/ratings/students/ HTTP/1.1" 200 17987
+INFO 2026-01-23 23:28:31,971 log "GET /operations/ratings/teachers/ HTTP/1.1" 200 17341
+INFO 2026-01-23 23:28:42,222 log "GET /operations/schedule/ HTTP/1.1" 200 67821
+INFO 2026-01-23 23:28:43,638 log "GET /operations/lessons/ HTTP/1.1" 200 30558
+INFO 2026-01-23 23:28:45,563 log "GET /edu/materials/ HTTP/1.1" 200 22240
+INFO 2026-01-23 23:28:47,045 log "GET /courses/ HTTP/1.1" 200 17483
+INFO 2026-01-23 23:28:49,632 log "GET /rooms/ HTTP/1.1" 200 17717
+INFO 2026-01-23 23:28:51,764 log "GET /courses/ HTTP/1.1" 200 17483
+INFO 2026-01-23 23:28:53,192 log "GET /rooms/ HTTP/1.1" 200 17717
+INFO 2026-01-23 23:29:04,811 log "GET /courses/ HTTP/1.1" 200 17483
+INFO 2026-01-23 23:29:18,737 log "GET /groups/ HTTP/1.1" 200 36144
+INFO 2026-01-23 23:29:20,981 log "GET /crm/sources/ HTTP/1.1" 200 17152
+INFO 2026-01-23 23:29:22,246 log "GET /crm/stages/ HTTP/1.1" 200 19501
+INFO 2026-01-23 23:29:23,749 log "GET /crm/pipeline/ HTTP/1.1" 200 20442
+INFO 2026-01-23 23:35:14,318 log "GET /finance/reports/ HTTP/1.1" 302 0
+INFO 2026-01-23 23:35:14,342 log "GET /login/?next=/finance/reports/ HTTP/1.1" 200 5409
+INFO 2026-01-23 23:35:14,388 log "GET /finance/categories/ HTTP/1.1" 302 0
+INFO 2026-01-23 23:35:14,395 log "GET /login/?next=/finance/categories/ HTTP/1.1" 200 5409
+INFO 2026-01-23 23:35:14,432 log "GET /finance/accounts/ HTTP/1.1" 302 0
+INFO 2026-01-23 23:35:14,440 log "GET /login/?next=/finance/accounts/ HTTP/1.1" 200 5409
+INFO 2026-01-23 23:35:14,479 log "GET /operations/ratings/teachers/ HTTP/1.1" 302 0
+INFO 2026-01-23 23:35:14,485 log "GET /login/?next=/operations/ratings/teachers/ HTTP/1.1" 200 5409
+INFO 2026-01-23 23:35:14,510 log "GET /rooms/ HTTP/1.1" 302 0
+INFO 2026-01-23 23:35:14,516 log "GET /login/?next=/rooms/ HTTP/1.1" 200 5409
+INFO 2026-01-23 23:35:14,550 log "GET /courses/ HTTP/1.1" 302 0
+INFO 2026-01-23 23:35:14,555 log "GET /login/?next=/courses/ HTTP/1.1" 200 5409
+INFO 2026-01-23 23:35:35,541 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:35:38,989 log "GET / HTTP/1.1" 200 23932
+INFO 2026-01-23 23:35:41,765 log "GET /users/ HTTP/1.1" 200 88362
+INFO 2026-01-23 23:35:43,022 log "GET /automation/templates/ HTTP/1.1" 200 17501
+INFO 2026-01-23 23:35:45,275 log "GET /crm/stages/ HTTP/1.1" 200 19501
+INFO 2026-01-23 23:35:46,992 log "GET /crm/sources/ HTTP/1.1" 200 17152
+INFO 2026-01-23 23:35:48,962 log "GET /groups/ HTTP/1.1" 200 36144
+INFO 2026-01-23 23:35:51,388 log "GET /courses/ HTTP/1.1" 200 17920
+INFO 2026-01-23 23:35:53,156 log "GET /groups/ HTTP/1.1" 200 36144
+INFO 2026-01-23 23:35:59,699 log "GET /courses/ HTTP/1.1" 200 17920
+INFO 2026-01-23 23:36:01,284 log "GET /edu/materials/ HTTP/1.1" 200 22240
+INFO 2026-01-23 23:36:03,194 log "GET /rooms/ HTTP/1.1" 200 17839
+INFO 2026-01-23 23:36:05,285 log "GET /operations/lessons/ HTTP/1.1" 200 30558
+INFO 2026-01-23 23:36:08,333 log "GET /operations/schedule/ HTTP/1.1" 200 67821
+INFO 2026-01-23 23:36:10,864 log "GET /operations/ratings/teachers/ HTTP/1.1" 200 17370
+INFO 2026-01-23 23:36:12,555 log "GET /operations/ratings/students/ HTTP/1.1" 200 17987
+INFO 2026-01-23 23:36:13,925 log "GET /operations/shop/ HTTP/1.1" 200 18144
+INFO 2026-01-23 23:36:16,189 log "GET /finance/accounts/ HTTP/1.1" 200 18149
+INFO 2026-01-23 23:36:18,204 log "GET /finance/categories/ HTTP/1.1" 200 19013
+INFO 2026-01-23 23:36:20,254 log "GET /finance/transactions/ HTTP/1.1" 200 24359
+INFO 2026-01-23 23:36:21,795 log "GET /finance/reports/ HTTP/1.1" 200 18917
+INFO 2026-01-23 23:36:23,226 log "GET /finance/payroll/ HTTP/1.1" 200 38048
+INFO 2026-01-23 23:36:25,171 log "GET /finance/hr/attendance/ HTTP/1.1" 200 37927
+INFO 2026-01-23 23:36:26,808 log "GET /finance/supplies/ HTTP/1.1" 200 27086
+INFO 2026-01-23 23:36:29,896 log "GET /finance/receipts/pending/ HTTP/1.1" 200 23243
+WARNING 2026-01-23 23:36:32,514 services Notification template not found: PAYMENT_RECEIVED
+INFO 2026-01-23 23:36:32,524 log "POST /finance/receipts/2/verify/ HTTP/1.1" 302 0
+INFO 2026-01-23 23:36:32,547 log "GET /finance/transactions/ HTTP/1.1" 200 24842
+INFO 2026-01-23 23:36:36,947 log "GET /finance/receipts/pending/ HTTP/1.1" 200 20105
+INFO 2026-01-23 23:36:38,397 log "GET /core/settings/ HTTP/1.1" 200 47218
+INFO 2026-01-23 23:36:49,998 log "GET /core/history/ HTTP/1.1" 200 95817
+INFO 2026-01-23 23:37:04,192 log "GET /users/ HTTP/1.1" 200 88362
+INFO 2026-01-23 23:37:06,566 log "GET / HTTP/1.1" 200 23932
+INFO 2026-01-23 23:37:10,135 log "GET /users/students/add/ HTTP/1.1" 200 26571
+ERROR 2026-01-23 23:37:49,767 log "POST /users/students/add/ HTTP/1.1" 500 101793
+INFO 2026-01-23 23:41:41,601 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 23:41:41,565 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 23:41:41,608 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 23:41:41,642 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\crm\views.py changed, reloading.
+INFO 2026-01-23 23:41:41,695 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\crm\views.py changed, reloading.
+INFO 2026-01-23 23:41:41,699 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 23:41:41,697 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\crm\views.py changed, reloading.
+INFO 2026-01-23 23:41:41,717 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\crm\views.py changed, reloading.
+INFO 2026-01-23 23:41:41,765 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\crm\views.py changed, reloading.
+INFO 2026-01-23 23:41:41,978 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\crm\views.py changed, reloading.
+INFO 2026-01-23 23:41:42,901 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py changed, reloading.
+INFO 2026-01-23 23:41:42,953 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\crm\views.py changed, reloading.
+INFO 2026-01-23 23:41:42,987 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\crm\views.py changed, reloading.
+INFO 2026-01-23 23:41:48,406 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:41:51,276 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:41:51,676 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:41:52,533 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:41:52,570 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:41:52,752 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:41:53,272 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:41:53,308 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:41:53,374 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:41:53,948 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:41:54,201 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:41:54,229 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:41:54,239 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:45:50,394 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:45:54,730 log "GET / HTTP/1.1" 200 24476
+INFO 2026-01-23 23:46:00,479 log "GET /users/ HTTP/1.1" 200 88362
+INFO 2026-01-23 23:46:07,172 log "GET / HTTP/1.1" 200 23932
+INFO 2026-01-23 23:46:08,819 log "GET /users/students/add/ HTTP/1.1" 200 26571
+INFO 2026-01-23 23:46:29,637 log "POST /users/students/add/ HTTP/1.1" 200 27715
+INFO 2026-01-23 23:46:42,037 log "POST /users/students/add/ HTTP/1.1" 302 0
+INFO 2026-01-23 23:46:42,165 log "GET /users/ HTTP/1.1" 200 92514
+WARNING 2026-01-23 23:46:57,637 log "GET /logout/ HTTP/1.1" 405 0
+WARNING 2026-01-23 23:47:00,803 log "GET /logout/ HTTP/1.1" 405 0
+INFO 2026-01-23 23:51:23,086 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:51:23,119 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:51:23,201 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:51:23,403 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:51:23,401 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:51:23,852 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:51:23,919 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:51:23,886 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:51:23,921 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:51:24,054 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:51:24,068 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:51:24,066 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:51:24,068 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:51:24,072 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:51:31,067 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:51:32,184 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:51:32,304 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:51:32,413 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:51:33,094 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:51:36,251 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:51:37,279 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:51:37,346 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:51:39,237 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:51:39,898 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:51:40,647 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:51:40,930 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:51:41,327 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:51:41,603 autoreload Watching for file changes with StatReloader
+WARNING 2026-01-23 23:53:23,752 log "GET /logout/ HTTP/1.1" 405 0
+INFO 2026-01-23 23:54:31,667 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\views.py changed, reloading.
+INFO 2026-01-23 23:54:31,769 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\views.py changed, reloading.
+INFO 2026-01-23 23:54:31,773 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\views.py changed, reloading.
+INFO 2026-01-23 23:54:32,193 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\views.py changed, reloading.
+INFO 2026-01-23 23:54:32,219 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\views.py changed, reloading.
+INFO 2026-01-23 23:54:32,410 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\views.py changed, reloading.
+INFO 2026-01-23 23:54:32,429 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\views.py changed, reloading.
+INFO 2026-01-23 23:54:32,422 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:54:32,704 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:54:32,837 autoreload C:\Users\shona\PycharmProjects\Crmtizim\config\urls.py changed, reloading.
+INFO 2026-01-23 23:54:32,839 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\views.py changed, reloading.
+INFO 2026-01-23 23:54:32,844 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\views.py changed, reloading.
+INFO 2026-01-23 23:54:32,844 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\views.py changed, reloading.
+INFO 2026-01-23 23:54:37,751 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:54:37,886 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:54:37,888 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:54:37,889 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:54:37,893 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:54:38,218 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:54:38,565 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:54:39,413 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:54:41,629 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:54:43,325 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:54:44,609 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:54:44,698 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:54:45,411 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:54:45,438 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:55:02,596 log "GET /logout/ HTTP/1.1" 200 4766
+INFO 2026-01-23 23:55:22,071 log "GET /logout/ HTTP/1.1" 200 4766
+INFO 2026-01-23 23:56:11,326 autoreload Watching for file changes with StatReloader
+INFO 2026-01-23 23:56:14,016 log "GET / HTTP/1.1" 200 23932
+INFO 2026-01-23 23:56:14,097 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-01-23 23:56:19,278 log "GET /logout/ HTTP/1.1" 200 4766
+INFO 2026-01-23 23:56:24,581 log "GET /login/ HTTP/1.1" 200 5409
+INFO 2026-01-23 23:56:33,775 log "POST /login/ HTTP/1.1" 200 5850
+INFO 2026-01-23 23:56:45,539 log "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-23 23:56:45,579 log "GET / HTTP/1.1" 200 23932
+INFO 2026-01-23 23:57:01,970 log "GET /logout/ HTTP/1.1" 200 4766
+INFO 2026-01-23 23:57:06,854 log "GET /login/ HTTP/1.1" 200 5409
+INFO 2026-01-23 23:57:23,337 log "POST /login/ HTTP/1.1" 200 5850
+INFO 2026-01-23 23:57:34,277 log "POST /login/ HTTP/1.1" 200 5850
+INFO 2026-01-23 23:57:37,532 log "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-23 23:57:37,561 log "GET / HTTP/1.1" 200 23932
+INFO 2026-01-23 23:57:41,212 log "GET /users/ HTTP/1.1" 200 91969
+INFO 2026-01-23 23:57:50,751 log "GET /users/?q=&role=student HTTP/1.1" 200 55887
+INFO 2026-01-23 23:58:03,306 log "GET /logout/ HTTP/1.1" 200 4766
+INFO 2026-01-23 23:58:06,129 log "GET /login/ HTTP/1.1" 200 5409
+INFO 2026-01-23 23:58:16,019 log "POST /login/ HTTP/1.1" 302 0
+ERROR 2026-01-23 23:58:16,470 log "GET / HTTP/1.1" 500 148226
+INFO 2026-01-24 00:00:35,644 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:35,712 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:35,756 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:35,789 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:35,846 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:35,854 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:36,253 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:36,304 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:36,534 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:36,533 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:36,520 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:36,533 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:36,747 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:36,699 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:36,757 autoreload C:\Users\shona\PycharmProjects\Crmtizim\apps\core\dashboards.py changed, reloading.
+INFO 2026-01-24 00:00:42,171 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:00:43,060 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:00:43,271 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:00:43,363 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:00:43,401 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:00:43,836 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:00:45,291 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:00:47,282 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:00:47,297 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:00:47,594 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:00:47,710 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:00:47,715 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:00:47,776 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:00:47,824 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:00:47,825 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:02:43,846 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-24 00:02:43,865 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-24 00:04:13,189 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:04:19,884 log "GET / HTTP/1.1" 200 26225
+INFO 2026-01-24 00:04:40,432 log "GET /operations/shop/ HTTP/1.1" 200 15327
+INFO 2026-01-24 00:04:44,021 log "GET /operations/ratings/students/ HTTP/1.1" 200 22800
+INFO 2026-01-24 00:04:53,197 log "GET /operations/ratings/teachers/ HTTP/1.1" 200 26088
+INFO 2026-01-24 00:05:14,147 log "GET / HTTP/1.1" 200 26225
+INFO 2026-01-24 00:05:23,262 log "GET /logout/ HTTP/1.1" 200 4766
+INFO 2026-01-24 00:05:26,056 log "GET /login/ HTTP/1.1" 200 5409
+INFO 2026-01-24 00:05:30,491 log "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-24 00:05:30,579 log "GET / HTTP/1.1" 200 23932
+INFO 2026-01-24 00:05:38,469 log "GET /users/ HTTP/1.1" 200 91969
+INFO 2026-01-24 00:06:01,115 log "GET /users/staff/add/ HTTP/1.1" 200 23962
+INFO 2026-01-24 00:06:09,057 log "GET /users/ HTTP/1.1" 200 91969
+INFO 2026-01-24 00:06:12,421 log "GET /users/teachers/add/ HTTP/1.1" 200 23999
+INFO 2026-01-24 00:06:21,177 log "GET /users/ HTTP/1.1" 200 91969
+INFO 2026-01-24 00:06:32,016 log "GET /users/?q=&role=parent HTTP/1.1" 200 26447
+INFO 2026-01-24 00:06:48,233 log "GET /logout/ HTTP/1.1" 200 4766
+INFO 2026-01-24 00:06:50,265 log "GET /login/ HTTP/1.1" 200 5409
+INFO 2026-01-24 00:06:56,430 log "POST /login/ HTTP/1.1" 200 5850
+INFO 2026-01-24 00:07:00,692 log "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-24 00:07:00,790 log "GET / HTTP/1.1" 200 23932
+INFO 2026-01-24 00:07:08,875 log "GET /users/ HTTP/1.1" 200 91969
+INFO 2026-01-24 00:16:34,805 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-24 00:16:34,815 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-24 00:17:02,398 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-24 00:17:02,406 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-24 00:20:13,326 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:20:18,480 log "GET / HTTP/1.1" 200 23932
+INFO 2026-01-24 00:20:23,700 log "GET /users/ HTTP/1.1" 200 91969
+INFO 2026-01-24 00:20:27,634 log "GET /users/students/add/ HTTP/1.1" 200 26571
+INFO 2026-01-24 00:21:04,690 log "POST /users/students/add/ HTTP/1.1" 200 27732
+INFO 2026-01-24 00:21:04,733 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-01-24 00:21:15,496 log "POST /users/students/add/ HTTP/1.1" 302 0
+INFO 2026-01-24 00:21:15,558 log "GET /users/ HTTP/1.1" 200 99154
+INFO 2026-01-24 00:21:22,622 log "GET /logout/ HTTP/1.1" 200 4766
+INFO 2026-01-24 00:21:24,763 log "GET /login/ HTTP/1.1" 200 5409
+INFO 2026-01-24 00:21:41,433 log "POST /login/ HTTP/1.1" 200 5850
+INFO 2026-01-24 00:21:52,316 log "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-24 00:21:52,420 log "GET / HTTP/1.1" 200 23934
+INFO 2026-01-24 00:21:54,838 log "GET /users/ HTTP/1.1" 200 98593
+INFO 2026-01-24 00:22:02,932 log "GET /users/?q=&role=parent HTTP/1.1" 200 29463
+INFO 2026-01-24 00:22:20,699 log "GET /logout/ HTTP/1.1" 200 4766
+INFO 2026-01-24 00:22:23,295 log "GET /login/ HTTP/1.1" 200 5409
+INFO 2026-01-24 00:22:35,624 log "POST /login/ HTTP/1.1" 200 5850
+INFO 2026-01-24 00:22:47,976 log "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-24 00:22:48,057 log "GET / HTTP/1.1" 200 26227
+INFO 2026-01-24 00:23:17,339 log "GET /logout/ HTTP/1.1" 200 4766
+INFO 2026-01-24 00:23:19,154 log "GET /login/ HTTP/1.1" 200 5409
+INFO 2026-01-24 00:23:32,171 log "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-24 00:23:32,197 log "GET / HTTP/1.1" 200 21698
+INFO 2026-01-24 00:23:52,284 log "GET /operations/ratings/teachers/ HTTP/1.1" 200 26087
+INFO 2026-01-24 00:23:58,742 log "GET /operations/ratings/students/ HTTP/1.1" 200 25380
+INFO 2026-01-24 00:24:11,608 log "GET /operations/ratings/teachers/ HTTP/1.1" 200 26087
+INFO 2026-01-24 00:24:13,931 log "GET /operations/shop/ HTTP/1.1" 200 15326
+INFO 2026-01-24 00:24:16,540 log "GET /operations/ratings/students/ HTTP/1.1" 200 25380
+INFO 2026-01-24 00:24:17,772 log "GET /operations/ratings/teachers/ HTTP/1.1" 200 26087
+INFO 2026-01-24 00:24:20,548 log "GET / HTTP/1.1" 200 21698
+INFO 2026-01-24 00:27:58,679 log "GET / HTTP/1.1" 302 0
+INFO 2026-01-24 00:27:58,688 log "GET /login/?next=/ HTTP/1.1" 200 5409
+INFO 2026-01-24 00:31:34,290 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 00:31:38,572 log "GET / HTTP/1.1" 200 21698
+INFO 2026-01-24 00:31:42,458 log "GET / HTTP/1.1" 200 21698
+INFO 2026-01-24 00:36:40,435 log "GET / HTTP/1.1" 200 21698
+INFO 2026-01-24 00:36:42,954 log "GET / HTTP/1.1" 200 21698
+WARNING 2026-01-24 00:36:52,269 log "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 10204
+INFO 2026-01-24 01:05:19,168 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 01:05:50,023 log "GET / HTTP/1.1" 200 21605
+INFO 2026-01-24 01:05:50,156 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-01-24 01:05:54,506 log "GET /operations/ratings/teachers/ HTTP/1.1" 200 26087
+INFO 2026-01-24 01:05:57,707 log "GET / HTTP/1.1" 200 21605
+INFO 2026-01-24 01:06:51,932 log "GET /logout/ HTTP/1.1" 200 4766
+INFO 2026-01-24 01:06:57,417 log "GET /login/ HTTP/1.1" 200 5409
+INFO 2026-01-24 01:07:29,111 log "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-24 01:07:29,166 log "GET / HTTP/1.1" 200 23934
+INFO 2026-01-24 01:07:35,508 log "GET /users/teachers/add/ HTTP/1.1" 200 23999
+INFO 2026-01-24 01:08:15,982 log "POST /users/teachers/add/ HTTP/1.1" 200 24955
+INFO 2026-01-24 01:08:25,782 log "POST /users/teachers/add/ HTTP/1.1" 302 0
+INFO 2026-01-24 01:08:25,824 log "GET /users/ HTTP/1.1" 200 102146
+INFO 2026-01-24 01:08:31,835 log "GET /logout/ HTTP/1.1" 200 4766
+INFO 2026-01-24 01:08:33,887 log "GET /login/ HTTP/1.1" 200 5409
+INFO 2026-01-24 01:08:41,805 log "POST /login/ HTTP/1.1" 302 0
+INFO 2026-01-24 01:08:41,853 log "GET / HTTP/1.1" 200 22233
+INFO 2026-01-24 01:08:51,074 log "GET /groups/ HTTP/1.1" 200 22588
+INFO 2026-01-24 01:08:53,409 log "GET / HTTP/1.1" 200 22233
+INFO 2026-01-24 01:09:14,563 log "GET /groups/ HTTP/1.1" 200 22588
+INFO 2026-01-24 01:09:16,570 log "GET /courses/ HTTP/1.1" 200 15910
+INFO 2026-01-24 01:09:18,280 log "GET /rooms/ HTTP/1.1" 200 15829
+INFO 2026-01-24 01:09:21,084 log "GET /courses/ HTTP/1.1" 200 15910
+INFO 2026-01-24 01:09:24,482 log "GET /courses/add/ HTTP/1.1" 200 16742
+INFO 2026-01-24 01:09:28,808 log "GET /rooms/ HTTP/1.1" 200 15829
+INFO 2026-01-24 01:09:32,099 log "GET /edu/materials/ HTTP/1.1" 200 20230
+INFO 2026-01-24 01:09:36,892 log "GET /operations/lessons/ HTTP/1.1" 200 17809
+INFO 2026-01-24 01:09:40,702 log "GET /operations/schedule/ HTTP/1.1" 200 20521
+INFO 2026-01-24 01:09:44,057 log "GET /operations/ratings/teachers/ HTTP/1.1" 200 29278
+INFO 2026-01-24 01:09:46,301 log "GET /operations/ratings/students/ HTTP/1.1" 200 26188
+INFO 2026-01-24 01:09:49,168 log "GET /operations/shop/ HTTP/1.1" 200 16134
+INFO 2026-01-24 01:11:41,253 autoreload Watching for file changes with StatReloader
+INFO 2026-01-24 01:11:45,345 log "GET / HTTP/1.1" 200 22233
+INFO 2026-01-24 01:12:02,244 log "GET /groups/ HTTP/1.1" 200 22588
+INFO 2026-01-24 01:12:06,621 log "GET /courses/ HTTP/1.1" 200 15910
+INFO 2026-01-24 01:12:08,011 log "GET /groups/ HTTP/1.1" 200 22588
+INFO 2026-01-24 01:12:09,909 log "GET /courses/ HTTP/1.1" 200 15910
+INFO 2026-01-24 01:12:12,365 log "GET /groups/ HTTP/1.1" 200 22588
+INFO 2026-01-24 01:12:13,732 log "GET /courses/ HTTP/1.1" 200 15910
+INFO 2026-01-24 01:12:14,849 log "GET /groups/ HTTP/1.1" 200 22588
+INFO 2026-01-24 01:16:28,065 log "GET /courses/ HTTP/1.1" 200 15910
+INFO 2026-01-24 01:19:26,304 log "GET /rooms/ HTTP/1.1" 200 15829
+INFO 2026-01-24 01:19:27,942 log "GET /courses/ HTTP/1.1" 200 15910
+INFO 2026-01-24 01:19:35,251 log "GET /rooms/ HTTP/1.1" 200 15829
+INFO 2026-01-24 01:19:36,842 log "GET /courses/ HTTP/1.1" 200 15910
+INFO 2026-01-24 01:19:50,400 log "GET /rooms/ HTTP/1.1" 200 15829
+INFO 2026-01-24 01:20:01,922 log "GET /edu/materials/ HTTP/1.1" 200 20230
+INFO 2026-01-24 01:23:50,036 log "GET /operations/lessons/ HTTP/1.1" 200 17809
+INFO 2026-01-24 01:23:57,652 log "GET /operations/schedule/ HTTP/1.1" 200 20521
+INFO 2026-01-24 01:24:00,124 log "GET /operations/lessons/ HTTP/1.1" 200 17809
+INFO 2026-01-24 01:24:09,266 log "GET /operations/ratings/teachers/ HTTP/1.1" 200 29278
+INFO 2026-01-24 01:24:12,319 log "GET /operations/shop/ HTTP/1.1" 200 16134
+INFO 2026-01-24 01:24:13,879 log "GET /operations/lessons/ HTTP/1.1" 200 17809
+INFO 2026-01-24 01:24:46,801 log "GET /groups/ HTTP/1.1" 200 22588

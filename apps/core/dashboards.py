@@ -501,7 +501,7 @@ def student_dashboard(request):
         is_active=True,
         is_deleted=False
     ).annotate(
-        xp_total=Sum('attendances__xp_points')
+        xp_total=Sum('lesson_attendances__xp_points')
     ).exclude(xp_total__isnull=True).order_by('-xp_total')[:10]
     
     # O'quvchining reytingdagi o'rni

@@ -8,51 +8,50 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Kassalar va Hisoblar 💰</h1>
-            <p class="text-gray-500">Tashkilot kassalari va hisob raqamlari</p>
+            <h1 class="text-2xl font-bold text-white">Kassalar va Hisoblar 💰</h1>
+            <p class="text-slate-400">Tashkilot kassalari va hisob raqamlari</p>
         </div>
         <a href="{% url 'finance:account_create' %}"
-            class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-indigo-700 shadow-sm flex items-center gap-2">
+            class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-violet-600 text-white rounded-lg hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2">
             <i class="ph ph-plus"></i> Yangi kassa
         </a>
     </div>
 
     <!-- Total Balance -->
-    <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-8 text-white">
-        <p class="text-green-100 text-sm">Jami balans</p>
-        <p class="text-4xl font-bold mt-2">{{ total_balance|floatformat:0 }} <span
-                class="text-xl font-normal text-green-200">UZS</span></p>
+    <div class="bg-gradient-to-r from-emerald-500 to-green-600 rounded-2xl p-8 text-white">
+        <p class="text-emerald-100 text-sm">Jami balans</p>
+        <p class="text-4xl font-bold mt-2">{{ total_balance|floatformat:0 }} <span class="text-xl font-normal text-emerald-200">UZS</span></p>
     </div>
 
     <!-- Accounts Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for account in accounts %}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition">
+        <div class="rounded-2xl border border-[#1c3255] bg-gradient-to-br from-[#152642] to-[#0f1f35] p-6 hover:border-blue-500/50 transition">
             <div class="flex items-center justify-between mb-4">
-                <div class="p-3 rounded-lg
-                    {% if account.account_type == 'cash' %}bg-green-50 text-green-600
-                    {% elif account.account_type == 'bank' %}bg-blue-50 text-blue-600
-                    {% elif account.account_type == 'card' %}bg-purple-50 text-purple-600
-                    {% else %}bg-orange-50 text-orange-600{% endif %}">
+                <div class="p-3 rounded-xl
+                    {% if account.account_type == 'cash' %}bg-emerald-500/20 text-emerald-400
+                    {% elif account.account_type == 'bank' %}bg-blue-500/20 text-blue-400
+                    {% elif account.account_type == 'card' %}bg-purple-500/20 text-purple-400
+                    {% else %}bg-orange-500/20 text-orange-400{% endif %}">
                     {% if account.account_type == 'cash' %}<i class="ph ph-money text-2xl"></i>
                     {% elif account.account_type == 'bank' %}<i class="ph ph-bank text-2xl"></i>
                     {% elif account.account_type == 'card' %}<i class="ph ph-credit-card text-2xl"></i>
                     {% else %}<i class="ph ph-wallet text-2xl"></i>{% endif %}
                 </div>
-                <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full font-medium">
+                <span class="px-2 py-1 text-xs bg-[#1c3255] text-slate-400 rounded-full font-medium">
                     {{ account.get_account_type_display }}
                 </span>
             </div>
-            <h3 class="text-lg font-bold text-gray-800 mb-1">{{ account.name }}</h3>
-            <p class="text-2xl font-bold {% if account.balance < 0 %}text-red-600{% else %}text-gray-800{% endif %}">
-                {{ account.balance|floatformat:0 }} <span class="text-sm font-normal text-gray-400">UZS</span>
+            <h3 class="text-lg font-bold text-white mb-1">{{ account.name }}</h3>
+            <p class="text-2xl font-bold {% if account.balance < 0 %}text-rose-400{% else %}text-white{% endif %}">
+                {{ account.balance|floatformat:0 }} <span class="text-sm font-normal text-slate-500">UZS</span>
             </p>
         </div>
         {% empty %}
-        <div class="col-span-3 bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
-            <i class="ph ph-vault text-5xl text-gray-300 mb-4"></i>
-            <h3 class="text-lg font-bold text-gray-800 mb-2">Kassalar topilmadi</h3>
-            <p class="text-gray-500">Yangi kassa yaratish uchun tugmani bosing</p>
+        <div class="col-span-3 rounded-2xl border border-[#1c3255] bg-gradient-to-br from-[#152642] to-[#0f1f35] p-12 text-center">
+            <i class="ph ph-vault text-5xl text-slate-600 mb-4"></i>
+            <h3 class="text-lg font-bold text-white mb-2">Kassalar topilmadi</h3>
+            <p class="text-slate-500">Yangi kassa yaratish uchun tugmani bosing</p>
         </div>
         {% endfor %}
     </div>
