@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import export_views
 
 app_name = 'users'
 
@@ -14,4 +15,10 @@ urlpatterns = [
     path('staff/add/', views.staff_create, name='staff_create'),
     path('<int:pk>/edit/', views.user_update, name='user_update'),
     path('<int:pk>/delete/', views.user_delete, name='user_delete'),
+
+    # Export (PDF/Excel)
+    path('export/excel/', export_views.export_users_excel, name='export_users_excel'),
+    path('export/pdf/', export_views.export_users_pdf, name='export_users_pdf'),
+    path('students/export/excel/', export_views.export_students_excel, name='export_students_excel'),
+    path('teachers/export/excel/', export_views.export_teachers_excel, name='export_teachers_excel'),
 ]

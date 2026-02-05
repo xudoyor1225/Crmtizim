@@ -8,18 +8,28 @@
     <!-- SARLAVHA + QUICK ACTIONS -->
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                <i class="ph ph-package text-primary-500"></i>
+            <h1 class="text-2xl font-bold text-white flex items-center gap-2">
+                <i class="ph ph-package text-blue-400"></i>
                 Sklad - Sarf Materiallar
             </h1>
-            <p class="text-gray-500 dark:text-gray-400">Resurslarni kuzatish va boshqarish</p>
+            <p class="text-slate-400">Resurslarni kuzatish va boshqarish</p>
         </div>
         <div class="flex gap-2">
             <a href="?low_stock=1"
-                class="inline-flex items-center gap-2 px-4 py-2.5 {% if show_low_stock %}bg-red-500 text-white{% else %}bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400{% endif %} rounded-xl font-medium hover:bg-red-600 hover:text-white transition">
+                class="inline-flex items-center gap-2 px-4 py-2.5 {% if show_low_stock %}bg-rose-500 text-white{% else %}bg-rose-500/20 text-rose-400{% endif %} rounded-xl font-medium hover:bg-rose-600 hover:text-white transition">
                 <i class="ph ph-warning"></i>
                 Tugayapti ({{ low_stock_count }})
             </a>
+            {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
+            <a href="{% url 'finance:supply_category_list' %}"
+                class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1c3255] text-slate-300 rounded-xl font-medium hover:bg-[#234069] transition">
+                <i class="ph ph-folder"></i> Kategoriyalar
+            </a>
+            <a href="{% url 'finance:supply_create' %}"
+                class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition">
+                <i class="ph ph-plus"></i> Yangi material
+            </a>
+            {% endif %}
         </div>
     </div>
 
@@ -162,6 +172,21 @@
                                     title="Chiqim">
                                     <i class="ph ph-minus"></i>
                                 </button>
+                                {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
+                                <!-- Tahrirlash -->
+                                <a href="{% url 'finance:supply_edit' supply.pk %}"
+                                    class="p-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg transition"
+                                    title="Tahrirlash">
+                                    <i class="ph ph-pencil"></i>
+                                </a>
+                                <!-- O'chirish -->
+                                <a href="{% url 'finance:supply_delete' supply.pk %}"
+                                    onclick="return confirm('{{ supply.name }} ni o\'chirmoqchimisiz?')"
+                                    class="p-2 text-white bg-rose-500 hover:bg-rose-600 rounded-lg transition"
+                                    title="O'chirish">
+                                    <i class="ph ph-trash"></i>
+                                </a>
+                                {% endif %}
                             </div>
                         </td>
                     </tr>

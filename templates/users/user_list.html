@@ -102,6 +102,16 @@
                 class="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200 transition">
                 Tozalash
             </a>
+
+            <!-- Export tugmalari -->
+            <a href="{% url 'users:export_users_excel' %}?{{ request.GET.urlencode }}"
+                class="px-4 py-2.5 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition flex items-center gap-2">
+                <i class="ph ph-file-xls"></i> Excel
+            </a>
+            <a href="{% url 'users:export_users_pdf' %}?{{ request.GET.urlencode }}"
+                class="px-4 py-2.5 bg-rose-600 text-white rounded-xl font-medium hover:bg-rose-700 transition flex items-center gap-2">
+                <i class="ph ph-file-pdf"></i> PDF
+            </a>
         </form>
     </div>
 

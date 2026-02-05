@@ -9,10 +9,12 @@
             <h1 class="text-2xl font-bold text-white">Kurslar 📚</h1>
             <p class="text-slate-400">O'quv markazida mavjud kurslar</p>
         </div>
+        {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
         <a href="{% url 'course_create' %}"
             class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-violet-600 text-white rounded-lg hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2">
             <i class="ph ph-plus"></i> Kurs qo'shish
         </a>
+        {% endif %}
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">

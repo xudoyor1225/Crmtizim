@@ -252,8 +252,98 @@ def add_student_payment(request, student_id):
     return render(request, 'finance/student_payment_form.html', {'form': form, 'student': student})
 
 @login_required
+@login_required
 def finance_report(request):
-    return render(request, 'finance/report.html', {})
+    """Moliyaviy hisobot - kirim, chiqim, foyda statistikasi"""
+    from datetime import timedelta
+    from django.db.models.functions import TruncDate
+    from django.db.models import Count
+
+    org = request.organization
+    today = timezone.now().date()
+
+    # Davr tanlash (default: 30 kun)
+    days = int(request.GET.get('days', 30))
+    start_date = today - timedelta(days=days)
+    end_date = today
+
+    # Base queryset
+    transactions = Transaction.objects.filter(
+        is_deleted=False,
+        status='confirmed',
+        created_at__date__gte=start_date,
+        created_at__date__lte=end_date
+    )
+    if org:
+        transactions = transactions.filter(organization=org)
+
+    # Umumiy statistika
+    total_income = transactions.filter(transaction_type='income').aggregate(t=Sum('amount'))['t'] or 0
+    total_expense = transactions.filter(transaction_type='expense').aggregate(t=Sum('amount'))['t'] or 0
+    net_profit = total_income - total_expense
+
+    # Kunlik statistika (grafik uchun)
+    daily_stats = []
+    for i in range(days):
+        day = start_date + timedelta(days=i)
+        day_txs = transactions.filter(created_at__date=day)
+        income = day_txs.filter(transaction_type='income').aggregate(t=Sum('amount'))['t'] or 0
+        expense = day_txs.filter(transaction_type='expense').aggregate(t=Sum('amount'))['t'] or 0
+        daily_stats.append({
+            'date': day,
+            'income': income,
+            'expense': expense,
+        })
+
+    # Maksimal qiymat (grafik scale uchun)
+    max_amount = max([max(d['income'], d['expense']) for d in daily_stats] or [1])
+    for d in daily_stats:
+        d['income_height'] = int((d['income'] / max_amount) * 100) if max_amount > 0 else 0
+        d['expense_height'] = int((d['expense'] / max_amount) * 100) if max_amount > 0 else 0
+
+    # Kategoriya bo'yicha (pie chart uchun)
+    income_by_category = transactions.filter(
+        transaction_type='income',
+        category__isnull=False
+    ).values('category__name').annotate(
+        total=Sum('amount')
+    ).order_by('-total')[:10]
+
+    expense_by_category = transactions.filter(
+        transaction_type='expense',
+        category__isnull=False
+    ).values('category__name').annotate(
+        total=Sum('amount')
+    ).order_by('-total')[:10]
+
+    # Kassalar balansi
+    accounts = Account.objects.filter(is_deleted=False)
+    if org:
+        accounts = accounts.filter(organization=org)
+    total_balance = accounts.aggregate(t=Sum('balance'))['t'] or 0
+
+    # Oxirgi tranzaksiyalar
+    recent_transactions = transactions.select_related(
+        'category', 'student', 'account'
+    ).order_by('-created_at')[:10]
+
+    context = {
+        'start_date': start_date,
+        'end_date': end_date,
+        'days': days,
+        'total_income': total_income,
+        'total_expense': total_expense,
+        'net_profit': net_profit,
+        'daily_stats': daily_stats,
+        'income_by_category': income_by_category,
+        'expense_by_category': expense_by_category,
+        'accounts': accounts,
+        'total_balance': total_balance,
+        'recent_transactions': recent_transactions,
+    }
+
+    return render(request, 'finance/report.html', context)
+
 
 @login_required
 def pending_receipts(request):

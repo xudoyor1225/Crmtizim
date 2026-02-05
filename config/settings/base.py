@@ -1,14 +1,15 @@
 import os
 from pathlib import Path
+from decouple import config, Csv
 
 # 1. PATHS
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # 2. SECURITY
-# ⚠️ MUHIM: Production'da .env faylidan o'qiladi!
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-dev-key-only-for-local-testing-change-this')
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+# .env faylidan o'qiladi
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-key-only-for-local-testing-change-this')
+DEBUG = config('DEBUG', default=True, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 
 # 3. APPS
 INSTALLED_APPS = [
@@ -72,13 +73,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# 4. DATABASE (SQLite)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# 4. DATABASE
+# PostgreSQL yoki SQLite tanlash
+USE_POSTGRES = config('USE_POSTGRES', default=False, cast=bool)
+
+if USE_POSTGRES:
+    # PostgreSQL sozlamalari
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DB_NAME', default='crmtizim_db'),
+            'USER': config('DB_USER', default='crmtizim_user'),
+            'PASSWORD': config('DB_PASSWORD', default=''),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='5432'),
+            'OPTIONS': {
+                'client_encoding': 'UTF8',
+            },
+        }
     }
-}
+else:
+    # SQLite sozlamalari (development uchun)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # 5. AUTH
 AUTH_USER_MODEL = 'users.User'

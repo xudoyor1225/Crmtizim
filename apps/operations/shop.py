@@ -29,14 +29,33 @@ class ShopItem(TenantAwareModel):
     Do'kondagi mahsulotlar.
     Sklad bilan bog'langan yoki virtual sovg'alar (vaucher, chegirma).
     """
-    category = models.ForeignKey(ShopCategory, on_delete=models.SET_NULL, null=True, 
+    TYPE_CHOICES = (
+        ('physical', 'Jismoniy mahsulot'),
+        ('digital', 'Elektron mahsulot'),
+        ('book_physical', 'Kitob (Qog\'oz)'),
+        ('book_digital', 'Kitob (Elektron)'),
+        ('voucher', 'Chegirma kuponi'),
+        ('service', 'Xizmat'),
+    )
+
+    category = models.ForeignKey(ShopCategory, on_delete=models.SET_NULL, null=True,
                                  related_name='items', verbose_name="Kategoriya")
     name = models.CharField(max_length=200, verbose_name="Nomi")
     description = models.TextField(blank=True, verbose_name="Tavsif")
     
-    # Narx (Coin bilan)
-    coin_price = models.PositiveIntegerField(default=100, verbose_name="Coin narxi")
-    
+    # Mahsulot turi
+    item_type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='physical',
+                                 verbose_name="Mahsulot turi")
+
+    # Narxlar (Coin YOKI Pul bilan)
+    coin_price = models.PositiveIntegerField(default=0, verbose_name="Coin narxi")
+    cash_price = models.DecimalField(max_digits=12, decimal_places=2, default=0,
+                                     verbose_name="Pul narxi (so'm)")
+
+    # Coin bilan yoki pul bilan sotib olish mumkinmi
+    allow_coin_purchase = models.BooleanField(default=True, verbose_name="Coin bilan olish")
+    allow_cash_purchase = models.BooleanField(default=True, verbose_name="Pul bilan olish")
+
     # Skladdan olinadimi?
     supply = models.ForeignKey(Supply, on_delete=models.SET_NULL, null=True, blank=True,
                                related_name='shop_items', verbose_name="Sklad mahsuloti")
@@ -44,6 +63,11 @@ class ShopItem(TenantAwareModel):
     # Virtual mahsulot uchun (agar supply yo'q bo'lsa)
     stock = models.PositiveIntegerField(default=0, verbose_name="Mavjud soni")
     
+    # Elektron mahsulot uchun (PDF, link)
+    digital_file = models.FileField(upload_to='shop/digital/%Y/%m/', null=True, blank=True,
+                                    verbose_name="Elektron fayl (PDF)")
+    digital_link = models.URLField(blank=True, verbose_name="Tashqi havola")
+
     # Media
     image = models.ImageField(upload_to='shop/%Y/%m/', null=True, blank=True, verbose_name="Rasm")
     
@@ -76,22 +100,39 @@ class ShopItem(TenantAwareModel):
 class Purchase(TenantAwareModel):
     """
     Xaridlar tarixi.
-    O'quvchi coin sarflab mahsulot sotib oladi.
+    O'quvchi coin yoki pul sarflab mahsulot sotib oladi.
     """
     STATUS_CHOICES = (
         ('pending', 'Kutilmoqda'),
+        ('paid', 'To\'langan (tasdiq kutilmoqda)'),
         ('delivered', 'Topshirildi'),
         ('cancelled', 'Bekor qilindi'),
     )
     
+    PAYMENT_TYPE_CHOICES = (
+        ('coin', 'Coin bilan'),
+        ('cash', 'Pul bilan'),
+    )
+
     student = models.ForeignKey(User, on_delete=models.CASCADE, related_name='purchases',
                                 limit_choices_to={'role': 'student'}, verbose_name="O'quvchi")
     item = models.ForeignKey(ShopItem, on_delete=models.CASCADE, related_name='purchases',
                              verbose_name="Mahsulot")
     
     quantity = models.PositiveIntegerField(default=1, verbose_name="Soni")
-    coin_spent = models.PositiveIntegerField(verbose_name="Sarflangan coin")
-    
+
+    # To'lov turi
+    payment_type = models.CharField(max_length=10, choices=PAYMENT_TYPE_CHOICES, default='coin',
+                                    verbose_name="To'lov turi")
+    coin_spent = models.PositiveIntegerField(default=0, verbose_name="Sarflangan coin")
+    cash_spent = models.DecimalField(max_digits=12, decimal_places=2, default=0,
+                                     verbose_name="To'langan summa")
+
+    # Chek (pul bilan to'lovda)
+    receipt_image = models.ImageField(upload_to='shop/receipts/%Y/%m/', null=True, blank=True,
+                                      verbose_name="Chek rasmi")
+    receipt_verified = models.BooleanField(default=False, verbose_name="Chek tasdiqlandi")
+
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending',
                               verbose_name="Holati")
     

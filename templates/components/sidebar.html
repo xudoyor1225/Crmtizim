@@ -55,10 +55,12 @@
     <span>Kurslar</span>
 </a>
 
+{% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
 <a href="{% url 'room_list' %}" class="sidebar-link {% if 'rooms' in request.path %}active{% endif %}">
     <i class="ph-fill ph-door"></i>
     <span>Xonalar</span>
 </a>
+{% endif %}
 
 <a href="{% url 'material_list' %}" class="sidebar-link {% if 'materials' in request.path %}active{% endif %}">
     <i class="ph-fill ph-file-video"></i>
@@ -100,6 +102,21 @@
     <i class="ph-fill ph-storefront"></i>
     <span>Do'kon</span>
 </a>
+
+<!-- TO'LOV (O'quvchi va Ota-ona uchun) -->
+{% if request.user.role == 'student' or request.user.role == 'parent' %}
+<p class="sidebar-section">To'lov</p>
+
+<a href="{% url 'finance:student_payment_page' %}" class="sidebar-link {% if '/finance/pay' in request.path %}active{% endif %}">
+    <i class="ph-fill ph-credit-card"></i>
+    <span>To'lov qilish</span>
+</a>
+
+<a href="{% url 'finance:my_payments' %}" class="sidebar-link {% if 'my-payments' in request.path %}active{% endif %}">
+    <i class="ph-fill ph-receipt"></i>
+    <span>To'lovlar tarixi</span>
+</a>
+{% endif %}
 
 <!-- FINANCE -->
 {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}

@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 from . import payroll_views
 from . import inventory_views
+from . import export_views
+from . import student_payment_views
 
 app_name = 'finance'
 
@@ -23,7 +25,20 @@ urlpatterns = [
     path('transactions/<int:pk>/confirm/', views.confirm_transaction, name='confirm_transaction'),
     path('transactions/<int:pk>/reject/', views.reject_transaction, name='reject_transaction'),
     
-    # Student Payments
+    # Export (PDF/Excel)
+    path('transactions/export/excel/', export_views.export_transactions_excel, name='export_transactions_excel'),
+    path('transactions/export/pdf/', export_views.export_transactions_pdf, name='export_transactions_pdf'),
+    path('reports/export/excel/', export_views.export_finance_report_excel, name='export_report_excel'),
+    path('reports/export/pdf/', export_views.export_finance_report_pdf, name='export_report_pdf'),
+    path('debtors/export/excel/', export_views.export_debtors_excel, name='export_debtors_excel'),
+    path('debtors/export/pdf/', export_views.export_debtors_pdf, name='export_debtors_pdf'),
+
+    # Student/Parent Payment (O'quvchi va Ota-ona to'lovi)
+    path('pay/', student_payment_views.student_payment_page, name='student_payment_page'),
+    path('pay/submit/', student_payment_views.submit_payment, name='submit_payment'),
+    path('my-payments/', student_payment_views.my_payments, name='my_payments'),
+
+    # Student Payments (Admin)
     path('students/<int:student_id>/payments/', views.student_payments, name='student_payments'),
     path('students/<int:student_id>/payments/add/', views.add_student_payment, name='add_student_payment'),
     path('students/<int:student_id>/payment/', views.add_student_payment, name='student_payment'),  # Alias
@@ -44,8 +59,19 @@ urlpatterns = [
     
     # Inventory (Sklad)
     path('supplies/', inventory_views.supply_list, name='supply_list'),
-    path('supplies/<int:supply_id>/add/', inventory_views.supply_add_stock, name='supply_add_stock'),
-    path('supplies/<int:supply_id>/remove/', inventory_views.supply_remove_stock, name='supply_remove_stock'),
+    path('supplies/add/', inventory_views.supply_create, name='supply_create'),
+    path('supplies/<int:pk>/edit/', inventory_views.supply_edit, name='supply_edit'),
+    path('supplies/<int:pk>/delete/', inventory_views.supply_delete, name='supply_delete'),
+    path('supplies/<int:supply_id>/stock-in/', inventory_views.supply_add_stock, name='supply_add_stock'),
+    path('supplies/<int:supply_id>/stock-out/', inventory_views.supply_remove_stock, name='supply_remove_stock'),
+
+    # Supply Categories
+    path('supplies/categories/', inventory_views.supply_category_list, name='supply_category_list'),
+    path('supplies/categories/add/', inventory_views.supply_category_create, name='supply_category_create'),
+    path('supplies/categories/<int:pk>/edit/', inventory_views.supply_category_edit, name='supply_category_edit'),
+    path('supplies/categories/<int:pk>/delete/', inventory_views.supply_category_delete, name='supply_category_delete'),
+
+    # Assets
     path('assets/', inventory_views.asset_list, name='asset_list'),
     
     # Receipt Verification (Chek tasdiqlash)

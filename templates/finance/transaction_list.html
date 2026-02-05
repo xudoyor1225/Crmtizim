@@ -108,6 +108,18 @@
             <button type="submit" class="px-6 py-2.5 rounded-xl font-medium transition bg-blue-600 text-white hover:bg-blue-700 shadow-sm">
                 <i class="ph ph-funnel"></i> Filtrlash
             </button>
+
+            <!-- Export tugmalari -->
+            <div class="flex gap-2 ml-auto">
+                <a href="{% url 'finance:export_transactions_excel' %}?{{ request.GET.urlencode }}"
+                   class="px-4 py-2.5 rounded-xl font-medium transition bg-emerald-600 text-white hover:bg-emerald-700 flex items-center gap-2">
+                    <i class="ph ph-file-xls"></i> Excel
+                </a>
+                <a href="{% url 'finance:export_transactions_pdf' %}?{{ request.GET.urlencode }}"
+                   class="px-4 py-2.5 rounded-xl font-medium transition bg-rose-600 text-white hover:bg-rose-700 flex items-center gap-2">
+                    <i class="ph ph-file-pdf"></i> PDF
+                </a>
+            </div>
         </form>
     </div>
 

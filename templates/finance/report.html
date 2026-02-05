@@ -6,15 +6,35 @@
 <div class="space-y-8">
 
     <!-- Header -->
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-white">Moliyaviy Hisobot 📈</h1>
             <p class="text-slate-400">{{ start_date|date:"d M" }} - {{ end_date|date:"d F Y" }}</p>
         </div>
-        <button onclick="window.print()"
-            class="px-4 py-2 bg-[#1c3255] text-slate-300 rounded-lg hover:bg-[#234069] transition flex items-center gap-2">
-            <i class="ph ph-printer"></i> Chop etish
-        </button>
+        <div class="flex items-center gap-3">
+            <!-- Davr tanlash -->
+            <select onchange="window.location.href='?days='+this.value"
+                class="px-4 py-2 rounded-xl border bg-[#0f1f35] border-[#1c3255] text-white">
+                <option value="7" {% if days == 7 %}selected{% endif %}>7 kun</option>
+                <option value="30" {% if days == 30 %}selected{% endif %}>30 kun</option>
+                <option value="90" {% if days == 90 %}selected{% endif %}>90 kun</option>
+                <option value="365" {% if days == 365 %}selected{% endif %}>1 yil</option>
+            </select>
+
+            <!-- Export -->
+            <a href="{% url 'finance:export_report_excel' %}"
+                class="px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition flex items-center gap-2">
+                <i class="ph ph-file-xls"></i> Excel
+            </a>
+            <a href="{% url 'finance:export_report_pdf' %}"
+                class="px-4 py-2 bg-rose-600 text-white rounded-xl hover:bg-rose-700 transition flex items-center gap-2">
+                <i class="ph ph-file-pdf"></i> PDF
+            </a>
+            <button onclick="window.print()"
+                class="px-4 py-2 bg-[#1c3255] text-slate-300 rounded-xl hover:bg-[#234069] transition flex items-center gap-2">
+                <i class="ph ph-printer"></i> Chop etish
+            </button>
+        </div>
     </div>
 
     <!-- Summary Cards -->
@@ -51,12 +71,12 @@
 
                     {% if day.income > 0 %}
                     <div class="w-full bg-emerald-500 rounded-t opacity-80 hover:opacity-100 transition relative"
-                        style="height: {{ day.income|default:1 }}px; max-height: 50%;"></div>
+                        style="height: {{ day.income_height }}%;"></div>
                     {% endif %}
 
                     {% if day.expense > 0 %}
                     <div class="w-full bg-rose-500 rounded-b opacity-80 hover:opacity-100 transition"
-                        style="height: {{ day.expense|default:1 }}px; max-height: 50%;"></div>
+                        style="height: {{ day.expense_height }}%;"></div>
                     {% endif %}
 
                     {% if forloop.counter|divisibleby:5 %}
@@ -75,11 +95,11 @@
                 {% if cat.total > 0 %}
                 <div>
                     <div class="flex justify-between text-sm mb-1">
-                        <span class="text-slate-400">{{ cat.name }}</span>
+                        <span class="text-slate-400">{{ cat.category__name }}</span>
                         <span class="font-bold text-white">{{ cat.total|floatformat:0 }}</span>
                     </div>
                     <div class="w-full bg-[#0f1f35] rounded-full h-2">
-                        <div class="bg-emerald-500 h-2 rounded-full" style="width: 10%"></div>
+                        <div class="bg-emerald-500 h-2 rounded-full" style="width: {% widthratio cat.total total_income 100 %}%;"></div>
                     </div>
                 </div>
                 {% endif %}
@@ -97,11 +117,11 @@
                 {% if cat.total > 0 %}
                 <div>
                     <div class="flex justify-between text-sm mb-1">
-                        <span class="text-slate-400">{{ cat.name }}</span>
+                        <span class="text-slate-400">{{ cat.category__name }}</span>
                         <span class="font-bold text-white">{{ cat.total|floatformat:0 }}</span>
                     </div>
                     <div class="w-full bg-[#0f1f35] rounded-full h-2">
-                        <div class="bg-rose-500 h-2 rounded-full" style="width: 10%"></div>
+                        <div class="bg-rose-500 h-2 rounded-full" style="width: {% widthratio cat.total total_expense 100 %}%;"></div>
                     </div>
                 </div>
                 {% endif %}
@@ -111,6 +131,75 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- Kassalar va Oxirgi tranzaksiyalar -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Kassalar balansi -->
+        <div class="rounded-2xl border border-[#1c3255] bg-gradient-to-br from-[#152642] to-[#0f1f35] p-6">
+            <h3 class="font-bold text-white mb-4 flex items-center gap-2">
+                <i class="ph-fill ph-vault text-blue-400"></i> Kassalar balansi
+            </h3>
+            <div class="space-y-3">
+                {% for account in accounts %}
+                <div class="flex items-center justify-between p-3 rounded-xl bg-[#0f1f35]">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                            <i class="ph-fill ph-wallet text-blue-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-white font-medium">{{ account.name }}</p>
+                            <p class="text-xs text-slate-500">{{ account.get_account_type_display }}</p>
+                        </div>
+                    </div>
+                    <p class="text-lg font-bold {% if account.balance >= 0 %}text-emerald-400{% else %}text-rose-400{% endif %}">
+                        {{ account.balance|floatformat:0 }}
+                    </p>
+                </div>
+                {% empty %}
+                <p class="text-slate-500 text-center py-4">Kassalar yo'q</p>
+                {% endfor %}
+
+                <div class="flex items-center justify-between p-3 rounded-xl bg-blue-500/20 border border-blue-500/30 mt-4">
+                    <span class="text-blue-400 font-medium">Jami balans:</span>
+                    <span class="text-xl font-bold text-blue-300">{{ total_balance|floatformat:0 }} so'm</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Oxirgi tranzaksiyalar -->
+        <div class="rounded-2xl border border-[#1c3255] bg-gradient-to-br from-[#152642] to-[#0f1f35] p-6">
+            <h3 class="font-bold text-white mb-4 flex items-center gap-2">
+                <i class="ph-fill ph-clock-counter-clockwise text-violet-400"></i> Oxirgi tranzaksiyalar
+            </h3>
+            <div class="space-y-2 max-h-[300px] overflow-y-auto">
+                {% for tx in recent_transactions %}
+                <div class="flex items-center justify-between p-3 rounded-xl bg-[#0f1f35]">
+                    <div class="flex items-center gap-3">
+                        {% if tx.transaction_type == 'income' %}
+                        <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
+                            <i class="ph-fill ph-arrow-down text-emerald-400"></i>
+                        </div>
+                        {% else %}
+                        <div class="w-8 h-8 rounded-full bg-rose-500/20 flex items-center justify-center">
+                            <i class="ph-fill ph-arrow-up text-rose-400"></i>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <p class="text-white text-sm">{{ tx.category.name|default:"Noma'lum" }}</p>
+                            <p class="text-xs text-slate-500">{{ tx.created_at|date:"d.m.Y H:i" }}</p>
+                        </div>
+                    </div>
+                    <p class="font-bold {% if tx.transaction_type == 'income' %}text-emerald-400{% else %}text-rose-400{% endif %}">
+                        {% if tx.transaction_type == 'income' %}+{% else %}-{% endif %}{{ tx.amount|floatformat:0 }}
+                    </p>
+                </div>
+                {% empty %}
+                <p class="text-slate-500 text-center py-4">Tranzaksiyalar yo'q</p>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 
 </div>

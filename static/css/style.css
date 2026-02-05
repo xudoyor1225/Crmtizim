@@ -199,6 +199,71 @@ html:not(.dark) ::-webkit-scrollbar-thumb:hover {
     box-shadow: var(--shadow-md);
 }
 
+/* ============================================
+   FORM INPUTS - Universal Dark/Light Styles
+   ============================================ */
+
+/* Form Input - Dark Mode */
+.dark .form-input,
+.dark .form-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    background-color: var(--navy-800) !important;
+    border: 1px solid var(--navy-600) !important;
+    color: var(--text-white) !important;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.dark .form-input::placeholder {
+    color: var(--text-dim);
+}
+
+.dark .form-input:focus,
+.dark .form-select:focus {
+    outline: none;
+    border-color: var(--accent-blue) !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    background-color: var(--navy-900) !important;
+}
+
+.dark .form-input:hover,
+.dark .form-select:hover {
+    border-color: var(--navy-500) !important;
+}
+
+/* Form Checkbox - Dark Mode */
+.dark .form-checkbox {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 0.375rem;
+    background-color: var(--navy-800);
+    border: 1px solid var(--navy-600);
+    color: var(--accent-blue);
+}
+
+/* Form Input - Light Mode */
+html:not(.dark) .form-input,
+html:not(.dark) .form-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    color: #111827;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+html:not(.dark) .form-input:focus,
+html:not(.dark) .form-select:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    background-color: #ffffff;
+}
+
 /* Dark mode inputs */
 .dark input:not([type="checkbox"]):not([type="radio"]),
 .dark select,

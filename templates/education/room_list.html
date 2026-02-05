@@ -11,10 +11,12 @@
             <h1 class="text-2xl font-bold text-white">Xonalar 🚪</h1>
             <p class="text-slate-400">O'quv markaz xonalari</p>
         </div>
+        {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
         <a href="{% url 'room_create' %}"
             class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-violet-600 text-white rounded-lg hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2">
             <i class="ph ph-plus"></i> Yangi Xona
         </a>
+        {% endif %}
     </div>
 
     <!-- Rooms Grid -->
@@ -32,14 +34,18 @@
             </div>
             <div class="flex items-center justify-between text-sm text-slate-400 border-t border-[#1c3255] pt-4">
                 <span><i class="ph ph-users-three"></i> Guruhlar: {{ room.groups.count }}</span>
+                {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
                 <a href="#" class="text-blue-400 hover:underline">Tahrirlash</a>
+                {% endif %}
             </div>
         </div>
         {% empty %}
         <div class="col-span-4 rounded-2xl border border-[#1c3255] bg-gradient-to-br from-[#152642] to-[#0f1f35] p-12 text-center">
             <i class="ph ph-door text-5xl text-slate-600 mb-4"></i>
             <h3 class="text-lg font-bold text-white mb-2">Xonalar topilmadi</h3>
+            {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
             <p class="text-slate-500">Yangi xona qo'shish uchun tugmani bosing</p>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
