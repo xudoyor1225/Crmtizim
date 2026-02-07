@@ -1338,3 +1338,18 @@ WARNING 2026-02-05 19:44:34,430 services Notification template not found: PAYMEN
 WARNING 2026-02-05 19:44:34,446 services Notification template not found: PAYMENT_RECEIVED
 WARNING 2026-02-05 19:44:34,455 services Notification template not found: PAYMENT_RECEIVED_PARENT
 INFO 2026-02-05 19:44:57,667 autoreload Watching for file changes with StatReloader
+INFO 2026-02-07 12:46:30,099 autoreload Watching for file changes with StatReloader
+INFO 2026-02-07 12:47:07,903 autoreload Watching for file changes with StatReloader
+INFO 2026-02-07 12:48:43,893 autoreload Watching for file changes with StatReloader
+INFO 2026-02-07 12:49:10,686 log "GET / HTTP/1.1" 200 23976
+INFO 2026-02-07 12:49:10,747 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-02-07 12:49:44,960 log "GET /users/ HTTP/1.1" 200 102204
+INFO 2026-02-07 12:50:19,173 log "GET /users/teachers/add/ HTTP/1.1" 200 24047
+INFO 2026-02-07 12:50:25,257 log "GET / HTTP/1.1" 200 23976
+INFO 2026-02-07 12:51:05,618 log "GET /users/students/add/ HTTP/1.1" 200 26619
+INFO 2026-02-07 12:51:41,378 log "GET / HTTP/1.1" 200 23976
+INFO 2026-02-07 12:52:16,065 log "GET /users/ HTTP/1.1" 200 102204
+INFO 2026-02-07 12:52:19,645 log "GET /core/history/ HTTP/1.1" 200 103503
+INFO 2026-02-07 12:52:30,905 log "GET /core/settings/ HTTP/1.1" 200 47267
+INFO 2026-02-07 12:53:42,554 log "GET /finance/categories/ HTTP/1.1" 200 19061
+INFO 2026-02-07 12:53:54,779 log "GET /finance/accounts/ HTTP/1.1" 200 18199
