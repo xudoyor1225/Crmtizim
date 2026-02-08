@@ -1376,3 +1376,10 @@ INFO 2026-02-08 23:48:43,943 log "GET /courses/add/ HTTP/1.1" 200 18800
 INFO 2026-02-08 23:48:46,765 log "GET / HTTP/1.1" 200 23976
 INFO 2026-02-08 23:48:49,167 log "GET /users/teachers/add/ HTTP/1.1" 200 24047
 INFO 2026-02-08 23:48:54,717 log "GET /users/students/add/ HTTP/1.1" 200 26619
+INFO 2026-02-08 23:52:51,078 autoreload Watching for file changes with StatReloader
+INFO 2026-02-08 23:52:54,703 log "GET / HTTP/1.1" 200 23976
+INFO 2026-02-08 23:52:59,727 log "GET /courses/ HTTP/1.1" 200 17986
+INFO 2026-02-08 23:53:01,686 log "GET /courses/add/ HTTP/1.1" 200 18800
+INFO 2026-02-08 23:53:05,622 log "GET /courses/add/ HTTP/1.1" 200 18800
+INFO 2026-02-08 23:53:07,505 log "GET /courses/add/ HTTP/1.1" 200 18800
+INFO 2026-02-08 23:53:07,548 log "GET /static/css/style.css HTTP/1.1" 200 41511

@@ -1670,3 +1670,89 @@ input[type="file"]:hover {
     border-color: var(--accent-blue) !important;
     background: var(--navy-700) !important;
 }
+
+/* ============================================
+   UNIVERSAL DARK MODE OVERRIDE
+   Barcha oq elementlarni dark qilish
+   ============================================ */
+
+/* Form va card containerlar - DARK */
+.bg-white,
+form.bg-white,
+div.bg-white {
+    background: var(--navy-800) !important;
+    border-color: var(--navy-600) !important;
+}
+
+/* Gray backgrounds - DARK */
+.bg-gray-50,
+.bg-gray-100 {
+    background: var(--navy-700) !important;
+}
+
+/* Border colors - DARK */
+.border-gray-100,
+.border-gray-200 {
+    border-color: var(--navy-600) !important;
+}
+
+/* Text colors - LIGHT */
+.text-gray-800,
+.text-gray-900 {
+    color: var(--text-white) !important;
+}
+
+.text-gray-600,
+.text-gray-700 {
+    color: var(--text-light) !important;
+}
+
+.text-gray-500 {
+    color: var(--text-muted) !important;
+}
+
+/* Labels - oq text */
+label,
+.form-label {
+    color: var(--text-light) !important;
+}
+
+/* Shadow adjustments for dark mode */
+.shadow-sm,
+.shadow {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Rounded containers - dark fon */
+.rounded-xl.p-6,
+.rounded-xl.p-4,
+.rounded-2xl.p-6 {
+    background: var(--navy-800) !important;
+}
+
+/* Hover effects for buttons */
+button.bg-gray-100:hover,
+a.bg-gray-100:hover {
+    background: var(--navy-700) !important;
+    color: var(--text-white) !important;
+}
+
+/* Specific overrides for common patterns */
+.space-y-6 > *,
+.space-y-4 > * {
+    /* Inherit dark theme */
+}
+
+/* Dropdown menus */
+.absolute.bg-white {
+    background: var(--navy-800) !important;
+    border: 1px solid var(--navy-600) !important;
+}
+
+/* Card elements */
+.card,
+.panel {
+    background: var(--navy-800) !important;
+    border: 1px solid var(--navy-600) !important;
+}
+
