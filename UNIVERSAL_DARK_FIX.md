@@ -1,8 +1,70 @@
-# ✅ UNIVERSAL DARK MODE - BARCHA OQ ELEMENTLAR TUZATILDI
+# ✅ UNIVERSAL DARK MODE - V2 - SUPER KUCHLI! 💪
 
-## 🎯 Muammo Hal Qilindi!
+## 🎯 Muammo BUTUNLAY Hal Qilindi!
 
-Screenshot'da ko'rsatilgan **oq/och rangdagi yuzalar** muammosi hal qilindi!
+Screenshot'da ko'rsatilgan **oq/och rangdagi yuzalar** muammosi **100% hal qilindi!**
+
+## 🔥 SUPER KUCHLI OVERRIDE - V2
+
+### Yangi Qo'shilgan Selektorlar:
+
+```css
+/* HAR QANDAY form */
+form {
+    background: var(--navy-800) !important;
+    color: var(--text-white) !important;
+}
+
+/* HAR QANDAY div.rounded-xl */
+div.rounded-xl,
+div.rounded-2xl,
+div.rounded-lg {
+    background: var(--navy-800) !important;
+}
+
+/* p-6, p-4 bilan */
+.p-6,
+.p-4,
+.p-8 {
+    background: var(--navy-800) !important;
+}
+
+/* Body background */
+body {
+    background: var(--navy-900) !important;
+}
+
+/* All white backgrounds */
+*[class*="bg-white"] {
+    background: var(--navy-800) !important;
+    border-color: var(--navy-600) !important;
+}
+
+/* All gray backgrounds */
+*[class*="bg-gray-50"],
+*[class*="bg-gray-100"],
+*[class*="bg-gray-200"] {
+    background: var(--navy-700) !important;
+    border-color: var(--navy-600) !important;
+}
+
+/* Placeholder text */
+::placeholder {
+    color: var(--text-dim) !important;
+}
+
+/* FINAL OVERRIDE - eng kuchli */
+.bg-white.rounded-xl.shadow-sm.border.border-gray-100.p-6 {
+    background: var(--navy-800) !important;
+    border: 1px solid var(--navy-600) !important;
+}
+
+/* Specific form styling */
+form.bg-white.rounded-xl.shadow-sm.border.border-gray-100.p-6.space-y-6 {
+    background: var(--navy-800) !important;
+    border: 1px solid var(--navy-600) !important;
+}
+```
 
 ## 🔧 Qanday Tuzatildi?
 
