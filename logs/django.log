@@ -1383,3 +1383,19 @@ INFO 2026-02-08 23:53:01,686 log "GET /courses/add/ HTTP/1.1" 200 18800
 INFO 2026-02-08 23:53:05,622 log "GET /courses/add/ HTTP/1.1" 200 18800
 INFO 2026-02-08 23:53:07,505 log "GET /courses/add/ HTTP/1.1" 200 18800
 INFO 2026-02-08 23:53:07,548 log "GET /static/css/style.css HTTP/1.1" 200 41511
+INFO 2026-02-08 23:56:36,179 autoreload Watching for file changes with StatReloader
+INFO 2026-02-08 23:56:41,320 log "GET / HTTP/1.1" 200 23976
+INFO 2026-02-08 23:56:41,479 log "GET /static/css/style.css HTTP/1.1" 200 43295
+INFO 2026-02-08 23:56:44,070 log "GET /courses/ HTTP/1.1" 200 17986
+INFO 2026-02-08 23:56:46,355 log "GET /courses/add/ HTTP/1.1" 200 18800
+INFO 2026-02-08 23:56:50,310 log "GET /groups/ HTTP/1.1" 200 36346
+INFO 2026-02-08 23:56:50,339 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-02-08 23:56:52,018 log "GET /groups/add/ HTTP/1.1" 200 25030
+INFO 2026-02-08 23:56:54,865 log "GET /rooms/ HTTP/1.1" 200 17939
+INFO 2026-02-08 23:56:58,138 log "GET /rooms/add/ HTTP/1.1" 200 18191
+INFO 2026-02-08 23:57:03,043 log "GET / HTTP/1.1" 200 23976
+INFO 2026-02-08 23:57:03,073 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-02-08 23:57:07,046 log "GET /users/staff/add/ HTTP/1.1" 200 24010
+INFO 2026-02-08 23:57:12,885 log "GET /finance/categories/ HTTP/1.1" 200 19061
+INFO 2026-02-08 23:57:15,004 log "GET /finance/categories/add/ HTTP/1.1" 200 18548
+INFO 2026-02-08 23:57:15,036 log "GET /static/css/style.css HTTP/1.1" 304 0

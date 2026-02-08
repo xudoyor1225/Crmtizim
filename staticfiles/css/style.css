@@ -1756,3 +1756,120 @@ a.bg-gray-100:hover {
     border: 1px solid var(--navy-600) !important;
 }
 
+/* ============================================
+   KUCHLI DARK MODE OVERRIDE - V2
+   Har qanday oq element uchun!
+   ============================================ */
+
+/* Form containers - MAXSUS */
+form[class*="bg-white"],
+div[class*="bg-white"],
+.bg-white.rounded-xl,
+.bg-white.rounded-2xl,
+.bg-white.shadow {
+    background: var(--navy-800) !important;
+    border-color: var(--navy-600) !important;
+    color: var(--text-white) !important;
+}
+
+/* Space-y containers ichidagi elementlar */
+.space-y-6 > form,
+.space-y-4 > form,
+.space-y-6 > div,
+.space-y-4 > div {
+    background: var(--navy-800) !important;
+}
+
+/* Max-w containers */
+.max-w-xl,
+.max-w-2xl,
+.max-w-3xl,
+.max-w-4xl {
+    color: var(--text-white) !important;
+}
+
+/* Har qanday form */
+form {
+    background: var(--navy-800) !important;
+    color: var(--text-white) !important;
+}
+
+/* Har qanday div.rounded-xl */
+div.rounded-xl,
+div.rounded-2xl,
+div.rounded-lg {
+    background: var(--navy-800) !important;
+}
+
+/* p-6, p-4 bilan */
+.p-6,
+.p-4,
+.p-8 {
+    background: var(--navy-800) !important;
+}
+
+/* Body background */
+body {
+    background: var(--navy-900) !important;
+}
+
+/* Main content */
+main,
+.main-content {
+    background: var(--navy-900) !important;
+}
+
+/* All white backgrounds */
+*[class*="bg-white"] {
+    background: var(--navy-800) !important;
+    border-color: var(--navy-600) !important;
+}
+
+/* All gray backgrounds */
+*[class*="bg-gray-50"],
+*[class*="bg-gray-100"],
+*[class*="bg-gray-200"] {
+    background: var(--navy-700) !important;
+    border-color: var(--navy-600) !important;
+}
+
+/* Border gray */
+*[class*="border-gray-100"],
+*[class*="border-gray-200"] {
+    border-color: var(--navy-600) !important;
+}
+
+/* Text gray */
+*[class*="text-gray-800"],
+*[class*="text-gray-900"] {
+    color: var(--text-white) !important;
+}
+
+*[class*="text-gray-600"],
+*[class*="text-gray-700"] {
+    color: var(--text-light) !important;
+}
+
+/* Placeholder text */
+::placeholder {
+    color: var(--text-dim) !important;
+}
+
+/* Hover states */
+button:hover,
+a:hover {
+    opacity: 0.9;
+}
+
+/* FINAL OVERRIDE - eng kuchli */
+.bg-white.rounded-xl.shadow-sm.border.border-gray-100.p-6 {
+    background: var(--navy-800) !important;
+    border: 1px solid var(--navy-600) !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+/* Specific form styling */
+form.bg-white.rounded-xl.shadow-sm.border.border-gray-100.p-6.space-y-6 {
+    background: var(--navy-800) !important;
+    border: 1px solid var(--navy-600) !important;
+}
