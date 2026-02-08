@@ -100,33 +100,34 @@ html:not(.dark) .glass-panel {
 html:not(.dark) input:not([type="checkbox"]):not([type="radio"]),
 html:not(.dark) select,
 html:not(.dark) textarea {
-    background: var(--light-surface);
-    border: 1px solid var(--light-border);
-    color: var(--light-text-primary);
-    border-radius: 10px;
-    padding: 0.625rem 0.875rem;
+    background: #ffffff !important;
+    border: 1.5px solid var(--light-border) !important;
+    color: var(--light-text-primary) !important;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
     font-size: 0.875rem;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
 }
 
 html:not(.dark) input::placeholder,
 html:not(.dark) textarea::placeholder {
-    color: var(--light-text-dim);
+    color: var(--light-text-dim) !important;
 }
 
 html:not(.dark) input:hover,
 html:not(.dark) select:hover,
 html:not(.dark) textarea:hover {
-    border-color: var(--light-border-hover);
+    border-color: var(--light-border-hover) !important;
+    background: #ffffff !important;
 }
 
 html:not(.dark) input:focus,
 html:not(.dark) select:focus,
 html:not(.dark) textarea:focus {
-    border-color: var(--light-accent);
-    box-shadow: 0 0 0 4px var(--light-accent-light);
+    border-color: var(--light-accent) !important;
+    box-shadow: 0 0 0 4px var(--light-accent-light) !important;
     outline: none;
-    background: #fff;
+    background: #ffffff !important;
 }
 
 /* Light mode tables */
@@ -249,19 +250,29 @@ html:not(.dark) .form-select {
     width: 100%;
     padding: 0.75rem 1rem;
     border-radius: 0.75rem;
-    background-color: #f9fafb;
-    border: 1px solid #e5e7eb;
-    color: #111827;
+    background-color: #ffffff !important;
+    border: 1.5px solid #e5e7eb !important;
+    color: #111827 !important;
     font-size: 0.875rem;
     transition: all 0.2s ease;
+}
+
+html:not(.dark) .form-input::placeholder {
+    color: #9ca3af !important;
 }
 
 html:not(.dark) .form-input:focus,
 html:not(.dark) .form-select:focus {
     outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-    background-color: #ffffff;
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+    background-color: #ffffff !important;
+}
+
+html:not(.dark) .form-input:hover,
+html:not(.dark) .form-select:hover {
+    border-color: #d1d5db !important;
+    background-color: #ffffff !important;
 }
 
 /* Dark mode inputs */
@@ -1210,13 +1221,42 @@ html:not(.dark) .menu-item:hover {
 
 /* Light mode modal overlay */
 html:not(.dark) .modal-overlay {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
 }
 
 html:not(.dark) .modal-box {
-    background: var(--light-surface);
+    background: #ffffff !important;
     border: 1px solid var(--light-border);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Light mode modal header */
+html:not(.dark) .modal-header {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border-bottom: 1px solid var(--light-border);
+}
+
+/* Light mode modal body */
+html:not(.dark) .modal-body {
+    background: #ffffff !important;
+    color: var(--light-text-primary) !important;
+}
+
+/* Light mode modal input fields */
+html:not(.dark) .modal-body input,
+html:not(.dark) .modal-body select,
+html:not(.dark) .modal-body textarea {
+    background: #ffffff !important;
+    border: 1.5px solid #e5e7eb !important;
+    color: #111827 !important;
+}
+
+html:not(.dark) .modal-body input:focus,
+html:not(.dark) .modal-body select:focus,
+html:not(.dark) .modal-body textarea:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
 }
 
 /* Light mode search input */
@@ -1413,3 +1453,297 @@ html:not(.dark) .payment-overdue {
     color: #be123c;
 }
 
+/* ============================================
+   LIGHT MODE - FORM & MODAL IMPROVEMENTS
+   Oq va aniq dizayn
+   ============================================ */
+
+/* Universal form wrapper for light mode */
+html:not(.dark) .glass-panel,
+html:not(.dark) .form-wrapper,
+html:not(.dark) .form-container {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Form labels - light mode */
+html:not(.dark) .form-label,
+html:not(.dark) form label {
+    color: #374151 !important;
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* All input types - light mode universal fix */
+html:not(.dark) input[type="text"],
+html:not(.dark) input[type="email"],
+html:not(.dark) input[type="password"],
+html:not(.dark) input[type="number"],
+html:not(.dark) input[type="tel"],
+html:not(.dark) input[type="date"],
+html:not(.dark) input[type="time"],
+html:not(.dark) input[type="datetime-local"],
+html:not(.dark) input[type="url"],
+html:not(.dark) input[type="search"],
+html:not(.dark) select,
+html:not(.dark) textarea {
+    width: 100%;
+    padding: 0.75rem 1rem !important;
+    background: #ffffff !important;
+    border: 1.5px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    color: #111827 !important;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    transition: all 0.2s ease;
+}
+
+html:not(.dark) input[type="text"]::placeholder,
+html:not(.dark) input[type="email"]::placeholder,
+html:not(.dark) input[type="password"]::placeholder,
+html:not(.dark) input[type="number"]::placeholder,
+html:not(.dark) input[type="tel"]::placeholder,
+html:not(.dark) input[type="search"]::placeholder,
+html:not(.dark) textarea::placeholder {
+    color: #9ca3af !important;
+}
+
+/* Focus state for all inputs - light mode */
+html:not(.dark) input[type="text"]:focus,
+html:not(.dark) input[type="email"]:focus,
+html:not(.dark) input[type="password"]:focus,
+html:not(.dark) input[type="number"]:focus,
+html:not(.dark) input[type="tel"]:focus,
+html:not(.dark) input[type="date"]:focus,
+html:not(.dark) input[type="time"]:focus,
+html:not(.dark) input[type="datetime-local"]:focus,
+html:not(.dark) input[type="url"]:focus,
+html:not(.dark) input[type="search"]:focus,
+html:not(.dark) select:focus,
+html:not(.dark) textarea:focus {
+    outline: none !important;
+    border-color: #6366f1 !important;
+    background: #ffffff !important;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1) !important;
+}
+
+/* Hover state for all inputs - light mode */
+html:not(.dark) input[type="text"]:hover,
+html:not(.dark) input[type="email"]:hover,
+html:not(.dark) input[type="password"]:hover,
+html:not(.dark) input[type="number"]:hover,
+html:not(.dark) input[type="tel"]:hover,
+html:not(.dark) input[type="date"]:hover,
+html:not(.dark) input[type="time"]:hover,
+html:not(.dark) select:hover,
+html:not(.dark) textarea:hover {
+    border-color: #d1d5db !important;
+    background: #ffffff !important;
+}
+
+/* Select dropdown options - light mode */
+html:not(.dark) select option {
+    background: #ffffff !important;
+    color: #111827 !important;
+    padding: 0.5rem;
+}
+
+/* Modal specific fixes - light mode */
+html:not(.dark) .fixed.inset-0 {
+    background: rgba(0, 0, 0, 0.5) !important;
+}
+
+html:not(.dark) .fixed .bg-white,
+html:not(.dark) .modal .bg-white,
+html:not(.dark) div[class*="modal"] .bg-white {
+    background: #ffffff !important;
+}
+
+html:not(.dark) .rounded-2xl.p-6,
+html:not(.dark) .rounded-2xl.p-5 {
+    background: #ffffff !important;
+}
+
+/* Modal titles - light mode */
+html:not(.dark) .modal h3,
+html:not(.dark) .modal h2,
+html:not(.dark) div[id*="Modal"] h3,
+html:not(.dark) div[id*="modal"] h3 {
+    color: #111827 !important;
+    font-weight: 700;
+}
+
+/* Modal text - light mode */
+html:not(.dark) .modal p,
+html:not(.dark) div[id*="Modal"] p,
+html:not(.dark) div[id*="modal"] p {
+    color: #4b5563 !important;
+}
+
+/* Button improvements - light mode */
+html:not(.dark) button[type="submit"],
+html:not(.dark) .btn-primary {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+html:not(.dark) button[type="submit"]:hover,
+html:not(.dark) .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3) !important;
+}
+
+/* Cancel/Secondary buttons - light mode */
+html:not(.dark) .btn-secondary,
+html:not(.dark) button[class*="bg-gray"] {
+    background: #f3f4f6 !important;
+    color: #374151 !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+html:not(.dark) .btn-secondary:hover,
+html:not(.dark) button[class*="bg-gray"]:hover {
+    background: #e5e7eb !important;
+    color: #111827 !important;
+}
+
+/* Success/Green buttons - light mode */
+html:not(.dark) button[class*="bg-green"],
+html:not(.dark) .btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+html:not(.dark) button[class*="bg-green"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Danger/Red buttons - light mode */
+html:not(.dark) button[class*="bg-red"],
+html:not(.dark) .btn-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+}
+
+html:not(.dark) button[class*="bg-red"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3) !important;
+}
+
+/* Form section dividers - light mode */
+html:not(.dark) .border-t,
+html:not(.dark) hr {
+    border-color: #e5e7eb !important;
+}
+
+/* Disabled inputs - light mode */
+html:not(.dark) input:disabled,
+html:not(.dark) select:disabled,
+html:not(.dark) textarea:disabled {
+    background: #f9fafb !important;
+    color: #9ca3af !important;
+    cursor: not-allowed;
+    border-color: #e5e7eb !important;
+}
+
+/* Form error messages - light mode */
+html:not(.dark) .error-message,
+html:not(.dark) .form-error {
+    color: #dc2626 !important;
+    background: #fef2f2 !important;
+    border: 1px solid #fecaca !important;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Form success messages - light mode */
+html:not(.dark) .success-message,
+html:not(.dark) .form-success {
+    color: #047857 !important;
+    background: #ecfdf5 !important;
+    border: 1px solid #a7f3d0 !important;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Checkbox and Radio - light mode */
+html:not(.dark) input[type="checkbox"],
+html:not(.dark) input[type="radio"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 1.5px solid #d1d5db !important;
+    background: #ffffff !important;
+    cursor: pointer;
+}
+
+html:not(.dark) input[type="checkbox"]:checked,
+html:not(.dark) input[type="radio"]:checked {
+    background: #6366f1 !important;
+    border-color: #6366f1 !important;
+}
+
+/* File input - light mode */
+html:not(.dark) input[type="file"] {
+    background: #ffffff !important;
+    border: 1.5px dashed #d1d5db !important;
+    padding: 1rem !important;
+    border-radius: 12px !important;
+    color: #374151 !important;
+    cursor: pointer;
+}
+
+html:not(.dark) input[type="file"]:hover {
+    border-color: #6366f1 !important;
+    background: rgba(99, 102, 241, 0.05) !important;
+}
+
+/* Form grid - light mode */
+html:not(.dark) .form-grid,
+html:not(.dark) .grid {
+    gap: 1.5rem;
+}
+
+/* Required field asterisk - light mode */
+html:not(.dark) .required::after,
+html:not(.dark) label.required::after {
+    content: '*';
+    color: #ef4444;
+    margin-left: 0.25rem;
+}
+
+/* Help text - light mode */
+html:not(.dark) .help-text,
+html:not(.dark) .form-help {
+    color: #6b7280 !important;
+    font-size: 0.813rem;
+    margin-top: 0.25rem;
+    font-style: italic;
+}
+
+/* Form card wrapper - light mode */
+html:not(.dark) .form-card {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+}
+
+/* Specific modal background override */
+html:not(.dark) div[id$="Modal"] > div:last-child,
+html:not(.dark) div[id$="modal"] > div:last-child {
+    background: #ffffff !important;
+}
