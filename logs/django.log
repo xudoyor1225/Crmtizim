@@ -1353,3 +1353,26 @@ INFO 2026-02-07 12:52:19,645 log "GET /core/history/ HTTP/1.1" 200 103503
 INFO 2026-02-07 12:52:30,905 log "GET /core/settings/ HTTP/1.1" 200 47267
 INFO 2026-02-07 12:53:42,554 log "GET /finance/categories/ HTTP/1.1" 200 19061
 INFO 2026-02-07 12:53:54,779 log "GET /finance/accounts/ HTTP/1.1" 200 18199
+INFO 2026-02-08 23:25:40,094 autoreload Watching for file changes with StatReloader
+INFO 2026-02-08 23:25:47,017 log "GET / HTTP/1.1" 200 23976
+INFO 2026-02-08 23:25:47,140 log "GET /static/css/style.css HTTP/1.1" 304 0
+INFO 2026-02-08 23:25:56,775 log "GET /users/students/add/ HTTP/1.1" 200 26619
+INFO 2026-02-08 23:26:00,785 log "GET /finance/transactions/ HTTP/1.1" 200 26533
+INFO 2026-02-08 23:26:02,784 log "GET /finance/transactions/income/ HTTP/1.1" 200 19137
+INFO 2026-02-08 23:44:56,274 autoreload Watching for file changes with StatReloader
+INFO 2026-02-08 23:45:27,520 log "GET / HTTP/1.1" 200 23976
+INFO 2026-02-08 23:45:31,670 log "GET /users/students/add/ HTTP/1.1" 200 26619
+INFO 2026-02-08 23:45:39,133 log "GET /automation/templates/ HTTP/1.1" 200 18725
+INFO 2026-02-08 23:45:40,653 log "GET /crm/pipeline/ HTTP/1.1" 200 20490
+INFO 2026-02-08 23:45:42,229 log "GET /crm/stages/ HTTP/1.1" 200 19549
+INFO 2026-02-08 23:45:45,774 log "GET /groups/ HTTP/1.1" 200 36346
+INFO 2026-02-08 23:45:52,384 log "GET /groups/add/ HTTP/1.1" 200 25030
+INFO 2026-02-08 23:45:55,862 log "GET /courses/ HTTP/1.1" 200 17986
+INFO 2026-02-08 23:45:57,940 log "GET /courses/add/ HTTP/1.1" 200 18800
+INFO 2026-02-08 23:48:32,705 log "GET / HTTP/1.1" 200 23976
+INFO 2026-02-08 23:48:37,361 log "GET /courses/ HTTP/1.1" 200 17986
+INFO 2026-02-08 23:48:39,699 log "GET /courses/add/ HTTP/1.1" 200 18800
+INFO 2026-02-08 23:48:43,943 log "GET /courses/add/ HTTP/1.1" 200 18800
+INFO 2026-02-08 23:48:46,765 log "GET / HTTP/1.1" 200 23976
+INFO 2026-02-08 23:48:49,167 log "GET /users/teachers/add/ HTTP/1.1" 200 24047
+INFO 2026-02-08 23:48:54,717 log "GET /users/students/add/ HTTP/1.1" 200 26619
