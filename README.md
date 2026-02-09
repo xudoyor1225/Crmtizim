@@ -1,13 +1,19 @@
 # 🎓 SMART EDU CRM - O'quv Markazlari uchun CRM & LMS Tizimi
 
 [![Django](https://img.shields.io/badge/Django-6.0-green.svg)](https://www.djangoproject.com/)
-[![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13%2B-blue.svg)](https://www.postgresql.org/)
+[![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://www.python.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue.svg)](https://www.postgresql.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Production-success.svg)](https://github.com/xudoyor1225/Crmtizim)
+
+> **🌟 Production'da ishlamoqda!** - http://13.39.83.160
 
 ## 📖 Loyiha Haqida
 
 **SMART EDU CRM** - O'zbekiston o'quv markazlari uchun maxsus ishlab chiqilgan to'liq funksional SaaS (Software as a Service) platformasi. Mijozlar boshqaruvi, ta'lim jarayoni, moliya va xodimlar boshqaruvini bir platformada birlashtiradi.
+
+### 🎯 Maqsad
+O'quv markazlarining barcha jarayonlarini avtomatlashtirish va markaziy boshqarish tizimini yaratish. Lidlardan tortib, to'lovlargacha barcha jarayonlarni bir tizimda boshqarish.
 
 ---
 
@@ -692,6 +698,32 @@ python manage.py runserver
 
 ---
 
+## 🚀 Deployment va Yangilash
+
+### Server Yangilash
+Server'da yangilanishlarni qo'llash uchun: [SERVER_UPDATE_GUIDE.md](SERVER_UPDATE_GUIDE.md)
+
+### Tezkor Yangilash
+```bash
+cd /var/www/Crmtizim && \
+source venv/bin/activate && \
+git pull origin main && \
+python manage.py collectstatic --noinput && \
+sudo systemctl restart gunicorn && \
+sudo systemctl reload nginx
+```
+
+### Monitoring
+```bash
+# Service statuslari
+sudo systemctl status gunicorn nginx
+
+# Loglarni kuzatish
+sudo journalctl -u gunicorn -f
+```
+
+---
+
 ## 🤝 Hissa Qo'shish
 
 1. Fork qiling
@@ -704,9 +736,9 @@ python manage.py runserver
 
 ## 📞 Aloqa
 
-- **Email:** support@smartedu.uz
-- **Telegram:** @smartedu_support
-- **Website:** https://smartedu.uz
+- **GitHub:** [xudoyor1225](https://github.com/xudoyor1225)
+- **Repository:** [Crmtizim](https://github.com/xudoyor1225/Crmtizim)
+- **Production:** http://13.39.83.160
 
 ---
 
@@ -720,8 +752,14 @@ Bu loyiha MIT litsenziyasi ostida tarqatiladi.
 
 - Django Framework
 - Django REST Framework
-- Tailwind CSS
-- HTMX
+- PostgreSQL
+- Gunicorn & Nginx
+- AWS EC2
+
+---
+
+**Oxirgi yangilanish:** 2026-02-09  
+**Versiya:** 2.0.0 (Production)
 - Va boshqa open-source kutubxonalarga!
 
 ---
