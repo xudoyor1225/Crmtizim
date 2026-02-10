@@ -3,7 +3,7 @@
 <html lang="uz" x-data="{ 
     darkMode: true,
     sidebarOpen: window.innerWidth >= 1024
-}" :class="{ 'dark': darkMode }" class="dark">
+}" :class="{ 'dark': darkMode }" x-init="darkMode = localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : true; $watch('darkMode', value => localStorage.setItem('theme', value ? 'dark' : 'light'))">
 
 <head>
     <meta charset="UTF-8">
@@ -42,7 +42,7 @@
     </style>
 </head>
 
-<body class="font-sans antialiased overflow-hidden bg-[#0a1628] text-slate-100">
+<body class="font-sans antialiased overflow-hidden">
 
     <div class="flex h-screen w-full">
 
@@ -91,7 +91,7 @@
             </script>
 
             <!-- User Profile -->
-            <div class="p-4 border-t border-[#152642] bg-[#0f1f35]/50">
+            <div class="p-4 border-t border-[#152642] bg-[#0f1f35]/50 profile-panel">
                 <div class="flex items-center gap-3">
                     <div
                         class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white flex items-center justify-center font-bold shadow-md">
@@ -135,17 +135,17 @@
 
                         <!-- Dropdown -->
                         <div x-show="notifOpen" @click.away="notifOpen = false" x-transition
-                            class="absolute right-0 mt-2 w-80 bg-[#152642] border border-[#1c3255] rounded-xl shadow-2xl z-50"
+                            class="absolute right-0 mt-2 w-80 bg-[#152642] border border-[#1c3255] rounded-xl shadow-2xl z-50 dropdown-panel"
                             x-cloak>
                             <div class="p-4 border-b border-[#1c3255] flex items-center justify-between">
-                                <h3 class="font-bold text-white flex items-center gap-2">
+                                <h3 class="font-bold text-white flex items-center gap-2 dropdown-title">
                                     <i class="ph-fill ph-bell text-amber-400"></i> Bildirishnomalar
                                 </h3>
-                                <span class="text-xs text-slate-500">Yangi: 3</span>
+                                <span class="text-xs text-slate-500 dropdown-muted">Yangi: 3</span>
                             </div>
                             <div class="max-h-64 overflow-y-auto">
                                 <a href="#"
-                                    class="flex items-start gap-3 p-4 hover:bg-[#1c3255] transition border-b border-[#1c3255]/50">
+                                    class="flex items-start gap-3 p-4 hover:bg-[#1c3255] transition border-b border-[#1c3255]/50 dropdown-item">
                                     <div
                                         class="w-10 h-10 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0">
                                         <i class="ph-fill ph-user-plus"></i>
@@ -157,7 +157,7 @@
                                     </div>
                                 </a>
                                 <a href="#"
-                                    class="flex items-start gap-3 p-4 hover:bg-[#1c3255] transition border-b border-[#1c3255]/50">
+                                    class="flex items-start gap-3 p-4 hover:bg-[#1c3255] transition border-b border-[#1c3255]/50 dropdown-item">
                                     <div
                                         class="w-10 h-10 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center flex-shrink-0">
                                         <i class="ph-fill ph-money"></i>
@@ -168,7 +168,7 @@
                                         <p class="text-xs text-slate-500 mt-1">1 soat oldin</p>
                                     </div>
                                 </a>
-                                <a href="#" class="flex items-start gap-3 p-4 hover:bg-[#1c3255] transition">
+                                <a href="#" class="flex items-start gap-3 p-4 hover:bg-[#1c3255] transition dropdown-item">
                                     <div
                                         class="w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
                                         <i class="ph-fill ph-warning"></i>
@@ -181,11 +181,17 @@
                                 </a>
                             </div>
                             <a href="#"
-                                class="block p-3 text-center text-sm text-blue-400 hover:bg-[#1c3255] transition border-t border-[#1c3255]">
+                                class="block p-3 text-center text-sm text-blue-400 hover:bg-[#1c3255] transition border-t border-[#1c3255] dropdown-item">
                                 Barchasini ko'rish →
                             </a>
                         </div>
                     </div>
+
+                    <!-- Theme Toggle -->
+                    <button @click="darkMode = !darkMode" class="header-btn" type="button" aria-label="Theme toggle">
+                        <i class="ph ph-moon text-xl" x-show="!darkMode" x-cloak></i>
+                        <i class="ph ph-sun text-xl" x-show="darkMode" x-cloak></i>
+                    </button>
 
                     <!-- Settings -->
                     <button class="p-2.5 text-slate-400 hover:text-blue-400 hover:bg-[#152642] rounded-xl transition">
@@ -231,7 +237,7 @@
             </header>
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto p-6 bg-[#0a1628]">
+            <main class="flex-1 overflow-y-auto p-6 main-content">
                 {% if messages %}
                 <div class="mb-6 space-y-3">
                     {% for message in messages %}
@@ -257,5 +263,4 @@
             class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" x-cloak></div>
     </div>
 </body>
-
 </html>

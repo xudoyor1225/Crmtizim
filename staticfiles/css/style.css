@@ -41,9 +41,67 @@
 }
 
 /* ============================================
+   BASE THEME BACKGROUNDS
+   ============================================ */
+
+body {
+    background: var(--navy-900);
+    color: var(--text-light);
+}
+
+html:not(.dark) body {
+    background: var(--light-bg);
+    color: var(--light-text-primary);
+}
+
+/* ============================================
    LIGHT MODE STYLES
    Modern, Clean & Professional White Theme
    ============================================ */
+
+/* Light mode header & sidebar containers */
+html:not(.dark) .header-dark {
+    background: var(--light-surface);
+    border-bottom: 1px solid var(--light-border);
+    color: var(--light-text-primary);
+}
+
+html:not(.dark) .sidebar-dark {
+    background: var(--light-surface);
+    border-right: 1px solid var(--light-border);
+}
+
+html:not(.dark) .profile-panel {
+    background: var(--light-bg-secondary);
+    border-top: 1px solid var(--light-border);
+}
+
+html:not(.dark) .main-content {
+    background: var(--light-bg);
+}
+
+/* Light mode dropdowns */
+html:not(.dark) .dropdown-panel {
+    background: var(--light-surface);
+    border: 1px solid var(--light-border);
+}
+
+html:not(.dark) .dropdown-panel .dropdown-item {
+    color: var(--light-text-primary);
+    border-color: var(--light-border);
+}
+
+html:not(.dark) .dropdown-panel .dropdown-item:hover {
+    background: var(--light-hover);
+}
+
+html:not(.dark) .dropdown-panel .dropdown-title {
+    color: var(--light-text-primary);
+}
+
+html:not(.dark) .dropdown-panel .dropdown-muted {
+    color: var(--light-text-muted);
+}
 
 :root {
     /* Light Mode - Premium White Colors */
@@ -745,6 +803,21 @@ html:not(.dark) .sidebar-section {
     background: rgba(15, 31, 53, 0.95);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--navy-700);
+}
+
+/* Light mode header icons */
+html:not(.dark) .header-btn {
+    color: var(--light-text-muted);
+    background: transparent;
+    border-radius: 12px;
+    padding: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+html:not(.dark) .header-btn:hover {
+    color: var(--light-accent);
+    background: var(--light-accent-light);
+    transform: scale(1.05);
 }
 
 /* ============================================
@@ -1524,23 +1597,23 @@ html:not(.dark) div[id$="modal"] > div:last-child {
 }
 
 /* ============================================
-   DARK MODE - DEFAULT ASOSIY TEMA
-   Dark mode har doim ishlatiladi
+   DARK MODE - SCOPED STYLES
+   Faqat .dark class bilan ishlaydi
    ============================================ */
 
-/* Dark mode inputlar - UNIVERSAL */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="number"],
-input[type="tel"],
-input[type="date"],
-input[type="time"],
-input[type="datetime-local"],
-input[type="url"],
-input[type="search"],
-select,
-textarea {
+/* Dark mode inputlar - SCOPED */
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="number"],
+.dark input[type="tel"],
+.dark input[type="date"],
+.dark input[type="time"],
+.dark input[type="datetime-local"],
+.dark input[type="url"],
+.dark input[type="search"],
+.dark select,
+.dark textarea {
     width: 100%;
     padding: 0.75rem 1rem !important;
     background: var(--navy-800) !important;
@@ -1552,24 +1625,24 @@ textarea {
     transition: all 0.2s ease;
 }
 
-input::placeholder,
-textarea::placeholder {
+.dark input::placeholder,
+.dark textarea::placeholder {
     color: var(--text-dim) !important;
 }
 
 /* Focus state - dark mode */
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="number"]:focus,
-input[type="tel"]:focus,
-input[type="date"]:focus,
-input[type="time"]:focus,
-input[type="datetime-local"]:focus,
-input[type="url"]:focus,
-input[type="search"]:focus,
-select:focus,
-textarea:focus {
+.dark input[type="text"]:focus,
+.dark input[type="email"]:focus,
+.dark input[type="password"]:focus,
+.dark input[type="number"]:focus,
+.dark input[type="tel"]:focus,
+.dark input[type="date"]:focus,
+.dark input[type="time"]:focus,
+.dark input[type="datetime-local"]:focus,
+.dark input[type="url"]:focus,
+.dark input[type="search"]:focus,
+.dark select:focus,
+.dark textarea:focus {
     outline: none !important;
     border-color: var(--accent-blue) !important;
     background: var(--navy-900) !important;
@@ -1577,63 +1650,63 @@ textarea:focus {
 }
 
 /* Hover state - dark mode */
-input[type="text"]:hover,
-input[type="email"]:hover,
-input[type="password"]:hover,
-input[type="number"]:hover,
-input[type="tel"]:hover,
-input[type="date"]:hover,
-input[type="time"]:hover,
-select:hover,
-textarea:hover {
+.dark input[type="text"]:hover,
+.dark input[type="email"]:hover,
+.dark input[type="password"]:hover,
+.dark input[type="number"]:hover,
+.dark input[type="tel"]:hover,
+.dark input[type="date"]:hover,
+.dark input[type="time"]:hover,
+.dark select:hover,
+.dark textarea:hover {
     border-color: var(--navy-500) !important;
     background: var(--navy-800) !important;
 }
 
 /* Select dropdown options - dark mode */
-select option {
+.dark select option {
     background: var(--navy-800) !important;
     color: var(--text-white) !important;
     padding: 0.5rem;
 }
 
 /* Modal specific - dark mode */
-.fixed.inset-0 {
+.dark .fixed.inset-0 {
     background: rgba(0, 0, 0, 0.7) !important;
 }
 
-.fixed .bg-white,
-.modal .bg-white,
-div[class*="modal"] .bg-white,
-div[class*="Modal"] .bg-white {
+.dark .fixed .bg-white,
+.dark .modal .bg-white,
+.dark div[class*="modal"] .bg-white,
+.dark div[class*="Modal"] .bg-white {
     background: var(--navy-800) !important;
 }
 
-.rounded-2xl.p-6,
-.rounded-2xl.p-5 {
+.dark .rounded-2xl.p-6,
+.dark .rounded-2xl.p-5 {
     background: var(--navy-800) !important;
 }
 
 /* Modal titles - dark mode */
-.modal h3,
-.modal h2,
-div[id*="Modal"] h3,
-div[id*="modal"] h3 {
+.dark .modal h3,
+.dark .modal h2,
+.dark div[id*="Modal"] h3,
+.dark div[id*="modal"] h3 {
     color: var(--text-white) !important;
     font-weight: 700;
 }
 
 /* Modal text - dark mode */
-.modal p,
-div[id*="Modal"] p,
-div[id*="modal"] p {
+.dark .modal p,
+.dark div[id*="Modal"] p,
+.dark div[id*="modal"] p {
     color: var(--text-light) !important;
 }
 
 /* Disabled inputs - dark mode */
-input:disabled,
-select:disabled,
-textarea:disabled {
+.dark input:disabled,
+.dark select:disabled,
+.dark textarea:disabled {
     background: var(--navy-900) !important;
     color: var(--text-dim) !important;
     cursor: not-allowed;
@@ -1641,8 +1714,8 @@ textarea:disabled {
 }
 
 /* Checkbox and Radio - dark mode */
-input[type="checkbox"],
-input[type="radio"] {
+.dark input[type="checkbox"],
+.dark input[type="radio"] {
     width: 1.25rem;
     height: 1.25rem;
     border: 1px solid var(--navy-600) !important;
@@ -1650,14 +1723,14 @@ input[type="radio"] {
     cursor: pointer;
 }
 
-input[type="checkbox"]:checked,
-input[type="radio"]:checked {
+.dark input[type="checkbox"]:checked,
+.dark input[type="radio"]:checked {
     background: var(--accent-blue) !important;
     border-color: var(--accent-blue) !important;
 }
 
 /* File input - dark mode */
-input[type="file"] {
+.dark input[type="file"] {
     background: var(--navy-800) !important;
     border: 1px dashed var(--navy-600) !important;
     padding: 1rem !important;
@@ -1666,210 +1739,199 @@ input[type="file"] {
     cursor: pointer;
 }
 
-input[type="file"]:hover {
+.dark input[type="file"]:hover {
     border-color: var(--accent-blue) !important;
     background: var(--navy-700) !important;
 }
 
 /* ============================================
-   UNIVERSAL DARK MODE OVERRIDE
-   Barcha oq elementlarni dark qilish
+   UNIVERSAL DARK MODE OVERRIDE - SCOPED
+   Faqat .dark class bilan ishlaydi
    ============================================ */
 
 /* Form va card containerlar - DARK */
-.bg-white,
-form.bg-white,
-div.bg-white {
+.dark .bg-white,
+.dark form.bg-white,
+.dark div.bg-white {
     background: var(--navy-800) !important;
     border-color: var(--navy-600) !important;
 }
 
 /* Gray backgrounds - DARK */
-.bg-gray-50,
-.bg-gray-100 {
+.dark .bg-gray-50,
+.dark .bg-gray-100 {
     background: var(--navy-700) !important;
 }
 
 /* Border colors - DARK */
-.border-gray-100,
-.border-gray-200 {
+.dark .border-gray-100,
+.dark .border-gray-200 {
     border-color: var(--navy-600) !important;
 }
 
 /* Text colors - LIGHT */
-.text-gray-800,
-.text-gray-900 {
+.dark .text-gray-800,
+.dark .text-gray-900 {
     color: var(--text-white) !important;
 }
 
-.text-gray-600,
-.text-gray-700 {
+.dark .text-gray-600,
+.dark .text-gray-700 {
     color: var(--text-light) !important;
 }
 
-.text-gray-500 {
+.dark .text-gray-500 {
     color: var(--text-muted) !important;
 }
 
 /* Labels - oq text */
-label,
-.form-label {
+.dark label,
+.dark .form-label {
     color: var(--text-light) !important;
 }
 
 /* Shadow adjustments for dark mode */
-.shadow-sm,
-.shadow {
+.dark .shadow-sm,
+.dark .shadow {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
 }
 
 /* Rounded containers - dark fon */
-.rounded-xl.p-6,
-.rounded-xl.p-4,
-.rounded-2xl.p-6 {
+.dark .rounded-xl.p-6,
+.dark .rounded-xl.p-4,
+.dark .rounded-2xl.p-6 {
     background: var(--navy-800) !important;
 }
 
 /* Hover effects for buttons */
-button.bg-gray-100:hover,
-a.bg-gray-100:hover {
+.dark button.bg-gray-100:hover,
+.dark a.bg-gray-100:hover {
     background: var(--navy-700) !important;
     color: var(--text-white) !important;
 }
 
-/* Specific overrides for common patterns */
-.space-y-6 > *,
-.space-y-4 > * {
-    /* Inherit dark theme */
-}
-
 /* Dropdown menus */
-.absolute.bg-white {
+.dark .absolute.bg-white {
     background: var(--navy-800) !important;
     border: 1px solid var(--navy-600) !important;
 }
 
 /* Card elements */
-.card,
-.panel {
+.dark .card,
+.dark .panel {
     background: var(--navy-800) !important;
     border: 1px solid var(--navy-600) !important;
 }
 
 /* ============================================
-   KUCHLI DARK MODE OVERRIDE - V2
-   Har qanday oq element uchun!
+   KUCHLI DARK MODE OVERRIDE - V2 SCOPED
+   Faqat .dark class bilan ishlaydi
    ============================================ */
 
 /* Form containers - MAXSUS */
-form[class*="bg-white"],
-div[class*="bg-white"],
-.bg-white.rounded-xl,
-.bg-white.rounded-2xl,
-.bg-white.shadow {
+.dark form[class*="bg-white"],
+.dark div[class*="bg-white"],
+.dark .bg-white.rounded-xl,
+.dark .bg-white.rounded-2xl,
+.dark .bg-white.shadow {
     background: var(--navy-800) !important;
     border-color: var(--navy-600) !important;
     color: var(--text-white) !important;
 }
 
 /* Space-y containers ichidagi elementlar */
-.space-y-6 > form,
-.space-y-4 > form,
-.space-y-6 > div,
-.space-y-4 > div {
+.dark .space-y-6 > form,
+.dark .space-y-4 > form,
+.dark .space-y-6 > div,
+.dark .space-y-4 > div {
     background: var(--navy-800) !important;
 }
 
 /* Max-w containers */
-.max-w-xl,
-.max-w-2xl,
-.max-w-3xl,
-.max-w-4xl {
+.dark .max-w-xl,
+.dark .max-w-2xl,
+.dark .max-w-3xl,
+.dark .max-w-4xl {
     color: var(--text-white) !important;
 }
 
 /* Har qanday form */
-form {
+.dark form {
     background: var(--navy-800) !important;
     color: var(--text-white) !important;
 }
 
 /* Har qanday div.rounded-xl */
-div.rounded-xl,
-div.rounded-2xl,
-div.rounded-lg {
+.dark div.rounded-xl,
+.dark div.rounded-2xl,
+.dark div.rounded-lg {
     background: var(--navy-800) !important;
 }
 
 /* p-6, p-4 bilan */
-.p-6,
-.p-4,
-.p-8 {
+.dark .p-6,
+.dark .p-4,
+.dark .p-8 {
     background: var(--navy-800) !important;
 }
 
 /* Body background */
-body {
+.dark body,
+html.dark body {
     background: var(--navy-900) !important;
 }
 
 /* Main content */
-main,
-.main-content {
+.dark main,
+.dark .main-content {
     background: var(--navy-900) !important;
 }
 
 /* All white backgrounds */
-*[class*="bg-white"] {
+.dark *[class*="bg-white"] {
     background: var(--navy-800) !important;
     border-color: var(--navy-600) !important;
 }
 
 /* All gray backgrounds */
-*[class*="bg-gray-50"],
-*[class*="bg-gray-100"],
-*[class*="bg-gray-200"] {
+.dark *[class*="bg-gray-50"],
+.dark *[class*="bg-gray-100"],
+.dark *[class*="bg-gray-200"] {
     background: var(--navy-700) !important;
     border-color: var(--navy-600) !important;
 }
 
 /* Border gray */
-*[class*="border-gray-100"],
-*[class*="border-gray-200"] {
+.dark *[class*="border-gray-100"],
+.dark *[class*="border-gray-200"] {
     border-color: var(--navy-600) !important;
 }
 
 /* Text gray */
-*[class*="text-gray-800"],
-*[class*="text-gray-900"] {
+.dark *[class*="text-gray-800"],
+.dark *[class*="text-gray-900"] {
     color: var(--text-white) !important;
 }
 
-*[class*="text-gray-600"],
-*[class*="text-gray-700"] {
+.dark *[class*="text-gray-600"],
+.dark *[class*="text-gray-700"] {
     color: var(--text-light) !important;
 }
 
 /* Placeholder text */
-::placeholder {
+.dark ::placeholder {
     color: var(--text-dim) !important;
 }
 
-/* Hover states */
-button:hover,
-a:hover {
-    opacity: 0.9;
-}
-
 /* FINAL OVERRIDE - eng kuchli */
-.bg-white.rounded-xl.shadow-sm.border.border-gray-100.p-6 {
+.dark .bg-white.rounded-xl.shadow-sm.border.border-gray-100.p-6 {
     background: var(--navy-800) !important;
     border: 1px solid var(--navy-600) !important;
     box-shadow: var(--shadow-md) !important;
 }
 
 /* Specific form styling */
-form.bg-white.rounded-xl.shadow-sm.border.border-gray-100.p-6.space-y-6 {
+.dark form.bg-white.rounded-xl.shadow-sm.border.border-gray-100.p-6.space-y-6 {
     background: var(--navy-800) !important;
     border: 1px solid var(--navy-600) !important;
 }
