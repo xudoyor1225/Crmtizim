@@ -2,59 +2,78 @@
 {% block title %}Do'kon kategoriyalari{% endblock %}
 {% block content %}
 <div class="space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-white">Kategoriyalar 📁</h1>
-            <p class="text-slate-400">Do'kon kategoriyalarini boshqaring</p>
+            <h1 class="text-2xl font-bold text-slate-800 bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600">
+                Kategoriyalar <span class="text-2xl text-amber-400">📁</span>
+            </h1>
+            <p class="text-slate-500 font-medium">Do'kon kategoriyalarini boshqaring va tartiblang</p>
         </div>
-        <div class="flex gap-3">
-            <a href="{% url 'operations:shop_item_list' %}" class="px-4 py-2.5 rounded-xl bg-[#1c3255] text-slate-300 hover:bg-[#234069] transition">
-                <i class="ph ph-package"></i> Mahsulotlar
+        <div class="flex flex-wrap gap-3">
+            <a href="{% url 'operations:shop_item_list' %}" class="px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-primary-600 hover:border-primary-200 hover:bg-primary-50 transition font-medium shadow-sm hover:shadow flex items-center gap-2">
+                <i class="ph ph-package text-lg"></i> Mahsulotlar
             </a>
-            <a href="{% url 'operations:shop' %}" class="px-4 py-2.5 rounded-xl bg-[#1c3255] text-slate-300 hover:bg-[#234069] transition">
-                <i class="ph ph-storefront"></i> Do'kon
+            <a href="{% url 'operations:shop' %}" class="px-5 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-primary-600 hover:border-primary-200 hover:bg-primary-50 transition font-medium shadow-sm hover:shadow flex items-center gap-2">
+                <i class="ph ph-storefront text-lg"></i> Do'kon
             </a>
-            <a href="{% url 'operations:shop_category_create' %}" class="px-4 py-2.5 bg-gradient-to-r from-indigo-500 to-violet-600 text-white rounded-xl font-medium">
-                <i class="ph ph-plus"></i> Yangi kategoriya
+            <a href="{% url 'operations:shop_category_create' %}" class="px-5 py-2.5 bg-gradient-to-r from-primary-600 to-indigo-600 hover:from-primary-700 hover:to-indigo-700 text-white rounded-xl font-medium shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 hover:-translate-y-0.5 transition flex items-center gap-2">
+                <i class="ph ph-plus-circle text-lg"></i> Yangi kategoriya
             </a>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {% for cat in categories %}
-        <div class="rounded-2xl p-5 bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255] hover:border-blue-500/50 transition">
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-xl bg-[#0f1f35] flex items-center justify-center">
-                    <span class="text-3xl">{{ cat.icon }}</span>
+        <div class="group relative rounded-2xl p-6 bg-white border border-slate-200 shadow-sm hover:shadow-xl hover:shadow-primary-500/10 hover:-translate-y-1 transition-all duration-300">
+            <!-- Decoration blob -->
+            <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-primary-50 to-indigo-50 rounded-bl-full rounded-tr-2xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
+
+            <div class="relative flex items-center gap-5">
+                <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-100 flex items-center justify-center text-4xl shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                    {{ cat.icon }}
                 </div>
                 <div class="flex-1">
-                    <h3 class="text-white font-bold text-lg">{{ cat.name }}</h3>
-                    <p class="text-slate-500 text-sm">{{ cat.items.count }} ta mahsulot</p>
+                    <h3 class="text-slate-800 font-bold text-lg group-hover:text-primary-600 transition-colors line-clamp-1" title="{{ cat.name }}">
+                        {{ cat.name }}
+                    </h3>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-50 text-primary-600 border border-primary-100">
+                            {{ cat.items.count }} ta mahsulot
+                        </span>
+                    </div>
                 </div>
             </div>
-            <div class="flex items-center justify-between mt-4 pt-4 border-t border-[#1c3255]">
-                <span class="text-slate-500 text-sm">Tartib: {{ cat.order }}</span>
+
+            <div class="flex items-center justify-between mt-6 pt-4 border-t border-slate-100">
+                <div class="flex items-center gap-1.5 text-slate-400 text-sm font-medium">
+                    <i class="ph ph-sort-ascending"></i>
+                    Tartib: {{ cat.order }}
+                </div>
                 <div class="flex gap-2">
                     <a href="{% url 'operations:shop_category_edit' cat.pk %}"
-                       class="p-2 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition">
-                        <i class="ph ph-pencil"></i>
+                       class="w-9 h-9 rounded-xl flex items-center justify-center bg-blue-50 text-blue-500 hover:bg-blue-500 hover:text-white transition-all shadow-sm hover:shadow-blue-500/30"
+                       title="Tahrirlash">
+                        <i class="ph-fill ph-pencil"></i>
                     </a>
                     <a href="{% url 'operations:shop_category_delete' cat.pk %}"
                        onclick="return confirm('Bu kategoriyani o\'chirmoqchimisiz?')"
-                       class="p-2 rounded-lg bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 transition">
-                        <i class="ph ph-trash"></i>
+                       class="w-9 h-9 rounded-xl flex items-center justify-center bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white transition-all shadow-sm hover:shadow-rose-500/30"
+                       title="O'chirish">
+                        <i class="ph-fill ph-trash"></i>
                     </a>
                 </div>
             </div>
         </div>
         {% empty %}
-        <div class="col-span-full rounded-2xl p-12 bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255] text-center">
-            <i class="ph ph-folder-open text-6xl text-slate-600 mb-4"></i>
-            <h3 class="text-xl font-bold text-white mb-2">Kategoriyalar yo'q</h3>
-            <p class="text-slate-500 mb-4">Do'kon uchun kategoriyalar yarating</p>
+        <div class="col-span-full py-16 text-center rounded-3xl bg-white border-2 border-dashed border-slate-200">
+            <div class="w-24 h-24 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+                <i class="ph-duotone ph-folder-open text-5xl text-primary-400"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-slate-800 mb-2">Kategoriyalar mavjud emas</h3>
+            <p class="text-slate-500 mb-8 max-w-md mx-auto text-lg">Do'koningizni tartibga solish uchun yangi mahsulot kategoriyalarini yarating.</p>
             <a href="{% url 'operations:shop_category_create' %}"
-               class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 to-violet-600 text-white rounded-xl font-medium">
-                <i class="ph ph-plus"></i> Birinchi kategoriyani yarating
+               class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary-600 to-indigo-600 text-white rounded-2xl font-bold shadow-xl shadow-primary-500/30 hover:shadow-primary-500/50 hover:-translate-y-1 transition text-lg">
+                <i class="ph-bold ph-plus-circle"></i> Birinchi kategoriyani qo'shish
             </a>
         </div>
         {% endfor %}
