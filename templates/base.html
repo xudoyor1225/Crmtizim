@@ -1,9 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="uz" x-data="{ 
-    darkMode: true,
-    sidebarOpen: window.innerWidth >= 1024
-}" :class="{ 'dark': darkMode }" x-init="darkMode = localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : true; $watch('darkMode', value => localStorage.setItem('theme', value ? 'dark' : 'light'))">
+<html lang="uz" x-data="{ sidebarOpen: window.innerWidth >= 1024 }">
 
 <head>
     <meta charset="UTF-8">
@@ -23,13 +20,12 @@
 
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        primary: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
-                        dark: { 800: '#1e293b', 900: '#0f172a' }
+                        primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 800: '#1e40af', 900: '#1e3a8a' },
+                        slate: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1e293b', 900: '#0f172a' }
                     }
                 }
             }
@@ -42,25 +38,25 @@
     </style>
 </head>
 
-<body class="font-sans antialiased overflow-hidden">
+<body class="font-sans antialiased overflow-hidden bg-slate-50 text-slate-800">
 
     <div class="flex h-screen w-full">
 
         <!-- SIDEBAR -->
         <aside
-            class="flex-shrink-0 w-64 flex flex-col transition-all duration-300 transform lg:transform-none z-50 absolute lg:relative h-full sidebar-dark"
+            class="flex-shrink-0 w-64 flex flex-col transition-all duration-300 transform lg:transform-none z-50 absolute lg:relative h-full bg-white border-r border-slate-200 shadow-sm"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
             <!-- Logo -->
-            <div class="h-16 flex items-center justify-center border-b border-[#152642]">
-                <span class="text-xl font-bold flex items-center gap-2 text-gradient">
+            <div class="h-16 flex items-center justify-center border-b border-slate-200 bg-gradient-to-r from-primary-600 to-primary-700">
+                <span class="text-xl font-bold flex items-center gap-2 text-white">
                     <i class="ph-fill ph-graduation-cap text-2xl"></i>
                     Smart Edu
                 </span>
             </div>
 
             <!-- Navigation -->
-            <div id="sidebar-nav" class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <div id="sidebar-nav" class="flex-1 overflow-y-auto py-4 px-3 space-y-1 bg-white">
                 {% include 'components/sidebar.html' %}
             </div>
 
@@ -91,18 +87,18 @@
             </script>
 
             <!-- User Profile -->
-            <div class="p-4 border-t border-[#152642] bg-[#0f1f35]/50 profile-panel">
+            <div class="p-4 border-t border-slate-200 bg-slate-50">
                 <div class="flex items-center gap-3">
                     <div
-                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white flex items-center justify-center font-bold shadow-md">
+                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 text-white flex items-center justify-center font-bold shadow-md">
                         {{ request.user.first_name|first }}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold truncate text-white">{{ request.user.first_name }}</p>
-                        <p class="text-xs truncate text-slate-400">{{ request.user.get_role_display }}</p>
+                        <p class="text-sm font-semibold truncate text-slate-800">{{ request.user.first_name }}</p>
+                        <p class="text-xs truncate text-slate-500">{{ request.user.get_role_display }}</p>
                     </div>
                     <a href="{% url 'logout' %}"
-                        class="transition p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10">
+                        class="transition p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50">
                         <i class="ph-fill ph-sign-out text-xl"></i>
                     </a>
                 </div>
@@ -110,16 +106,16 @@
         </aside>
 
         <!-- MAIN CONTENT -->
-        <div class="flex-1 flex flex-col h-screen min-w-0 overflow-hidden">
+        <div class="flex-1 flex flex-col h-screen min-w-0 overflow-hidden bg-slate-50">
 
             <!-- Header -->
-            <header class="h-16 flex items-center justify-between px-6 z-40 header-dark">
+            <header class="h-16 flex items-center justify-between px-6 z-40 bg-white border-b border-slate-200 shadow-sm">
                 <button @click="sidebarOpen = !sidebarOpen"
-                    class="focus:outline-none transition p-2 rounded-lg lg:hidden text-slate-400 hover:text-blue-400 hover:bg-[#152642]">
+                    class="focus:outline-none transition p-2 rounded-lg lg:hidden text-slate-500 hover:text-primary-600 hover:bg-primary-50">
                     <i class="ph ph-list text-2xl"></i>
                 </button>
 
-                <h1 class="text-lg font-bold hidden sm:block text-gradient">
+                <h1 class="text-lg font-bold hidden sm:block bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
                     {{ organization.name|default:"Smart Edu Center" }}
                 </h1>
 
@@ -128,100 +124,94 @@
                     <!-- Notification Dropdown -->
                     <div class="relative">
                         <button @click="notifOpen = !notifOpen"
-                            class="relative p-2.5 rounded-xl transition text-slate-400 hover:text-amber-400 hover:bg-[#152642]">
+                            class="relative p-2.5 rounded-xl transition text-slate-500 hover:text-amber-500 hover:bg-amber-50">
                             <i class="ph ph-bell text-xl"></i>
                             <span class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full animate-pulse"></span>
                         </button>
 
                         <!-- Dropdown -->
                         <div x-show="notifOpen" @click.away="notifOpen = false" x-transition
-                            class="absolute right-0 mt-2 w-80 bg-[#152642] border border-[#1c3255] rounded-xl shadow-2xl z-50 dropdown-panel"
+                            class="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-xl shadow-xl z-50"
                             x-cloak>
-                            <div class="p-4 border-b border-[#1c3255] flex items-center justify-between">
-                                <h3 class="font-bold text-white flex items-center gap-2 dropdown-title">
-                                    <i class="ph-fill ph-bell text-amber-400"></i> Bildirishnomalar
+                            <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50 rounded-t-xl">
+                                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                    <i class="ph-fill ph-bell text-amber-500"></i> Bildirishnomalar
                                 </h3>
-                                <span class="text-xs text-slate-500 dropdown-muted">Yangi: 3</span>
+                                <span class="text-xs text-slate-500 bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full">Yangi: 3</span>
                             </div>
                             <div class="max-h-64 overflow-y-auto">
                                 <a href="#"
-                                    class="flex items-start gap-3 p-4 hover:bg-[#1c3255] transition border-b border-[#1c3255]/50 dropdown-item">
+                                    class="flex items-start gap-3 p-4 hover:bg-slate-50 transition border-b border-slate-100">
                                     <div
-                                        class="w-10 h-10 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0">
+                                        class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
                                         <i class="ph-fill ph-user-plus"></i>
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <p class="text-sm text-white font-medium">Yangi o'quvchi qo'shildi</p>
-                                        <p class="text-xs text-slate-400 mt-0.5">Ali Valiyev guruhga qo'shildi</p>
-                                        <p class="text-xs text-slate-500 mt-1">5 daqiqa oldin</p>
+                                        <p class="text-sm text-slate-800 font-medium">Yangi o'quvchi qo'shildi</p>
+                                        <p class="text-xs text-slate-500 mt-0.5">Ali Valiyev guruhga qo'shildi</p>
+                                        <p class="text-xs text-slate-400 mt-1">5 daqiqa oldin</p>
                                     </div>
                                 </a>
                                 <a href="#"
-                                    class="flex items-start gap-3 p-4 hover:bg-[#1c3255] transition border-b border-[#1c3255]/50 dropdown-item">
+                                    class="flex items-start gap-3 p-4 hover:bg-slate-50 transition border-b border-slate-100">
                                     <div
-                                        class="w-10 h-10 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center flex-shrink-0">
+                                        class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center flex-shrink-0">
                                         <i class="ph-fill ph-money"></i>
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <p class="text-sm text-white font-medium">To'lov qabul qilindi</p>
-                                        <p class="text-xs text-slate-400 mt-0.5">500,000 so'm tushdi</p>
-                                        <p class="text-xs text-slate-500 mt-1">1 soat oldin</p>
+                                        <p class="text-sm text-slate-800 font-medium">To'lov qabul qilindi</p>
+                                        <p class="text-xs text-slate-500 mt-0.5">500,000 so'm tushdi</p>
+                                        <p class="text-xs text-slate-400 mt-1">1 soat oldin</p>
                                     </div>
                                 </a>
-                                <a href="#" class="flex items-start gap-3 p-4 hover:bg-[#1c3255] transition dropdown-item">
+                                <a href="#" class="flex items-start gap-3 p-4 hover:bg-slate-50 transition">
                                     <div
-                                        class="w-10 h-10 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center flex-shrink-0">
+                                        class="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0">
                                         <i class="ph-fill ph-warning"></i>
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <p class="text-sm text-white font-medium">Davomat belgilanmagan</p>
-                                        <p class="text-xs text-slate-400 mt-0.5">IELTS-A guruhida</p>
-                                        <p class="text-xs text-slate-500 mt-1">2 soat oldin</p>
+                                        <p class="text-sm text-slate-800 font-medium">Davomat belgilanmagan</p>
+                                        <p class="text-xs text-slate-500 mt-0.5">IELTS-A guruhida</p>
+                                        <p class="text-xs text-slate-400 mt-1">2 soat oldin</p>
                                     </div>
                                 </a>
                             </div>
                             <a href="#"
-                                class="block p-3 text-center text-sm text-blue-400 hover:bg-[#1c3255] transition border-t border-[#1c3255] dropdown-item">
+                                class="block p-3 text-center text-sm text-primary-600 hover:bg-primary-50 transition border-t border-slate-100 rounded-b-xl font-medium">
                                 Barchasini ko'rish →
                             </a>
                         </div>
                     </div>
 
-                    <!-- Theme Toggle -->
-                    <button @click="darkMode = !darkMode" class="header-btn" type="button" aria-label="Theme toggle">
-                        <i class="ph ph-moon text-xl" x-show="!darkMode" x-cloak></i>
-                        <i class="ph ph-sun text-xl" x-show="darkMode" x-cloak></i>
-                    </button>
-
                     <!-- Settings -->
-                    <button class="p-2.5 text-slate-400 hover:text-blue-400 hover:bg-[#152642] rounded-xl transition">
+                    <button class="p-2.5 text-slate-500 hover:text-primary-600 hover:bg-primary-50 rounded-xl transition">
                         <i class="ph ph-gear text-xl"></i>
                     </button>
 
                     <!-- Logout Button -->
                     <div class="relative">
                         <button @click="logoutOpen = true"
-                            class="p-2.5 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition">
+                            class="p-2.5 text-slate-500 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition">
                             <i class="ph ph-sign-out text-xl"></i>
                         </button>
 
                         <!-- Logout Confirmation Modal -->
                         <div x-show="logoutOpen" x-transition
                             class="fixed inset-0 z-50 flex items-center justify-center" x-cloak>
-                            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="logoutOpen = false">
+                            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="logoutOpen = false">
                             </div>
                             <div
-                                class="relative bg-[#152642] border border-[#1c3255] rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6">
+                                class="relative bg-white border border-slate-200 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6">
                                 <div class="text-center">
                                     <div
-                                        class="w-16 h-16 bg-rose-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <i class="ph-fill ph-sign-out text-3xl text-rose-400"></i>
+                                        class="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i class="ph-fill ph-sign-out text-3xl text-rose-500"></i>
                                     </div>
-                                    <h3 class="text-xl font-bold text-white mb-2">Chiqishni tasdiqlang</h3>
-                                    <p class="text-slate-400 text-sm mb-6">Tizimdan chiqmoqchimisiz?</p>
+                                    <h3 class="text-xl font-bold text-slate-800 mb-2">Chiqishni tasdiqlang</h3>
+                                    <p class="text-slate-500 text-sm mb-6">Tizimdan chiqmoqchimisiz?</p>
                                     <div class="flex gap-3">
                                         <button @click="logoutOpen = false"
-                                            class="flex-1 px-4 py-2.5 bg-[#1c3255] text-slate-300 rounded-xl font-medium hover:bg-[#234069] transition">
+                                            class="flex-1 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition">
                                             Bekor qilish
                                         </button>
                                         <a href="{% url 'logout' %}"
@@ -237,15 +227,15 @@
             </header>
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto p-6 main-content">
+            <main class="flex-1 overflow-y-auto p-6 bg-slate-50">
                 {% if messages %}
                 <div class="mb-6 space-y-3">
                     {% for message in messages %}
                     <div class="p-4 rounded-xl flex items-center gap-3 animate-fadeIn
                         {% if message.tags == 'error' %}
-                        bg-rose-500/10 text-rose-400 border border-rose-500/30
+                        bg-rose-50 text-rose-600 border border-rose-200
                         {% else %}
-                        bg-emerald-500/10 text-emerald-400 border border-emerald-500/30
+                        bg-emerald-50 text-emerald-600 border border-emerald-200
                         {% endif %}">
                         <i class="ph {% if message.tags == 'error' %}ph-warning-circle{% else %}ph-check-circle{% endif %} text-xl"></i>
                         {{ message }}
@@ -260,7 +250,7 @@
 
         <!-- Overlay -->
         <div x-show="sidebarOpen && window.innerWidth < 1024" @click="sidebarOpen = false" x-transition.opacity
-            class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" x-cloak></div>
+            class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden" x-cloak></div>
     </div>
 </body>
 </html>
