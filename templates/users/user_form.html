@@ -8,17 +8,17 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-white">{{ title }} 👤</h1>
+            <h1 class="text-2xl font-bold text-slate-800">{{ title }} 👤</h1>
             <p class="text-slate-400">Foydalanuvchi ma'lumotlarini kiriting</p>
         </div>
         <a href="{% url 'users:user_list' %}"
-            class="px-4 py-2.5 rounded-xl flex items-center gap-2 transition font-medium bg-[#1c3255] text-slate-300 hover:bg-[#234069]">
+            class="px-4 py-2.5 rounded-xl flex items-center gap-2 transition font-medium bg-slate-100 text-slate-600 hover:bg-slate-200">
             <i class="ph ph-arrow-left"></i> Orqaga
         </a>
     </div>
 
     <!-- Form Card -->
-    <div class="rounded-2xl p-6 bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255]">
+    <div class="rounded-2xl p-6 bg-white border border-slate-200">
 
         {% if form.errors %}
             <div class="bg-red-500/20 border border-red-500/50 text-red-400 p-4 rounded-xl mb-6 text-sm">
@@ -36,40 +36,40 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Ism *</label>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">Ism *</label>
                     <input type="text" name="first_name" value="{{ form.first_name.value|default:'' }}"
-                        class="w-full px-4 py-3 rounded-xl border bg-[#0f1f35] border-[#1c3255] text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500"
+                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1D546D]/30 focus:border-[#1D546D]"
                         placeholder="Ismni kiriting" required>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Familiya *</label>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">Familiya *</label>
                     <input type="text" name="last_name" value="{{ form.last_name.value|default:'' }}"
-                        class="w-full px-4 py-3 rounded-xl border bg-[#0f1f35] border-[#1c3255] text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500"
+                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1D546D]/30 focus:border-[#1D546D]"
                         placeholder="Familiyani kiriting" required>
                 </div>
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-slate-300 mb-2">Telefon *</label>
+                <label class="block text-sm font-medium text-slate-600 mb-2">Telefon *</label>
                 <input type="text" name="phone" value="{{ form.phone.value|default:'' }}"
-                    class="w-full px-4 py-3 rounded-xl border bg-[#0f1f35] border-[#1c3255] text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500"
+                    class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1D546D]/30 focus:border-[#1D546D]"
                     placeholder="+998901234567" required>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Roli *</label>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">Roli *</label>
                     <select name="role" required
-                        class="w-full px-4 py-3 rounded-xl border bg-[#0f1f35] border-[#1c3255] text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500">
+                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1D546D]/30 focus:border-[#1D546D]">
                         {% for value, label in form.fields.role.choices %}
                         <option value="{{ value }}" {% if form.role.value == value %}selected{% endif %}>{{ label }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Filial</label>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">Filial</label>
                     <select name="branch"
-                        class="w-full px-4 py-3 rounded-xl border bg-[#0f1f35] border-[#1c3255] text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500">
+                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1D546D]/30 focus:border-[#1D546D]">
                         <option value="">Tanlang...</option>
                         {% for value, label in form.fields.branch.choices %}
                         {% if value %}
@@ -81,27 +81,27 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-slate-300 mb-2">Parol {% if not form.instance.pk %}*{% else %}(Agar o'zgartirsangiz){% endif %}</label>
+                <label class="block text-sm font-medium text-slate-600 mb-2">Parol {% if not form.instance.pk %}*{% else %}(Agar o'zgartirsangiz){% endif %}</label>
                 <input type="password" name="password"
-                    class="w-full px-4 py-3 rounded-xl border bg-[#0f1f35] border-[#1c3255] text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500"
+                    class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1D546D]/30 focus:border-[#1D546D]"
                     placeholder="••••••••" {% if not form.instance.pk %}required{% endif %}>
             </div>
 
             <div class="flex items-center gap-3 pt-2">
                 <input type="checkbox" name="is_active" id="is_active"
-                    class="w-5 h-5 rounded border-[#1c3255] bg-[#0f1f35] text-blue-500 focus:ring-blue-500/50"
+                    class="w-5 h-5 rounded border-slate-200 bg-slate-50 text-[#1D546D] focus:ring-[#1D546D]/30"
                     {% if form.is_active.value %}checked{% endif %}>
-                <label for="is_active" class="text-sm text-slate-300">Aktiv foydalanuvchi</label>
+                <label for="is_active" class="text-sm text-slate-600">Aktiv foydalanuvchi</label>
             </div>
 
             <!-- Submit -->
-            <div class="flex justify-end gap-3 pt-6 border-t border-[#1c3255]">
+            <div class="flex justify-end gap-3 pt-6 border-t border-slate-200">
                 <a href="{% url 'users:user_list' %}"
-                    class="px-6 py-3 rounded-xl font-medium transition bg-[#1c3255] text-slate-300 hover:bg-[#234069]">
+                    class="px-6 py-3 rounded-xl font-medium transition bg-slate-100 text-slate-600 hover:bg-slate-200">
                     Bekor qilish
                 </a>
                 <button type="submit"
-                    class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-violet-600 text-white rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2 font-medium">
+                    class="px-6 py-3 bg-gradient-to-r from-[#5F9598] to-violet-600 text-slate-800 rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2 font-medium">
                     <i class="ph ph-check"></i> Saqlash
                 </button>
             </div>

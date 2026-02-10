@@ -8,15 +8,15 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-white flex items-center gap-3">
+            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
                 Salom, {{ request.user.first_name }}! 🎓
                 <span class="icon-box-lg icon-purple">
                     <i class="ph-fill ph-student"></i>
                 </span>
             </h1>
-            <p class="text-slate-400 mt-1">O'quvchi shaxsiy kabineti</p>
+            <p class="text-slate-500 mt-1">O'quvchi shaxsiy kabineti</p>
         </div>
-        <div class="px-4 py-2 bg-[#152642] rounded-xl text-sm font-medium text-slate-300 border border-[#1c3255]">
+        <div class="px-4 py-2 bg-white rounded-xl text-sm font-medium text-slate-600 border border-slate-200 shadow-sm">
             {% now "d F Y" %}
         </div>
     </div>
@@ -26,23 +26,23 @@
         <!-- Davomat -->
         <div class="stat-card hover-lift">
             <div class="flex items-center justify-between mb-2">
-                <p class="text-xs font-semibold text-slate-400 uppercase">Davomat</p>
-                <i class="ph-fill ph-check-circle text-xl text-emerald-400"></i>
+                <p class="text-xs font-semibold text-slate-500 uppercase">Davomat</p>
+                <i class="ph-fill ph-check-circle text-xl text-emerald-500"></i>
             </div>
-            <p class="text-3xl font-bold text-white">{{ attendance_rate }}%</p>
-            <div class="w-full bg-[#0f1f35] rounded-full h-1.5 mt-3">
-                <div class="bg-emerald-500 h-1.5 rounded-full" style="width: {{ attendance_rate }}%"></div>
+            <p class="text-3xl font-bold text-slate-800">{{ attendance_rate }}%</p>
+            <div class="progress-bar-bg mt-3">
+                <div class="progress-bar-fill bg-emerald-500" style="width: {{ attendance_rate }}%"></div>
             </div>
         </div>
 
         <!-- O'rtacha Baho -->
         <div class="stat-card hover-lift">
             <div class="flex items-center justify-between mb-2">
-                <p class="text-xs font-semibold text-slate-400 uppercase">O'rtacha Baho</p>
-                <i class="ph-fill ph-star text-xl text-blue-400"></i>
+                <p class="text-xs font-semibold text-slate-500 uppercase">O'rtacha Baho</p>
+                <i class="ph-fill ph-star text-xl text-[#1D546D]"></i>
             </div>
-            <p class="text-3xl font-bold text-white">{{ avg_grade }}</p>
-            <div class="flex gap-0.5 mt-3 text-amber-400 text-xs">
+            <p class="text-3xl font-bold text-slate-800">{{ avg_grade }}</p>
+            <div class="flex gap-0.5 mt-3 text-amber-500 text-xs">
                 <i class="ph-fill ph-star"></i>
                 <i class="ph-fill ph-star"></i>
                 <i class="ph-fill ph-star"></i>
@@ -52,16 +52,17 @@
         </div>
 
         <!-- Coin Balance / XP -->
-        <div class="stat-card hover-lift bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border-amber-500/30">
+        <div class="stat-card hover-lift bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200">
             <div class="flex items-center justify-between mb-2">
-                <p class="text-xs font-semibold text-amber-400 uppercase">💰 Coin Balans</p>
+                <p class="text-xs font-semibold text-amber-700 uppercase">💰 Coin Balans</p>
                 {% if student_rank > 0 %}
-                <span class="px-2 py-0.5 bg-amber-500 text-white text-xs font-bold rounded-full">#{{ student_rank }}</span>
+                <span class="px-2 py-0.5 bg-amber-500 text-white text-xs font-bold rounded-full">#{{ student_rank
+                    }}</span>
                 {% endif %}
             </div>
-            <p class="text-3xl font-bold text-amber-400">{{ coin_balance|default:total_xp }}</p>
+            <p class="text-3xl font-bold text-amber-600">{{ coin_balance|default:total_xp }}</p>
             <div class="flex items-center gap-2 mt-2">
-                <span class="text-xs text-purple-400 font-medium flex items-center gap-1">
+                <span class="text-xs text-purple-600 font-medium flex items-center gap-1">
                     <i class="ph-fill ph-lightning"></i> {{ total_xp }} XP
                 </span>
             </div>
@@ -70,13 +71,13 @@
         <!-- Balans -->
         <div class="stat-card hover-lift">
             <div class="flex items-center justify-between mb-2">
-                <p class="text-xs font-semibold text-slate-400 uppercase">Balans</p>
+                <p class="text-xs font-semibold text-slate-500 uppercase">Balans</p>
                 <i class="ph-fill ph-wallet text-xl text-slate-400"></i>
             </div>
-            <p class="text-3xl font-bold {% if balance < 0 %}text-rose-400{% else %}text-white{% endif %}">
+            <p class="text-3xl font-bold {% if balance < 0 %}text-rose-500{% else %}text-slate-800{% endif %}">
                 {{ balance|floatformat:0 }}
             </p>
-            <p class="text-xs text-slate-500 mt-2">UZS</p>
+            <p class="text-xs text-slate-400 mt-2">UZS</p>
         </div>
     </div>
 
@@ -86,8 +87,8 @@
         <!-- Leaderboard -->
         <div class="lg:col-span-2 card">
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="ph-fill ph-trophy text-amber-400"></i> Top 10 - Eng Faol O'quvchilar
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <i class="ph-fill ph-trophy text-amber-500"></i> Top 10 - Eng Faol O'quvchilar
                 </h3>
                 {% if student_rank > 0 %}
                 <span class="badge badge-amber">Sizning o'rningiz: #{{ student_rank }}</span>
@@ -96,36 +97,36 @@
             <div class="space-y-2 max-h-80 overflow-y-auto">
                 {% for s in leaderboard %}
                 <div
-                    class="flex items-center justify-between p-3 rounded-xl transition {% if s.id == request.user.id %}bg-amber-500/10 border border-amber-500/30{% else %}hover:bg-[#152642]{% endif %}">
+                    class="flex items-center justify-between p-3 rounded-xl transition {% if s.id == request.user.id %}bg-amber-50 border border-amber-200{% else %}hover:bg-slate-50{% endif %}">
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-lg
                             {% if forloop.counter == 1 %}bg-gradient-to-br from-amber-400 to-yellow-500 text-white shadow-lg shadow-amber-500/30
                             {% elif forloop.counter == 2 %}bg-gradient-to-br from-gray-300 to-gray-400 text-white
                             {% elif forloop.counter == 3 %}bg-gradient-to-br from-amber-600 to-orange-500 text-white
-                            {% else %}bg-[#152642] text-slate-400{% endif %}">
+                            {% else %}bg-slate-100 text-slate-500{% endif %}">
                             {{ forloop.counter }}
                         </div>
                         <div class="flex items-center gap-3">
                             <div
-                                class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white font-bold shadow-md shadow-blue-500/30">
+                                class="w-10 h-10 rounded-full bg-gradient-to-br from-[#1D546D] to-[#5F9598] flex items-center justify-center text-white font-bold shadow-md shadow-[#1D546D]/20">
                                 {{ s.first_name|first|default:"?" }}
                             </div>
                             <div>
-                                <h4 class="font-semibold text-white">{{ s.first_name }} {{ s.last_name }}</h4>
+                                <h4 class="font-semibold text-slate-800">{{ s.first_name }} {{ s.last_name }}</h4>
                                 {% if s.id == request.user.id %}
-                                <span class="text-xs text-amber-400 font-medium">Bu sizsiz! 🎉</span>
+                                <span class="text-xs text-amber-600 font-medium">Bu sizsiz! 🎉</span>
                                 {% endif %}
                             </div>
                         </div>
                     </div>
                     <div class="text-right">
-                        <span class="text-lg font-bold text-purple-400">{{ s.xp_total|default:0 }}</span>
-                        <span class="text-xs text-slate-500 ml-1">XP</span>
+                        <span class="text-lg font-bold text-purple-600">{{ s.xp_total|default:0 }}</span>
+                        <span class="text-xs text-slate-400 ml-1">XP</span>
                     </div>
                 </div>
                 {% empty %}
                 <div class="text-center py-8 text-slate-400">
-                    <i class="ph ph-users text-4xl text-slate-600 mb-2"></i>
+                    <i class="ph ph-users text-4xl text-slate-300 mb-2"></i>
                     <p class="font-medium">Hozircha reyting ma'lumotlari yo'q</p>
                 </div>
                 {% endfor %}
@@ -135,7 +136,7 @@
         <!-- Shop Quick Access -->
         <div class="flex flex-col gap-6">
             <a href="{% url 'operations:shop' %}"
-                class="card bg-gradient-to-br from-emerald-600 to-teal-700 border-emerald-500/30 hover:scale-[1.02] transition">
+                class="card bg-gradient-to-br from-emerald-500 to-teal-600 border-emerald-400 hover:scale-[1.02] transition p-6">
                 <div class="flex items-center justify-between mb-4">
                     <div
                         class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center text-3xl backdrop-blur-sm">
@@ -148,28 +149,28 @@
                     {% endif %}
                 </div>
                 <h3 class="text-xl font-bold text-white mb-1">Do'konga kirish</h3>
-                <p class="text-emerald-200 text-sm">Coin sarflab sovg'alar oling!</p>
+                <p class="text-emerald-100 text-sm">Coin sarflab sovg'alar oling!</p>
                 <div class="mt-4 flex items-center gap-2">
-                    <span class="text-amber-300 font-bold text-lg">{{ coin_balance|default:total_xp }} 💰</span>
+                    <span class="text-amber-200 font-bold text-lg">{{ coin_balance|default:total_xp }} 💰</span>
                     <span class="text-xs text-white/70">mavjud</span>
                 </div>
             </a>
 
             <!-- Mini Stats -->
             <div class="card">
-                <h4 class="text-sm font-bold text-slate-400 mb-4 uppercase">Tezkor statistika</h4>
+                <h4 class="text-sm font-bold text-slate-500 mb-4 uppercase">Tezkor statistika</h4>
                 <div class="space-y-3">
                     <div class="flex items-center justify-between">
-                        <span class="text-sm text-slate-400">Davomat</span>
-                        <span class="font-bold text-emerald-400">{{ attendance_rate }}%</span>
+                        <span class="text-sm text-slate-500">Davomat</span>
+                        <span class="font-bold text-emerald-600">{{ attendance_rate }}%</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-sm text-slate-400">O'rtacha baho</span>
-                        <span class="font-bold text-blue-400">{{ avg_grade }}</span>
+                        <span class="text-sm text-slate-500">O'rtacha baho</span>
+                        <span class="font-bold text-[#1D546D]">{{ avg_grade }}</span>
                     </div>
                     <div class="flex items-center justify-between">
-                        <span class="text-sm text-slate-400">Guruhlar</span>
-                        <span class="font-bold text-purple-400">{{ my_enrollments|length }}</span>
+                        <span class="text-sm text-slate-500">Guruhlar</span>
+                        <span class="font-bold text-purple-600">{{ my_enrollments|length }}</span>
                     </div>
                 </div>
             </div>
@@ -179,8 +180,8 @@
     <!-- Grades Chart -->
     <div class="card">
         <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xl font-bold text-white flex items-center gap-2">
-                <i class="ph-fill ph-trend-up text-blue-400"></i> O'zlashtirish Tarixi
+            <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <i class="ph-fill ph-trend-up text-[#1D546D]"></i> O'zlashtirish Tarixi
             </h3>
         </div>
         <div class="h-64 w-full">
@@ -192,7 +193,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             const ctx = document.getElementById('gradesChart').getContext('2d');
             const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.3)');
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.15)');
             gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
 
             new Chart(ctx, {
@@ -207,11 +208,11 @@
             borderWidth: 3,
             tension: 0.4,
             fill: true,
-            pointBackgroundColor: '#0f1f35',
+            pointBackgroundColor: '#ffffff',
             pointBorderColor: '#3b82f6',
             pointBorderWidth: 2,
-            pointRadius: 6,
-            pointHoverRadius: 8
+            pointRadius: 5,
+            pointHoverRadius: 7
                     }]
                 },
             options: {
@@ -220,24 +221,27 @@
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    backgroundColor: 'rgba(15, 31, 53, 0.95)',
-                    borderColor: '#1c3255',
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    titleColor: '#1e293b',
+                    bodyColor: '#475569',
+                    borderColor: '#e2e8f0',
                     borderWidth: 1,
                     padding: 12,
-                    cornerRadius: 8,
+                    cornerRadius: 10,
                     displayColors: false,
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
                 }
             },
             scales: {
                 y: {
                     beginAtZero: true,
                     max: 100,
-                    grid: { color: 'rgba(28, 50, 85, 0.5)', borderDash: [5, 5] },
-                    ticks: { color: '#64748b' }
+                    grid: { color: 'rgba(226, 232, 240, 0.6)', borderDash: [5, 5] },
+                    ticks: { color: '#94a3b8' }
                 },
                 x: {
                     grid: { display: false },
-                    ticks: { color: '#64748b' }
+                    ticks: { color: '#94a3b8' }
                 }
             }
         }
@@ -247,14 +251,15 @@
 
     <!-- Bugungi Darslar -->
     <div class="card">
-        <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-            <i class="ph-fill ph-calendar-check text-blue-400"></i> Bugungi Darslarim
+        <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <i class="ph-fill ph-calendar-check text-[#1D546D]"></i> Bugungi Darslarim
         </h3>
 
         {% if today_lessons %}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             {% for lesson in today_lessons %}
-            <div class="p-5 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-700 text-white shadow-lg">
+            <div
+                class="p-5 rounded-2xl bg-gradient-to-br from-[#1D546D] to-purple-600 text-white shadow-lg shadow-[#1D546D]/20">
                 <div class="flex items-start justify-between">
                     <div>
                         <span
@@ -262,8 +267,9 @@
                             {{ lesson.start_time|time:"H:i" }} - {{ lesson.end_time|time:"H:i" }}
                         </span>
                         <h4 class="text-2xl font-bold mb-1">{{ lesson.group.name }}</h4>
-                        <p class="text-blue-200 text-sm flex items-center gap-2">
-                            <i class="ph-fill ph-chalkboard-teacher"></i> {{ lesson.teacher.first_name }} {{ lesson.teacher.last_name }}
+                        <p class="text-[#1D546D] text-sm flex items-center gap-2">
+                            <i class="ph-fill ph-chalkboard-teacher"></i> {{ lesson.teacher.first_name }} {{
+                            lesson.teacher.last_name }}
                         </p>
                     </div>
                     <div
@@ -272,10 +278,10 @@
                     </div>
                 </div>
                 <div class="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
-                    <p class="text-xs text-blue-200 flex items-center gap-1">
+                    <p class="text-xs text-[#1D546D] flex items-center gap-1">
                         <i class="ph ph-door"></i> {{ lesson.room.name|default:"Xona yo'q" }}
                     </p>
-                    <span class="px-2 py-0.5 text-[10px] font-bold uppercase bg-white text-blue-600 rounded">
+                    <span class="px-2 py-0.5 text-[10px] font-bold uppercase bg-white text-[#1D546D] rounded">
                         {{ lesson.get_status_display }}
                     </span>
                 </div>
@@ -283,11 +289,11 @@
             {% endfor %}
         </div>
         {% else %}
-        <div class="text-center py-12 text-slate-400 bg-[#152642] rounded-xl border border-dashed border-[#1c3255]">
-            <div class="w-16 h-16 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <i class="ph-fill ph-sun text-3xl text-amber-400"></i>
+        <div class="text-center py-12 text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+            <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                <i class="ph-fill ph-sun text-3xl text-amber-500"></i>
             </div>
-            <p class="font-medium text-white">Bugun darslaringiz yo'q!</p>
+            <p class="font-medium text-slate-700">Bugun darslaringiz yo'q!</p>
         </div>
         {% endif %}
     </div>
@@ -297,27 +303,28 @@
 
         <!-- Mening Guruhlarim -->
         <div class="card flex flex-col h-full">
-            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <i class="ph-fill ph-books text-blue-400"></i> Mening Kurslarim
+            <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+                <i class="ph-fill ph-books text-[#1D546D]"></i> Mening Kurslarim
             </h3>
             <div class="space-y-4 flex-1">
                 {% for enrollment in my_enrollments %}
                 <div
-                    class="p-4 bg-[#152642] border border-[#1c3255] rounded-xl hover:border-blue-500/50 transition group">
+                    class="p-4 bg-slate-50 border border-slate-100 rounded-xl hover:border-primary-200 hover:shadow-md transition group">
                     <div class="flex items-center gap-4">
                         <div
-                            class="w-14 h-14 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md shadow-blue-500/20 group-hover:rotate-6 transition-transform">
+                            class="w-14 h-14 bg-gradient-to-br from-[#1D546D] to-[#5F9598] rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md shadow-[#1D546D]/20 group-hover:rotate-6 transition-transform">
                             {{ enrollment.group.course.name|first }}
                         </div>
                         <div class="flex-1">
-                            <h4 class="font-bold text-white text-lg">{{ enrollment.group.name }}</h4>
-                            <p class="text-xs text-slate-500 bg-[#0f1f35] px-2 py-0.5 rounded inline-block mt-1">{{ enrollment.group.course.name }}</p>
+                            <h4 class="font-bold text-slate-800 text-lg">{{ enrollment.group.name }}</h4>
+                            <p class="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded inline-block mt-1">{{
+                                enrollment.group.course.name }}</p>
                         </div>
                         <div class="text-right">
                             <span class="px-2.5 py-1 text-xs font-bold rounded-lg border
-                                {% if enrollment.status == 'active' %}bg-emerald-500/20 text-emerald-400 border-emerald-500/30
-                                {% elif enrollment.status == 'frozen' %}bg-blue-500/20 text-blue-400 border-blue-500/30
-                                {% else %}bg-slate-500/20 text-slate-400 border-slate-500/30{% endif %}">
+                                {% if enrollment.status == 'active' %}bg-emerald-50 text-emerald-700 border-emerald-200
+                                {% elif enrollment.status == 'frozen' %}bg-[#1D546D]/5 text-[#061E29] border-[#5F9598]/25
+                                {% else %}bg-slate-50 text-slate-600 border-slate-200{% endif %}">
                                 {{ enrollment.get_status_display }}
                             </span>
                         </div>
@@ -333,37 +340,40 @@
 
         <!-- So'nggi Davomatlar -->
         <div class="card flex flex-col h-full">
-            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <i class="ph-fill ph-chart-bar text-purple-400"></i> So'nggi Davomatlar
+            <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+                <i class="ph-fill ph-chart-bar text-purple-500"></i> So'nggi Davomatlar
             </h3>
             <div class="space-y-3 flex-1 overflow-y-auto max-h-[400px] pr-2">
                 {% for att in my_attendance %}
-                <div class="flex items-center justify-between p-3 hover:bg-[#152642] rounded-xl transition">
+                <div class="flex items-center justify-between p-3 hover:bg-slate-50 rounded-xl transition">
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg
-                            {% if att.status == 'present' %}bg-emerald-500/20 text-emerald-400
-                            {% elif att.status == 'absent' %}bg-rose-500/20 text-rose-400
-                            {% elif att.status == 'late' %}bg-amber-500/20 text-amber-400
-                            {% else %}bg-slate-500/20 text-slate-400{% endif %}">
+                            {% if att.status == 'present' %}bg-emerald-50 text-emerald-600
+                            {% elif att.status == 'absent' %}bg-rose-50 text-rose-500
+                            {% elif att.status == 'late' %}bg-amber-50 text-amber-600
+                            {% else %}bg-slate-100 text-slate-400{% endif %}">
                             {% if att.status == 'present' %}<i class="ph-fill ph-check"></i>
                             {% elif att.status == 'absent' %}<i class="ph-fill ph-x"></i>
                             {% elif att.status == 'late' %}<i class="ph-fill ph-clock"></i>
                             {% else %}<i class="ph-fill ph-minus"></i>{% endif %}
                         </div>
                         <div>
-                            <p class="font-bold text-white text-sm">{{ att.lesson.group.name }}</p>
-                            <p class="text-[10px] text-slate-500 font-medium uppercase">{{ att.lesson.date|date:"d M Y" }}</p>
+                            <p class="font-bold text-slate-800 text-sm">{{ att.lesson.group.name }}</p>
+                            <p class="text-[10px] text-slate-400 font-medium uppercase">{{ att.lesson.date|date:"d M Y"
+                                }}</p>
                         </div>
                     </div>
                     <div class="text-right flex flex-col items-end">
                         {% if att.grade %}
                         <div class="flex items-baseline gap-0.5">
-                            <span class="text-lg font-bold text-blue-400">{{ att.grade }}</span>
-                            <span class="text-[10px] text-slate-500">/100</span>
+                            <span class="text-lg font-bold text-[#1D546D]">{{ att.grade }}</span>
+                            <span class="text-[10px] text-slate-400">/100</span>
                         </div>
                         {% endif %}
                         {% if att.xp_points > 0 %}
-                        <span class="text-[10px] font-bold text-white bg-gradient-to-r from-purple-500 to-pink-500 px-1.5 py-0.5 rounded shadow-sm shadow-purple-500/30">+{{ att.xp_points }} XP</span>
+                        <span
+                            class="text-[10px] font-bold text-white bg-gradient-to-r from-purple-500 to-pink-500 px-1.5 py-0.5 rounded shadow-sm shadow-[#1D546D]/15">+{{
+                            att.xp_points }} XP</span>
                         {% endif %}
                     </div>
                 </div>
@@ -379,17 +389,19 @@
     <!-- Keyingi Darslar -->
     {% if upcoming_lessons %}
     <div class="card">
-        <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-            <i class="ph-fill ph-calendar text-amber-400"></i> Kelasi Darslar
+        <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <i class="ph-fill ph-calendar text-amber-500"></i> Kelasi Darslar
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {% for lesson in upcoming_lessons %}
-            <div class="p-5 bg-[#152642] border border-[#1c3255] rounded-xl hover:border-blue-500/50 transition">
-                <div class="text-xs font-bold text-amber-400 bg-amber-500/10 px-2 py-1 rounded-md inline-block mb-3">{{
+            <div
+                class="p-5 bg-slate-50 border border-slate-100 rounded-xl hover:border-primary-200 hover:shadow-md transition">
+                <div class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-md inline-block mb-3">{{
                     lesson.date|date:"d M, l" }}</div>
-                <div class="text-2xl font-bold text-white mb-1">{{ lesson.start_time|time:"H:i" }}</div>
-                <p class="text-sm font-semibold text-slate-300">{{ lesson.group.name }}</p>
-                <p class="text-xs text-slate-500 mt-2 flex items-center gap-1"><i class="ph ph-door"></i> {{ lesson.room.name|default:"-" }}</p>
+                <div class="text-2xl font-bold text-slate-800 mb-1">{{ lesson.start_time|time:"H:i" }}</div>
+                <p class="text-sm font-semibold text-slate-600">{{ lesson.group.name }}</p>
+                <p class="text-xs text-slate-500 mt-2 flex items-center gap-1"><i class="ph ph-door"></i> {{
+                    lesson.room.name|default:"-" }}</p>
             </div>
             {% endfor %}
         </div>
@@ -399,11 +411,11 @@
     <!-- To'lovlar Tarixi -->
     {% if payments %}
     <div class="card">
-        <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-            <i class="ph-fill ph-receipt text-cyan-400"></i> To'lovlar Tarixi
+        <h3 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <i class="ph-fill ph-receipt text-cyan-500"></i> To'lovlar Tarixi
         </h3>
         <div class="overflow-x-auto">
-            <table class="w-full table-dark">
+            <table class="w-full">
                 <thead>
                     <tr>
                         <th class="rounded-l-xl">Sana</th>
@@ -419,15 +431,15 @@
                         <td class="text-sm">{{ payment.get_transaction_type_display }}</td>
                         <td
                             class="text-right font-bold 
-                            {% if payment.transaction_type == 'income' %}text-emerald-400{% else %}text-rose-400{% endif %}">
+                            {% if payment.transaction_type == 'income' %}text-emerald-600{% else %}text-rose-500{% endif %}">
                             {% if payment.transaction_type == 'income' %}+{% else %}-{% endif %} {{
                             payment.amount|floatformat:0 }}
                         </td>
                         <td class="text-center">
-                            <span class="px-2.5 py-1 text-xs font-bold rounded-lg
-                                {% if payment.status == 'confirmed' %}bg-emerald-500/20 text-emerald-400 border border-emerald-500/30
-                                {% elif payment.status == 'pending' %}bg-amber-500/20 text-amber-400 border border-amber-500/30
-                                {% else %}bg-rose-500/20 text-rose-400 border border-rose-500/30{% endif %}">
+                            <span class="px-2.5 py-1 text-xs font-bold rounded-lg border
+                                {% if payment.status == 'confirmed' %}bg-emerald-50 text-emerald-700 border-emerald-200
+                                {% elif payment.status == 'pending' %}bg-amber-50 text-amber-700 border-amber-200
+                                {% else %}bg-rose-50 text-rose-700 border-rose-200{% endif %}">
                                 {{ payment.get_status_display }}
                             </span>
                         </td>

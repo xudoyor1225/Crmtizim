@@ -8,30 +8,32 @@
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-white">Moliyaviy Hisobot 📈</h1>
-            <p class="text-slate-400">{{ start_date|date:"d M" }} - {{ end_date|date:"d F Y" }}</p>
+            <h1 class="text-2xl font-bold text-[#061E29] flex items-center gap-2">
+                <i class="ph ph-chart-bar text-[#1D546D]"></i> Moliyaviy Hisobot
+            </h1>
+            <p class="text-[#5F9598]">{{ start_date|date:"d M" }} - {{ end_date|date:"d F Y" }}</p>
         </div>
         <div class="flex items-center gap-3">
             <!-- Davr tanlash -->
             <select onchange="window.location.href='?days='+this.value"
-                class="px-4 py-2 rounded-xl border bg-[#0f1f35] border-[#1c3255] text-white">
-                <option value="7" {% if days == 7 %}selected{% endif %}>7 kun</option>
-                <option value="30" {% if days == 30 %}selected{% endif %}>30 kun</option>
-                <option value="90" {% if days == 90 %}selected{% endif %}>90 kun</option>
-                <option value="365" {% if days == 365 %}selected{% endif %}>1 yil</option>
+                class="px-4 py-2 rounded-xl border bg-white border-slate-200 text-slate-700 shadow-sm">
+                <option value="7" {% if days==7 %}selected{% endif %}>7 kun</option>
+                <option value="30" {% if days==30 %}selected{% endif %}>30 kun</option>
+                <option value="90" {% if days==90 %}selected{% endif %}>90 kun</option>
+                <option value="365" {% if days==365 %}selected{% endif %}>1 yil</option>
             </select>
 
             <!-- Export -->
             <a href="{% url 'finance:export_report_excel' %}"
-                class="px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition flex items-center gap-2">
+                class="px-4 py-2 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition flex items-center gap-2 shadow-sm hover:shadow-md hover:shadow-emerald-500/15">
                 <i class="ph ph-file-xls"></i> Excel
             </a>
             <a href="{% url 'finance:export_report_pdf' %}"
-                class="px-4 py-2 bg-rose-600 text-white rounded-xl hover:bg-rose-700 transition flex items-center gap-2">
+                class="px-4 py-2 bg-rose-600 text-white rounded-xl hover:bg-rose-700 transition flex items-center gap-2 shadow-sm hover:shadow-md hover:shadow-rose-500/15">
                 <i class="ph ph-file-pdf"></i> PDF
             </a>
             <button onclick="window.print()"
-                class="px-4 py-2 bg-[#1c3255] text-slate-300 rounded-xl hover:bg-[#234069] transition flex items-center gap-2">
+                class="px-4 py-2 bg-white text-slate-600 rounded-xl hover:bg-slate-50 transition flex items-center gap-2 border border-slate-200 shadow-sm">
                 <i class="ph ph-printer"></i> Chop etish
             </button>
         </div>
@@ -39,17 +41,35 @@
 
     <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-gradient-to-br from-emerald-500/20 to-green-600/10 border border-emerald-500/30 rounded-xl p-6">
-            <p class="text-emerald-400 text-sm font-medium">Jami Kirim</p>
-            <p class="text-3xl font-bold text-emerald-300 mt-2">+{{ total_income|floatformat:0 }}</p>
+        <div
+            class="bg-white rounded-2xl p-6 border border-emerald-200 shadow-sm hover:shadow-lg hover:shadow-emerald-500/10 transition-all duration-300">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                    <i class="ph ph-arrow-down text-emerald-600 text-xl"></i>
+                </div>
+                <p class="text-[#5F9598] text-sm font-medium">Jami Kirim</p>
+            </div>
+            <p class="text-3xl font-bold text-emerald-600">+{{ total_income|floatformat:0 }}</p>
         </div>
-        <div class="bg-gradient-to-br from-rose-500/20 to-red-600/10 border border-rose-500/30 rounded-xl p-6">
-            <p class="text-rose-400 text-sm font-medium">Jami Chiqim</p>
-            <p class="text-3xl font-bold text-rose-300 mt-2">-{{ total_expense|floatformat:0 }}</p>
+        <div
+            class="bg-white rounded-2xl p-6 border border-rose-200 shadow-sm hover:shadow-lg hover:shadow-rose-500/10 transition-all duration-300">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center">
+                    <i class="ph ph-arrow-up text-rose-600 text-xl"></i>
+                </div>
+                <p class="text-[#5F9598] text-sm font-medium">Jami Chiqim</p>
+            </div>
+            <p class="text-3xl font-bold text-rose-600">-{{ total_expense|floatformat:0 }}</p>
         </div>
-        <div class="bg-gradient-to-br from-blue-500/20 to-indigo-600/10 border border-blue-500/30 rounded-xl p-6">
-            <p class="text-blue-400 text-sm font-medium">Sof Foyda</p>
-            <p class="text-3xl font-bold text-blue-300 mt-2">{{ net_profit|floatformat:0 }}</p>
+        <div
+            class="bg-white rounded-2xl p-6 border border-[#5F9598]/20 shadow-sm hover:shadow-lg hover:shadow-[#1D546D]/10 transition-all duration-300">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 bg-[#1D546D]/10 rounded-xl flex items-center justify-center">
+                    <i class="ph ph-scales text-[#1D546D] text-xl"></i>
+                </div>
+                <p class="text-[#5F9598] text-sm font-medium">Sof Foyda</p>
+            </div>
+            <p class="text-3xl font-bold text-[#1D546D]">{{ net_profit|floatformat:0 }}</p>
         </div>
     </div>
 
@@ -57,16 +77,19 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <!-- Kunlik Grafika -->
-        <div class="rounded-2xl border border-[#1c3255] bg-gradient-to-br from-[#152642] to-[#0f1f35] p-6 col-span-2">
-            <h3 class="font-bold text-white mb-6">30 kunlik dinamika</h3>
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 col-span-2 shadow-sm">
+            <h3 class="font-bold text-[#061E29] mb-6 flex items-center gap-2">
+                <i class="ph ph-chart-line text-[#1D546D]"></i> 30 kunlik dinamika
+            </h3>
             <div class="h-64 flex items-end gap-2">
                 {% for day in daily_stats %}
                 <div class="flex-1 flex flex-col justify-end h-full gap-1 group relative">
                     <!-- Tooltip -->
-                    <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-[#0f1f35] border border-[#1c3255] text-white text-xs p-2 rounded-lg z-10 whitespace-nowrap">
-                        <p class="font-bold">{{ day.date|date:"d M" }}</p>
-                        <p class="text-emerald-400">In: {{ day.income }}</p>
-                        <p class="text-rose-400">Out: {{ day.expense }}</p>
+                    <div
+                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-white border border-slate-200 text-slate-700 text-xs p-3 rounded-xl z-10 whitespace-nowrap shadow-lg shadow-[#061E29]/8">
+                        <p class="font-bold text-[#061E29]">{{ day.date|date:"d M" }}</p>
+                        <p class="text-emerald-600">In: {{ day.income }}</p>
+                        <p class="text-rose-600">Out: {{ day.expense }}</p>
                     </div>
 
                     {% if day.income > 0 %}
@@ -80,7 +103,7 @@
                     {% endif %}
 
                     {% if forloop.counter|divisibleby:5 %}
-                    <span class="text-[10px] text-slate-500 text-center mt-2">{{ day.date|date:"d" }}</span>
+                    <span class="text-[10px] text-[#5F9598] text-center mt-2">{{ day.date|date:"d" }}</span>
                     {% endif %}
                 </div>
                 {% endfor %}
@@ -88,45 +111,53 @@
         </div>
 
         <!-- Kirim Kategoriyalari -->
-        <div class="rounded-2xl border border-[#1c3255] bg-gradient-to-br from-[#152642] to-[#0f1f35] p-6">
-            <h3 class="font-bold text-white mb-4">Kirim Tuzilmasi</h3>
+        <div
+            class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg hover:shadow-[#5F9598]/5 transition-all duration-300">
+            <h3 class="font-bold text-[#061E29] mb-4 flex items-center gap-2">
+                <i class="ph ph-arrow-circle-down text-emerald-500"></i> Kirim Tuzilmasi
+            </h3>
             <div class="space-y-4">
                 {% for cat in income_by_category %}
                 {% if cat.total > 0 %}
                 <div>
                     <div class="flex justify-between text-sm mb-1">
-                        <span class="text-slate-400">{{ cat.category__name }}</span>
-                        <span class="font-bold text-white">{{ cat.total|floatformat:0 }}</span>
+                        <span class="text-[#5F9598]">{{ cat.category__name }}</span>
+                        <span class="font-bold text-[#061E29]">{{ cat.total|floatformat:0 }}</span>
                     </div>
-                    <div class="w-full bg-[#0f1f35] rounded-full h-2">
-                        <div class="bg-emerald-500 h-2 rounded-full" style="width: {% widthratio cat.total total_income 100 %}%;"></div>
+                    <div class="w-full bg-slate-100 rounded-full h-2">
+                        <div class="bg-emerald-500 h-2 rounded-full transition-all duration-500"
+                            style="width: {% widthratio cat.total total_income 100 %}%;"></div>
                     </div>
                 </div>
                 {% endif %}
                 {% empty %}
-                <p class="text-slate-500 text-center">Ma'lumot yo'q</p>
+                <p class="text-[#5F9598] text-center">Ma'lumot yo'q</p>
                 {% endfor %}
             </div>
         </div>
 
         <!-- Chiqim Kategoriyalari -->
-        <div class="rounded-2xl border border-[#1c3255] bg-gradient-to-br from-[#152642] to-[#0f1f35] p-6">
-            <h3 class="font-bold text-white mb-4">Chiqim Tuzilmasi</h3>
+        <div
+            class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg hover:shadow-[#5F9598]/5 transition-all duration-300">
+            <h3 class="font-bold text-[#061E29] mb-4 flex items-center gap-2">
+                <i class="ph ph-arrow-circle-up text-rose-500"></i> Chiqim Tuzilmasi
+            </h3>
             <div class="space-y-4">
                 {% for cat in expense_by_category %}
                 {% if cat.total > 0 %}
                 <div>
                     <div class="flex justify-between text-sm mb-1">
-                        <span class="text-slate-400">{{ cat.category__name }}</span>
-                        <span class="font-bold text-white">{{ cat.total|floatformat:0 }}</span>
+                        <span class="text-[#5F9598]">{{ cat.category__name }}</span>
+                        <span class="font-bold text-[#061E29]">{{ cat.total|floatformat:0 }}</span>
                     </div>
-                    <div class="w-full bg-[#0f1f35] rounded-full h-2">
-                        <div class="bg-rose-500 h-2 rounded-full" style="width: {% widthratio cat.total total_expense 100 %}%;"></div>
+                    <div class="w-full bg-slate-100 rounded-full h-2">
+                        <div class="bg-rose-500 h-2 rounded-full transition-all duration-500"
+                            style="width: {% widthratio cat.total total_expense 100 %}%;"></div>
                     </div>
                 </div>
                 {% endif %}
                 {% empty %}
-                <p class="text-slate-500 text-center">Ma'lumot yo'q</p>
+                <p class="text-[#5F9598] text-center">Ma'lumot yo'q</p>
                 {% endfor %}
             </div>
         </div>
@@ -137,66 +168,71 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <!-- Kassalar balansi -->
-        <div class="rounded-2xl border border-[#1c3255] bg-gradient-to-br from-[#152642] to-[#0f1f35] p-6">
-            <h3 class="font-bold text-white mb-4 flex items-center gap-2">
-                <i class="ph-fill ph-vault text-blue-400"></i> Kassalar balansi
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+            <h3 class="font-bold text-[#061E29] mb-4 flex items-center gap-2">
+                <i class="ph-fill ph-vault text-[#1D546D]"></i> Kassalar balansi
             </h3>
             <div class="space-y-3">
                 {% for account in accounts %}
-                <div class="flex items-center justify-between p-3 rounded-xl bg-[#0f1f35]">
+                <div
+                    class="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-white hover:shadow-sm transition-all">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
-                            <i class="ph-fill ph-wallet text-blue-400"></i>
+                        <div class="w-10 h-10 rounded-full bg-[#1D546D]/10 flex items-center justify-center">
+                            <i class="ph-fill ph-wallet text-[#1D546D]"></i>
                         </div>
                         <div>
-                            <p class="text-white font-medium">{{ account.name }}</p>
-                            <p class="text-xs text-slate-500">{{ account.get_account_type_display }}</p>
+                            <p class="text-[#061E29] font-medium">{{ account.name }}</p>
+                            <p class="text-xs text-[#5F9598]">{{ account.get_account_type_display }}</p>
                         </div>
                     </div>
-                    <p class="text-lg font-bold {% if account.balance >= 0 %}text-emerald-400{% else %}text-rose-400{% endif %}">
+                    <p
+                        class="text-lg font-bold {% if account.balance >= 0 %}text-emerald-600{% else %}text-rose-600{% endif %}">
                         {{ account.balance|floatformat:0 }}
                     </p>
                 </div>
                 {% empty %}
-                <p class="text-slate-500 text-center py-4">Kassalar yo'q</p>
+                <p class="text-[#5F9598] text-center py-4">Kassalar yo'q</p>
                 {% endfor %}
 
-                <div class="flex items-center justify-between p-3 rounded-xl bg-blue-500/20 border border-blue-500/30 mt-4">
-                    <span class="text-blue-400 font-medium">Jami balans:</span>
-                    <span class="text-xl font-bold text-blue-300">{{ total_balance|floatformat:0 }} so'm</span>
+                <div
+                    class="flex items-center justify-between p-4 rounded-xl bg-[#1D546D]/5 border border-[#5F9598]/15 mt-4">
+                    <span class="text-[#1D546D] font-medium">Jami balans:</span>
+                    <span class="text-xl font-bold text-[#1D546D]">{{ total_balance|floatformat:0 }} so'm</span>
                 </div>
             </div>
         </div>
 
         <!-- Oxirgi tranzaksiyalar -->
-        <div class="rounded-2xl border border-[#1c3255] bg-gradient-to-br from-[#152642] to-[#0f1f35] p-6">
-            <h3 class="font-bold text-white mb-4 flex items-center gap-2">
-                <i class="ph-fill ph-clock-counter-clockwise text-violet-400"></i> Oxirgi tranzaksiyalar
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+            <h3 class="font-bold text-[#061E29] mb-4 flex items-center gap-2">
+                <i class="ph-fill ph-clock-counter-clockwise text-purple-500"></i> Oxirgi tranzaksiyalar
             </h3>
             <div class="space-y-2 max-h-[300px] overflow-y-auto">
                 {% for tx in recent_transactions %}
-                <div class="flex items-center justify-between p-3 rounded-xl bg-[#0f1f35]">
+                <div
+                    class="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-white hover:shadow-sm transition-all">
                     <div class="flex items-center gap-3">
                         {% if tx.transaction_type == 'income' %}
-                        <div class="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                            <i class="ph-fill ph-arrow-down text-emerald-400"></i>
+                        <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                            <i class="ph-fill ph-arrow-down text-emerald-600"></i>
                         </div>
                         {% else %}
-                        <div class="w-8 h-8 rounded-full bg-rose-500/20 flex items-center justify-center">
-                            <i class="ph-fill ph-arrow-up text-rose-400"></i>
+                        <div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center">
+                            <i class="ph-fill ph-arrow-up text-rose-600"></i>
                         </div>
                         {% endif %}
                         <div>
-                            <p class="text-white text-sm">{{ tx.category.name|default:"Noma'lum" }}</p>
-                            <p class="text-xs text-slate-500">{{ tx.created_at|date:"d.m.Y H:i" }}</p>
+                            <p class="text-[#061E29] text-sm">{{ tx.category.name|default:"Noma'lum" }}</p>
+                            <p class="text-xs text-[#5F9598]">{{ tx.created_at|date:"d.m.Y H:i" }}</p>
                         </div>
                     </div>
-                    <p class="font-bold {% if tx.transaction_type == 'income' %}text-emerald-400{% else %}text-rose-400{% endif %}">
+                    <p
+                        class="font-bold {% if tx.transaction_type == 'income' %}text-emerald-600{% else %}text-rose-600{% endif %}">
                         {% if tx.transaction_type == 'income' %}+{% else %}-{% endif %}{{ tx.amount|floatformat:0 }}
                     </p>
                 </div>
                 {% empty %}
-                <p class="text-slate-500 text-center py-4">Tranzaksiyalar yo'q</p>
+                <p class="text-[#5F9598] text-center py-4">Tranzaksiyalar yo'q</p>
                 {% endfor %}
             </div>
         </div>

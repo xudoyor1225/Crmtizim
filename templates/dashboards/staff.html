@@ -3,38 +3,52 @@
 {% block title %}Xodim Kabineti{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
+<div class="space-y-8 animate-fadeIn">
 
-    <!-- Sarlavha -->
+    <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Xush kelibsiz, {{ request.user.first_name }}! 👋</h1>
-            <p class="text-gray-500">Xodim kabineti</p>
+            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
+                Xush kelibsiz, {{ request.user.first_name }}! 👋
+                <span class="icon-box-lg icon-blue">
+                    <i class="ph-fill ph-briefcase"></i>
+                </span>
+            </h1>
+            <p class="text-slate-500 mt-1">Xodim kabineti</p>
         </div>
-        <div class="text-sm text-gray-500">{% now "d F Y" %}</div>
+        <div class="px-4 py-2 bg-white rounded-xl text-sm font-medium text-slate-600 border border-slate-200 shadow-sm">
+            {% now "d F Y" %}
+        </div>
     </div>
 
     <!-- PROFIL KARTASI -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+    <div class="card p-8">
         <div class="flex items-center gap-6">
             <div
-                class="w-20 h-20 bg-gradient-to-br from-gray-400 to-gray-500 rounded-full flex items-center justify-center text-white text-3xl font-bold">
+                class="w-20 h-20 bg-gradient-to-br from-[#1D546D] to-[#061E29] rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-[#1D546D]/20">
                 {{ request.user.first_name|first }}
             </div>
             <div>
-                <h2 class="text-xl font-bold text-gray-800">{{ request.user.first_name }} {{ request.user.last_name }}
+                <h2 class="text-xl font-bold text-slate-800">{{ request.user.first_name }} {{ request.user.last_name }}
                 </h2>
-                <p class="text-gray-500">{{ request.user.get_role_display }}</p>
-                <p class="text-sm text-gray-400">{{ request.user.phone }}</p>
+                <p class="text-slate-500">{{ request.user.get_role_display }}</p>
+                <p class="text-sm text-slate-400 flex items-center gap-1 mt-1">
+                    <i class="ph-fill ph-phone"></i> {{ request.user.phone }}
+                </p>
             </div>
         </div>
     </div>
 
     <!-- MA'LUMOT -->
-    <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 text-center">
-        <i class="ph ph-info text-4xl text-blue-500 mb-2"></i>
-        <p class="text-blue-700">Sizning rolingiz uchun maxsus funksiyalar mavjud emas. Qo'shimcha huquqlar uchun
-            administratorga murojaat qiling.</p>
+    <div class="card bg-[#1D546D]/5 border-[#5F9598]/25 p-8 text-center">
+        <div class="w-16 h-16 bg-[#1D546D]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="ph-fill ph-info text-3xl text-[#1D546D]"></i>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800 mb-2">Maxsus funksiyalar mavjud emas</h3>
+        <p class="text-sm text-slate-600 max-w-md mx-auto">
+            Sizning rolingiz uchun maxsus funksiyalar mavjud emas. Qo'shimcha huquqlar uchun administratorga murojaat
+            qiling.
+        </p>
     </div>
 
 </div>

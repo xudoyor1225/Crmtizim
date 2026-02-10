@@ -8,25 +8,25 @@
     <!-- SARLAVHA + QUICK ACTIONS -->
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-                <i class="ph ph-package text-blue-400"></i>
+            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                <i class="ph ph-package text-[#1D546D]"></i>
                 Sklad - Sarf Materiallar
             </h1>
             <p class="text-slate-400">Resurslarni kuzatish va boshqarish</p>
         </div>
         <div class="flex gap-2">
             <a href="?low_stock=1"
-                class="inline-flex items-center gap-2 px-4 py-2.5 {% if show_low_stock %}bg-rose-500 text-white{% else %}bg-rose-500/20 text-rose-400{% endif %} rounded-xl font-medium hover:bg-rose-600 hover:text-white transition">
+                class="inline-flex items-center gap-2 px-4 py-2.5 {% if show_low_stock %}bg-rose-500 text-slate-800{% else %}bg-rose-500/20 text-rose-600{% endif %} rounded-xl font-medium hover:bg-rose-600 hover:text-slate-800 transition">
                 <i class="ph ph-warning"></i>
                 Tugayapti ({{ low_stock_count }})
             </a>
             {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
             <a href="{% url 'finance:supply_category_list' %}"
-                class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1c3255] text-slate-300 rounded-xl font-medium hover:bg-[#234069] transition">
+                class="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-600 rounded-xl font-medium hover:bg-slate-200 transition">
                 <i class="ph ph-folder"></i> Kategoriyalar
             </a>
             <a href="{% url 'finance:supply_create' %}"
-                class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition">
+                class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-green-600 text-slate-800 rounded-xl font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition">
                 <i class="ph ph-plus"></i> Yangi material
             </a>
             {% endif %}
@@ -35,36 +35,36 @@
 
     <!-- STATISTIKA KARTALAR -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="glass-panel p-4 rounded-xl border border-blue-100 dark:border-blue-900/30">
+        <div class="glass-panel p-4 rounded-xl border border-[#5F9598]/20">
             <div class="flex items-center gap-3">
-                <div class="p-3 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
-                    <i class="ph ph-cube text-xl text-blue-600 dark:text-blue-400"></i>
+                <div class="p-3 bg-[#1D546D]/10 rounded-lg">
+                    <i class="ph ph-cube text-xl text-[#1D546D]"></i>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Jami Resurslar</p>
-                    <p class="text-xl font-bold text-gray-800 dark:text-white">{{ total_items }}</p>
+                    <p class="text-sm text-slate-500">Jami Resurslar</p>
+                    <p class="text-xl font-bold text-slate-800">{{ total_items }}</p>
                 </div>
             </div>
         </div>
-        <div class="glass-panel p-4 rounded-xl border border-orange-100 dark:border-orange-900/30">
+        <div class="glass-panel p-4 rounded-xl border border-amber-200">
             <div class="flex items-center gap-3">
-                <div class="p-3 bg-orange-100 dark:bg-orange-900/40 rounded-lg">
-                    <i class="ph ph-warning text-xl text-orange-600 dark:text-orange-400"></i>
+                <div class="p-3 bg-orange-100 rounded-lg">
+                    <i class="ph ph-warning text-xl text-orange-600"></i>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Kam Qolganlar</p>
-                    <p class="text-xl font-bold text-orange-600 dark:text-orange-400">{{ low_stock_count }} ta</p>
+                    <p class="text-sm text-slate-500">Kam Qolganlar</p>
+                    <p class="text-xl font-bold text-orange-600">{{ low_stock_count }} ta</p>
                 </div>
             </div>
         </div>
-        <div class="glass-panel p-4 rounded-xl border border-green-100 dark:border-green-900/30">
+        <div class="glass-panel p-4 rounded-xl border border-emerald-200">
             <div class="flex items-center gap-3">
-                <div class="p-3 bg-green-100 dark:bg-green-900/40 rounded-lg">
-                    <i class="ph ph-money text-xl text-green-600 dark:text-green-400"></i>
+                <div class="p-3 bg-green-100 rounded-lg">
+                    <i class="ph ph-money text-xl text-green-600"></i>
                 </div>
                 <div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Umumiy Qiymat</p>
-                    <p class="text-xl font-bold text-green-600 dark:text-green-400">{{ total_value|floatformat:0 }} so'm
+                    <p class="text-sm text-slate-500">Umumiy Qiymat</p>
+                    <p class="text-xl font-bold text-green-600">{{ total_value|floatformat:0 }} so'm
                     </p>
                 </div>
             </div>
@@ -72,13 +72,13 @@
     </div>
 
     <!-- FILTERLAR -->
-    <div class="glass-panel rounded-xl border border-gray-100 dark:border-gray-800 p-4">
+    <div class="glass-panel rounded-xl border border-slate-100 p-4">
         <form method="GET" class="flex flex-wrap items-center gap-4">
             <div class="flex-1 min-w-[200px]">
                 <div class="relative">
                     <input type="text" name="q" value="{{ current_search|default:'' }}"
                         placeholder="Material qidirish..." class="w-full pl-10">
-                    <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 </div>
             </div>
 
@@ -90,99 +90,99 @@
             </select>
 
             <button type="submit"
-                class="px-4 py-2.5 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition">
+                class="px-4 py-2.5 bg-[#1D546D] text-slate-800 rounded-xl font-medium hover:bg-[#061E29] transition">
                 <i class="ph ph-funnel"></i> Filtrlash
             </button>
             <a href="{% url 'finance:supply_list' %}"
-                class="px-4 py-2.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-xl font-medium hover:bg-gray-200 transition">
+                class="px-4 py-2.5 bg-slate-100 text-slate-600 rounded-xl font-medium hover:bg-slate-200 transition">
                 Tozalash
             </a>
         </form>
     </div>
 
     <!-- MATERIALLAR JADVALI -->
-    <div class="glass-panel rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+    <div class="glass-panel rounded-2xl border border-slate-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-gray-50 dark:bg-gray-800/50">
+                <thead class="bg-slate-50">
                     <tr>
-                        <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                             Material</th>
-                        <th class="text-left px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                             Kategoriya</th>
-                        <th class="text-center px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        <th class="text-center px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                             Miqdor</th>
-                        <th class="text-center px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        <th class="text-center px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                             Min</th>
-                        <th class="text-right px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        <th class="text-right px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                             Narxi</th>
-                        <th class="text-right px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        <th class="text-right px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">
                             Amallar</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                <tbody class="divide-y divide-slate-100">
                     {% for supply in supplies %}
                     <tr
-                        class="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition {% if supply.is_low_stock %}bg-red-50/50 dark:bg-red-900/10{% endif %}">
+                        class="hover:bg-slate-50 transition {% if supply.is_low_stock %}bg-red-50/50{% endif %}">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div
-                                    class="w-10 h-10 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center text-white">
+                                    class="w-10 h-10 bg-gradient-to-br from-[#1D546D] to-[#5F9598] rounded-lg flex items-center justify-center text-slate-800">
                                     <i class="ph ph-cube text-lg"></i>
                                 </div>
                                 <div>
-                                    <div class="font-semibold text-gray-800 dark:text-white">{{ supply.name }}</div>
-                                    <div class="text-xs text-gray-500">{{ supply.unit }}</div>
+                                    <div class="font-semibold text-slate-800">{{ supply.name }}</div>
+                                    <div class="text-xs text-slate-500">{{ supply.unit }}</div>
                                 </div>
                             </div>
                         </td>
                         <td class="px-6 py-4">
                             <span
-                                class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded text-xs">
+                                class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs">
                                 {{ supply.category.name|default:"-" }}
                             </span>
                         </td>
                         <td class="px-6 py-4 text-center">
                             <span
-                                class="text-xl font-bold {% if supply.is_low_stock %}text-red-600 dark:text-red-400{% else %}text-gray-800 dark:text-white{% endif %}">
+                                class="text-xl font-bold {% if supply.is_low_stock %}text-red-600{% else %}text-slate-800{% endif %}">
                                 {{ supply.quantity }}
                             </span>
                             {% if supply.is_low_stock %}
                             <i class="ph ph-warning-circle text-red-500 ml-1"></i>
                             {% endif %}
                         </td>
-                        <td class="px-6 py-4 text-center text-gray-500">
+                        <td class="px-6 py-4 text-center text-slate-500">
                             {{ supply.min_quantity }}
                         </td>
-                        <td class="px-6 py-4 text-right text-gray-600 dark:text-gray-400">
+                        <td class="px-6 py-4 text-right text-slate-600">
                             {{ supply.unit_price|floatformat:0 }} so'm
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center justify-end gap-2">
                                 <!-- Qo'shish Modal trigger -->
                                 <button onclick="openAddModal({{ supply.id }}, '{{ supply.name }}')"
-                                    class="p-2 text-white bg-green-500 hover:bg-green-600 rounded-lg transition"
+                                    class="p-2 text-slate-800 bg-green-500 hover:bg-green-600 rounded-lg transition"
                                     title="Kirim">
                                     <i class="ph ph-plus"></i>
                                 </button>
                                 <!-- Yechish Modal trigger -->
                                 <button
                                     onclick="openRemoveModal({{ supply.id }}, '{{ supply.name }}', {{ supply.quantity }})"
-                                    class="p-2 text-white bg-red-500 hover:bg-red-600 rounded-lg transition"
+                                    class="p-2 text-slate-800 bg-red-500 hover:bg-red-600 rounded-lg transition"
                                     title="Chiqim">
                                     <i class="ph ph-minus"></i>
                                 </button>
                                 {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
                                 <!-- Tahrirlash -->
                                 <a href="{% url 'finance:supply_edit' supply.pk %}"
-                                    class="p-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg transition"
+                                    class="p-2 text-slate-800 bg-[#1D546D]/50 hover:bg-[#1D546D] rounded-lg transition"
                                     title="Tahrirlash">
                                     <i class="ph ph-pencil"></i>
                                 </a>
                                 <!-- O'chirish -->
                                 <a href="{% url 'finance:supply_delete' supply.pk %}"
                                     onclick="return confirm('{{ supply.name }} ni o\'chirmoqchimisiz?')"
-                                    class="p-2 text-white bg-rose-500 hover:bg-rose-600 rounded-lg transition"
+                                    class="p-2 text-slate-800 bg-rose-500 hover:bg-rose-600 rounded-lg transition"
                                     title="O'chirish">
                                     <i class="ph ph-trash"></i>
                                 </a>
@@ -195,10 +195,10 @@
                         <td colspan="6" class="px-6 py-12 text-center">
                             <div class="flex flex-col items-center">
                                 <div
-                                    class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
-                                    <i class="ph ph-package text-3xl text-gray-400"></i>
+                                    class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                                    <i class="ph ph-package text-3xl text-slate-400"></i>
                                 </div>
-                                <p class="text-gray-500 dark:text-gray-400">Hozircha materiallar yo'q</p>
+                                <p class="text-slate-500">Hozircha materiallar yo'q</p>
                             </div>
                         </td>
                     </tr>
@@ -211,24 +211,24 @@
 
 <!-- QO'SHISH MODALI -->
 <div id="addModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl">
-        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4">📦 Material Kirim</h3>
+    <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl">
+        <h3 class="text-lg font-bold text-slate-800 mb-4">📦 Material Kirim</h3>
         <form id="addForm" method="POST">
             {% csrf_token %}
-            <p id="addSupplyName" class="text-gray-600 dark:text-gray-400 mb-4"></p>
+            <p id="addSupplyName" class="text-slate-600 mb-4"></p>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Miqdor</label>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Miqdor</label>
                 <input type="number" name="quantity" required min="1" class="w-full" placeholder="Kiritilgan miqdor">
             </div>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Izoh</label>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Izoh</label>
                 <input type="text" name="notes" class="w-full" placeholder="Ixtiyoriy izoh">
             </div>
             <div class="flex gap-3">
                 <button type="button" onclick="closeModal('addModal')"
-                    class="flex-1 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium">Bekor</button>
+                    class="flex-1 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-medium">Bekor</button>
                 <button type="submit"
-                    class="flex-1 py-2.5 bg-green-500 text-white rounded-xl font-medium hover:bg-green-600">Qo'shish</button>
+                    class="flex-1 py-2.5 bg-green-500 text-slate-800 rounded-xl font-medium hover:bg-green-600">Qo'shish</button>
             </div>
         </form>
     </div>
@@ -236,26 +236,26 @@
 
 <!-- YECHISH MODALI -->
 <div id="removeModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
-    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl">
-        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4">📤 Material Chiqim</h3>
+    <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl">
+        <h3 class="text-lg font-bold text-slate-800 mb-4">📤 Material Chiqim</h3>
         <form id="removeForm" method="POST">
             {% csrf_token %}
-            <p id="removeSupplyName" class="text-gray-600 dark:text-gray-400 mb-2"></p>
-            <p id="removeSupplyStock" class="text-sm text-gray-500 mb-4"></p>
+            <p id="removeSupplyName" class="text-slate-600 mb-2"></p>
+            <p id="removeSupplyStock" class="text-sm text-slate-500 mb-4"></p>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Miqdor</label>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Miqdor</label>
                 <input type="number" name="quantity" id="removeQuantity" required min="1" class="w-full"
                     placeholder="Yechiladigan miqdor">
             </div>
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sabab</label>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Sabab</label>
                 <input type="text" name="notes" class="w-full" placeholder="Ishlatildi, berildi, yoki boshqa">
             </div>
             <div class="flex gap-3">
                 <button type="button" onclick="closeModal('removeModal')"
-                    class="flex-1 py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium">Bekor</button>
+                    class="flex-1 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-medium">Bekor</button>
                 <button type="submit"
-                    class="flex-1 py-2.5 bg-red-500 text-white rounded-xl font-medium hover:bg-red-600">Yechish</button>
+                    class="flex-1 py-2.5 bg-red-500 text-slate-800 rounded-xl font-medium hover:bg-red-600">Yechish</button>
             </div>
         </form>
     </div>

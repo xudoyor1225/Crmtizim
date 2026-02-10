@@ -1,27 +1,27 @@
 <!-- Global Search Results (HTMX partial) -->
-<div class="divide-y divide-gray-100 dark:divide-dark-700">
+<div class="divide-y divide-slate-100">
     {% if results %}
     {% for result in results %}
     <a href="{{ result.url }}"
-        class="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-dark-700 transition group">
+        class="flex items-center gap-3 p-3 hover:bg-slate-50 transition group">
         <div class="w-10 h-10 rounded-xl 
-                {% if result.type == 'user' %}bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600
-                {% elif result.type == 'lead' %}bg-green-100 dark:bg-green-900/30 text-green-600
-                {% else %}bg-purple-100 dark:bg-purple-900/30 text-purple-600{% endif %}
+                {% if result.type == 'user' %}bg-[#5F9598]/10 text-[#1D546D]
+                {% elif result.type == 'lead' %}bg-green-100 text-green-600
+                {% else %}bg-purple-100 text-purple-600{% endif %}
                 flex items-center justify-center">
             <i class="ph {{ result.icon }} text-xl"></i>
         </div>
         <div class="flex-1 min-w-0">
-            <p class="font-medium text-gray-800 dark:text-white truncate group-hover:text-indigo-600">
+            <p class="font-medium text-slate-800 truncate group-hover:text-[#1D546D]">
                 {{ result.title }}
             </p>
-            <p class="text-xs text-gray-500 truncate">{{ result.subtitle }}</p>
+            <p class="text-xs text-slate-500 truncate">{{ result.subtitle }}</p>
         </div>
-        <i class="ph ph-arrow-right text-gray-400 group-hover:text-indigo-500 transition"></i>
+        <i class="ph ph-arrow-right text-slate-400 group-hover:text-[#1D546D] transition"></i>
     </a>
     {% endfor %}
     {% else %}
-    <div class="p-6 text-center text-gray-500">
+    <div class="p-6 text-center text-slate-500">
         <i class="ph ph-magnifying-glass text-3xl mb-2"></i>
         <p>"{{ query }}" bo'yicha hech narsa topilmadi</p>
     </div>

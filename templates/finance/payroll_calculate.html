@@ -10,17 +10,17 @@
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
             <a href="{% url 'finance:payroll_list' %}"
-                class="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-dark-700 transition">
-                <i class="ph ph-arrow-left text-xl text-gray-600 dark:text-gray-400"></i>
+                class="p-2 rounded-xl hover:bg-slate-100 transition">
+                <i class="ph ph-arrow-left text-xl text-slate-600"></i>
             </a>
             <div class="flex items-center gap-3">
                 <div
-                    class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
+                    class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#5F9598] to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
                     {{ staff.first_name|first }}
                 </div>
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ staff.full_name }}</h1>
-                    <p class="text-gray-500">{{ staff.get_role_display }} • {{ selected_month|date:"F Y" }}</p>
+                    <h1 class="text-2xl font-bold text-slate-800">{{ staff.full_name }}</h1>
+                    <p class="text-slate-500">{{ staff.get_role_display }} • {{ selected_month|date:"F Y" }}</p>
                 </div>
             </div>
         </div>
@@ -33,16 +33,16 @@
         <!-- Ma'lumotlar -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="glass-panel p-4 rounded-xl text-center">
-                <p class="text-3xl font-bold text-indigo-600">{{ lessons_count }}</p>
-                <p class="text-xs text-gray-500 uppercase">O'tilgan Darslar</p>
+                <p class="text-3xl font-bold text-[#1D546D]">{{ lessons_count }}</p>
+                <p class="text-xs text-slate-500 uppercase">O'tilgan Darslar</p>
             </div>
             <div class="glass-panel p-4 rounded-xl text-center">
                 <p class="text-3xl font-bold text-yellow-600">{{ late_count }}</p>
-                <p class="text-xs text-gray-500 uppercase">Kechikishlar</p>
+                <p class="text-xs text-slate-500 uppercase">Kechikishlar</p>
             </div>
             <div class="glass-panel p-4 rounded-xl text-center">
                 <p class="text-3xl font-bold text-red-600">{{ absent_count }}</p>
-                <p class="text-xs text-gray-500 uppercase">Yo'qlamalar</p>
+                <p class="text-xs text-slate-500 uppercase">Yo'qlamalar</p>
             </div>
         </div>
 
@@ -51,73 +51,73 @@
 
             <!-- Daromadlar -->
             <div>
-                <h3 class="font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                <h3 class="font-semibold text-slate-800 mb-4 flex items-center gap-2">
                     <i class="ph ph-trend-up text-green-500"></i> Daromadlar
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Asosiy
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Asosiy
                             Oylik</label>
                         <input type="number" name="base_salary" value="{{ payroll.base_salary|floatformat:0 }}"
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500">
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-800 focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Darslik
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Darslik
                             Stavka</label>
                         <input type="number" name="per_lesson_rate" value="{{ payroll.per_lesson_rate|floatformat:0 }}"
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500">
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-800 focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">KPI Bonus</label>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">KPI Bonus</label>
                         <input type="number" name="kpi_bonus" value="{{ payroll.kpi_bonus|floatformat:0 }}"
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500">
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-800 focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Boshqa
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Boshqa
                             Bonuslar</label>
                         <input type="number" name="other_bonus" value="{{ payroll.other_bonus|floatformat:0 }}"
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500">
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-800 focus:ring-2 focus:ring-indigo-500">
                     </div>
                 </div>
             </div>
 
-            <hr class="border-gray-200 dark:border-dark-600">
+            <hr class="border-slate-200">
 
             <!-- Ushlab qolishlar -->
             <div>
-                <h3 class="font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                <h3 class="font-semibold text-slate-800 mb-4 flex items-center gap-2">
                     <i class="ph ph-trend-down text-red-500"></i> Ushlab Qolishlar
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kechikish
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Kechikish
                             Jarimasi</label>
                         <input type="number" name="late_penalty" value="{{ payroll.late_penalty|floatformat:0 }}"
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500">
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-800 focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Yo'qlama
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Yo'qlama
                             Jarimasi</label>
                         <input type="number" name="absent_penalty" value="{{ payroll.absent_penalty|floatformat:0 }}"
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500">
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-800 focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Boshqa Ushlab
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Boshqa Ushlab
                             Qolish</label>
                         <input type="number" name="other_deductions"
                             value="{{ payroll.other_deductions|floatformat:0 }}"
-                            class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500">
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-800 focus:ring-2 focus:ring-indigo-500">
                     </div>
                 </div>
             </div>
 
-            <hr class="border-gray-200 dark:border-dark-600">
+            <hr class="border-slate-200">
 
             <!-- Izoh -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Izoh</label>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Izoh</label>
                 <textarea name="notes" rows="3"
-                    class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-dark-600 bg-white dark:bg-dark-800 text-gray-800 dark:text-white focus:ring-2 focus:ring-indigo-500">{{ payroll.notes }}</textarea>
+                    class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-800 focus:ring-2 focus:ring-indigo-500">{{ payroll.notes }}</textarea>
             </div>
 
         </div>
@@ -125,11 +125,11 @@
         <!-- Submit -->
         <div class="flex justify-end gap-3">
             <a href="{% url 'finance:payroll_list' %}"
-                class="px-6 py-3 rounded-xl border border-gray-200 dark:border-dark-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-dark-700 transition">
+                class="px-6 py-3 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition">
                 Bekor qilish
             </a>
             <button type="submit"
-                class="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold hover:shadow-lg hover:shadow-indigo-500/30 transition">
+                class="px-6 py-3 rounded-xl bg-gradient-to-r from-[#5F9598] to-purple-500 text-white font-semibold hover:shadow-lg hover:shadow-indigo-500/30 transition">
                 <i class="ph ph-calculator mr-2"></i> Hisoblash
             </button>
         </div>

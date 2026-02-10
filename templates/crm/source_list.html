@@ -8,9 +8,9 @@
 
     <!-- Header -->
     <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Manbalar</h1>
+        <h1 class="text-2xl font-bold text-slate-800">Manbalar</h1>
         <a href="{% url 'crm:source_create' %}"
-            class="px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition flex items-center gap-2">
+            class="px-4 py-2 bg-[#1D546D] text-white rounded-xl hover:bg-[#1D546D]/10 transition flex items-center gap-2">
             <i class="ph ph-plus"></i> Yangi Manba
         </a>
     </div>
@@ -22,25 +22,25 @@
             <div class="flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div
-                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-xl">
+                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-[#5F9598] to-purple-500 flex items-center justify-center text-white text-xl">
                         <i class="ph ph-megaphone"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-gray-800 dark:text-white">{{ source.name }}</h3>
-                        <p class="text-sm text-gray-500">{{ source.lead_count }} lid</p>
+                        <h3 class="font-bold text-slate-800">{{ source.name }}</h3>
+                        <p class="text-sm text-slate-500">{{ source.lead_count }} lid</p>
                     </div>
                 </div>
                 <a href="{% url 'crm:source_edit' source.id %}"
-                    class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-dark-700 text-gray-500">
+                    class="p-2 rounded-lg hover:bg-slate-100 text-slate-500">
                     <i class="ph ph-pencil"></i>
                 </a>
             </div>
         </div>
         {% empty %}
-        <div class="col-span-full text-center py-12 text-gray-500">
+        <div class="col-span-full text-center py-12 text-slate-500">
             <i class="ph ph-megaphone text-5xl mb-4"></i>
             <p>Hozircha manbalar yo'q</p>
-            <a href="{% url 'crm:source_create' %}" class="text-indigo-600 hover:underline mt-2 inline-block">+ Yangi manba
+            <a href="{% url 'crm:source_create' %}" class="text-[#1D546D] hover:underline mt-2 inline-block">+ Yangi manba
                 qo'shish</a>
         </div>
         {% endfor %}

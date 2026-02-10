@@ -8,17 +8,17 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-white">Bugungi Darslar 📚</h1>
+            <h1 class="text-2xl font-bold text-slate-800">Bugungi Darslar 📚</h1>
             <p class="text-slate-400">Kunlik darslar jadvali va davomat</p>
         </div>
         <div class="flex gap-3">
             <a href="{% url 'operations:schedule' %}"
-                class="px-4 py-2.5 rounded-xl flex items-center gap-2 transition font-medium bg-[#1c3255] text-slate-300 hover:bg-[#234069]">
+                class="px-4 py-2.5 rounded-xl flex items-center gap-2 transition font-medium bg-slate-100 text-slate-600 hover:bg-slate-200">
                 <i class="ph ph-calendar"></i> Haftalik jadval
             </a>
             {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' or request.user.role == 'teacher' %}
             <a href="{% url 'operations:lesson_add' %}"
-                class="px-4 py-2.5 bg-gradient-to-r from-indigo-500 to-violet-600 text-white rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2 font-medium">
+                class="px-4 py-2.5 bg-gradient-to-r from-[#5F9598] to-violet-600 text-slate-800 rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2 font-medium">
                 <i class="ph ph-plus"></i> Yangi dars
             </a>
             {% endif %}
@@ -26,17 +26,17 @@
     </div>
 
     <!-- Filters -->
-    <div class="rounded-2xl p-5 bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255]">
+    <div class="rounded-2xl p-5 bg-white border border-slate-200">
         <form method="GET" class="flex flex-wrap gap-4 items-end">
             <div>
                 <label class="block text-xs mb-1.5 font-medium text-slate-400">Sana</label>
                 <input type="date" name="date" value="{{ date_filter }}"
-                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-[#0f1f35] border-[#1c3255] text-white focus:ring-blue-500/50">
+                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#1D546D]/30">
             </div>
             <div>
                 <label class="block text-xs mb-1.5 font-medium text-slate-400">Guruh</label>
                 <select name="group"
-                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-[#0f1f35] border-[#1c3255] text-white focus:ring-blue-500/50">
+                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#1D546D]/30">
                     <option value="">Barchasi</option>
                     {% for group in groups %}
                     <option value="{{ group.id }}" {% if group_filter == group.id|stringformat:"s" %}selected{% endif %}>
@@ -47,14 +47,14 @@
             <div>
                 <label class="block text-xs mb-1.5 font-medium text-slate-400">Holat</label>
                 <select name="status"
-                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-[#0f1f35] border-[#1c3255] text-white focus:ring-blue-500/50">
+                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#1D546D]/30">
                     <option value="">Barchasi</option>
                     <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Rejalashtirilgan</option>
                     <option value="started" {% if status_filter == 'started' %}selected{% endif %}>Darsda</option>
                     <option value="finished" {% if status_filter == 'finished' %}selected{% endif %}>Yakunlangan</option>
                 </select>
             </div>
-            <button type="submit" class="px-6 py-2.5 rounded-xl font-medium transition bg-blue-600 text-white hover:bg-blue-700 shadow-sm">
+            <button type="submit" class="px-6 py-2.5 rounded-xl font-medium transition bg-[#1D546D] text-white hover:bg-[#061E29] shadow-sm">
                 <i class="ph ph-funnel"></i> Filtrlash
             </button>
 
@@ -76,20 +76,20 @@
     <div class="space-y-4">
         {% for item in lessons_data %}
         {% with lesson=item.lesson %}
-        <div class="rounded-2xl p-5 bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255] hover:border-blue-500/50 transition">
+        <div class="rounded-2xl p-5 bg-white border border-slate-200 hover:border-primary-300 transition">
             <div class="flex items-center gap-4">
                 <!-- Vaqt -->
                 <div class="w-20 text-center">
-                    <p class="text-xl font-bold text-white">{{ lesson.start_time|time:"H:i" }}</p>
+                    <p class="text-xl font-bold text-slate-800">{{ lesson.start_time|time:"H:i" }}</p>
                     <p class="text-xs text-slate-500">{{ lesson.end_time|time:"H:i" }}</p>
                 </div>
 
                 <!-- Status indikator -->
-                <div class="w-1 h-16 rounded-full {% if lesson.status == 'started' %}bg-blue-500 animate-pulse{% elif lesson.status == 'finished' %}bg-green-500{% elif lesson.status == 'cancelled' %}bg-red-500{% else %}bg-gray-600{% endif %}"></div>
+                <div class="w-1 h-16 rounded-full {% if lesson.status == 'started' %}bg-[#1D546D]/50 animate-pulse{% elif lesson.status == 'finished' %}bg-green-500{% elif lesson.status == 'cancelled' %}bg-red-500{% else %}bg-gray-600{% endif %}"></div>
 
                 <!-- Ma'lumot -->
                 <div class="flex-1">
-                    <h3 class="text-lg font-bold text-white">{{ lesson.group.name }}</h3>
+                    <h3 class="text-lg font-bold text-slate-800">{{ lesson.group.name }}</h3>
                     <div class="flex items-center gap-4 text-sm mt-1.5 text-slate-400">
                         <span class="flex items-center gap-1.5"><i class="ph ph-user"></i> {{ lesson.teacher.first_name }} {{ lesson.teacher.last_name }}</span>
                         <span class="flex items-center gap-1.5"><i class="ph ph-door"></i> {{ lesson.room.name|default:"-" }}</span>
@@ -102,7 +102,7 @@
                 <!-- Davomat holati -->
                 {% if item.attendance_taken %}
                 <div class="text-center px-3">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl text-emerald-400 bg-emerald-500/20">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl text-emerald-600 bg-emerald-500/20">
                         <i class="ph-fill ph-check-circle"></i> Davomat olingan
                     </span>
                     <p class="text-xs mt-1.5 text-slate-500">{{ item.present_count }}/{{ item.attendance_count }} kelgan</p>
@@ -115,9 +115,9 @@
 
                 <!-- Status badge -->
                 <span class="px-3 py-1.5 text-xs font-bold rounded-xl
-                    {% if lesson.status == 'started' %}text-blue-400 bg-blue-500/20
-                    {% elif lesson.status == 'finished' %}text-emerald-400 bg-emerald-500/20
-                    {% elif lesson.status == 'cancelled' %}text-rose-400 bg-rose-500/20
+                    {% if lesson.status == 'started' %}text-[#1D546D] bg-[#1D546D]/15
+                    {% elif lesson.status == 'finished' %}text-emerald-600 bg-emerald-500/20
+                    {% elif lesson.status == 'cancelled' %}text-rose-600 bg-rose-500/20
                     {% else %}text-slate-400 bg-slate-500/20{% endif %}">
                     {{ lesson.get_status_display }}
                 </span>
@@ -126,17 +126,17 @@
                 <div class="flex items-center gap-2">
                     {% if lesson.status == 'scheduled' %}
                     <a href="{% url 'operations:start_lesson' lesson.pk %}"
-                        class="px-4 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:shadow-lg hover:shadow-blue-500/25 transition text-sm font-medium flex items-center gap-1.5">
+                        class="px-4 py-2.5 bg-gradient-to-r from-[#1D546D] to-[#061E29] text-white rounded-xl hover:shadow-lg hover:shadow-[#1D546D]/25 transition text-sm font-medium flex items-center gap-1.5">
                         <i class="ph-fill ph-play"></i> Boshlash
                     </a>
                     {% elif lesson.status == 'started' %}
                     <a href="{% url 'operations:take_attendance' lesson.pk %}"
-                        class="px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:shadow-lg hover:shadow-emerald-500/25 transition text-sm font-medium flex items-center gap-1.5">
+                        class="px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-green-600 text-slate-800 rounded-xl hover:shadow-lg hover:shadow-emerald-500/25 transition text-sm font-medium flex items-center gap-1.5">
                         <i class="ph-fill ph-check-circle"></i> Davomat
                     </a>
                     {% else %}
                     <a href="{% url 'operations:lesson_detail' lesson.pk %}"
-                        class="px-4 py-2.5 rounded-xl transition text-sm font-medium flex items-center gap-1.5 bg-[#1c3255] text-slate-300 hover:bg-[#234069]">
+                        class="px-4 py-2.5 rounded-xl transition text-sm font-medium flex items-center gap-1.5 bg-slate-100 text-slate-600 hover:bg-slate-200">
                         <i class="ph ph-eye"></i> Ko'rish
                     </a>
                     {% endif %}
@@ -145,13 +145,13 @@
         </div>
         {% endwith %}
         {% empty %}
-        <div class="rounded-2xl p-12 text-center bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255]">
+        <div class="rounded-2xl p-12 text-center bg-white border border-slate-200">
             <i class="ph ph-calendar-blank text-5xl mb-4 text-slate-600"></i>
-            <h3 class="text-lg font-bold mb-2 text-white">Darslar topilmadi</h3>
+            <h3 class="text-lg font-bold mb-2 text-slate-800">Darslar topilmadi</h3>
             <p class="text-slate-400 mb-4">Tanlangan sana uchun darslar mavjud emas</p>
             <p class="text-sm text-slate-500">
                 Darslar avtomatik yaratilishi uchun
-                <a href="{% url 'operations:schedule' %}" class="font-medium text-blue-400 hover:underline">haftalik jadval</a>
+                <a href="{% url 'operations:schedule' %}" class="font-medium text-[#1D546D] hover:underline">haftalik jadval</a>
                 dan foydalaning
             </p>
         </div>

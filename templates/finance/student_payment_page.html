@@ -8,7 +8,7 @@
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-white">To'lov qilish 💳</h1>
+            <h1 class="text-2xl font-bold text-slate-800">To'lov qilish 💳</h1>
             <p class="text-slate-400">Chek yuklang va to'lovni yuboring</p>
         </div>
 
@@ -16,7 +16,7 @@
         <div class="flex items-center gap-3">
             <span class="text-slate-400 text-sm">Farzand:</span>
             <select onchange="window.location.href='?student='+this.value"
-                class="px-4 py-2 rounded-xl border bg-[#0f1f35] border-[#1c3255] text-white">
+                class="px-4 py-2 rounded-xl border bg-slate-50 border-slate-200 text-slate-800">
                 {% for child in children %}
                 <option value="{{ child.id }}" {% if child.id == student.id %}selected{% endif %}>
                     {{ child.first_name }} {{ child.last_name }}
@@ -29,33 +29,33 @@
 
     <!-- Balans kartasi -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="rounded-2xl p-6 bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255]">
+        <div class="rounded-2xl p-6 bg-white border border-slate-200">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-slate-400">Joriy balans</p>
-                    <p class="text-3xl font-bold mt-1 {% if student.balance < 0 %}text-rose-400{% else %}text-emerald-400{% endif %}">
+                    <p class="text-3xl font-bold mt-1 {% if student.balance < 0 %}text-rose-600{% else %}text-emerald-600{% endif %}">
                         {{ student.balance|floatformat:0 }} <span class="text-lg text-slate-500">so'm</span>
                     </p>
                 </div>
                 <div class="p-4 rounded-xl {% if student.balance < 0 %}bg-rose-500/20{% else %}bg-emerald-500/20{% endif %}">
-                    <i class="ph-fill ph-wallet text-3xl {% if student.balance < 0 %}text-rose-400{% else %}text-emerald-400{% endif %}"></i>
+                    <i class="ph-fill ph-wallet text-3xl {% if student.balance < 0 %}text-rose-600{% else %}text-emerald-600{% endif %}"></i>
                 </div>
             </div>
         </div>
 
-        <div class="rounded-2xl p-6 bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255]">
+        <div class="rounded-2xl p-6 bg-white border border-slate-200">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-slate-400">Jami to'langan</p>
-                    <p class="text-3xl font-bold mt-1 text-blue-400">{{ total_paid|floatformat:0 }} <span class="text-lg text-slate-500">so'm</span></p>
+                    <p class="text-3xl font-bold mt-1 text-[#1D546D]">{{ total_paid|floatformat:0 }} <span class="text-lg text-slate-500">so'm</span></p>
                 </div>
-                <div class="p-4 rounded-xl bg-blue-500/20">
-                    <i class="ph-fill ph-check-circle text-3xl text-blue-400"></i>
+                <div class="p-4 rounded-xl bg-[#1D546D]/15">
+                    <i class="ph-fill ph-check-circle text-3xl text-[#1D546D]"></i>
                 </div>
             </div>
         </div>
 
-        <div class="rounded-2xl p-6 bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255]">
+        <div class="rounded-2xl p-6 bg-white border border-slate-200">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-sm text-slate-400">Kutilmoqda</p>
@@ -70,9 +70,9 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- To'lov formasi -->
-        <div class="rounded-2xl p-6 bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255]">
-            <h2 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <i class="ph-fill ph-credit-card text-blue-400"></i> Yangi to'lov
+        <div class="rounded-2xl p-6 bg-white border border-slate-200">
+            <h2 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+                <i class="ph-fill ph-credit-card text-[#1D546D]"></i> Yangi to'lov
             </h2>
 
             <form method="POST" action="{% url 'finance:submit_payment' %}" enctype="multipart/form-data" class="space-y-5">
@@ -80,19 +80,19 @@
                 <input type="hidden" name="student_id" value="{{ student.id }}">
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">To'lov summasi *</label>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">To'lov summasi *</label>
                     <div class="relative">
                         <input type="text" name="amount" required
-                            class="w-full px-4 py-3 rounded-xl border bg-[#0f1f35] border-[#1c3255] text-white text-xl font-bold placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                            class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 text-xl font-bold placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1D546D]/30"
                             placeholder="1 000 000">
                         <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500">so'm</span>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">To'lov usuli *</label>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">To'lov usuli *</label>
                     <select name="payment_method" required
-                        class="w-full px-4 py-3 rounded-xl border bg-[#0f1f35] border-[#1c3255] text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50">
+                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1D546D]/30">
                         <option value="transfer">🏦 Bank o'tkazmasi</option>
                         <option value="card">💳 Plastik karta</option>
                         <option value="online">📱 Click / Payme</option>
@@ -100,22 +100,22 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">
-                        <i class="ph ph-image text-emerald-400"></i> Chek rasmi *
+                    <label class="block text-sm font-medium text-slate-600 mb-2">
+                        <i class="ph ph-image text-emerald-600"></i> Chek rasmi *
                     </label>
                     <input type="file" name="receipt_image" accept="image/*" required
-                        class="w-full px-4 py-3 rounded-xl border bg-[#0f1f35] border-[#1c3255] text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-500 file:text-white hover:file:bg-blue-600">
+                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#1D546D]/50 file:text-slate-800 hover:file:bg-[#1D546D]">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-2">Izoh</label>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">Izoh</label>
                     <textarea name="description" rows="2"
-                        class="w-full px-4 py-3 rounded-xl border bg-[#0f1f35] border-[#1c3255] text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1D546D]/30"
                         placeholder="Masalan: Fevral oyi uchun"></textarea>
                 </div>
 
                 <button type="submit"
-                    class="w-full px-6 py-4 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:shadow-lg hover:shadow-emerald-500/25 transition flex items-center justify-center gap-2 font-bold text-lg">
+                    class="w-full px-6 py-4 bg-gradient-to-r from-emerald-500 to-green-600 text-slate-800 rounded-xl hover:shadow-lg hover:shadow-emerald-500/25 transition flex items-center justify-center gap-2 font-bold text-lg">
                     <i class="ph ph-paper-plane-tilt"></i> To'lovni yuborish
                 </button>
 
@@ -126,19 +126,19 @@
         </div>
 
         <!-- To'lovlar tarixi -->
-        <div class="rounded-2xl p-6 bg-gradient-to-br from-[#152642] to-[#0f1f35] border border-[#1c3255]">
-            <h2 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+        <div class="rounded-2xl p-6 bg-white border border-slate-200">
+            <h2 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
                 <i class="ph-fill ph-clock-counter-clockwise text-violet-400"></i> To'lovlar tarixi
             </h2>
 
             <div class="space-y-3 max-h-[500px] overflow-y-auto">
                 {% for payment in payments %}
-                <div class="p-4 rounded-xl bg-[#0f1f35] border border-[#1c3255]">
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
                             {% if payment.status == 'confirmed' %}
                             <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                                <i class="ph-fill ph-check-circle text-emerald-400"></i>
+                                <i class="ph-fill ph-check-circle text-emerald-600"></i>
                             </div>
                             {% elif payment.status == 'pending' %}
                             <div class="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
@@ -146,23 +146,23 @@
                             </div>
                             {% else %}
                             <div class="w-10 h-10 rounded-full bg-rose-500/20 flex items-center justify-center">
-                                <i class="ph-fill ph-x-circle text-rose-400"></i>
+                                <i class="ph-fill ph-x-circle text-rose-600"></i>
                             </div>
                             {% endif %}
 
                             <div>
-                                <p class="font-bold text-white">{{ payment.amount|floatformat:0 }} so'm</p>
+                                <p class="font-bold text-slate-800">{{ payment.amount|floatformat:0 }} so'm</p>
                                 <p class="text-sm text-slate-500">{{ payment.created_at|date:"d.m.Y H:i" }}</p>
                             </div>
                         </div>
 
                         <div class="text-right">
                             {% if payment.status == 'confirmed' %}
-                            <span class="px-2 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400">Tasdiqlandi</span>
+                            <span class="px-2 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-600">Tasdiqlandi</span>
                             {% elif payment.status == 'pending' %}
                             <span class="px-2 py-1 rounded-full text-xs font-medium bg-amber-500/20 text-amber-400">Kutilmoqda</span>
                             {% else %}
-                            <span class="px-2 py-1 rounded-full text-xs font-medium bg-rose-500/20 text-rose-400">Rad etildi</span>
+                            <span class="px-2 py-1 rounded-full text-xs font-medium bg-rose-500/20 text-rose-600">Rad etildi</span>
                             {% endif %}
                         </div>
                     </div>

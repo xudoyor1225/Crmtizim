@@ -8,8 +8,8 @@
     <!-- SARLAVHA -->
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-white flex items-center gap-2">
-                <i class="ph ph-clock-counter-clockwise text-blue-400"></i>
+            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                <i class="ph ph-clock-counter-clockwise text-[#1D546D]"></i>
                 Tizim Tarixi
             </h1>
             <p class="text-slate-400">Barcha amallar va o'zgarishlar logi</p>
@@ -17,37 +17,39 @@
     </div>
 
     <!-- FILTERLAR -->
-    <div class="rounded-2xl border border-[#1c3255] bg-gradient-to-br from-[#152642] to-[#0f1f35] p-6">
+    <div class="rounded-2xl border border-slate-200 bg-white p-6">
         <form method="GET" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
             <!-- Qidiruv -->
             <div class="lg:col-span-2">
-                <label class="block text-sm font-medium text-slate-300 mb-1">Qidirish</label>
+                <label class="block text-sm font-medium text-slate-600 mb-1">Qidirish</label>
                 <div class="relative">
                     <input type="text" name="q" value="{{ current_search|default:'' }}"
                         placeholder="Ism, model, obyekt..."
-                        class="w-full pl-10 px-4 py-2.5 rounded-xl bg-[#0f1f35] border border-[#1c3255] text-white focus:ring-2 focus:ring-blue-500/50 focus:outline-none">
+                        class="w-full pl-10 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#1D546D]/30 focus:outline-none">
                     <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
                 </div>
             </div>
 
             <!-- Amal turi -->
             <div>
-                <label class="block text-sm font-medium text-slate-300 mb-1">Amal</label>
-                <select name="action" class="w-full px-4 py-2.5 rounded-xl bg-[#0f1f35] border border-[#1c3255] text-white focus:ring-2 focus:ring-blue-500/50 focus:outline-none">
+                <label class="block text-sm font-medium text-slate-600 mb-1">Amal</label>
+                <select name="action"
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#1D546D]/30 focus:outline-none">
                     <option value="">Barchasi</option>
                     {% for value, label in action_choices %}
-                    <option value="{{ value }}" {% if current_action == value %}selected{% endif %}>{{ label }}</option>
+                    <option value="{{ value }}" {% if current_action==value %}selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
 
             <!-- Foydalanuvchi -->
             <div>
-                <label class="block text-sm font-medium text-slate-300 mb-1">Foydalanuvchi</label>
-                <select name="user" class="w-full px-4 py-2.5 rounded-xl bg-[#0f1f35] border border-[#1c3255] text-white focus:ring-2 focus:ring-blue-500/50 focus:outline-none">
+                <label class="block text-sm font-medium text-slate-600 mb-1">Foydalanuvchi</label>
+                <select name="user"
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#1D546D]/30 focus:outline-none">
                     <option value="">Barchasi</option>
                     {% for user in users %}
-                    <option value="{{ user.id }}" {% if current_user == user.id|stringformat:"s" %}selected{% endif %}>
+                    <option value="{{ user.id }}" {% if current_user==user.id|stringformat:"s" %}selected{% endif %}>
                         {{ user.first_name }} {{ user.last_name }}
                     </option>
                     {% endfor %}
@@ -56,26 +58,26 @@
 
             <!-- Sana dan -->
             <div>
-                <label class="block text-sm font-medium text-slate-300 mb-1">Sanadan</label>
+                <label class="block text-sm font-medium text-slate-600 mb-1">Sanadan</label>
                 <input type="date" name="date_from" value="{{ date_from|default:'' }}"
-                    class="w-full px-4 py-2.5 rounded-xl bg-[#0f1f35] border border-[#1c3255] text-white focus:ring-2 focus:ring-blue-500/50 focus:outline-none">
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#1D546D]/30 focus:outline-none">
             </div>
 
             <!-- Sana gacha -->
             <div>
-                <label class="block text-sm font-medium text-slate-300 mb-1">Sanagacha</label>
+                <label class="block text-sm font-medium text-slate-600 mb-1">Sanagacha</label>
                 <input type="date" name="date_to" value="{{ date_to|default:'' }}"
-                    class="w-full px-4 py-2.5 rounded-xl bg-[#0f1f35] border border-[#1c3255] text-white focus:ring-2 focus:ring-blue-500/50 focus:outline-none">
+                    class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#1D546D]/30 focus:outline-none">
             </div>
 
             <!-- Tugmalar -->
             <div class="lg:col-span-6 flex items-center gap-3">
                 <button type="submit"
-                    class="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition flex items-center gap-2">
+                    class="px-6 py-2.5 bg-[#1D546D] text-white rounded-xl font-medium hover:bg-[#061E29] transition flex items-center gap-2">
                     <i class="ph ph-funnel"></i> Filtrlash
                 </button>
                 <a href="{% url 'core:history_list' %}"
-                    class="px-4 py-2.5 bg-[#1c3255] text-slate-300 rounded-xl font-medium hover:bg-[#234069] transition">
+                    class="px-4 py-2.5 bg-slate-100 text-slate-600 rounded-xl font-medium hover:bg-slate-200 transition">
                     Tozalash
                 </a>
             </div>
@@ -83,33 +85,40 @@
     </div>
 
     <!-- NATIJALAR JADVALI -->
-    <div class="rounded-2xl border border-[#1c3255] bg-gradient-to-br from-[#152642] to-[#0f1f35] overflow-hidden">
+    <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full">
-                <thead class="bg-[#0f1f35]">
+                <thead class="bg-slate-50">
                     <tr>
-                        <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Vaqt</th>
-                        <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Foydalanuvchi</th>
-                        <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Amal</th>
-                        <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Bo'lim</th>
-                        <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">Obyekt</th>
-                        <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">IP</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                            Vaqt</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                            Foydalanuvchi</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                            Amal</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                            Bo'lim</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                            Obyekt</th>
+                        <th class="text-left px-6 py-4 text-xs font-semibold text-slate-400 uppercase tracking-wider">IP
+                        </th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-[#1c3255]">
+                <tbody class="divide-y divide-slate-100">
                     {% for log in logs %}
-                    <tr class="hover:bg-[#1c3255] transition">
+                    <tr class="hover:bg-slate-100 transition">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-white">{{ log.created_at|date:"d.m.Y" }}</div>
+                            <div class="text-sm font-medium text-slate-800">{{ log.created_at|date:"d.m.Y" }}</div>
                             <div class="text-xs text-slate-500">{{ log.created_at|time:"H:i:s" }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                                <div
+                                    class="w-8 h-8 bg-gradient-to-br from-[#1D546D] to-[#5F9598] rounded-full flex items-center justify-center text-slate-800 text-xs font-bold">
                                     {{ log.user.first_name|first|default:"?" }}
                                 </div>
                                 <div>
-                                    <div class="text-sm font-medium text-white">
+                                    <div class="text-sm font-medium text-slate-800">
                                         {{ log.user.first_name|default:"Tizim" }} {{ log.user.last_name|default:"" }}
                                     </div>
                                     <div class="text-xs text-slate-500">{{ log.user.role|default:"-" }}</div>
@@ -119,7 +128,7 @@
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium
                                 {% if log.action == 'CREATE' %}bg-green-500/20 text-green-400
-                                {% elif log.action == 'UPDATE' %}bg-blue-500/20 text-blue-400
+                                {% elif log.action == 'UPDATE' %}bg-[#1D546D]/15 text-[#1D546D]
                                 {% elif log.action == 'DELETE' %}bg-red-500/20 text-red-400
                                 {% elif log.action == 'LOGIN' %}bg-purple-500/20 text-purple-400
                                 {% else %}bg-slate-500/20 text-slate-400{% endif %}">
@@ -132,12 +141,12 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 py-1 bg-[#1c3255] rounded text-xs text-slate-400">
+                            <span class="px-2 py-1 bg-slate-100 rounded text-xs text-slate-400">
                                 {{ log.model_name }}
                             </span>
                         </td>
                         <td class="px-6 py-4">
-                            <div class="text-sm text-white max-w-xs truncate" title="{{ log.object_repr }}">
+                            <div class="text-sm text-slate-800 max-w-xs truncate" title="{{ log.object_repr }}">
                                 {{ log.object_repr|default:"-" }}
                             </div>
                             {% if log.object_id %}
@@ -152,7 +161,7 @@
                     <tr>
                         <td colspan="6" class="px-6 py-12 text-center">
                             <div class="flex flex-col items-center">
-                                <div class="w-16 h-16 bg-[#1c3255] rounded-full flex items-center justify-center mb-4">
+                                <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
                                     <i class="ph ph-clock text-3xl text-slate-500"></i>
                                 </div>
                                 <p class="text-slate-500">Hozircha tarix yo'q</p>
@@ -166,25 +175,25 @@
 
         <!-- PAGINATION -->
         {% if logs.has_other_pages %}
-        <div class="px-6 py-4 border-t border-[#1c3255] flex items-center justify-between">
+        <div class="px-6 py-4 border-t border-slate-200 flex items-center justify-between">
             <div class="text-sm text-slate-500">
                 {{ logs.start_index }} - {{ logs.end_index }} / {{ logs.paginator.count }} ta
             </div>
             <div class="flex items-center gap-2">
                 {% if logs.has_previous %}
                 <a href="?page={{ logs.previous_page_number }}{% if current_action %}&action={{ current_action }}{% endif %}{% if current_user %}&user={{ current_user }}{% endif %}{% if current_search %}&q={{ current_search }}{% endif %}"
-                    class="px-3 py-1.5 bg-[#1c3255] rounded-lg text-sm text-slate-300 hover:bg-[#234069] transition">
+                    class="px-3 py-1.5 bg-slate-100 rounded-lg text-sm text-slate-600 hover:bg-slate-200 transition">
                     <i class="ph ph-caret-left"></i>
                 </a>
                 {% endif %}
 
-                <span class="px-3 py-1.5 bg-blue-500/20 text-blue-400 rounded-lg text-sm font-medium">
+                <span class="px-3 py-1.5 bg-[#1D546D]/15 text-[#1D546D] rounded-lg text-sm font-medium">
                     {{ logs.number }}
                 </span>
 
                 {% if logs.has_next %}
                 <a href="?page={{ logs.next_page_number }}{% if current_action %}&action={{ current_action }}{% endif %}{% if current_user %}&user={{ current_user }}{% endif %}{% if current_search %}&q={{ current_search }}{% endif %}"
-                    class="px-3 py-1.5 bg-[#1c3255] rounded-lg text-sm text-slate-300 hover:bg-[#234069] transition">
+                    class="px-3 py-1.5 bg-slate-100 rounded-lg text-sm text-slate-600 hover:bg-slate-200 transition">
                     <i class="ph ph-caret-right"></i>
                 </a>
                 {% endif %}

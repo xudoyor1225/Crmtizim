@@ -8,21 +8,21 @@
     <!-- SARLAVHA -->
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Chek Tasdiqlash 🧾</h1>
-            <p class="text-gray-500 dark:text-gray-400">Plastik orqali to'lov qilganlarni tekshiring</p>
+            <h1 class="text-2xl font-bold text-slate-800">Chek Tasdiqlash 🧾</h1>
+            <p class="text-slate-500">Plastik orqali to'lov qilganlarni tekshiring</p>
         </div>
 
         <!-- STATISTIKA -->
         <div class="flex gap-3">
             <div
-                class="px-4 py-2 bg-amber-50 dark:bg-amber-900/30 rounded-xl border border-amber-200 dark:border-amber-800">
-                <span class="text-sm text-amber-600 dark:text-amber-400">Kutilmoqda:</span>
-                <span class="font-bold text-amber-700 dark:text-amber-300 ml-2">{{ pending_count }}</span>
+                class="px-4 py-2 bg-amber-50 rounded-xl border border-amber-200">
+                <span class="text-sm text-amber-600">Kutilmoqda:</span>
+                <span class="font-bold text-amber-700 ml-2">{{ pending_count }}</span>
             </div>
             <div
-                class="px-4 py-2 bg-blue-50 dark:bg-blue-900/30 rounded-xl border border-blue-200 dark:border-blue-800">
-                <span class="text-sm text-blue-600 dark:text-blue-400">Jami summa:</span>
-                <span class="font-bold text-blue-700 dark:text-blue-300 ml-2">{{ pending_sum|floatformat:0 }}
+                class="px-4 py-2 bg-[#1D546D]/5 rounded-xl border border-[#5F9598]/25">
+                <span class="text-sm text-[#1D546D]">Jami summa:</span>
+                <span class="font-bold text-[#061E29] ml-2">{{ pending_sum|floatformat:0 }}
                     so'm</span>
             </div>
         </div>
@@ -33,67 +33,67 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
         {% for tx in pending_receipts %}
         <div
-            class="glass-panel p-6 rounded-2xl border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-all">
+            class="glass-panel p-6 rounded-2xl border border-slate-100 hover:shadow-lg transition-all">
 
             <!-- O'quvchi ma'lumotlari -->
             <div class="flex items-center gap-4 mb-4">
                 <div
-                    class="w-12 h-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/30">
+                    class="w-12 h-12 bg-gradient-to-br from-[#1D546D] to-[#5F9598] rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-[#1D546D]/30">
                     {{ tx.student.first_name|first|default:"?" }}
                 </div>
                 <div class="flex-1">
-                    <h3 class="font-semibold text-gray-800 dark:text-white">
+                    <h3 class="font-semibold text-slate-800">
                         {{ tx.student.first_name }} {{ tx.student.last_name }}
                     </h3>
-                    <p class="text-sm text-gray-500">{{ tx.student.phone }}</p>
+                    <p class="text-sm text-slate-500">{{ tx.student.phone }}</p>
                 </div>
                 <span class="px-3 py-1 text-xs font-medium rounded-full 
-                    {% if tx.payment_method == 'card' %}bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400
-                    {% elif tx.payment_method == 'transfer' %}bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400
-                    {% else %}bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400{% endif %}">
+                    {% if tx.payment_method == 'card' %}bg-purple-100 text-purple-700
+                    {% elif tx.payment_method == 'transfer' %}bg-[#1D546D]/10 text-[#061E29]
+                    {% else %}bg-green-100 text-green-700{% endif %}">
                     {{ tx.get_payment_method_display }}
                 </span>
             </div>
 
             <!-- Summa va sana -->
-            <div class="flex items-center justify-between mb-4 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+            <div class="flex items-center justify-between mb-4 p-3 bg-slate-50 rounded-xl">
                 <div>
-                    <span class="text-sm text-gray-500">Summa</span>
-                    <p class="text-xl font-bold text-green-600 dark:text-green-400">{{ tx.amount|floatformat:0 }} so'm
+                    <span class="text-sm text-slate-500">Summa</span>
+                    <p class="text-xl font-bold text-green-600">{{ tx.amount|floatformat:0 }} so'm
                     </p>
                 </div>
                 <div class="text-right">
-                    <span class="text-sm text-gray-500">Sana</span>
-                    <p class="text-sm text-gray-700 dark:text-gray-300">{{ tx.created_at|date:"d M, H:i" }}</p>
+                    <span class="text-sm text-slate-500">Sana</span>
+                    <p class="text-sm text-slate-700">{{ tx.created_at|date:"d M, H:i" }}</p>
                 </div>
             </div>
 
             <!-- Chek ko'rish -->
             {% if tx.receipt_image or tx.receipt_file %}
             <div class="mb-4">
-                <span class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                <span class="text-sm font-medium text-slate-700 mb-2 block">
                     <i class="ph ph-file-image mr-1"></i> Chek:
                 </span>
                 {% if tx.receipt_image %}
                 <a href="{{ tx.receipt_image.url }}" target="_blank"
-                    class="block p-3 bg-gray-100 dark:bg-gray-800 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition">
+                    class="block p-3 bg-slate-100 rounded-xl hover:bg-slate-200 transition">
                     <img src="{{ tx.receipt_image.url }}" alt="Chek rasmi"
                         class="w-full h-32 object-cover rounded-lg cursor-zoom-in">
-                    <p class="text-xs text-gray-500 mt-2 text-center">Kattalashtirish uchun bosing</p>
+                    <p class="text-xs text-slate-500 mt-2 text-center">Kattalashtirish uchun bosing</p>
                 </a>
                 {% endif %}
                 {% if tx.receipt_file %}
                 <a href="{{ tx.receipt_file.url }}" target="_blank"
-                    class="flex items-center gap-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-xl hover:bg-red-100 dark:hover:bg-red-900/30 transition">
+                    class="flex items-center gap-3 p-3 bg-red-50 rounded-xl hover:bg-red-100 transition">
                     <i class="ph ph-file-pdf text-2xl text-red-500"></i>
-                    <span class="text-sm text-red-700 dark:text-red-400">PDF chek - ochish uchun bosing</span>
+                    <span class="text-sm text-red-700">PDF chek - ochish uchun bosing</span>
                 </a>
                 {% endif %}
             </div>
             {% else %}
             <div
-                class="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl">
-                <p class="text-sm text-yellow-700 dark:text-yellow-400">
+                class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
+                <p class="text-sm text-yellow-700">
                     <i class="ph ph-warning mr-1"></i> Chek yuklanmagan
                 </p>
             </div>
@@ -101,14 +101,14 @@
 
             <!-- Izoh -->
             {% if tx.description %}
-            <div class="mb-4 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
-                <span class="text-xs text-gray-500">Izoh:</span>
-                <p class="text-sm text-gray-700 dark:text-gray-300">{{ tx.description }}</p>
+            <div class="mb-4 p-3 bg-slate-50 rounded-xl">
+                <span class="text-xs text-slate-500">Izoh:</span>
+                <p class="text-sm text-slate-700">{{ tx.description }}</p>
             </div>
             {% endif %}
 
             <!-- Kiritdi -->
-            <div class="text-xs text-gray-500 mb-4">
+            <div class="text-xs text-slate-500 mb-4">
                 <i class="ph ph-user"></i> Kiritdi: {{ tx.created_by.first_name }}
             </div>
 
@@ -122,7 +122,7 @@
                     </button>
                 </form>
                 <button onclick="openRejectModal({{ tx.pk }})"
-                    class="px-4 py-2.5 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl font-medium border border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/50 transition-all">
+                    class="px-4 py-2.5 bg-red-50 text-red-600 rounded-xl font-medium border border-red-200 hover:bg-red-100 transition-all">
                     <i class="ph ph-x-circle"></i>
                 </button>
             </div>
@@ -131,13 +131,13 @@
     </div>
     {% else %}
     <!-- BO'SH HOLAT -->
-    <div class="glass-panel p-12 rounded-2xl border border-gray-100 dark:border-gray-800 text-center">
+    <div class="glass-panel p-12 rounded-2xl border border-slate-100 text-center">
         <div
-            class="w-20 h-20 mx-auto mb-4 bg-green-100 dark:bg-green-900/40 rounded-full flex items-center justify-center">
+            class="w-20 h-20 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
             <i class="ph ph-check-circle text-4xl text-green-500"></i>
         </div>
-        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-2">Hammasi tasdiqlangan! ✅</h3>
-        <p class="text-gray-500">Tasdiqlanmagan cheklar yo'q</p>
+        <h3 class="text-xl font-semibold text-slate-800 mb-2">Hammasi tasdiqlangan! ✅</h3>
+        <p class="text-slate-500">Tasdiqlanmagan cheklar yo'q</p>
     </div>
     {% endif %}
 
@@ -145,21 +145,21 @@
 
 <!-- RAD ETISH MODALI -->
 <div id="rejectModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50 flex items-center justify-center">
-    <div class="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-md shadow-2xl m-4">
-        <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4">
+    <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl m-4">
+        <h3 class="text-lg font-bold text-slate-800 mb-4">
             <i class="ph ph-warning text-red-500 mr-2"></i>Chekni rad etish
         </h3>
         <form id="rejectForm" method="post">
             {% csrf_token %}
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sabab</label>
+                <label class="block text-sm font-medium text-slate-700 mb-2">Sabab</label>
                 <textarea name="reason" rows="3"
-                    class="w-full px-4 py-2 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    class="w-full px-4 py-2 rounded-lg bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500"
                     placeholder="Rad etish sababini yozing..."></textarea>
             </div>
             <div class="flex justify-end gap-3">
                 <button type="button" onclick="closeRejectModal()"
-                    class="px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition">
+                    class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg transition">
                     Bekor qilish
                 </button>
                 <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">

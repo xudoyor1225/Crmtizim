@@ -9,12 +9,12 @@
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
             <a href="{% url 'operations:shop' %}"
-                class="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition">
-                <i class="ph ph-arrow-left text-xl text-gray-700 dark:text-gray-300"></i>
+                class="p-2 bg-slate-100 rounded-lg hover:bg-slate-200 transition">
+                <i class="ph ph-arrow-left text-xl text-slate-700"></i>
             </a>
             <div>
-                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Xaridlar Tarixi 📜</h1>
-                <p class="text-gray-500 dark:text-gray-400">
+                <h1 class="text-2xl font-bold text-slate-800">Xaridlar Tarixi 📜</h1>
+                <p class="text-slate-500">
                     Jami sarflangan: <span class="font-semibold text-amber-600">{{ total_spent }} 💰</span>
                 </p>
             </div>
@@ -26,30 +26,30 @@
     <div class="space-y-4">
         {% for p in purchases %}
         <div
-            class="glass-panel p-4 rounded-xl border border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            class="glass-panel p-4 rounded-xl border border-slate-100 flex items-center justify-between">
             <div class="flex items-center gap-4">
                 {% if p.item.image %}
                 <img src="{{ p.item.image.url }}" alt="{{ p.item.name }}" class="w-16 h-16 rounded-lg object-cover">
                 {% else %}
-                <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+                <div class="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center">
                     <span class="text-2xl">📦</span>
                 </div>
                 {% endif %}
                 <div>
-                    <h3 class="font-semibold text-gray-800 dark:text-white">{{ p.item.name }}</h3>
-                    <p class="text-sm text-gray-500">{{ p.created_at|date:"d M Y, H:i" }}</p>
+                    <h3 class="font-semibold text-slate-800">{{ p.item.name }}</h3>
+                    <p class="text-sm text-slate-500">{{ p.created_at|date:"d M Y, H:i" }}</p>
                     {% if request.user.role != 'student' %}
-                    <p class="text-xs text-gray-400">O'quvchi: {{ p.student.first_name }}</p>
+                    <p class="text-xs text-slate-400">O'quvchi: {{ p.student.first_name }}</p>
                     {% endif %}
                 </div>
             </div>
             <div class="text-right">
-                <span class="text-lg font-bold text-amber-600 dark:text-amber-400">-{{ p.coin_spent }} 💰</span>
+                <span class="text-lg font-bold text-amber-600">-{{ p.coin_spent }} 💰</span>
                 <br>
                 <span class="px-3 py-1 text-xs font-medium rounded-full
-                    {% if p.status == 'pending' %}bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400
-                    {% elif p.status == 'delivered' %}bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400
-                    {% else %}bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400{% endif %}">
+                    {% if p.status == 'pending' %}bg-amber-100 text-amber-700
+                    {% elif p.status == 'delivered' %}bg-green-100 text-green-700
+                    {% else %}bg-red-100 text-red-700{% endif %}">
                     {% if p.status == 'pending' %}Kutilmoqda
                     {% elif p.status == 'delivered' %}Topshirildi
                     {% else %}Bekor qilindi{% endif %}
@@ -59,12 +59,12 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="glass-panel p-12 rounded-2xl border border-gray-100 dark:border-gray-800 text-center">
-        <div class="w-20 h-20 mx-auto mb-4 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
+    <div class="glass-panel p-12 rounded-2xl border border-slate-100 text-center">
+        <div class="w-20 h-20 mx-auto mb-4 bg-slate-100 rounded-full flex items-center justify-center">
             <span class="text-4xl">🛒</span>
         </div>
-        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-2">Xaridlar yo'q</h3>
-        <p class="text-gray-500 mb-4">Siz hali hech narsa sotib olmadingiz</p>
+        <h3 class="text-xl font-semibold text-slate-800 mb-2">Xaridlar yo'q</h3>
+        <p class="text-slate-500 mb-4">Siz hali hech narsa sotib olmadingiz</p>
         <a href="{% url 'operations:shop' %}"
             class="inline-flex items-center gap-2 px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition">
             <i class="ph ph-storefront"></i> Do'konga o'tish

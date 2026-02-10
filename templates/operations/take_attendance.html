@@ -9,59 +9,59 @@
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
             <a href="{% url 'operations:lesson_list' %}"
-                class="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+                class="p-2 bg-slate-100 rounded-lg hover:bg-slate-200 transition">
                 <i class="ph ph-arrow-left text-xl"></i>
             </a>
             <div>
-                <h1 class="text-2xl font-bold text-gray-800">Davomat olish</h1>
-                <p class="text-gray-500">{{ lesson.group.name }} - {{ lesson.date|date:"d F Y" }}</p>
+                <h1 class="text-2xl font-bold text-slate-800">Davomat olish</h1>
+                <p class="text-slate-500">{{ lesson.group.name }} - {{ lesson.date|date:"d F Y" }}</p>
             </div>
         </div>
         <div class="flex items-center gap-2">
             <span class="px-3 py-1 text-sm rounded-full
-                {% if lesson.status == 'started' %}text-blue-700 bg-blue-100
+                {% if lesson.status == 'started' %}text-[#061E29] bg-[#1D546D]/10
                 {% elif lesson.status == 'finished' %}text-green-700 bg-green-100
-                {% else %}text-gray-600 bg-gray-100{% endif %}">
+                {% else %}text-slate-600 bg-slate-100{% endif %}">
                 {{ lesson.get_status_display }}
             </span>
         </div>
     </div>
 
     <!-- Dars ma'lumotlari -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
         <div class="flex flex-wrap gap-6 text-sm">
             <div class="flex items-center gap-2">
                 <i class="ph ph-clock text-primary"></i>
-                <span class="text-gray-600">{{ lesson.start_time|time:"H:i" }} - {{ lesson.end_time|time:"H:i" }}</span>
+                <span class="text-slate-600">{{ lesson.start_time|time:"H:i" }} - {{ lesson.end_time|time:"H:i" }}</span>
             </div>
             <div class="flex items-center gap-2">
                 <i class="ph ph-user text-primary"></i>
-                <span class="text-gray-600">{{ lesson.teacher.first_name }} {{ lesson.teacher.last_name }}</span>
+                <span class="text-slate-600">{{ lesson.teacher.first_name }} {{ lesson.teacher.last_name }}</span>
             </div>
             <div class="flex items-center gap-2">
                 <i class="ph ph-door text-primary"></i>
-                <span class="text-gray-600">{{ lesson.room.name|default:"Belgilanmagan" }}</span>
+                <span class="text-slate-600">{{ lesson.room.name|default:"Belgilanmagan" }}</span>
             </div>
             {% if lesson.topic %}
             <div class="flex items-center gap-2">
                 <i class="ph ph-book-open text-primary"></i>
-                <span class="text-gray-600">{{ lesson.topic }}</span>
+                <span class="text-slate-600">{{ lesson.topic }}</span>
             </div>
             {% endif %}
         </div>
     </div>
 
     <!-- Davomat jadvali -->
-    <form method="POST" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <form method="POST" class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
         {% csrf_token %}
 
-        <div class="p-4 bg-gray-50 border-b flex items-center justify-between">
-            <h3 class="font-bold text-gray-800">O'quvchilar ro'yxati</h3>
-            <span class="text-sm text-gray-500">{{ students_data|length }} ta o'quvchi</span>
+        <div class="p-4 bg-slate-50 border-b flex items-center justify-between">
+            <h3 class="font-bold text-slate-800">O'quvchilar ro'yxati</h3>
+            <span class="text-sm text-slate-500">{{ students_data|length }} ta o'quvchi</span>
         </div>
 
         <table class="w-full">
-            <thead class="bg-gray-50 text-gray-600 uppercase text-xs font-semibold">
+            <thead class="bg-slate-50 text-slate-600 uppercase text-xs font-semibold">
                 <tr>
                     <th class="p-4 text-left">#</th>
                     <th class="p-4 text-left">O'quvchi</th>
@@ -70,19 +70,19 @@
                     <th class="p-4 text-left">Izoh</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
+            <tbody class="divide-y divide-slate-100">
                 {% for data in students_data %}
-                <tr class="hover:bg-gray-50 transition">
-                    <td class="p-4 text-gray-500">{{ forloop.counter }}</td>
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="p-4 text-slate-500">{{ forloop.counter }}</td>
                     <td class="p-4">
                         <div class="flex items-center gap-3">
                             <div
-                                class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 text-white flex items-center justify-center font-bold">
+                                class="w-10 h-10 rounded-full bg-gradient-to-br from-[#1D546D] to-[#5F9598] text-white flex items-center justify-center font-bold">
                                 {{ data.student.first_name|first }}
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-800">{{ data.student.first_name }} {{ data.student.last_name }}</p>
-                                <p class="text-xs text-gray-500">{{ data.student.phone }}</p>
+                                <p class="font-semibold text-slate-800">{{ data.student.first_name }} {{ data.student.last_name }}</p>
+                                <p class="text-xs text-slate-500">{{ data.student.phone }}</p>
                             </div>
                         </div>
                     </td>
@@ -91,28 +91,28 @@
                             <label class="cursor-pointer">
                                 <input type="radio" name="status_{{ data.student.id }}" value="present" {% if data.status == 'present' %}checked{% endif %} class="sr-only peer">
                                 <span
-                                    class="px-3 py-2 rounded-lg border-2 border-gray-200 peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:text-green-700 transition block text-sm">
+                                    class="px-3 py-2 rounded-lg border-2 border-slate-200 peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:text-green-700 transition block text-sm">
                                     ✓ Bor
                                 </span>
                             </label>
                             <label class="cursor-pointer">
                                 <input type="radio" name="status_{{ data.student.id }}" value="absent" {% if data.status == 'absent' %}checked{% endif %} class="sr-only peer">
                                 <span
-                                    class="px-3 py-2 rounded-lg border-2 border-gray-200 peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 transition block text-sm">
+                                    class="px-3 py-2 rounded-lg border-2 border-slate-200 peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 transition block text-sm">
                                     ✗ Yo'q
                                 </span>
                             </label>
                             <label class="cursor-pointer">
                                 <input type="radio" name="status_{{ data.student.id }}" value="late" {% if data.status == 'late' %}checked{% endif %} class="sr-only peer">
                                 <span
-                                    class="px-3 py-2 rounded-lg border-2 border-gray-200 peer-checked:border-yellow-500 peer-checked:bg-yellow-50 peer-checked:text-yellow-700 transition block text-sm">
+                                    class="px-3 py-2 rounded-lg border-2 border-slate-200 peer-checked:border-yellow-500 peer-checked:bg-yellow-50 peer-checked:text-yellow-700 transition block text-sm">
                                     ⏰ Kech
                                 </span>
                             </label>
                             <label class="cursor-pointer">
                                 <input type="radio" name="status_{{ data.student.id }}" value="excused" {% if data.status == 'excused' %}checked{% endif %} class="sr-only peer">
                                 <span
-                                    class="px-3 py-2 rounded-lg border-2 border-gray-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700 transition block text-sm">
+                                    class="px-3 py-2 rounded-lg border-2 border-slate-200 peer-checked:border-[#5F9598]/20 peer-checked:bg-[#1D546D]/5 peer-checked:text-[#061E29] transition block text-sm">
                                     📝 Sababli
                                 </span>
                             </label>
@@ -121,17 +121,17 @@
                     <td class="p-4 text-center">
                         <input type="number" name="grade_{{ data.student.id }}" value="{{ data.grade|default:'' }}"
                             min="0" max="100" placeholder="-"
-                            class="w-20 px-3 py-2 text-center rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+                            class="w-20 px-3 py-2 text-center rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary">
                     </td>
                     <td class="p-4">
                         <input type="text" name="comment_{{ data.student.id }}" value="{{ data.comment }}"
                             placeholder="Izoh..."
-                            class="w-full px-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary">
+                            class="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary">
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="p-8 text-center text-gray-500">
+                    <td colspan="5" class="p-8 text-center text-slate-500">
                         <i class="ph ph-users text-4xl mb-2"></i>
                         <p>Bu guruhda o'quvchilar yo'q</p>
                     </td>
@@ -141,7 +141,7 @@
         </table>
 
         <!-- Submit -->
-        <div class="p-4 bg-gray-50 border-t flex items-center justify-between">
+        <div class="p-4 bg-slate-50 border-t flex items-center justify-between">
             <div class="flex items-center gap-4">
                 <a href="{% url 'operations:finish_lesson' lesson.pk %}"
                     class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition flex items-center gap-2">
@@ -149,7 +149,7 @@
                 </a>
             </div>
             <button type="submit"
-                class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-indigo-700 transition flex items-center gap-2">
+                class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-[#1D546D]/10 transition flex items-center gap-2">
                 <i class="ph ph-floppy-disk"></i> Saqlash
             </button>
         </div>

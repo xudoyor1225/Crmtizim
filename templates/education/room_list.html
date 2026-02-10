@@ -8,12 +8,12 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-white">Xonalar 🚪</h1>
+            <h1 class="text-2xl font-bold text-slate-800">Xonalar 🚪</h1>
             <p class="text-slate-400">O'quv markaz xonalari</p>
         </div>
         {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
         <a href="{% url 'room_create' %}"
-            class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-violet-600 text-white rounded-lg hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2">
+            class="px-4 py-2 bg-gradient-to-r from-[#5F9598] to-violet-600 text-slate-800 rounded-lg hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2">
             <i class="ph ph-plus"></i> Yangi Xona
         </a>
         {% endif %}
@@ -22,27 +22,27 @@
     <!-- Rooms Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {% for room in rooms %}
-        <div class="rounded-2xl border border-[#1c3255] bg-gradient-to-br from-[#152642] to-[#0f1f35] p-6 hover:border-blue-500/50 transition">
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 hover:border-primary-300 transition">
             <div class="flex items-center gap-4 mb-4">
-                <div class="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center text-2xl">
+                <div class="w-12 h-12 bg-[#1D546D]/15 text-[#1D546D] rounded-xl flex items-center justify-center text-2xl">
                     <i class="ph ph-door"></i>
                 </div>
                 <div>
-                    <h3 class="font-bold text-white">{{ room.name }}</h3>
+                    <h3 class="font-bold text-slate-800">{{ room.name }}</h3>
                     <p class="text-xs text-slate-500">{{ room.capacity }} o'rinli</p>
                 </div>
             </div>
-            <div class="flex items-center justify-between text-sm text-slate-400 border-t border-[#1c3255] pt-4">
+            <div class="flex items-center justify-between text-sm text-slate-400 border-t border-slate-200 pt-4">
                 <span><i class="ph ph-users-three"></i> Guruhlar: {{ room.groups.count }}</span>
                 {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
-                <a href="#" class="text-blue-400 hover:underline">Tahrirlash</a>
+                <a href="#" class="text-[#1D546D] hover:underline">Tahrirlash</a>
                 {% endif %}
             </div>
         </div>
         {% empty %}
-        <div class="col-span-4 rounded-2xl border border-[#1c3255] bg-gradient-to-br from-[#152642] to-[#0f1f35] p-12 text-center">
+        <div class="col-span-4 rounded-2xl border border-slate-200 bg-white p-12 text-center">
             <i class="ph ph-door text-5xl text-slate-600 mb-4"></i>
-            <h3 class="text-lg font-bold text-white mb-2">Xonalar topilmadi</h3>
+            <h3 class="text-lg font-bold text-slate-800 mb-2">Xonalar topilmadi</h3>
             {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
             <p class="text-slate-500">Yangi xona qo'shish uchun tugmani bosing</p>
             {% endif %}

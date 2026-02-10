@@ -8,19 +8,19 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">O'quvchilar Leaderboard 🏆</h1>
-            <p class="text-gray-500">Eng yaxshi o'quvchilar reytingi</p>
+            <h1 class="text-2xl font-bold text-slate-800">O'quvchilar Leaderboard 🏆</h1>
+            <p class="text-slate-500">Eng yaxshi o'quvchilar reytingi</p>
         </div>
         <a href="{% url 'operations:teacher_ratings' %}"
-            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center gap-2">
+            class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition flex items-center gap-2">
             <i class="ph ph-chalkboard-teacher"></i> O'qituvchilar reytingi
         </a>
     </div>
 
     <!-- Leaderboard -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
         <table class="w-full">
-            <thead class="bg-gray-50 text-gray-600 uppercase text-xs font-semibold">
+            <thead class="bg-slate-50 text-slate-600 uppercase text-xs font-semibold">
                 <tr>
                     <th class="p-4 text-center">O'rin</th>
                     <th class="p-4 text-left">O'quvchi</th>
@@ -31,11 +31,11 @@
                     <th class="p-4 text-center">Umumiy Ball</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
+            <tbody class="divide-y divide-slate-100">
                 {% for data in students_data %}
-                <tr class="hover:bg-gray-50 transition
+                <tr class="hover:bg-slate-50 transition
                     {% if data.rank == 1 %}bg-yellow-50
-                    {% elif data.rank == 2 %}bg-gray-50
+                    {% elif data.rank == 2 %}bg-slate-50
                     {% elif data.rank == 3 %}bg-orange-50{% endif %}">
                     <td class="p-4 text-center">
                         {% if data.rank == 1 %}
@@ -45,7 +45,7 @@
                         {% elif data.rank == 3 %}
                         <span class="text-3xl">🥉</span>
                         {% else %}
-                        <span class="text-lg font-bold text-gray-400">#{{ data.rank }}</span>
+                        <span class="text-lg font-bold text-slate-400">#{{ data.rank }}</span>
                         {% endif %}
                     </td>
                     <td class="p-4">
@@ -54,31 +54,31 @@
                                 {% if data.rank == 1 %}from-yellow-400 to-orange-500
                                 {% elif data.rank == 2 %}from-gray-300 to-gray-400
                                 {% elif data.rank == 3 %}from-orange-300 to-orange-400
-                                {% else %}from-blue-400 to-indigo-500{% endif %} 
+                                {% else %}from-[#1D546D] to-[#5F9598]{% endif %} 
                                 text-white flex items-center justify-center font-bold">
                                 {{ data.student.first_name|first }}
                             </div>
                             <div>
-                                <p class="font-semibold text-gray-800">{{ data.student.first_name }} {{ data.student.last_name }}</p>
-                                <p class="text-xs text-gray-500">{{ data.student.phone }}</p>
+                                <p class="font-semibold text-slate-800">{{ data.student.first_name }} {{ data.student.last_name }}</p>
+                                <p class="text-xs text-slate-500">{{ data.student.phone }}</p>
                             </div>
                         </div>
                     </td>
                     <td class="p-4 text-center">
-                        <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                        <span class="px-2 py-1 bg-[#1D546D]/10 text-[#061E29] rounded-full text-sm font-medium">
                             {{ data.group_count }}
                         </span>
                     </td>
                     <td class="p-4 text-center">
                         <div class="flex items-center justify-center gap-2">
-                            <div class="w-16 h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div class="w-16 h-2 bg-slate-100 rounded-full overflow-hidden">
                                 <div class="h-full 
                                     {% if data.attendance_rate >= 90 %}bg-green-500
                                     {% elif data.attendance_rate >= 70 %}bg-yellow-500
                                     {% else %}bg-red-500{% endif %} rounded-full"
                                     style="width: {{ data.attendance_rate }}%;"></div>
                             </div>
-                            <span class="text-sm font-medium text-gray-700">{{ data.attendance_rate }}%</span>
+                            <span class="text-sm font-medium text-slate-700">{{ data.attendance_rate }}%</span>
                         </div>
                     </td>
                     <td class="p-4 text-center">
@@ -96,12 +96,12 @@
                         </span>
                     </td>
                     <td class="p-4 text-center">
-                        <span class="text-xl font-bold text-gray-800">{{ data.score }}</span>
+                        <span class="text-xl font-bold text-slate-800">{{ data.score }}</span>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="7" class="p-12 text-center text-gray-500">
+                    <td colspan="7" class="p-12 text-center text-slate-500">
                         <i class="ph ph-student text-5xl mb-4"></i>
                         <p>Hozircha o'quvchilar mavjud emas</p>
                     </td>

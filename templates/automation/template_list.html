@@ -8,13 +8,13 @@
     <!-- Header -->
     <div class="glass-panel p-6 rounded-2xl flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#1D546D] to-purple-600">
                 Xabar Shablonlari
             </h1>
-            <p class="text-gray-500">Avtomatik xabarlar matnini boshqarish</p>
+            <p class="text-slate-500">Avtomatik xabarlar matnini boshqarish</p>
         </div>
         <a href="{% url 'automation:template_create' %}"
-            class="px-5 py-2.5 bg-primary-600 hover:bg-primary-700 text-white rounded-xl shadow-lg shadow-primary-500/30 transition flex items-center gap-2">
+            class="px-5 py-2.5 bg-[#1D546D] hover:bg-[#061E29] text-white rounded-xl shadow-lg shadow-primary-500/30 transition flex items-center gap-2">
             <i class="ph ph-plus-circle text-xl"></i>
             <span>Yangi Shablon</span>
         </a>
@@ -27,15 +27,15 @@
             <div class="flex justify-between items-start mb-4">
                 <div class="p-3 rounded-xl 
                     {% if template.message_type == 'sms' %}bg-green-100 text-green-600
-                    {% elif template.message_type == 'telegram' %}bg-blue-100 text-blue-600
-                    {% else %}bg-gray-100 text-gray-600{% endif %}">
+                    {% elif template.message_type == 'telegram' %}bg-[#1D546D]/10 text-[#1D546D]
+                    {% else %}bg-slate-100 text-slate-600{% endif %}">
                     {% if template.message_type == 'sms' %}<i class="ph ph-chat-text text-2xl"></i>
                     {% elif template.message_type == 'telegram' %}<i class="ph ph-telegram-logo text-2xl"></i>
                     {% else %}<i class="ph ph-bell text-2xl"></i>{% endif %}
                 </div>
                 <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <a href="{% url 'automation:template_edit' template.pk %}"
-                        class="p-2 hover:bg-gray-100 rounded-lg text-gray-600">
+                        class="p-2 hover:bg-slate-100 rounded-lg text-slate-600">
                         <i class="ph ph-pencil-simple"></i>
                     </a>
                     <form method="POST" action="{% url 'automation:template_delete' template.pk %}"
@@ -48,18 +48,18 @@
                 </div>
             </div>
 
-            <h3 class="text-lg font-bold text-gray-800 mb-1">{{ template.title }}</h3>
-            <code class="text-xs bg-gray-100 px-2 py-1 rounded text-gray-500 font-mono">{{ template.code }}</code>
+            <h3 class="text-lg font-bold text-slate-800 mb-1">{{ template.title }}</h3>
+            <code class="text-xs bg-slate-100 px-2 py-1 rounded text-slate-500 font-mono">{{ template.code }}</code>
 
-            <div class="mt-4 p-3 bg-gray-50 rounded-xl text-sm text-gray-600 line-clamp-3">
+            <div class="mt-4 p-3 bg-slate-50 rounded-xl text-sm text-slate-600 line-clamp-3">
                 {{ template.body }}
             </div>
         </div>
         {% empty %}
         <div class="col-span-3 glass-panel p-12 text-center rounded-2xl">
-            <i class="ph ph-envelope-open text-6xl text-gray-300 mb-4 inline-block"></i>
-            <h3 class="text-xl font-bold text-gray-800">Shablonlar yo'q</h3>
-            <p class="text-gray-500 mt-2">Yangi shablon yaratish uchun yuqoridagi tugmani bosing</p>
+            <i class="ph ph-envelope-open text-6xl text-slate-300 mb-4 inline-block"></i>
+            <h3 class="text-xl font-bold text-slate-800">Shablonlar yo'q</h3>
+            <p class="text-slate-500 mt-2">Yangi shablon yaratish uchun yuqoridagi tugmani bosing</p>
         </div>
         {% endfor %}
     </div>
