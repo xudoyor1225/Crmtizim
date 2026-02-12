@@ -1,43 +1,58 @@
 from django.contrib import admin
-from django.utils.html import format_html
+from django.utils.safestring import mark_safe
+from unfold.admin import ModelAdmin
 from .models import Account, TransactionCategory, Transaction
 from .services import confirm_transaction
 from django.contrib import messages
 
 
 @admin.register(Account)
-class AccountAdmin(admin.ModelAdmin):
-    list_display = ('name', 'account_type', 'balance', 'organization')
+class AccountAdmin(ModelAdmin):
+    list_display = ('name', 'account_type', 'formatted_balance', 'organization')
+    list_filter_submit = True
+
+    @admin.display(description="Balans")
+    def formatted_balance(self, obj):
+        formatted = "{:,.0f}".format(obj.balance)
+        color = "#10b981" if obj.balance >= 0 else "#ef4444"
+        return mark_safe(
+            f'<span style="color: {color}; font-weight: bold;">{formatted} so\'m</span>'
+        )
 
 
 @admin.register(TransactionCategory)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(ModelAdmin):
     list_display = ('name', 'transaction_type')
+    list_filter_submit = True
 
 
 @admin.register(Transaction)
-class TransactionAdmin(admin.ModelAdmin):
+class TransactionAdmin(ModelAdmin):
     list_display = ('amount_colored', 'transaction_type', 'account', 'student', 'status_colored', 'created_at')
     list_filter = ('status', 'transaction_type', 'account', 'category')
     search_fields = ('student__phone', 'student__first_name', 'description')
     readonly_fields = ('created_by', 'confirmed_by', 'confirmed_at')
+    list_filter_submit = True
 
     actions = ['approve_transactions']
 
+    @admin.display(description="Summa")
     def amount_colored(self, obj):
-        color = 'green' if obj.transaction_type == 'income' else 'red'
-        return format_html('<span style="color: {}; font-weight: bold;">{} {:,.0f}</span>', color,
-                           "+" if obj.transaction_type == 'income' else "-", obj.amount)
+        color = '#10b981' if obj.transaction_type == 'income' else '#ef4444'
+        sign = "+" if obj.transaction_type == 'income' else "-"
+        formatted_amount = "{:,.0f}".format(obj.amount)
+        return mark_safe(
+            f'<span style="color: {color}; font-weight: bold;">{sign} {formatted_amount} so\'m</span>'
+        )
 
-    amount_colored.short_description = "Summa"
-
+    @admin.display(description="Status")
     def status_colored(self, obj):
-        colors = {'pending': 'orange', 'confirmed': 'green', 'rejected': 'red'}
-        return format_html(
-            '<span style="background-color: {}; color: white; padding: 3px 6px; border-radius: 3px;">{}</span>',
-            colors.get(obj.status, 'gray'), obj.get_status_display())
-
-    status_colored.short_description = "Status"
+        colors = {'pending': '#f59e0b', 'confirmed': '#10b981', 'rejected': '#ef4444'}
+        bg_color = colors.get(obj.status, '#6b7280')
+        status_text = obj.get_status_display()
+        return mark_safe(
+            f'<span style="background-color: {bg_color}; color: white; padding: 4px 10px; border-radius: 6px; font-size: 12px;">{status_text}</span>'
+        )
 
     # Admin paneldan "Action" orqali tasdiqlash
     def approve_transactions(self, request, queryset):

@@ -77,12 +77,14 @@
             <div class="flex-1 min-w-[200px]">
                 <div class="relative">
                     <input type="text" name="q" value="{{ current_search|default:'' }}"
-                        placeholder="Material qidirish..." class="w-full pl-10">
+                        placeholder="Material qidirish..."
+                        class="w-full pl-10 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#1D546D]/30 focus:outline-none">
                     <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 </div>
             </div>
 
-            <select name="category" class="min-w-[150px]">
+            <select name="category"
+                class="min-w-[150px] px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#1D546D]/30 focus:outline-none">
                 <option value="">Barcha kategoriyalar</option>
                 {% for cat in categories %}
                 <option value="{{ cat.id }}" {% if current_category|stringformat:"s" == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
@@ -90,7 +92,7 @@
             </select>
 
             <button type="submit"
-                class="px-4 py-2.5 bg-[#1D546D] text-slate-800 rounded-xl font-medium hover:bg-[#061E29] transition">
+                class="px-4 py-2.5 bg-[#1D546D] text-white rounded-xl font-medium hover:bg-[#061E29] transition">
                 <i class="ph ph-funnel"></i> Filtrlash
             </button>
             <a href="{% url 'finance:supply_list' %}"
@@ -122,8 +124,7 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100">
                     {% for supply in supplies %}
-                    <tr
-                        class="hover:bg-slate-50 transition {% if supply.is_low_stock %}bg-red-50/50{% endif %}">
+                    <tr class="hover:bg-slate-50 transition {% if supply.is_low_stock %}bg-red-50/50{% endif %}">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div
@@ -137,8 +138,7 @@
                             </div>
                         </td>
                         <td class="px-6 py-4">
-                            <span
-                                class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs">
+                            <span class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-xs">
                                 {{ supply.category.name|default:"-" }}
                             </span>
                         </td>
@@ -194,8 +194,7 @@
                     <tr>
                         <td colspan="6" class="px-6 py-12 text-center">
                             <div class="flex flex-col items-center">
-                                <div
-                                    class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
+                                <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
                                     <i class="ph ph-package text-3xl text-slate-400"></i>
                                 </div>
                                 <p class="text-slate-500">Hozircha materiallar yo'q</p>

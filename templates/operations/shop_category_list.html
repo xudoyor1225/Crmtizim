@@ -26,6 +26,14 @@
                 </div>
                 <span class="font-semibold">Do'kon</span>
             </a>
+            {% if request.user.is_superuser or request.user.role == 'super_admin' %}
+            <a href="/admin/" class="btn bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 px-5 py-3 rounded-xl flex items-center gap-2 group">
+                <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <i class="ph ph-gear-six text-lg"></i>
+                </div>
+                <span class="font-semibold">Admin Panel</span>
+            </a>
+            {% endif %}
             <a href="{% url 'operations:shop_category_create' %}" class="btn bg-gradient-to-r from-primary-600 to-[#1D546D] hover:from-primary-700 hover:to-[#061E29] text-white shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 hover:-translate-y-1 transition-all duration-300 px-6 py-3 rounded-xl flex items-center gap-2">
                 <i class="ph-bold ph-plus-circle text-xl"></i>
                 <span class="font-bold">Yangi kategoriya</span>

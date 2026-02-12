@@ -37,7 +37,7 @@
                     class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#1D546D]/30 focus:outline-none">
                     <option value="">Barchasi</option>
                     {% for value, label in action_choices %}
-                    <option value="{{ value }}" {% if current_action==value %}selected{% endif %}>{{ label }}</option>
+                    <option value="{{ value }}" {% if current_action == value %}selected{% endif %}>{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -49,7 +49,7 @@
                     class="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#1D546D]/30 focus:outline-none">
                     <option value="">Barchasi</option>
                     {% for user in users %}
-                    <option value="{{ user.id }}" {% if current_user==user.id|stringformat:"s" %}selected{% endif %}>
+                    <option value="{{ user.id }}" {% if current_user == user.id|stringformat:"s" %}selected{% endif %}>
                         {{ user.first_name }} {{ user.last_name }}
                     </option>
                     {% endfor %}

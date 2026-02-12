@@ -13,6 +13,11 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='13.39.83.160,localhost,127.0.0.
 
 # 3. APPS
 INSTALLED_APPS = [
+    # Unfold admin (django.contrib.admin dan oldin bo'lishi kerak)
+    'unfold',
+    'unfold.contrib.filters',
+    'unfold.contrib.forms',
+
     'rest_framework',
     'corsheaders',
     'apps.api',
@@ -223,4 +228,127 @@ import os
 LOGS_DIR = BASE_DIR / 'logs'
 if not os.path.exists(LOGS_DIR):
     os.makedirs(LOGS_DIR)
+
+
+# ========================================
+# UNFOLD ADMIN PANEL SOZLAMALARI
+# ========================================
+from django.templatetags.static import static
+from django.urls import reverse_lazy
+
+UNFOLD = {
+    "SITE_TITLE": "Smart EDU CRM",
+    "SITE_HEADER": "Smart EDU CRM",
+    "SITE_SYMBOL": "school",  # Material Symbols icon nomi
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
+    "ENVIRONMENT": "apps.core.admin.environment_callback",
+    "DASHBOARD_CALLBACK": "apps.core.admin.dashboard_callback",
+    "COLORS": {
+        "primary": {
+            "50": "240 253 250",
+            "100": "204 251 241",
+            "200": "153 246 228",
+            "300": "94 234 212",
+            "400": "45 212 191",
+            "500": "29 84 109",  # #1D546D - main brand color
+            "600": "13 79 102",
+            "700": "15 75 99",
+            "800": "17 63 84",
+            "900": "6 30 41",
+            "950": "4 21 29",
+        },
+    },
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": True,
+        "navigation": [
+            {
+                "title": "Boshqaruv",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Dashboard",
+                        "icon": "dashboard",
+                        "link": reverse_lazy("dashboard"),
+                    },
+                    {
+                        "title": "Foydalanuvchilar",
+                        "icon": "people",
+                        "link": reverse_lazy("admin:users_user_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Ta'lim",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Guruhlar",
+                        "icon": "groups",
+                        "link": reverse_lazy("admin:education_group_changelist"),
+                    },
+                    {
+                        "title": "Kurslar",
+                        "icon": "book",
+                        "link": reverse_lazy("admin:education_course_changelist"),
+                    },
+                    {
+                        "title": "Xonalar",
+                        "icon": "meeting_room",
+                        "link": reverse_lazy("admin:education_room_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Moliya",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Tranzaksiyalar",
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:finance_transaction_changelist"),
+                    },
+                    {
+                        "title": "Hisoblar",
+                        "icon": "account_balance",
+                        "link": reverse_lazy("admin:finance_account_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "CRM",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Lidlar",
+                        "icon": "funnel",
+                        "link": reverse_lazy("admin:crm_lead_changelist"),
+                    },
+                    {
+                        "title": "Bosqichlar",
+                        "icon": "view_kanban",
+                        "link": reverse_lazy("admin:crm_stage_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Tashkilot",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Tashkilotlar",
+                        "icon": "business",
+                        "link": reverse_lazy("admin:organizations_organization_changelist"),
+                    },
+                    {
+                        "title": "Filiallar",
+                        "icon": "store",
+                        "link": reverse_lazy("admin:organizations_branch_changelist"),
+                    },
+                ],
+            },
+        ],
+    },
+}
 

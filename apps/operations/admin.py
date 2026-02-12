@@ -2,22 +2,39 @@ from django.contrib import admin
 from django.urls import path
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.utils.safestring import mark_safe
+from unfold.admin import ModelAdmin, TabularInline
 from .models import Lesson, Attendance
 from .services import finish_lesson_logic
 
 
-class AttendanceInline(admin.TabularInline):
+class AttendanceInline(TabularInline):
     model = Attendance
-    extra = 0  # Bo'sh qatorlar kerak emas
+    extra = 0
     autocomplete_fields = ['student']
 
 
 @admin.register(Lesson)
-class LessonAdmin(admin.ModelAdmin):
-    list_display = ('group', 'date', 'start_time', 'teacher', 'status')
+class LessonAdmin(ModelAdmin):
+    list_display = ('group', 'date', 'start_time', 'teacher', 'status_badge')
     list_filter = ('status', 'date', 'group')
     inlines = [AttendanceInline]
-    change_list_template = "admin/operations/lesson/change_list.html"  # Custom button uchun
+    list_filter_submit = True
+    search_fields = ('group__name', 'teacher__first_name')
+
+    @admin.display(description="Holat")
+    def status_badge(self, obj):
+        status_colors = {
+            'scheduled': '#3b82f6',
+            'ongoing': '#f59e0b',
+            'finished': '#10b981',
+            'cancelled': '#ef4444',
+        }
+        color = status_colors.get(obj.status, '#6b7280')
+        status_text = obj.get_status_display() if hasattr(obj, 'get_status_display') else obj.status
+        return mark_safe(
+            f'<span style="background-color: {color}; color: white; padding: 4px 10px; border-radius: 6px; font-size: 12px;">{status_text}</span>'
+        )
 
     def get_urls(self):
         urls = super().get_urls()
@@ -34,3 +51,25 @@ class LessonAdmin(admin.ModelAdmin):
             self.message_user(request, f"Xatolik: {e}", level=messages.ERROR)
 
         return redirect('admin:operations_lesson_changelist')
+
+
+@admin.register(Attendance)
+class AttendanceAdmin(ModelAdmin):
+    list_display = ('lesson', 'student', 'status_badge', 'grade')
+    list_filter = ('status', 'lesson__date')
+    search_fields = ('student__first_name', 'student__phone')
+    list_filter_submit = True
+
+    @admin.display(description="Holat")
+    def status_badge(self, obj):
+        status_colors = {
+            'present': '#10b981',
+            'absent': '#ef4444',
+            'late': '#f59e0b',
+            'excused': '#6b7280',
+        }
+        color = status_colors.get(obj.status, '#6b7280')
+        status_text = obj.get_status_display() if hasattr(obj, 'get_status_display') else obj.status
+        return mark_safe(
+            f'<span style="background-color: {color}; color: white; padding: 4px 10px; border-radius: 6px; font-size: 12px;">{status_text}</span>'
+        )
