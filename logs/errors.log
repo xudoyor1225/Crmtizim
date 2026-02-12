@@ -5978,3 +5978,27 @@ Traceback (most recent call last):
     ...<2 lines>...
     )
 django.template.exceptions.TemplateSyntaxError: Template: C:\Users\shona\PycharmProjects\Crmtizim\templates\core\history.html, Could not parse the remainder: '==value' from 'current_action==value'
+ERROR 2026-02-13 03:13:37,834 log Internal Server Error: /finance/supplies/add/
+Traceback (most recent call last):
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\apps\finance\inventory_views.py", line 177, in supply_create
+    supply = Supply.objects.create(
+        organization=org,
+    ...<6 lines>...
+        description=description
+    )
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\db\models\query.py", line 667, in create
+    obj = self.model(**kwargs)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\db\models\base.py", line 590, in __init__
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: Supply() got unexpected keyword arguments: 'description'
