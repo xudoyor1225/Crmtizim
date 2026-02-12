@@ -55,19 +55,19 @@
                     <a href="{% url 'core:notification_read' notification.pk %}"
                        class="flex items-start gap-3 p-4 hover:bg-slate-50 transition border-b border-slate-100 {% if notification.status == 'sent' %}bg-blue-50/50{% endif %}">
                         <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
-                            {% if notification.template.message_type == 'sms' %}bg-green-100 text-green-600
-                            {% elif notification.template.message_type == 'telegram' %}bg-blue-100 text-blue-600
+                            {% if notification.message_type == 'sms' %}bg-green-100 text-green-600
+                            {% elif notification.message_type == 'telegram' %}bg-blue-100 text-blue-600
                             {% else %}bg-[#1D546D]/10 text-[#1D546D]{% endif %}">
-                            {% if notification.template.message_type == 'sms' %}
+                            {% if notification.message_type == 'sms' %}
                             <i class="ph-fill ph-chat-circle-text"></i>
-                            {% elif notification.template.message_type == 'telegram' %}
+                            {% elif notification.message_type == 'telegram' %}
                             <i class="ph-fill ph-telegram-logo"></i>
                             {% else %}
                             <i class="ph-fill ph-bell-ringing"></i>
                             {% endif %}
                         </div>
                         <div class="flex-1 min-w-0">
-                            <p class="text-sm text-slate-800 line-clamp-2">{{ notification.message|truncatewords:15 }}</p>
+                            <p class="text-sm text-slate-800 line-clamp-2">{{ notification.message|striptags|truncatewords:12 }}</p>
                             <span class="text-xs text-slate-400">{{ notification.created_at|timesince }} oldin</span>
                         </div>
                         {% if notification.status == 'sent' %}

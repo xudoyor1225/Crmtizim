@@ -1,71 +1,182 @@
-from django.db.models.signals import post_save
+"""
+Bildirishnoma signallari - avtomatik xabar yuborish
+"""
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.conf import settings
-from apps.operations.models import Attendance
-from apps.finance.models import Transaction
-from apps.automation.services import send_notification
+import logging
 
-@receiver(post_save, sender=Attendance)
+logger = logging.getLogger(__name__)
+
+
+# ============================================
+# YANGI FOYDALANUVCHI QO'SHILGANDA
+# ============================================
+@receiver(post_save, sender='users.User')
+def user_created_notification(sender, instance, created, **kwargs):
+    """
+    Yangi foydalanuvchi yaratilganda bildirishnoma.
+    """
+    if not created:
+        return
+
+    try:
+        from apps.automation.services import create_system_notification
+
+        # Foydalanuvchiga xush kelibsiz xabari
+        create_system_notification(
+            recipient=instance,
+            title="Xush kelibsiz!",
+            message=f"Hurmatli {instance.first_name or 'Foydalanuvchi'}, tizimga muvaffaqiyatli ro'yxatdan o'tdingiz!",
+            notification_type='system'
+        )
+
+        # Super admin va adminlarga xabar
+        from apps.users.models import User
+        admins = User.objects.filter(
+            role__in=['super_admin', 'admin', 'owner'],
+            is_active=True,
+            organization=instance.organization
+        ).exclude(pk=instance.pk)
+
+        for admin in admins[:5]:  # Faqat 5 tagacha
+            create_system_notification(
+                recipient=admin,
+                title="Yangi foydalanuvchi",
+                message=f"Yangi {instance.get_role_display()}: {instance.first_name} {instance.last_name} ({instance.phone})",
+                notification_type='system'
+            )
+
+        logger.info(f"User created notification sent for: {instance.phone}")
+
+    except Exception as e:
+        logger.error(f"Error in user_created_notification: {e}")
+
+
+# ============================================
+# DAVOMAT O'ZGARGANDA
+# ============================================
+@receiver(post_save, sender='operations.Attendance')
 def attendance_notification(sender, instance, created, **kwargs):
     """
     Davomat o'zgarganda (agar 'absent' bo'lsa) ota-onaga xabar yuborish.
     """
-    if instance.status == 'absent':
-        # Ota-onani topamiz
+    if instance.status != 'absent':
+        return
+
+    try:
+        from apps.automation.services import send_template_notification
+
         student = instance.student
         
-        # O'quvchining barcha ota-onalari (yoki asosiysi)
-        parents = student.parent_relations.all()
-        
-        for relation in parents:
-            parent = relation.parent
-            
-            # Xabar yuborish
-            send_notification(
-                user=parent,
-                template_code='ATTENDANCE_ABSENT',
-                context={
-                    'parent_name': parent.first_name,
-                    'student_name': student.full_name,
-                    'date': instance.lesson.date,
-                    'group': instance.lesson.group.name
-                }
-            )
+        # O'quvchining ota-onalariga xabar
+        if hasattr(student, 'parent_relations'):
+            parents = student.parent_relations.all()
 
-@receiver(post_save, sender=Transaction)
+            for relation in parents:
+                send_template_notification(
+                    user=relation.parent,
+                    template_code='ATTENDANCE_ABSENT',
+                    context={
+                        'parent_name': relation.parent.first_name,
+                        'student_name': f"{student.first_name} {student.last_name}",
+                        'date': str(instance.lesson.date) if instance.lesson else '',
+                        'group': instance.lesson.group.name if instance.lesson and instance.lesson.group else ''
+                    }
+                )
+
+        logger.info(f"Attendance notification sent for student: {student.phone}")
+
+    except Exception as e:
+        logger.error(f"Error in attendance_notification: {e}")
+
+
+# ============================================
+# TO'LOV TASDIQLANGANDA
+# ============================================
+@receiver(post_save, sender='finance.Transaction')
 def payment_notification(sender, instance, created, **kwargs):
     """
     To'lov tasdiqlanganda o'quvchi va ota-onaga xabar yuborish.
     """
-    if instance.transaction_type == 'income' and instance.status == 'confirmed':
+    # Faqat tasdiqlangan kirim
+    if instance.transaction_type != 'income' or instance.status != 'confirmed':
+        return
+
+    if not instance.student:
+        return
+
+    try:
+        from apps.automation.services import send_template_notification, create_system_notification
+
         student = instance.student
-        if not student:
-            return
+        amount_formatted = f"{instance.amount:,.0f}"
 
         # O'quvchiga xabar
-        send_notification(
+        send_template_notification(
             user=student,
             template_code='PAYMENT_RECEIVED',
             context={
                 'name': student.first_name,
-                'amount': instance.amount,
-                'date': instance.created_at.strftime('%d.%m.%Y'),
-                'balance': student.balance
+                'amount': amount_formatted,
+                'date': instance.created_at.strftime('%d.%m.%Y') if instance.created_at else '',
+                'balance': f"{student.balance:,.0f}" if student.balance else '0'
             }
         )
         
-        # Ota-onasiga ham xabar (agar bo'lsa)
-        parents = student.parent_relations.all()
-        for relation in parents:
-            parent = relation.parent
-            send_notification(
-                user=parent,
-                template_code='PAYMENT_RECEIVED_PARENT',
-                context={
-                    'parent_name': parent.first_name,
-                    'student_name': student.full_name,
-                    'amount': instance.amount,
-                    'date': instance.created_at.strftime('%d.%m.%Y'),
-                     'balance': student.balance
-                }
+        # Tizim bildirishnomasi ham
+        create_system_notification(
+            recipient=student,
+            title="To'lov qabul qilindi",
+            message=f"{amount_formatted} so'm to'lov muvaffaqiyatli qabul qilindi. Joriy balans: {student.balance:,.0f} so'm",
+            notification_type='system'
+        )
+
+        # Ota-onalariga ham xabar
+        if hasattr(student, 'parent_relations'):
+            for relation in student.parent_relations.all():
+                send_template_notification(
+                    user=relation.parent,
+                    template_code='PAYMENT_RECEIVED_PARENT',
+                    context={
+                        'parent_name': relation.parent.first_name,
+                        'student_name': f"{student.first_name} {student.last_name}",
+                        'amount': amount_formatted,
+                        'date': instance.created_at.strftime('%d.%m.%Y') if instance.created_at else '',
+                        'balance': f"{student.balance:,.0f}" if student.balance else '0'
+                    }
+                )
+
+        logger.info(f"Payment notification sent for: {student.phone}, amount: {instance.amount}")
+
+    except Exception as e:
+        logger.error(f"Error in payment_notification: {e}")
+
+
+# ============================================
+# LID YARATILGANDA
+# ============================================
+@receiver(post_save, sender='crm.Lead')
+def lead_created_notification(sender, instance, created, **kwargs):
+    """
+    Yangi lid qo'shilganda mas'ul shaxsga xabar.
+    """
+    if not created:
+        return
+
+    try:
+        from apps.automation.services import create_system_notification
+
+        # Mas'ul shaxsga xabar
+        if instance.assigned_to:
+            create_system_notification(
+                recipient=instance.assigned_to,
+                title="Yangi lid tayinlandi",
+                message=f"Sizga yangi lid tayinlandi: {instance.full_name} ({instance.phone})",
+                notification_type='system'
             )
+
+        logger.info(f"Lead notification sent for: {instance.full_name}")
+
+    except Exception as e:
+        logger.error(f"Error in lead_created_notification: {e}")
