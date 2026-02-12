@@ -6,9 +6,10 @@
 <div class="space-y-6">
 
     <!-- Header -->
-    <div class="glass-panel p-6 rounded-2xl flex items-center justify-between">
+    <div class="bg-white border border-slate-200 p-6 rounded-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#1D546D] to-purple-600">
+            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                <i class="ph ph-envelope-simple text-[#1D546D]"></i>
                 Xabar Shablonlari
             </h1>
             <p class="text-slate-500">Avtomatik xabarlar matnini boshqarish</p>
@@ -20,46 +21,145 @@
         </a>
     </div>
 
-    <!-- Templates Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for template in templates %}
-        <div class="glass-panel p-6 rounded-2xl hover:shadow-xl transition-all duration-300 group">
-            <div class="flex justify-between items-start mb-4">
-                <div class="p-3 rounded-xl 
-                    {% if template.message_type == 'sms' %}bg-green-100 text-green-600
-                    {% elif template.message_type == 'telegram' %}bg-[#1D546D]/10 text-[#1D546D]
-                    {% else %}bg-slate-100 text-slate-600{% endif %}">
-                    {% if template.message_type == 'sms' %}<i class="ph ph-chat-text text-2xl"></i>
-                    {% elif template.message_type == 'telegram' %}<i class="ph ph-telegram-logo text-2xl"></i>
-                    {% else %}<i class="ph ph-bell text-2xl"></i>{% endif %}
+    <!-- Tushuntirish Banner -->
+    <div class="bg-gradient-to-r from-[#1D546D]/5 to-[#5F9598]/5 border border-[#1D546D]/10 rounded-2xl p-6">
+        <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-[#1D546D]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i class="ph ph-info text-2xl text-[#1D546D]"></i>
+            </div>
+            <div class="flex-1">
+                <h3 class="font-bold text-slate-800 mb-2">Shablonlar qanday ishlaydi?</h3>
+                <p class="text-slate-600 text-sm mb-3">
+                    Shablonlar tizim ichida avtomatik xabarlar yuborish uchun ishlatiladi. Masalan:
+                </p>
+                <ul class="text-sm text-slate-600 space-y-1.5 mb-4">
+                    <li class="flex items-center gap-2">
+                        <i class="ph ph-check-circle text-green-500"></i>
+                        <strong>To'lov qabul qilindi</strong> - O'quvchi to'lov qilganda avtomatik xabar
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="ph ph-check-circle text-green-500"></i>
+                        <strong>Darsga kelmadi</strong> - O'quvchi darsga kelmaganda ota-onaga xabar
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="ph ph-check-circle text-green-500"></i>
+                        <strong>Qarz eslatmasi</strong> - Balans minus bo'lganda avtomatik eslatma
+                    </li>
+                </ul>
+                <div class="flex flex-wrap gap-2">
+                    <span class="text-xs bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600">
+                        <i class="ph ph-code text-[#1D546D]"></i>
+                        <code class="font-mono">{first_name}</code> - Ism
+                    </span>
+                    <span class="text-xs bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600">
+                        <i class="ph ph-code text-[#1D546D]"></i>
+                        <code class="font-mono">{amount}</code> - Summa
+                    </span>
+                    <span class="text-xs bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600">
+                        <i class="ph ph-code text-[#1D546D]"></i>
+                        <code class="font-mono">{balance}</code> - Balans
+                    </span>
+                    <span class="text-xs bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-slate-600">
+                        <i class="ph ph-code text-[#1D546D]"></i>
+                        <code class="font-mono">{date}</code> - Sana
+                    </span>
                 </div>
-                <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+            </div>
+        </div>
+    </div>
+
+    <!-- Shablon turlari statistikasi -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4">
+            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                <i class="ph ph-chat-text text-2xl text-green-600"></i>
+            </div>
+            <div>
+                <p class="text-2xl font-bold text-slate-800">{{ templates|length }}</p>
+                <p class="text-sm text-slate-500">SMS Shablonlari</p>
+            </div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4">
+            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                <i class="ph ph-telegram-logo text-2xl text-blue-600"></i>
+            </div>
+            <div>
+                <p class="text-2xl font-bold text-slate-800">-</p>
+                <p class="text-sm text-slate-500">Telegram Bot</p>
+            </div>
+        </div>
+        <div class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4">
+            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                <i class="ph ph-bell text-2xl text-purple-600"></i>
+            </div>
+            <div>
+                <p class="text-2xl font-bold text-slate-800">-</p>
+                <p class="text-sm text-slate-500">Tizim Xabarlari</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Templates Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {% for template in templates %}
+        <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-lg hover:border-[#1D546D]/20 transition-all duration-300 group">
+            <!-- Card Header -->
+            <div class="p-4 border-b border-slate-100 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-xl
+                        {% if template.message_type == 'sms' %}bg-green-100 text-green-600
+                        {% elif template.message_type == 'telegram' %}bg-blue-100 text-blue-600
+                        {% else %}bg-purple-100 text-purple-600{% endif %}">
+                        {% if template.message_type == 'sms' %}<i class="ph ph-chat-text text-xl"></i>
+                        {% elif template.message_type == 'telegram' %}<i class="ph ph-telegram-logo text-xl"></i>
+                        {% else %}<i class="ph ph-bell text-xl"></i>{% endif %}
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-slate-800">{{ template.title }}</h3>
+                        <code class="text-xs bg-slate-100 px-2 py-0.5 rounded text-slate-500 font-mono">{{ template.code }}</code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-4">
+                <div class="bg-slate-50 rounded-xl p-3 text-sm text-slate-600 min-h-[80px]">
+                    <p class="line-clamp-3">{{ template.body }}</p>
+                </div>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="px-4 py-3 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
+                <span class="text-xs text-slate-400">
+                    {{ template.get_message_type_display }}
+                </span>
+                <div class="flex gap-1">
                     <a href="{% url 'automation:template_edit' template.pk %}"
-                        class="p-2 hover:bg-slate-100 rounded-lg text-slate-600">
+                       class="p-2 hover:bg-white rounded-lg text-slate-500 hover:text-[#1D546D] transition">
                         <i class="ph ph-pencil-simple"></i>
                     </a>
                     <form method="POST" action="{% url 'automation:template_delete' template.pk %}"
-                        onsubmit="return confirm('O\'chirasizmi?')">
+                          onsubmit="return confirm('Bu shablonni o\'chirasizmi?')" class="inline">
                         {% csrf_token %}
-                        <button class="p-2 hover:bg-red-50 rounded-lg text-red-500">
+                        <button class="p-2 hover:bg-white rounded-lg text-slate-500 hover:text-red-500 transition">
                             <i class="ph ph-trash"></i>
                         </button>
                     </form>
                 </div>
             </div>
-
-            <h3 class="text-lg font-bold text-slate-800 mb-1">{{ template.title }}</h3>
-            <code class="text-xs bg-slate-100 px-2 py-1 rounded text-slate-500 font-mono">{{ template.code }}</code>
-
-            <div class="mt-4 p-3 bg-slate-50 rounded-xl text-sm text-slate-600 line-clamp-3">
-                {{ template.body }}
-            </div>
         </div>
         {% empty %}
-        <div class="col-span-3 glass-panel p-12 text-center rounded-2xl">
-            <i class="ph ph-envelope-open text-6xl text-slate-300 mb-4 inline-block"></i>
-            <h3 class="text-xl font-bold text-slate-800">Shablonlar yo'q</h3>
-            <p class="text-slate-500 mt-2">Yangi shablon yaratish uchun yuqoridagi tugmani bosing</p>
+        <div class="col-span-3 bg-white border border-slate-200 p-12 text-center rounded-2xl">
+            <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="ph ph-envelope-open text-4xl text-slate-400"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 mb-2">Shablonlar yo'q</h3>
+            <p class="text-slate-500 mb-4">Avtomatik xabarlar uchun shablon yarating</p>
+            <a href="{% url 'automation:template_create' %}"
+               class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1D546D] text-white rounded-xl hover:bg-[#061E29] transition">
+                <i class="ph ph-plus-circle"></i>
+                Birinchi shablonni yaratish
+            </a>
         </div>
         {% endfor %}
     </div>

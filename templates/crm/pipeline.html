@@ -46,48 +46,58 @@
             </div>
 
             <!-- DRAGGABLE AREA -->
-            <div class="p-4 flex-1 overflow-y-auto space-y-3 sortable-list custom-scrollbar"
+            <div class="p-3 flex-1 overflow-y-auto space-y-2.5 sortable-list custom-scrollbar"
                 data-stage-id="{{ stage.id }}">
 
                 {% for lead in stage.leads.all %}
-                <!-- LEAD CARD -->
-                <div class="bg-white/80 p-4 rounded-xl shadow-lg border border-white/40 hover:scale-[1.02] hover:shadow-xl hover:border-[#5F9598]/200/50 transition-all duration-300 cursor-grab active:cursor-grabbing group relative backdrop-blur-sm"
+                <!-- LEAD CARD - Ixcham va chiroyli dizayn -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-[#1D546D]/20 transition-all duration-200 cursor-grab active:cursor-grabbing group"
                     data-lead-id="{{ lead.id }}">
 
-                    <div class="flex justify-between items-start mb-3">
-                        <h4 class="font-bold text-slate-800 truncate pr-2 capitalize">{{
-                            lead.full_name }}</h4>
-                        <!-- Edit Button -->
-                        <a href="{% url 'crm:lead_detail' lead.id %}"
-                            class="text-slate-400 hover:text-[#1D546D] opacity-0 group-hover:opacity-100 transition p-1 hover:bg-[#1D546D]/5 rounded">
-                            <i class="ph ph-pencil-simple"></i>
-                        </a>
-                    </div>
-
-                    <div class="space-y-2">
-                        <div class="text-xs font-medium text-slate-500 flex items-center gap-2">
-                            <div class="p-1 rounded bg-[#1D546D]/5 text-[#1D546D]">
-                                <i class="ph ph-phone"></i>
+                    <!-- Card Header -->
+                    <div class="p-3 pb-2">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-semibold text-slate-800 text-sm truncate">{{ lead.full_name }}</h4>
+                                <p class="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                                    <i class="ph ph-phone text-[10px]"></i>
+                                    {{ lead.phone }}
+                                </p>
                             </div>
-                            {{ lead.phone }}
+                            <a href="{% url 'crm:lead_detail' lead.id %}"
+                               class="w-7 h-7 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#1D546D] hover:text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                                <i class="ph ph-arrow-right text-xs"></i>
+                            </a>
                         </div>
-
-                        {% if lead.interested_course %}
-                        <div
-                            class="text-xs text-[#1D546D] font-semibold bg-[#1D546D]/5 inline-block px-2.5 py-1 rounded-lg border border-[#5F9598]/20">
-                            {{ lead.interested_course.name }}
-                        </div>
-                        {% endif %}
                     </div>
 
-                    <div
-                        class="mt-3 pt-3 border-t border-slate-100 flex justify-between items-center text-[10px] uppercase font-bold tracking-wider text-slate-400">
-                        <span class="flex items-center gap-1">
-                            <i class="ph ph-arrow-elbow-down-right"></i> {{ lead.source.name|default:"-" }}
+                    <!-- Card Body -->
+                    {% if lead.interested_course %}
+                    <div class="px-3 pb-2">
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-[#1D546D] bg-[#1D546D]/5 px-2 py-1 rounded-md">
+                            <i class="ph ph-book-open text-[10px]"></i>
+                            {{ lead.interested_course.name|truncatewords:3 }}
                         </span>
-                        <span class="bg-slate-100 px-1.5 py-0.5 rounded text-slate-500">{{
-                            lead.created_at|date:"d M" }}</span>
                     </div>
+                    {% endif %}
+
+                    <!-- Card Footer -->
+                    <div class="px-3 py-2 border-t border-slate-50 flex items-center justify-between">
+                        <span class="text-[10px] text-slate-400 flex items-center gap-1">
+                            <i class="ph ph-flow-arrow text-xs"></i>
+                            {{ lead.source.name|default:"Noma'lum"|truncatewords:1 }}
+                        </span>
+                        <span class="text-[10px] text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded">
+                            {{ lead.created_at|date:"d.m" }}
+                        </span>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="py-8 text-center">
+                    <div class="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                        <i class="ph ph-user-plus text-slate-400"></i>
+                    </div>
+                    <p class="text-xs text-slate-400">Lidlar yo'q</p>
                 </div>
                 {% endfor %}
 
