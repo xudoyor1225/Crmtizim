@@ -54,13 +54,20 @@ def validate_file_size(value, max_size_mb=5):
         )
 
 
+from django.utils.deconstruct import deconstructible
+
+
+@deconstructible
 class FileSizeValidator:
-    """Custom validator class"""
+    """Custom validator class - serializable for Django migrations"""
     def __init__(self, max_size_mb=5):
         self.max_size_mb = max_size_mb
 
     def __call__(self, value):
         validate_file_size(value, self.max_size_mb)
+
+    def __eq__(self, other):
+        return isinstance(other, FileSizeValidator) and self.max_size_mb == other.max_size_mb
 
 
 # Material fayllari uchun

@@ -84,7 +84,8 @@ class Supply(TenantAwareModel):
     category = models.ForeignKey(SupplyCategory, on_delete=models.SET_NULL, null=True, related_name='supplies')
     name = models.CharField(max_length=200, verbose_name="Nomi")
     unit = models.CharField(max_length=20, default='dona', verbose_name="O'lchov birligi")
-    
+    description = models.TextField(blank=True, default='', verbose_name="Tavsif")
+
     # Miqdor
     quantity = models.PositiveIntegerField(default=0, verbose_name="Joriy miqdor")
     min_quantity = models.PositiveIntegerField(default=5, verbose_name="Minimal miqdor")
