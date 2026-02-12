@@ -130,7 +130,11 @@
                         <button @click="notifOpen = !notifOpen"
                             class="relative p-2.5 rounded-xl transition text-slate-500 hover:text-amber-500 hover:bg-amber-50">
                             <i class="ph ph-bell text-xl"></i>
-                            <span class="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full animate-pulse"></span>
+                            {% if unread_notifications_count > 0 %}
+                            <span class="absolute top-1 right-1 min-w-[18px] h-[18px] bg-rose-500 rounded-full text-white text-[10px] flex items-center justify-center font-bold animate-pulse">
+                                {{ unread_notifications_count }}
+                            </span>
+                            {% endif %}
                         </button>
 
                         <!-- Dropdown -->
@@ -142,51 +146,53 @@
                                 <h3 class="font-bold text-slate-800 flex items-center gap-2">
                                     <i class="ph-fill ph-bell text-amber-500"></i> Bildirishnomalar
                                 </h3>
-                                <span
-                                    class="text-xs text-slate-500 bg-[#1D546D]/10 text-[#061E29] px-2 py-0.5 rounded-full">Yangi:
-                                    3</span>
+                                {% if unread_notifications_count > 0 %}
+                                <span class="text-xs bg-rose-100 text-rose-600 px-2 py-0.5 rounded-full font-medium">
+                                    Yangi: {{ unread_notifications_count }}
+                                </span>
+                                {% endif %}
                             </div>
-                            <div class="max-h-64 overflow-y-auto">
-                                <a href="#"
-                                    class="flex items-start gap-3 p-4 hover:bg-slate-50 transition border-b border-slate-100">
-                                    <div
-                                        class="w-10 h-10 rounded-full bg-[#1D546D]/10 text-[#1D546D] flex items-center justify-center flex-shrink-0">
-                                        <i class="ph-fill ph-user-plus"></i>
+                            <div class="max-h-72 overflow-y-auto">
+                                {% for notification in notifications %}
+                                <a href="{% url 'core:notification_read' notification.pk %}"
+                                    class="flex items-start gap-3 p-4 hover:bg-slate-50 transition border-b border-slate-100 {% if notification.status == 'sent' %}bg-blue-50/30{% endif %}">
+                                    <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
+                                        {% if notification.message_type == 'sms' %}bg-green-100 text-green-600
+                                        {% elif notification.message_type == 'telegram' %}bg-blue-100 text-blue-600
+                                        {% else %}bg-[#1D546D]/10 text-[#1D546D]{% endif %}">
+                                        {% if notification.message_type == 'sms' %}
+                                        <i class="ph-fill ph-chat-circle-text"></i>
+                                        {% elif notification.message_type == 'telegram' %}
+                                        <i class="ph-fill ph-telegram-logo"></i>
+                                        {% else %}
+                                        <i class="ph-fill ph-bell-ringing"></i>
+                                        {% endif %}
                                     </div>
                                     <div class="flex-1 min-w-0">
-                                        <p class="text-sm text-slate-800 font-medium">Yangi o'quvchi qo'shildi</p>
-                                        <p class="text-xs text-slate-500 mt-0.5">Ali Valiyev guruhga qo'shildi</p>
-                                        <p class="text-xs text-slate-400 mt-1">5 daqiqa oldin</p>
+                                        <p class="text-sm text-slate-800 font-medium line-clamp-1">
+                                            {{ notification.message|striptags|truncatewords:8 }}
+                                        </p>
+                                        <p class="text-xs text-slate-400 mt-1">{{ notification.created_at|timesince }} oldin</p>
                                     </div>
+                                    {% if notification.status == 'sent' %}
+                                    <span class="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2"></span>
+                                    {% endif %}
                                 </a>
-                                <a href="#"
-                                    class="flex items-start gap-3 p-4 hover:bg-slate-50 transition border-b border-slate-100">
-                                    <div
-                                        class="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center flex-shrink-0">
-                                        <i class="ph-fill ph-money"></i>
+                                {% empty %}
+                                <div class="p-8 text-center">
+                                    <div class="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="ph ph-bell-slash text-2xl text-slate-400"></i>
                                     </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm text-slate-800 font-medium">To'lov qabul qilindi</p>
-                                        <p class="text-xs text-slate-500 mt-0.5">500,000 so'm tushdi</p>
-                                        <p class="text-xs text-slate-400 mt-1">1 soat oldin</p>
-                                    </div>
-                                </a>
-                                <a href="#" class="flex items-start gap-3 p-4 hover:bg-slate-50 transition">
-                                    <div
-                                        class="w-10 h-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0">
-                                        <i class="ph-fill ph-warning"></i>
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm text-slate-800 font-medium">Davomat belgilanmagan</p>
-                                        <p class="text-xs text-slate-500 mt-0.5">IELTS-A guruhida</p>
-                                        <p class="text-xs text-slate-400 mt-1">2 soat oldin</p>
-                                    </div>
-                                </a>
+                                    <p class="text-slate-500 text-sm">Bildirishnomalar yo'q</p>
+                                </div>
+                                {% endfor %}
                             </div>
-                            <a href="#"
+                            {% if notifications %}
+                            <a href="{% url 'core:notifications' %}"
                                 class="block p-3 text-center text-sm text-[#1D546D] hover:bg-primary-50 transition border-t border-slate-100 rounded-b-xl font-medium">
                                 Barchasini ko'rish →
                             </a>
+                            {% endif %}
                         </div>
                     </div>
 
