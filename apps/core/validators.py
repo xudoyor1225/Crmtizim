@@ -4,7 +4,7 @@ Xavfsizlik uchun fayl turini va hajmini tekshirish.
 """
 import os
 from django.core.exceptions import ValidationError
-
+from django.utils.deconstruct import deconstructible
 
 def validate_image_extension(value):
     """Faqat rasm fayllari (JPEG, PNG, GIF, WEBP)"""
