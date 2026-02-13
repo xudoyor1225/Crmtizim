@@ -7,8 +7,11 @@ from datetime import timedelta
 from .models import Account, Transaction, TransactionCategory
 from apps.users.models import User
 from apps.core.audit import log_user_action
+from apps.core.permissions import permission_required, check_permission
+
 
 @login_required
+@permission_required('finance', 'view')
 def transaction_list(request):
     org = request.organization
 
@@ -71,6 +74,7 @@ def transaction_list(request):
 # Lekin faylni to'liq yozayotganimiz uchun ularni ham qo'shish kerak)
 
 @login_required
+@permission_required('finance', 'view')
 def account_list(request):
     org = request.organization
     accounts = Account.objects.filter(is_deleted=False)

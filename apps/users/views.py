@@ -6,9 +6,11 @@ from django.db.models import Q, Sum
 from django.db import transaction
 from .models import User, ParentStudent
 from .forms import UserForm, StudentForm, TeacherForm, StaffForm
+from apps.core.permissions import permission_required, check_permission
 
 
 @login_required
+@permission_required('users', 'view')
 def user_list(request, role=None):
     users = User.objects.filter(is_deleted=False).select_related('organization', 'branch').order_by('-date_joined')
 
@@ -61,6 +63,7 @@ def user_list(request, role=None):
 
 
 @login_required
+@permission_required('users', 'create')
 def user_create(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
@@ -83,6 +86,7 @@ def user_create(request):
 # O'QUVCHI QO'SHISH (Majburiy Ota-Ona bilan)
 # ============================================
 @login_required
+@permission_required('users', 'create')
 @transaction.atomic
 def student_create(request):
     """O'quvchi qo'shish - ota-ona ma'lumotlari majburiy"""
@@ -142,6 +146,7 @@ def student_create(request):
 # O'QITUVCHI QO'SHISH (NFC Card bilan)
 # ============================================
 @login_required
+@permission_required('users', 'create')
 def teacher_create(request):
     """O'qituvchi qo'shish - NFC karta va to'liq ma'lumotlar"""
     if request.method == 'POST':
@@ -165,13 +170,10 @@ def teacher_create(request):
 # XODIM QO'SHISH (Rol va Ruxsatlar bilan)
 # ============================================
 @login_required
+@permission_required('users', 'create')
 def staff_create(request):
     """Xodim qo'shish - ruxsatlar bilan"""
 
-    # Faqat super_admin va owner qo'sha oladi
-    if request.user.role not in ['super_admin', 'owner', 'admin']:
-        messages.error(request, "Sizda xodim qo'shish huquqi yo'q!")
-        return redirect('users:user_list')
 
     # Bo'limlar va amallar
     from apps.users.forms import AVAILABLE_MODULES, AVAILABLE_ACTIONS
@@ -209,6 +211,7 @@ def staff_create(request):
 
 
 @login_required
+@permission_required('users', 'edit')
 def user_update(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
@@ -223,6 +226,7 @@ def user_update(request, pk):
 
 
 @login_required
+@permission_required('users', 'delete')
 def user_delete(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':

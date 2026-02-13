@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load role_tags %}
 
 {% block title %}Foydalanuvchilar{% endblock %}
 
@@ -18,7 +19,9 @@
                 Qarzdorlar ({{ debtors_count }})
             </a>
 
-            <!-- Tez qo'shish tugmalari -->
+            <!-- Tez qo'shish tugmalari - faqat create ruxsati bor bo'lsa -->
+            {% has_permission 'users' 'create' as can_create %}
+            {% if can_create %}
             <a href="{% url 'users:student_create' %}"
                 class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#1D546D] to-[#061E29] text-white rounded-xl font-medium shadow-lg shadow-[#1D546D]/25 hover:shadow-[#1D546D]/40 transition-all hover:-translate-y-0.5">
                 <i class="ph ph-student"></i>
@@ -34,6 +37,7 @@
                 <i class="ph ph-user-gear"></i>
                 Xodim
             </a>
+            {% endif %}
         </div>
     </div>
 
@@ -192,21 +196,44 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center justify-end gap-2">
+                                {% has_permission 'users' 'edit' as can_edit %}
+                                {% if can_edit %}
                                 <a href="{% url 'users:user_update' user.id %}"
-                                    class="p-2 text-slate-500 hover:text-[#1D546D] bg-slate-100 rounded-lg hover:bg-[#1D546D]/5 transition">
+                                    class="p-2 text-slate-500 hover:text-[#1D546D] bg-slate-100 rounded-lg hover:bg-[#1D546D]/5 transition"
+                                    title="Tahrirlash">
                                     <i class="ph ph-pencil-simple"></i>
                                 </a>
+                                {% else %}
+                                <span class="p-2 text-slate-300 bg-slate-50 rounded-lg cursor-not-allowed"
+                                    title="Tahrirlash ruxsati yo'q">
+                                    <i class="ph ph-pencil-simple"></i>
+                                </span>
+                                {% endif %}
+
                                 {% if user.role == 'student' %}
+                                {% has_permission 'finance' 'create' as can_pay %}
+                                {% if can_pay %}
                                 <a href="{% url 'finance:student_payment' user.id %}"
                                     class="p-2 text-slate-500 hover:text-green-600 bg-slate-100 rounded-lg hover:bg-green-50 transition"
                                     title="To'lov qabul qilish">
                                     <i class="ph ph-money"></i>
                                 </a>
                                 {% endif %}
+                                {% endif %}
+
+                                {% has_permission 'users' 'delete' as can_delete %}
+                                {% if can_delete %}
                                 <a href="{% url 'users:user_delete' user.id %}"
-                                    class="p-2 text-slate-500 hover:text-red-600 bg-slate-100 rounded-lg hover:bg-red-50 transition">
+                                    class="p-2 text-slate-500 hover:text-red-600 bg-slate-100 rounded-lg hover:bg-red-50 transition"
+                                    title="O'chirish">
                                     <i class="ph ph-trash"></i>
                                 </a>
+                                {% else %}
+                                <span class="p-2 text-slate-300 bg-slate-50 rounded-lg cursor-not-allowed"
+                                    title="O'chirish ruxsati yo'q">
+                                    <i class="ph ph-trash"></i>
+                                </span>
+                                {% endif %}
                             </div>
                         </td>
                     </tr>

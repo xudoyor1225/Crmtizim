@@ -7322,3 +7322,23 @@ Traceback (most recent call last):
         "%r received an invalid token: %r" % (bits[0], remaining_bits[0])
     )
 django.template.exceptions.TemplateSyntaxError: Template: C:\Users\shona\PycharmProjects\Crmtizim\templates\components\sidebar.html, 'with' received an invalid token: 'in'
+ERROR 2026-02-13 16:21:31,586 log Internal Server Error: /users/29/delete/
+Traceback (most recent call last):
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\apps\users\views.py", line 231, in user_delete
+    return redirect('user_list')
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\shortcuts.py", line 51, in redirect
+    resolve_url(to, *args, **kwargs),
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\shortcuts.py", line 184, in resolve_url
+    return reverse(to, args=args, kwargs=kwargs)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\urls\resolvers.py", line 842, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'user_list' not found. 'user_list' is not a valid view function or pattern name.
