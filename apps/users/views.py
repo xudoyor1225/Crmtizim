@@ -162,15 +162,37 @@ def teacher_create(request):
 
 
 # ============================================
-# XODIM QO'SHISH
+# XODIM QO'SHISH (Rol va Ruxsatlar bilan)
 # ============================================
 @login_required
 def staff_create(request):
-    """Xodim qo'shish"""
+    """Xodim qo'shish - ruxsatlar bilan"""
+
+    # Faqat super_admin va owner qo'sha oladi
+    if request.user.role not in ['super_admin', 'owner', 'admin']:
+        messages.error(request, "Sizda xodim qo'shish huquqi yo'q!")
+        return redirect('users:user_list')
+
+    # Bo'limlar va amallar
+    from apps.users.forms import AVAILABLE_MODULES, AVAILABLE_ACTIONS
+
     if request.method == 'POST':
         form = StaffForm(request.POST, request.FILES)
         if form.is_valid():
-            staff = form.save(commit=False, organization=request.user.organization)
+            # Ruxsatlarni yig'ish
+            permissions = {}
+            for module_code, module_name, icon in AVAILABLE_MODULES:
+                module_perms = {}
+                for action_code, action_name in AVAILABLE_ACTIONS:
+                    field_name = f"perm_{module_code}_{action_code}"
+                    module_perms[action_code] = field_name in request.POST
+                permissions[module_code] = module_perms
+
+            staff = form.save(
+                commit=False,
+                organization=request.user.organization,
+                permissions=permissions
+            )
             staff.save()
             
             messages.success(request, f"✅ Xodim {staff.full_name} muvaffaqiyatli qo'shildi!")
@@ -180,7 +202,9 @@ def staff_create(request):
     
     return render(request, 'users/staff_form.html', {
         'form': form, 
-        'title': "Yangi Xodim Qo'shish"
+        'title': "Yangi Xodim Qo'shish",
+        'modules': AVAILABLE_MODULES,
+        'actions': AVAILABLE_ACTIONS,
     })
 
 

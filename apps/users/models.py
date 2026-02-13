@@ -46,7 +46,11 @@ class User(AbstractUser, TenantAwareModel):
     profile_data = models.JSONField(default=dict, blank=True, verbose_name="Qo'shimcha Info")
     # Misol: {"passport": "AA...", "shirt_size": "XL", "instagram": "@..."}
 
-    # 6. MOLIYA (O'quvchilar uchun)
+    # 6. RUXSATLAR (Xodimlar uchun bo'limlar va huquqlar)
+    permissions = models.JSONField(default=dict, blank=True, verbose_name="Ruxsatlar")
+    # Misol: {"users": {"view": true, "create": false}, "finance": {"view": true, "create": true}}
+
+    # 7. MOLIYA (O'quvchilar uchun)
     balance = models.DecimalField(max_digits=12, decimal_places=2, default=0, verbose_name="Hisob (Balans)")
 
     # 7. Organization Override (TenantAwareModeldan keladi, lekin SuperAdmin uchun bo'sh bo'lishi mumkin)
@@ -65,6 +69,48 @@ class User(AbstractUser, TenantAwareModel):
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
+
+    def has_module_permission(self, module: str, action: str = 'view') -> bool:
+        """
+        Foydalanuvchi berilgan modulga ruxsati borligini tekshirish.
+
+        Args:
+            module: Modul nomi (users, finance, education, crm, operations)
+            action: Amal turi (view, create, edit, delete)
+
+        Returns:
+            True/False
+        """
+        # Super admin va owner hammasiga ruxsat
+        if self.role in ['super_admin', 'owner']:
+            return True
+
+        # Admin ko'pgiga ruxsat
+        if self.role == 'admin':
+            return True
+
+        # Permissions dan tekshirish
+        if not self.permissions:
+            return False
+
+        module_perms = self.permissions.get(module, {})
+        return module_perms.get(action, False)
+
+    def get_allowed_modules(self) -> list:
+        """
+        Foydalanuvchi kirishi mumkin bo'lgan modullar ro'yxati.
+        """
+        if self.role in ['super_admin', 'owner', 'admin']:
+            return ['dashboard', 'users', 'education', 'finance', 'crm', 'operations', 'reports', 'settings']
+
+        allowed = ['dashboard']  # Hammaga dashboard
+
+        if self.permissions:
+            for module, perms in self.permissions.items():
+                if perms.get('view', False):
+                    allowed.append(module)
+
+        return allowed
 
     class Meta:
         db_table = 'users'

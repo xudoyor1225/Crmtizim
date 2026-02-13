@@ -6002,3 +6002,17 @@ Traceback (most recent call last):
     ...<2 lines>...
     )
 TypeError: Supply() got unexpected keyword arguments: 'description'
+ERROR 2026-02-13 15:11:22,897 log Internal Server Error: /finance/hr/check-in/
+Traceback (most recent call last):
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\core\handlers\base.py", line 198, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\.venv\Lib\site-packages\django\contrib\auth\decorators.py", line 59, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "C:\Users\shona\PycharmProjects\Crmtizim\apps\finance\payroll_views.py", line 379, in staff_check_in
+    att.calculate_late_minutes()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\shona\PycharmProjects\Crmtizim\apps\finance\payroll.py", line 225, in calculate_late_minutes
+    expected_dt = datetime.combine(self.date, self.expected_time)
+TypeError: combine() argument 2 must be datetime.time, not str

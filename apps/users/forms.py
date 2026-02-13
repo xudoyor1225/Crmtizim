@@ -207,17 +207,51 @@ class TeacherForm(forms.ModelForm):
 
 
 # ============================================
-# XODIM FORMASI (Staff)
+# XODIM FORMASI (Staff) - ROL VA RUXSATLAR BILAN
 # ============================================
+
+# Mavjud bo'limlar va amallar
+AVAILABLE_MODULES = [
+    ('users', 'Foydalanuvchilar', 'ph-users'),
+    ('education', 'Ta\'lim (Guruhlar, Kurslar)', 'ph-graduation-cap'),
+    ('finance', 'Moliya (To\'lovlar, Xarajatlar)', 'ph-money'),
+    ('crm', 'CRM (Lidlar, Voronka)', 'ph-funnel'),
+    ('operations', 'Operatsiyalar (Darslar, Davomat)', 'ph-calendar'),
+    ('reports', 'Hisobotlar', 'ph-chart-bar'),
+    ('settings', 'Sozlamalar', 'ph-gear'),
+]
+
+AVAILABLE_ACTIONS = [
+    ('view', 'Ko\'rish'),
+    ('create', 'Yaratish'),
+    ('edit', 'Tahrirlash'),
+    ('delete', 'O\'chirish'),
+]
+
+# Xodim rollari
+STAFF_ROLE_CHOICES = [
+    ('admin', 'Administrator'),
+    ('staff', 'Xodim'),
+    ('owner', 'Direktor'),
+]
+
+
 class StaffForm(forms.ModelForm):
-    """Xodim qo'shish formasi"""
-    
+    """Xodim qo'shish formasi - rol va ruxsatlar bilan"""
+
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-input', 'placeholder': '********'}),
         required=True, 
         label="Parol"
     )
     
+    staff_role = forms.ChoiceField(
+        choices=STAFF_ROLE_CHOICES,
+        required=True,
+        label="Lavozim",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
     passport_series = forms.CharField(
         max_length=20, 
         required=False,
@@ -259,9 +293,9 @@ class StaffForm(forms.ModelForm):
             'nfc_card_id': 'NFC Karta ID',
         }
 
-    def save(self, commit=True, organization=None):
+    def save(self, commit=True, organization=None, permissions=None):
         user = super().save(commit=False)
-        user.role = 'staff'
+        user.role = self.cleaned_data.get('staff_role', 'staff')
         user.set_password(self.cleaned_data['password'])
         
         user.profile_data = {
@@ -269,6 +303,10 @@ class StaffForm(forms.ModelForm):
             'address': self.cleaned_data.get('address', ''),
         }
         
+        # Ruxsatlarni saqlash
+        if permissions:
+            user.permissions = permissions
+
         if organization:
             user.organization = organization
             

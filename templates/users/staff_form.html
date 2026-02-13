@@ -3,7 +3,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto">
+<div class="max-w-5xl mx-auto">
     <div class="glass-panel rounded-2xl border border-slate-100 p-8">
 
         <!-- Sarlavha -->
@@ -14,13 +14,12 @@
             </div>
             <div>
                 <h2 class="text-2xl font-bold text-slate-800">{{ title }}</h2>
-                <p class="text-slate-500">Xodim ma'lumotlari va NFC karta ID</p>
+                <p class="text-slate-500">Xodim ma'lumotlari, lavozim va ruxsatlarni belgilang</p>
             </div>
         </div>
 
         {% if form.errors %}
-        <div
-            class="bg-red-50 text-red-600 p-4 rounded-xl mb-6 text-sm border border-red-200">
+        <div class="bg-red-50 text-red-600 p-4 rounded-xl mb-6 text-sm border border-red-200">
             <div class="flex items-center gap-2 font-semibold mb-2">
                 <i class="ph ph-warning-circle"></i> Xatoliklar
             </div>
@@ -38,8 +37,7 @@
 
             <!-- 1. SHAXSIY MA'LUMOTLAR -->
             <div class="space-y-4">
-                <h3
-                    class="text-lg font-semibold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
+                <h3 class="text-lg font-semibold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
                     <i class="ph ph-user text-orange-500"></i> Shaxsiy ma'lumotlar
                 </h3>
 
@@ -49,26 +47,22 @@
                         {{ form.first_name }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Familiyasi
-                            *</label>
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Familiyasi *</label>
                         {{ form.last_name }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Otasining
-                            ismi</label>
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Otasining ismi</label>
                         {{ form.middle_name }}
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Telefon raqami
-                            *</label>
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Telefon raqami *</label>
                         {{ form.phone }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Tug'ilgan
-                            sana</label>
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Tug'ilgan sana</label>
                         {{ form.birth_date }}
                     </div>
                     <div>
@@ -89,31 +83,117 @@
                 </div>
             </div>
 
-            <!-- 2. HR MA'LUMOTLARI -->
+            <!-- 2. LAVOZIM VA ROL -->
             <div class="space-y-4">
-                <h3
-                    class="text-lg font-semibold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
-                    <i class="ph ph-identification-card text-[#1D546D]"></i> HR va Turniket
+                <h3 class="text-lg font-semibold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
+                    <i class="ph ph-briefcase text-purple-500"></i> Lavozim
                 </h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">
-                            <i class="ph ph-credit-card text-[#1D546D]"></i> NFC Karta ID (Turniket uchun)
-                        </label>
-                        {{ form.nfc_card_id }}
-                        <p class="text-xs text-slate-500 mt-1">Turniket orqali kirishni nazorat qilish uchun</p>
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Lavozim *</label>
+                        {{ form.staff_role }}
+                        <p class="text-xs text-slate-500 mt-1">
+                            <strong>Direktor</strong> - to'liq huquq,
+                            <strong>Administrator</strong> - ko'p huquq,
+                            <strong>Xodim</strong> - cheklangan huquq
+                        </p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Pasport
-                            seriyasi</label>
-                        {{ form.passport_series }}
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">NFC Karta ID</label>
+                        {{ form.nfc_card_id }}
+                        <p class="text-xs text-slate-500 mt-1">Turniket orqali kirish uchun</p>
                     </div>
                 </div>
+            </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-slate-600 mb-1.5">Manzil</label>
-                    {{ form.address }}
+            <!-- 3. RUXSATLAR -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-semibold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
+                    <i class="ph ph-shield-check text-green-500"></i> Ruxsatlar
+                    <span class="text-xs font-normal text-slate-500 ml-2">(Xodim lavozimi uchun qo'llaniladi)</span>
+                </h3>
+
+                <p class="text-sm text-slate-500 mb-4">
+                    Xodim qaysi bo'limlarga kirishi va qanday amallarni bajarishi mumkinligini belgilang.
+                </p>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-slate-50">
+                                <th class="text-left px-4 py-3 text-sm font-semibold text-slate-700 rounded-l-xl">Bo'lim</th>
+                                {% for action_code, action_name in actions %}
+                                <th class="text-center px-4 py-3 text-sm font-semibold text-slate-700">{{ action_name }}</th>
+                                {% endfor %}
+                                <th class="text-center px-4 py-3 text-sm font-semibold text-slate-700 rounded-r-xl">Barchasi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            {% for module_code, module_name, icon in modules %}
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2">
+                                        <i class="ph {{ icon }} text-[#1D546D]"></i>
+                                        <span class="text-sm font-medium text-slate-700">{{ module_name }}</span>
+                                    </div>
+                                </td>
+                                {% for action_code, action_name in actions %}
+                                <td class="text-center px-4 py-3">
+                                    <input type="checkbox"
+                                           name="perm_{{ module_code }}_{{ action_code }}"
+                                           id="perm_{{ module_code }}_{{ action_code }}"
+                                           class="w-5 h-5 rounded border-slate-300 text-[#1D546D] focus:ring-[#1D546D]/30 perm-checkbox"
+                                           data-module="{{ module_code }}">
+                                </td>
+                                {% endfor %}
+                                <td class="text-center px-4 py-3">
+                                    <input type="checkbox"
+                                           class="w-5 h-5 rounded border-slate-300 text-green-600 focus:ring-green-500/30 select-all-row"
+                                           data-module="{{ module_code }}"
+                                           title="Hammasini belgilash">
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="bg-slate-50">
+                                <td class="px-4 py-3 text-sm font-semibold text-slate-700 rounded-l-xl">Barcha bo'limlar</td>
+                                {% for action_code, action_name in actions %}
+                                <td class="text-center px-4 py-3">
+                                    <input type="checkbox"
+                                           class="w-5 h-5 rounded border-slate-300 text-purple-600 focus:ring-purple-500/30 select-all-column"
+                                           data-action="{{ action_code }}"
+                                           title="Bu amalni hammaga berish">
+                                </td>
+                                {% endfor %}
+                                <td class="text-center px-4 py-3 rounded-r-xl">
+                                    <button type="button" id="selectAllBtn"
+                                            class="px-3 py-1 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600 transition">
+                                        Barchasi
+                                    </button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4. HR MA'LUMOTLARI -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-semibold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
+                    <i class="ph ph-identification-card text-[#1D546D]"></i> Qo'shimcha ma'lumotlar
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Pasport seriyasi</label>
+                        {{ form.passport_series }}
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Manzil</label>
+                        {{ form.address }}
+                    </div>
                 </div>
             </div>
 
@@ -133,8 +213,7 @@
 </div>
 
 <style>
-    .form-input,
-    .form-select {
+    .form-input, .form-select {
         width: 100%;
         padding: 0.75rem 1rem;
         border-radius: 0.75rem;
@@ -143,24 +222,73 @@
         transition: all 0.2s;
     }
 
-    .dark .form-input,
-    .dark .form-select {
-        background-color: #1f2937;
-        border-color: #374151;
-        color: #f3f4f6;
-    }
-
-    .form-input:focus,
-    .form-select:focus {
+    .form-input:focus, .form-select:focus {
         outline: none;
         border-color: #f59e0b;
         box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
         background-color: white;
     }
-
-    .dark .form-input:focus,
-    .dark .form-select:focus {
-        background-color: #111827;
-    }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Qator bo'yicha barchani belgilash
+    document.querySelectorAll('.select-all-row').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            const module = this.dataset.module;
+            const isChecked = this.checked;
+            document.querySelectorAll(`input[data-module="${module}"].perm-checkbox`).forEach(function(cb) {
+                cb.checked = isChecked;
+            });
+        });
+    });
+
+    // Ustun bo'yicha barchani belgilash
+    document.querySelectorAll('.select-all-column').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            const action = this.dataset.action;
+            const isChecked = this.checked;
+            document.querySelectorAll(`input[name$="_${action}"]`).forEach(function(cb) {
+                cb.checked = isChecked;
+            });
+        });
+    });
+
+    // Hammasini belgilash
+    document.getElementById('selectAllBtn').addEventListener('click', function() {
+        const checkboxes = document.querySelectorAll('.perm-checkbox, .select-all-row, .select-all-column');
+        const allChecked = Array.from(document.querySelectorAll('.perm-checkbox')).every(cb => cb.checked);
+        checkboxes.forEach(function(cb) {
+            cb.checked = !allChecked;
+        });
+    });
+
+    // Lavozim o'zgarganda ruxsatlarni avtomatik belgilash
+    const staffRoleSelect = document.querySelector('[name="staff_role"]');
+    if (staffRoleSelect) {
+        staffRoleSelect.addEventListener('change', function() {
+            const role = this.value;
+            const checkboxes = document.querySelectorAll('.perm-checkbox');
+
+            if (role === 'owner') {
+                // Direktor - hammasi
+                checkboxes.forEach(cb => cb.checked = true);
+                document.querySelectorAll('.select-all-row').forEach(cb => cb.checked = true);
+            } else if (role === 'admin') {
+                // Administrator - ko'rish, yaratish, tahrirlash
+                checkboxes.forEach(cb => {
+                    const name = cb.name;
+                    cb.checked = !name.includes('delete');
+                });
+            } else {
+                // Xodim - faqat ko'rish
+                checkboxes.forEach(cb => {
+                    const name = cb.name;
+                    cb.checked = name.includes('view');
+                });
+            }
+        });
+    }
+});
+</script>
 {% endblock %}
