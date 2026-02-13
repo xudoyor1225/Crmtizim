@@ -14,25 +14,34 @@ def user_permissions_context(request):
     if not request.user.is_authenticated:
         return {
             'user_modules': [],
-            'can_view': lambda m: False,
+            'full_access': False,
         }
 
     user = request.user
 
-    # Super admin, owner, admin - hamma narsaga ruxsat
-    if user.role in ['super_admin', 'owner', 'admin']:
+    # Super admin va owner - hamma narsaga ruxsat
+    if user.role in ['super_admin', 'owner']:
         allowed_modules = ['dashboard', 'users', 'education', 'finance', 'crm', 'operations', 'reports', 'settings', 'automation']
         return {
             'user_modules': allowed_modules,
             'full_access': True,
         }
 
-    # Boshqa rollar uchun permissions dan tekshirish
+    # Admin, staff va boshqa rollar uchun permissions dan tekshirish
     allowed_modules = ['dashboard']  # Hammaga dashboard
 
+    # Agar permissions bo'sh bo'lsa va admin bo'lsa - hamma narsaga ruxsat
+    if user.role == 'admin' and not user.permissions:
+        allowed_modules = ['dashboard', 'users', 'education', 'finance', 'crm', 'operations', 'reports', 'settings', 'automation']
+        return {
+            'user_modules': allowed_modules,
+            'full_access': True,
+        }
+
+    # Permissions dan tekshirish
     if user.permissions:
         for module, perms in user.permissions.items():
-            if perms.get('view', False):
+            if isinstance(perms, dict) and perms.get('view', False):
                 allowed_modules.append(module)
 
     return {
