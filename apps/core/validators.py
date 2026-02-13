@@ -54,8 +54,6 @@ def validate_file_size(value, max_size_mb=5):
         )
 
 
-from django.utils.deconstruct import deconstructible
-
 
 @deconstructible
 class FileSizeValidator:
