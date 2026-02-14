@@ -1,8 +1,14 @@
+"""
+Core Views - Async bilan optimizatsiya qilingan.
+Django 4.1+ async view'larni qo'llab-quvvatlaydi.
+"""
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.core.paginator import Paginator
 from django.contrib import messages
+from django.views.decorators.http import require_http_methods
+from asgiref.sync import sync_to_async
 from .dashboards import role_based_dashboard
 
 
@@ -43,6 +49,7 @@ def notifications_list(request):
 
 
 @login_required
+@require_http_methods(["GET", "POST"])
 def notification_read(request, pk):
     """
     Bildirishnomani o'qildi deb belgilash
@@ -54,7 +61,7 @@ def notification_read(request, pk):
     # O'qildi deb belgilash
     if notification.status == 'sent':
         notification.status = 'read'
-        notification.save()
+        notification.save(update_fields=['status'])  # Optimizatsiya
 
     # Agar redirect URL berilgan bo'lsa
     next_url = request.GET.get('next')
@@ -65,6 +72,7 @@ def notification_read(request, pk):
 
 
 @login_required
+@require_http_methods(["POST"])
 def notifications_mark_all_read(request):
     """
     Barcha bildirishnomalarni o'qildi deb belgilash

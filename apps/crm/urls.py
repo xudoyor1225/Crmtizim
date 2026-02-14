@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import htmx_views
 
 app_name = 'crm'
 
@@ -29,4 +30,11 @@ urlpatterns = [
     path('sources/add/', views.source_create, name='source_create'),
     path('sources/<int:pk>/edit/', views.source_edit, name='source_edit'),
     path('sources/<int:pk>/delete/', views.source_delete, name='source_delete'),
+
+    # HTMX Endpoints - Tez partial rendering
+    path('htmx/lead/<int:pk>/', htmx_views.htmx_lead_card, name='htmx_lead_card'),
+    path('htmx/stage/<int:stage_id>/leads/', htmx_views.htmx_stage_leads, name='htmx_stage_leads'),
+    path('htmx/lead/<int:pk>/move/<int:stage_id>/', htmx_views.htmx_move_lead, name='htmx_move_lead'),
+    path('htmx/search/', htmx_views.htmx_search_leads, name='htmx_search_leads'),
+    path('htmx/lead/<int:pk>/delete/', htmx_views.htmx_delete_lead, name='htmx_delete_lead'),
 ]
