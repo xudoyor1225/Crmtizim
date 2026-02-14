@@ -4,17 +4,26 @@ from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Sum, Q
 from datetime import timedelta
-from asgiref.sync import sync_to_async
 from .models import Account, Transaction, TransactionCategory
 from apps.users.models import User
 from apps.core.audit import log_user_action
 from apps.core.permissions import permission_required, check_permission
 
 
-# Async helper functions
-@sync_to_async
-def get_transactions_data(org, date_from, date_to, trans_type, status, account_id):
-    """Tranzaksiyalarni async olish"""
+@login_required
+@permission_required('finance', 'view')
+def transaction_list(request):
+    """Tranzaksiyalar ro'yxati"""
+    org = request.organization
+
+    # Filter parametrlari
+    date_from = request.GET.get('date_from', '')
+    date_to = request.GET.get('date_to', '')
+    trans_type = request.GET.get('type', '')
+    status = request.GET.get('status', '')
+    account_id = request.GET.get('account', '')
+
+    # Asosiy QuerySet
     transactions = Transaction.objects.filter(is_deleted=False)
     if org:
         transactions = transactions.filter(organization=org)
@@ -36,40 +45,13 @@ def get_transactions_data(org, date_from, date_to, trans_type, status, account_i
     expense = stats_qs.filter(transaction_type='expense').aggregate(t=Sum('amount'))['t'] or 0
 
     # Optimallashtirilgan load
-    transactions_list = list(transactions.select_related(
+    transactions = transactions.select_related(
         'account', 'category', 'student', 'staff', 'created_by', 'confirmed_by'
-    ).order_by('-created_at')[:100])
+    ).order_by('-created_at')[:100]
 
-    return transactions_list, income, expense
-
-
-@sync_to_async
-def get_accounts_list(org):
-    """Accountlarni async olish"""
     accounts = Account.objects.filter(is_deleted=False)
     if org:
         accounts = accounts.filter(organization=org)
-    return list(accounts)
-
-
-@login_required
-@permission_required('finance', 'view')
-async def transaction_list(request):
-    """Tranzaksiyalar ro'yxati (ASYNC)"""
-    org = request.organization
-
-    # Filter parametrlari
-    date_from = request.GET.get('date_from', '')
-    date_to = request.GET.get('date_to', '')
-    trans_type = request.GET.get('type', '')
-    status = request.GET.get('status', '')
-    account_id = request.GET.get('account', '')
-
-    # Async ma'lumotlarni olish
-    transactions, income, expense = await get_transactions_data(
-        org, date_from, date_to, trans_type, status, account_id
-    )
-    accounts = await get_accounts_list(org)
 
     context = {
         'transactions': transactions,

@@ -4,27 +4,31 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, Sum
 from django.db import transaction
-from asgiref.sync import sync_to_async
 from .models import User, ParentStudent
 from .forms import UserForm, StudentForm, TeacherForm, StaffForm
 from apps.core.permissions import permission_required, check_permission
 
 
-# Async helper functions
-@sync_to_async
-def get_users_data(user, role, filter_type, search, page):
-    """Users ma'lumotlarini async olish"""
+@login_required
+@permission_required('users', 'view')
+def user_list(request, role=None):
+    """Foydalanuvchilar ro'yxati"""
     users = User.objects.filter(is_deleted=False).select_related('organization', 'branch').order_by('-date_joined')
 
-    if user.role != 'super_admin' and user.organization:
-        users = users.filter(organization=user.organization)
+    if request.user.role != 'super_admin' and request.user.organization:
+        users = users.filter(organization=request.user.organization)
 
+    # Role from URL kwargs or GET parameter
+    if not role:
+        role = request.GET.get('role')
     if role:
         users = users.filter(role=role)
 
+    filter_type = request.GET.get('filter')
     if filter_type == 'debtors':
         users = users.filter(role='student', balance__lt=0)
 
+    search = request.GET.get('q')
     if search:
         users = users.filter(
             Q(first_name__icontains=search) |
@@ -32,36 +36,19 @@ def get_users_data(user, role, filter_type, search, page):
             Q(phone__icontains=search)
         )
 
-    # Statistika
     base_qs = User.objects.filter(is_deleted=False)
-    if user.role != 'super_admin' and user.organization:
-        base_qs = base_qs.filter(organization=user.organization)
+    if request.user.role != 'super_admin' and request.user.organization:
+        base_qs = base_qs.filter(organization=request.user.organization)
 
     total_students = base_qs.filter(role='student', is_active=True).count()
     debtors_count = base_qs.filter(role='student', balance__lt=0).count()
+
     debt_agg = base_qs.filter(role='student', balance__lt=0).aggregate(total=Sum('balance'))
     total_debt = abs(debt_agg['total'] or 0)
 
-    # Pagination
     paginator = Paginator(users, 25)
-    users_page = paginator.get_page(page)
-
-    return users_page, total_students, debtors_count, total_debt
-
-
-@login_required
-@permission_required('users', 'view')
-async def user_list(request, role=None):
-    """Foydalanuvchilar ro'yxati (ASYNC)"""
-    if not role:
-        role = request.GET.get('role')
-    filter_type = request.GET.get('filter')
-    search = request.GET.get('q')
     page = request.GET.get('page', 1)
-
-    users_page, total_students, debtors_count, total_debt = await get_users_data(
-        request.user, role, filter_type, search, page
-    )
+    users_page = paginator.get_page(page)
 
     context = {
         'users': users_page,
