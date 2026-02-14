@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Count, Q
+from asgiref.sync import sync_to_async
 
 from .models import Course, Room, Group, GroupStudent
 from .forms import CourseForm, RoomForm, GroupForm
@@ -9,15 +10,23 @@ from apps.users.models import User
 from apps.core.audit import log_user_action
 
 
-# --- KURSLAR ---
-@login_required
-def course_list(request):
-    org = request.organization
+# Async helper functions
+@sync_to_async
+def get_courses_with_groups(org):
+    """Kurslarni guruhlar soni bilan olish"""
     courses = Course.objects.filter(organization=org, is_deleted=False)
-    
     courses = courses.annotate(
         group_count=Count('groups', filter=Q(groups__is_deleted=False))
     )
+    return list(courses)
+
+
+# --- KURSLAR ---
+@login_required
+async def course_list(request):
+    """Kurslar ro'yxati (ASYNC)"""
+    org = request.organization
+    courses = await get_courses_with_groups(org)
     return render(request, 'education/course_list.html', {'courses': courses})
 
 

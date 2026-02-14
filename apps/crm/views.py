@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.db.models import Prefetch, Count
+from asgiref.sync import sync_to_async
 
 from .models import Lead, Stage, LeadSource, Activity
 from .forms import LeadForm, StageForm, LeadSourceForm, LeadConvertForm
@@ -14,18 +15,10 @@ from apps.users.models import User, ParentStudent
 from apps.core.audit import log_user_action
 
 
-# ===========================================
-# PIPELINE (VORONKA)
-# ===========================================
-
-@login_required
-def pipeline_view(request):
-    """
-    Kanban doska.
-    Lidlarni bosqichlar (Stage) bo'yicha guruhlab olib kelamiz.
-    """
-    org = request.organization
-    
+# Async helper functions
+@sync_to_async
+def get_pipeline_data(org):
+    """Pipeline ma'lumotlarini async olish"""
     stages = Stage.objects.filter(organization=org, is_deleted=False) \
         .order_by('order') \
         .prefetch_related(
@@ -33,10 +26,23 @@ def pipeline_view(request):
                 organization=org, is_deleted=False
             ).select_related('source', 'interested_course').order_by('-created_at'))
         )
-
-    # Statistika
     total_leads = Lead.objects.filter(organization=org, is_deleted=False).count()
-    
+    return list(stages), total_leads
+
+
+# ===========================================
+# PIPELINE (VORONKA)
+# ===========================================
+
+@login_required
+async def pipeline_view(request):
+    """
+    Kanban doska (ASYNC).
+    Lidlarni bosqichlar (Stage) bo'yicha guruhlab olib kelamiz.
+    """
+    org = request.organization
+    stages, total_leads = await get_pipeline_data(org)
+
     return render(request, 'crm/pipeline.html', {
         'stages': stages,
         'total_leads': total_leads,

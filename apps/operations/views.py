@@ -1,5 +1,5 @@
 """
-Operations views - Darslar va Davomat tizimi.
+Operations views - Darslar va Davomat tizimi (ASYNC optimized).
 """
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Q, Count, Avg
 from datetime import timedelta
+from asgiref.sync import sync_to_async
 
 from .models import Lesson, Attendance
 from apps.education.models import Group, GroupStudent
@@ -14,22 +15,10 @@ from apps.users.models import User
 from apps.core.audit import log_user_action
 
 
-# ===========================================
-# LESSONS (DARSLAR)
-# ===========================================
-
-@login_required
-def lesson_list(request):
-    """Bugungi darslar ro'yxati"""
-    org = request.user.organization
-    user = request.user
-    today = timezone.now().date()
-    
-    # Filter parametrlari
-    date_filter = request.GET.get('date', str(today))
-    group_filter = request.GET.get('group', '')
-    status_filter = request.GET.get('status', '')
-    
+# Async helper functions
+@sync_to_async
+def get_lessons_data(user, org, date_filter, group_filter, status_filter):
+    """Darslar ma'lumotlarini async olish"""
     # Super admin barcha darslarni ko'radi
     if user.role == 'super_admin' or not org:
         lessons = Lesson.objects.filter(is_deleted=False)
@@ -40,15 +29,10 @@ def lesson_list(request):
     if user.role == 'teacher':
         lessons = lessons.filter(teacher=user)
     
-    # Sana bo'yicha filter
     if date_filter:
         lessons = lessons.filter(date=date_filter)
-    
-    # Guruh bo'yicha filter
     if group_filter:
         lessons = lessons.filter(group_id=group_filter)
-    
-    # Status bo'yicha filter
     if status_filter:
         lessons = lessons.filter(status=status_filter)
     
@@ -58,24 +42,48 @@ def lesson_list(request):
     lessons_data = []
     for lesson in lessons:
         attendance_count = lesson.attendances.count()
-        attendance_taken = attendance_count > 0
-        present_count = lesson.attendances.filter(status='present').count()
-        
         lessons_data.append({
             'lesson': lesson,
-            'attendance_taken': attendance_taken,
+            'attendance_taken': attendance_count > 0,
             'attendance_count': attendance_count,
-            'present_count': present_count,
+            'present_count': lesson.attendances.filter(status='present').count(),
         })
     
-    # Guruhlar (filter uchun)
+    return lessons_data, list(lessons)
+
+
+@sync_to_async
+def get_groups_for_filter(user, org):
+    """Guruhlarni filter uchun olish"""
     if user.role == 'teacher':
         groups = Group.objects.filter(teacher=user, is_deleted=False)
     elif user.role == 'super_admin' or not org:
         groups = Group.objects.filter(is_deleted=False)
     else:
         groups = Group.objects.filter(organization=org, is_deleted=False)
-    
+    return list(groups)
+
+
+# ===========================================
+# LESSONS (DARSLAR)
+# ===========================================
+
+@login_required
+async def lesson_list(request):
+    """Bugungi darslar ro'yxati (ASYNC)"""
+    org = request.user.organization
+    user = request.user
+    today = timezone.now().date()
+
+    # Filter parametrlari
+    date_filter = request.GET.get('date', str(today))
+    group_filter = request.GET.get('group', '')
+    status_filter = request.GET.get('status', '')
+
+    # Async ma'lumotlarni olish
+    lessons_data, lessons = await get_lessons_data(user, org, date_filter, group_filter, status_filter)
+    groups = await get_groups_for_filter(user, org)
+
     context = {
         'lessons_data': lessons_data,
         'lessons': lessons,
