@@ -78,6 +78,8 @@ TEMPLATES = [
     },
 ]
 
+# ASGI va WSGI
+ASGI_APPLICATION = 'config.asgi.application'
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # 4. DATABASE
@@ -146,10 +148,61 @@ REST_FRAMEWORK = {
     ],
 }
 
-# CELERY & REDIS (Temporarily disabled - install celery first)
-# CELERY_BROKER_URL = 'redis://localhost:6379/0'
-# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-# CELERY_TIMEZONE = 'Asia/Tashkent'
+# ============================================
+# REDIS & CELERY CONFIGURATION
+# ============================================
+REDIS_URL = config('REDIS_URL', default='redis://localhost:6379/0')
+USE_REDIS = config('USE_REDIS', default=False, cast=bool)
+
+# Cache sozlamalari
+if USE_REDIS:
+    # Redis bilan (production uchun - tezroq)
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': REDIS_URL,
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            },
+            'KEY_PREFIX': 'smartedu',
+            'TIMEOUT': 300,  # 5 daqiqa default
+        }
+    }
+    # Session backend - Redis
+    SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+    SESSION_CACHE_ALIAS = 'default'
+else:
+    # Local memory cache (development uchun - Redis kerak emas)
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'smartedu-cache',
+            'TIMEOUT': 300,
+        }
+    }
+    # Default session backend
+    SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Celery sozlamalari
+CELERY_BROKER_URL = REDIS_URL
+CELERY_RESULT_BACKEND = REDIS_URL
+CELERY_TIMEZONE = 'Asia/Tashkent'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 daqiqa max
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+CELERY_TASK_ACKS_LATE = True
+
+# Celery beat (davriy vazifalar)
+CELERY_BEAT_SCHEDULE = {
+    # Har kuni soat 9:00 da eslatmalar yuborish
+    'send-daily-reminders': {
+        'task': 'apps.automation.tasks.send_daily_reminders',
+        'schedule': 60 * 60 * 24,  # Har 24 soatda
+    },
+}
 
 # CORS (Mobil ilova uchun)
 # ⚠️ Production'da faqat o'z domenlaringizni ruxsat bering!

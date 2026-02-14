@@ -1,11 +1,13 @@
 """
 Rol asosli Dashboard viewlari.
 Har bir rol uchun alohida ma'lumotlar va statistikalar.
+Cache bilan optimizatsiya qilingan.
 """
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, Q
 from django.utils import timezone
+from django.core.cache import cache
 from datetime import timedelta
 
 from apps.users.models import User, ParentStudent
@@ -21,6 +23,21 @@ def get_date_range(days=30):
     end_date = timezone.now()
     start_date = end_date - timedelta(days=days)
     return start_date, end_date
+
+
+def get_cached_or_compute(cache_key, compute_func, timeout=300):
+    """
+    Cache dan olish yoki hisoblash.
+    Args:
+        cache_key: Cache kaliti
+        compute_func: Cache topilmasa chaqiriladigan funksiya
+        timeout: Cache muddati (soniyalarda)
+    """
+    result = cache.get(cache_key)
+    if result is None:
+        result = compute_func()
+        cache.set(cache_key, result, timeout)
+    return result
 
 
 @login_required

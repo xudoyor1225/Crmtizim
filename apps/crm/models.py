@@ -46,8 +46,8 @@ class Lead(TenantAwareModel):
     """
     Potensial mijoz (Lid).
     """
-    full_name = models.CharField(max_length=255, verbose_name="To'liq ismi")
-    phone = models.CharField(max_length=20, verbose_name="Telefon")
+    full_name = models.CharField(max_length=255, verbose_name="To'liq ismi", db_index=True)
+    phone = models.CharField(max_length=20, verbose_name="Telefon", db_index=True)
 
     source = models.ForeignKey(LeadSource, on_delete=models.SET_NULL, null=True, verbose_name="Manba")
     stage = models.ForeignKey(Stage, on_delete=models.PROTECT, related_name='leads', verbose_name="Bosqich")
@@ -67,6 +67,10 @@ class Lead(TenantAwareModel):
         db_table = 'leads'
         verbose_name = "Lid"
         verbose_name_plural = "Lidlar"
+        indexes = [
+            models.Index(fields=['organization', 'stage']),
+            models.Index(fields=['created_at']),
+        ]
 
 
 class Activity(TenantAwareModel):
