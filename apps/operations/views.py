@@ -15,6 +15,21 @@ from apps.users.models import User
 from apps.core.audit import log_user_action
 
 
+# Shablon izohlar - davomat olishda tez tanlash uchun
+ATTENDANCE_NOTES = [
+    "Darsga tayyor",
+    "Uy vazifasini bajargan",
+    "Faol qatnashdi",
+    "Diqqat bilan tingladi",
+    "Savollar berdi",
+    "Uy vazifasini bajarmagan",
+    "Darsga kech keldi",
+    "Telefonni ko'p ishlatdi",
+    "Sababli kelmadi - kasal",
+    "Sababli kelmadi - oilaviy",
+]
+
+
 # Async helper functions
 @sync_to_async
 def get_lessons_data(user, org, date_filter, group_filter, status_filter):

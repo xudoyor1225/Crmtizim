@@ -124,9 +124,27 @@
                             class="w-20 px-3 py-2 text-center rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary">
                     </td>
                     <td class="p-4">
-                        <input type="text" name="comment_{{ data.student.id }}" value="{{ data.comment }}"
-                            placeholder="Izoh..."
-                            class="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary">
+                        <div class="space-y-2">
+                            <div class="relative">
+                                <input type="text" name="comment_{{ data.student.id }}"
+                                    id="comment_{{ data.student.id }}"
+                                    value="{{ data.comment }}"
+                                    placeholder="Izoh yozing... (majburiy)"
+                                    required
+                                    class="w-full px-3 py-2 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary {% if not data.comment %}border-red-300{% endif %}">
+                                <span class="absolute right-2 top-1/2 -translate-y-1/2 text-red-500 text-xs">*</span>
+                            </div>
+                            <!-- Shablon izohlar -->
+                            <div class="flex flex-wrap gap-1">
+                                {% for note in attendance_notes %}
+                                <button type="button"
+                                    onclick="document.getElementById('comment_{{ data.student.id }}').value = '{{ note }}'"
+                                    class="text-xs px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded-md text-slate-600 transition">
+                                    {{ note }}
+                                </button>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 {% empty %}
