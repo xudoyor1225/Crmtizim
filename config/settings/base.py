@@ -11,6 +11,10 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-key-only-for-loca
 DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='13.39.83.160,localhost,127.0.0.1', cast=Csv())
 
+# Development uchun async ORM ruxsat berish
+if DEBUG:
+    os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+
 # 3. APPS
 INSTALLED_APPS = [
     # Unfold admin (django.contrib.admin dan oldin bo'lishi kerak)
