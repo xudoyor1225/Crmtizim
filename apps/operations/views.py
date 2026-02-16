@@ -84,8 +84,8 @@ def get_groups_for_filter(user, org):
 # ===========================================
 
 @login_required
-async def lesson_list(request):
-    """Bugungi darslar ro'yxati (ASYNC)"""
+def lesson_list(request):
+    """Bugungi darslar ro'yxati"""
     org = request.user.organization
     user = request.user
     today = timezone.now().date()
@@ -95,9 +95,43 @@ async def lesson_list(request):
     group_filter = request.GET.get('group', '')
     status_filter = request.GET.get('status', '')
 
-    # Async ma'lumotlarni olish
-    lessons_data, lessons = await get_lessons_data(user, org, date_filter, group_filter, status_filter)
-    groups = await get_groups_for_filter(user, org)
+    # Super admin barcha darslarni ko'radi
+    if user.role == 'super_admin' or not org:
+        lessons = Lesson.objects.filter(is_deleted=False)
+    else:
+        lessons = Lesson.objects.filter(organization=org, is_deleted=False)
+
+    # Agar o'qituvchi bo'lsa, faqat o'z darslari
+    if user.role == 'teacher':
+        lessons = lessons.filter(teacher=user)
+
+    if date_filter:
+        lessons = lessons.filter(date=date_filter)
+    if group_filter:
+        lessons = lessons.filter(group_id=group_filter)
+    if status_filter:
+        lessons = lessons.filter(status=status_filter)
+
+    lessons = lessons.select_related('group', 'teacher', 'room').prefetch_related('attendances').order_by('start_time')
+
+    # Davomat olinganligini tekshirish
+    lessons_data = []
+    for lesson in lessons:
+        attendance_count = lesson.attendances.count()
+        lessons_data.append({
+            'lesson': lesson,
+            'attendance_taken': attendance_count > 0,
+            'attendance_count': attendance_count,
+            'present_count': lesson.attendances.filter(status='present').count(),
+        })
+
+    # Guruhlar filter uchun
+    if user.role == 'teacher':
+        groups = Group.objects.filter(teacher=user, is_deleted=False)
+    elif user.role == 'super_admin' or not org:
+        groups = Group.objects.filter(is_deleted=False)
+    else:
+        groups = Group.objects.filter(organization=org, is_deleted=False)
 
     context = {
         'lessons_data': lessons_data,

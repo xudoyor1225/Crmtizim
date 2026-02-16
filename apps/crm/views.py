@@ -19,15 +19,34 @@ from apps.core.audit import log_user_action
 @sync_to_async
 def get_pipeline_data(org):
     """Pipeline ma'lumotlarini async olish"""
+    from django.utils import timezone
+    from django.db import models
+
     stages = Stage.objects.filter(organization=org, is_deleted=False) \
         .order_by('order') \
         .prefetch_related(
             Prefetch('leads', queryset=Lead.objects.filter(
                 organization=org, is_deleted=False
             ).select_related('source', 'interested_course').order_by('-created_at'))
+        ).annotate(
+            lead_count=Count('leads', filter=models.Q(leads__is_deleted=False))
         )
     total_leads = Lead.objects.filter(organization=org, is_deleted=False).count()
-    return list(stages), total_leads
+
+    # Bugungi lidlar
+    today = timezone.now().date()
+    today_leads = Lead.objects.filter(
+        organization=org,
+        is_deleted=False,
+        created_at__date=today
+    ).count()
+
+    # Manbalar
+    sources = LeadSource.objects.filter(organization=org, is_deleted=False).annotate(
+        lead_count=Count('lead', filter=~models.Q(lead__is_deleted=True))
+    )
+
+    return list(stages), total_leads, today_leads, list(sources)
 
 
 # ===========================================
@@ -35,17 +54,45 @@ def get_pipeline_data(org):
 # ===========================================
 
 @login_required
-async def pipeline_view(request):
+def pipeline_view(request):
     """
-    Kanban doska (ASYNC).
-    Lidlarni bosqichlar (Stage) bo'yicha guruhlab olib kelamiz.
+    CRM Dashboard - Voronka, Bosqichlar va Manbalar.
+    Barcha CRM ma'lumotlari bitta sahifada.
     """
-    org = request.organization
-    stages, total_leads = await get_pipeline_data(org)
+    from django.db import models
 
-    return render(request, 'crm/pipeline.html', {
+    org = request.organization
+
+    stages = Stage.objects.filter(organization=org, is_deleted=False) \
+        .order_by('order') \
+        .prefetch_related(
+            Prefetch('leads', queryset=Lead.objects.filter(
+                organization=org, is_deleted=False
+            ).select_related('source', 'interested_course').order_by('-created_at'))
+        ).annotate(
+            lead_count=Count('leads', filter=models.Q(leads__is_deleted=False))
+        )
+    total_leads = Lead.objects.filter(organization=org, is_deleted=False).count()
+
+    # Bugungi lidlar
+    from django.utils import timezone
+    today = timezone.now().date()
+    today_leads = Lead.objects.filter(
+        organization=org,
+        is_deleted=False,
+        created_at__date=today
+    ).count()
+
+    # Manbalar
+    sources = LeadSource.objects.filter(organization=org, is_deleted=False).annotate(
+        lead_count=Count('lead', filter=~models.Q(lead__is_deleted=True))
+    )
+
+    return render(request, 'crm/crm_dashboard.html', {
         'stages': stages,
         'total_leads': total_leads,
+        'today_leads': today_leads,
+        'sources': sources,
     })
 
 
@@ -71,7 +118,7 @@ def lead_create(request):
             
             if not first_stage:
                 messages.error(request, "Avval bosqichlarni (Stages) yarating!")
-                return redirect('stage_list')
+                return redirect('crm:pipeline')
 
             lead.stage = first_stage
             lead.assigned_to = request.user
@@ -81,7 +128,7 @@ def lead_create(request):
             log_user_action(request.user, 'CREATE', 'Lead', lead.id, str(lead), request=request)
 
             messages.success(request, "Lid muvaffaqiyatli qo'shildi!")
-            return redirect('pipeline')
+            return redirect('crm:pipeline')
     else:
         form = LeadForm(organization=org)
 
@@ -136,7 +183,7 @@ def lead_delete(request, pk):
         lead.delete()  # Soft delete
         log_user_action(request.user, 'DELETE', 'Lead', lead.id, str(lead), request=request)
         messages.warning(request, "Lid o'chirildi!")
-        return redirect('pipeline')
+        return redirect('crm:pipeline')
     
     return render(request, 'crm/lead_confirm_delete.html', {'lead': lead})
 
@@ -293,7 +340,7 @@ def stage_create(request):
             stage.save()
             log_user_action(request.user, 'CREATE', 'Stage', stage.id, str(stage), request=request)
             messages.success(request, "Bosqich yaratildi!")
-            return redirect('stage_list')
+            return redirect('crm:pipeline')
     else:
         # Default order
         max_order = Stage.objects.filter(organization=org).count() + 1
@@ -314,7 +361,7 @@ def stage_edit(request, pk):
             form.save()
             log_user_action(request.user, 'UPDATE', 'Stage', stage.id, str(stage), request=request)
             messages.success(request, "Bosqich yangilandi!")
-            return redirect('stage_list')
+            return redirect('crm:pipeline')
     else:
         form = StageForm(instance=stage)
     
@@ -331,12 +378,12 @@ def stage_delete(request, pk):
         # Tekshirish: bu bosqichda lidlar bormi?
         if stage.leads.filter(is_deleted=False).exists():
             messages.error(request, "Bu bosqichda lidlar bor! Avval ularni boshqa bosqichga o'tkazing.")
-            return redirect('stage_list')
+            return redirect('crm:pipeline')
         
         stage.delete()
         log_user_action(request.user, 'DELETE', 'Stage', stage.id, str(stage), request=request)
         messages.warning(request, "Bosqich o'chirildi!")
-        return redirect('stage_list')
+        return redirect('crm:pipeline')
     
     return render(request, 'crm/stage_confirm_delete.html', {'stage': stage})
 
@@ -369,7 +416,7 @@ def source_create(request):
             source.save()
             log_user_action(request.user, 'CREATE', 'LeadSource', source.id, str(source), request=request)
             messages.success(request, "Manba yaratildi!")
-            return redirect('source_list')
+            return redirect('crm:pipeline')
     else:
         form = LeadSourceForm()
     
@@ -388,7 +435,7 @@ def source_edit(request, pk):
             form.save()
             log_user_action(request.user, 'UPDATE', 'LeadSource', source.id, str(source), request=request)
             messages.success(request, "Manba yangilandi!")
-            return redirect('source_list')
+            return redirect('crm:pipeline')
     else:
         form = LeadSourceForm(instance=source)
     
@@ -405,7 +452,7 @@ def source_delete(request, pk):
         source.delete()
         log_user_action(request.user, 'DELETE', 'LeadSource', source.id, str(source), request=request)
         messages.warning(request, "Manba o'chirildi!")
-        return redirect('source_list')
+        return redirect('crm:pipeline')
     
     return render(request, 'crm/source_confirm_delete.html', {'source': source})
 
