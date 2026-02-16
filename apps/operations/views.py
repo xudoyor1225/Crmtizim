@@ -603,58 +603,45 @@ def teacher_ratings(request):
         'can_rate': user.role in ['super_admin', 'owner'],
     }
 
-    return render(request, 'operations/teacher_ratings.html', context)
+    # ========== O'QUVCHILAR ==========
+    if user.role == 'super_admin' or not org:
+        students = User.objects.filter(role='student', is_deleted=False)
+    else:
+        students = User.objects.filter(organization=org, role='student', is_deleted=False)
+
+    students_data = []
+    for student in students[:50]:  # Top 50
+        # Guruh
+        gs = GroupStudent.objects.filter(student=student, status='active').select_related('group').first()
+        group_name = gs.group.name if gs else None
+
+        # XP
+        xp = getattr(student, 'xp_points', 0) or 0
+
+        # Davomat
+        total_att = Attendance.objects.filter(student=student).count()
+        present_att = Attendance.objects.filter(student=student, status='present').count()
+        att_rate = (present_att / total_att * 100) if total_att > 0 else 0
+
+        # O'rtacha baho
+        avg_grade = Attendance.objects.filter(student=student, grade__isnull=False).aggregate(avg=Avg('grade'))['avg']
+
+        students_data.append({
+            'student': student,
+            'group_name': group_name,
+            'xp': xp,
+            'attendance_rate': round(att_rate, 1),
+            'avg_grade': round(avg_grade, 1) if avg_grade else None,
+        })
+
+    # XP bo'yicha tartiblash
+    students_data.sort(key=lambda x: x['xp'], reverse=True)
+    context['students_data'] = students_data
+
+    return render(request, 'operations/ratings_dashboard.html', context)
 
 
 @login_required
 def student_ratings(request):
-    """O'quvchilar reytingi (Leaderboard)"""
-    org = request.user.organization
-    
-    students = User.objects.filter(
-        organization=org,
-        role='student',
-        is_deleted=False
-    )
-    
-    students_data = []
-    for student in students:
-        # Davomat
-        total_att = Attendance.objects.filter(student=student).count()
-        present = Attendance.objects.filter(student=student, status='present').count()
-        att_rate = (present / total_att * 100) if total_att > 0 else 0
-        
-        # O'rtacha baho
-        avg_grade = Attendance.objects.filter(
-            student=student,
-            grade__isnull=False
-        ).aggregate(avg=Avg('grade'))['avg'] or 0
-        
-        # Jami XP
-        total_xp = Attendance.objects.filter(student=student).aggregate(
-            total=Count('xp_points')
-        )['total'] or 0
-        
-        # Guruhlar soni
-        group_count = GroupStudent.objects.filter(
-            student=student, status='active'
-        ).count()
-        
-        students_data.append({
-            'student': student,
-            'attendance_rate': round(att_rate, 1),
-            'avg_grade': round(avg_grade, 1),
-            'total_xp': total_xp,
-            'group_count': group_count,
-            # Umumiy ball (reyting uchun)
-            'score': round(att_rate * 0.3 + avg_grade * 0.5 + total_xp * 0.2, 1)
-        })
-    
-    # Baliga ko'ra tartiblash
-    students_data.sort(key=lambda x: x['score'], reverse=True)
-    
-    # Rank qo'shish
-    for i, data in enumerate(students_data):
-        data['rank'] = i + 1
-    
-    return render(request, 'operations/student_ratings.html', {'students_data': students_data})
+    """O'quvchilar reytingi - Reytinglar sahifasiga redirect (tab=students)"""
+    return redirect('operations:teacher_ratings')
