@@ -19,21 +19,21 @@
         <!-- O'qituvchilar -->
         <a href="?tab=teachers" class="group relative overflow-hidden rounded-2xl p-5 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl
             {% if current_tab == 'teachers' %}
-            bg-gradient-to-br from-[#1D546D] to-[#0D3A4D] text-white shadow-lg shadow-[#1D546D]/30
+            bg-gradient-to-br from-[#5A7863] to-[#3B4953] text-white shadow-lg shadow-[#5A7863]/30
             {% else %}
-            bg-white border-2 border-slate-200 hover:border-[#1D546D]/50 text-slate-800
+            bg-white border-2 border-[#90AB8B]/30 hover:border-[#5A7863]/50 text-[#3B4953]
             {% endif %}">
             <div class="flex items-center gap-4">
                 <div class="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0
-                    {% if current_tab == 'teachers' %}bg-white/20{% else %}bg-[#1D546D]/10{% endif %}">
-                    <i class="ph-fill ph-chalkboard-teacher text-2xl {% if current_tab == 'teachers' %}text-white{% else %}text-[#1D546D]{% endif %}"></i>
+                    {% if current_tab == 'teachers' %}bg-white/20{% else %}bg-[#EBF4DD]{% endif %}">
+                    <i class="ph-fill ph-chalkboard-teacher text-2xl {% if current_tab == 'teachers' %}text-white{% else %}text-[#5A7863]{% endif %}"></i>
                 </div>
                 <div class="flex-1">
                     <h3 class="text-lg font-bold flex items-center gap-2">
                         👨‍🏫 O'qituvchilar
-                        {% if current_tab == 'teachers' %}<i class="ph-fill ph-check-circle text-emerald-300"></i>{% endif %}
+                        {% if current_tab == 'teachers' %}<i class="ph-fill ph-check-circle text-[#EBF4DD]"></i>{% endif %}
                     </h3>
-                    <p class="text-sm {% if current_tab == 'teachers' %}text-white/70{% else %}text-slate-500{% endif %}">
+                    <p class="text-sm {% if current_tab == 'teachers' %}text-white/70{% else %}text-[#5A7863]{% endif %}">
                         Haftalik baho: {{ current_week_start|date:"d M" }} - {{ current_week_end|date:"d M" }}
                     </p>
                 </div>
@@ -43,21 +43,21 @@
         <!-- O'quvchilar -->
         <a href="?tab=students" class="group relative overflow-hidden rounded-2xl p-5 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl
             {% if current_tab == 'students' %}
-            bg-gradient-to-br from-purple-600 to-indigo-700 text-white shadow-lg shadow-purple-500/30
+            bg-gradient-to-br from-[#90AB8B] to-[#5A7863] text-white shadow-lg shadow-[#90AB8B]/30
             {% else %}
-            bg-white border-2 border-slate-200 hover:border-purple-300 text-slate-800
+            bg-white border-2 border-[#90AB8B]/30 hover:border-[#90AB8B] text-[#3B4953]
             {% endif %}">
             <div class="flex items-center gap-4">
                 <div class="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0
-                    {% if current_tab == 'students' %}bg-white/20{% else %}bg-purple-100{% endif %}">
-                    <i class="ph-fill ph-student text-2xl {% if current_tab == 'students' %}text-white{% else %}text-purple-600{% endif %}"></i>
+                    {% if current_tab == 'students' %}bg-white/20{% else %}bg-[#EBF4DD]{% endif %}">
+                    <i class="ph-fill ph-student text-2xl {% if current_tab == 'students' %}text-white{% else %}text-[#5A7863]{% endif %}"></i>
                 </div>
                 <div class="flex-1">
                     <h3 class="text-lg font-bold flex items-center gap-2">
                         👨‍🎓 O'quvchilar
-                        {% if current_tab == 'students' %}<i class="ph-fill ph-check-circle text-emerald-300"></i>{% endif %}
+                        {% if current_tab == 'students' %}<i class="ph-fill ph-check-circle text-[#EBF4DD]"></i>{% endif %}
                     </h3>
-                    <p class="text-sm {% if current_tab == 'students' %}text-white/70{% else %}text-slate-500{% endif %}">
+                    <p class="text-sm {% if current_tab == 'students' %}text-white/70{% else %}text-[#5A7863]{% endif %}">
                         XP va yutuqlar bo'yicha reyting
                     </p>
                 </div>
@@ -76,11 +76,11 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {% for data in teachers_data %}
-            <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden hover:shadow-lg transition-all duration-300"
+            <div class="rounded-2xl border border-[#90AB8B]/30 bg-white overflow-hidden hover:shadow-lg transition-all duration-300"
                 x-data="{ showRating: false }">
 
                 <!-- Header -->
-                <div class="bg-gradient-to-r from-[#1D546D] to-[#5F9598] p-4 text-white">
+                <div class="bg-gradient-to-r from-[#5A7863] to-[#90AB8B] p-4 text-white">
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-xl font-bold">
                             {{ data.teacher.first_name|first }}
@@ -104,21 +104,21 @@
 
                 <!-- Stats -->
                 <div class="grid grid-cols-4 gap-1 p-3">
-                    <div class="text-center p-2 bg-slate-50 rounded-lg">
-                        <p class="text-lg font-bold text-[#1D546D]">{{ data.group_count }}</p>
-                        <p class="text-xs text-slate-400">Guruh</p>
+                    <div class="text-center p-2 bg-[#EBF4DD] rounded-lg">
+                        <p class="text-lg font-bold text-[#5A7863]">{{ data.group_count }}</p>
+                        <p class="text-xs text-[#3B4953]">Guruh</p>
                     </div>
-                    <div class="text-center p-2 bg-slate-50 rounded-lg">
+                    <div class="text-center p-2 bg-[#EBF4DD] rounded-lg">
                         <p class="text-lg font-bold text-emerald-600">{{ data.student_count }}</p>
-                        <p class="text-xs text-slate-400">O'quvchi</p>
+                        <p class="text-xs text-[#3B4953]">O'quvchi</p>
                     </div>
-                    <div class="text-center p-2 bg-slate-50 rounded-lg">
-                        <p class="text-lg font-bold text-purple-600">{{ data.lesson_count }}</p>
-                        <p class="text-xs text-slate-400">Dars</p>
+                    <div class="text-center p-2 bg-[#EBF4DD] rounded-lg">
+                        <p class="text-lg font-bold text-[#90AB8B]">{{ data.lesson_count }}</p>
+                        <p class="text-xs text-[#3B4953]">Dars</p>
                     </div>
-                    <div class="text-center p-2 bg-slate-50 rounded-lg">
+                    <div class="text-center p-2 bg-[#EBF4DD] rounded-lg">
                         <p class="text-lg font-bold text-orange-500">{{ data.attendance_rate }}%</p>
-                        <p class="text-xs text-slate-400">Davomat</p>
+                        <p class="text-xs text-[#3B4953]">Davomat</p>
                     </div>
                 </div>
 
@@ -143,13 +143,13 @@
                 <div class="px-3 pb-3">
                     <button @click="showRating = !showRating"
                         class="w-full py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-1
-                        {% if data.current_rating %}bg-slate-100 text-slate-600 hover:bg-slate-200{% else %}bg-purple-600 text-white hover:bg-purple-700{% endif %}">
+                        {% if data.current_rating %}bg-[#EBF4DD] text-[#5A7863] hover:bg-[#90AB8B]/30{% else %}bg-[#5A7863] text-white hover:bg-[#3B4953]{% endif %}">
                         <i class="ph ph-star"></i>
                         <span x-text="showRating ? 'Yopish' : '{% if data.current_rating %}Tahrirlash{% else %}Baholash{% endif %}'"></span>
                     </button>
 
                     <!-- Baho formasi -->
-                    <div x-show="showRating" x-transition x-cloak class="mt-3 p-3 bg-slate-50 rounded-lg">
+                    <div x-show="showRating" x-transition x-cloak class="mt-3 p-3 bg-[#EBF4DD] rounded-lg">
                         <form method="POST" class="space-y-3">
                             {% csrf_token %}
                             <input type="hidden" name="teacher_id" value="{{ data.teacher.id }}">
@@ -227,9 +227,9 @@
                                 <input type="hidden" name="overall" :value="r">
                             </div>
 
-                            <textarea name="rating_comment" rows="1" class="w-full px-2 py-1.5 text-xs rounded border border-slate-200" placeholder="Izoh...">{{ data.current_rating.comment|default:"" }}</textarea>
+                            <textarea name="rating_comment" rows="1" class="w-full px-2 py-1.5 text-xs rounded border border-[#90AB8B]/30" placeholder="Izoh...">{{ data.current_rating.comment|default:"" }}</textarea>
 
-                            <button type="submit" class="w-full py-2 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700">
+                            <button type="submit" class="w-full py-2 bg-[#5A7863] text-white rounded-lg text-sm font-medium hover:bg-[#3B4953]">
                                 {% if data.current_rating %}Yangilash{% else %}Saqlash{% endif %}
                             </button>
                         </form>
@@ -283,37 +283,37 @@
         {% endif %}
 
         <!-- Qolgan o'quvchilar -->
-        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+        <div class="bg-white rounded-2xl border border-[#90AB8B]/30 overflow-hidden">
             <table class="w-full">
-                <thead class="bg-slate-50">
+                <thead class="bg-[#EBF4DD]">
                     <tr>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600">#</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600">O'quvchi</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-slate-600">Guruh</th>
-                        <th class="px-4 py-3 text-center text-xs font-semibold text-slate-600">XP</th>
-                        <th class="px-4 py-3 text-center text-xs font-semibold text-slate-600">Davomat</th>
-                        <th class="px-4 py-3 text-center text-xs font-semibold text-slate-600">O'rt. Baho</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-[#3B4953]">#</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-[#3B4953]">O'quvchi</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-[#3B4953]">Guruh</th>
+                        <th class="px-4 py-3 text-center text-xs font-semibold text-[#3B4953]">XP</th>
+                        <th class="px-4 py-3 text-center text-xs font-semibold text-[#3B4953]">Davomat</th>
+                        <th class="px-4 py-3 text-center text-xs font-semibold text-[#3B4953]">O'rt. Baho</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-[#90AB8B]/20">
                     {% for data in students_data %}
-                    <tr class="hover:bg-slate-50">
+                    <tr class="hover:bg-[#EBF4DD]/50">
                         <td class="px-4 py-3">
-                            <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-600">
+                            <span class="w-6 h-6 rounded-full bg-[#EBF4DD] flex items-center justify-center text-xs font-bold text-[#5A7863]">
                                 {{ forloop.counter }}
                             </span>
                         </td>
                         <td class="px-4 py-3">
                             <div class="flex items-center gap-2">
-                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-[#5A7863] to-[#3B4953] flex items-center justify-center text-white text-xs font-bold">
                                     {{ data.student.first_name|first }}
                                 </div>
-                                <span class="font-medium text-slate-800">{{ data.student.first_name }} {{ data.student.last_name }}</span>
+                                <span class="font-medium text-[#3B4953]">{{ data.student.first_name }} {{ data.student.last_name }}</span>
                             </div>
                         </td>
-                        <td class="px-4 py-3 text-sm text-slate-600">{{ data.group_name|default:"—" }}</td>
+                        <td class="px-4 py-3 text-sm text-[#5A7863]">{{ data.group_name|default:"—" }}</td>
                         <td class="px-4 py-3 text-center">
-                            <span class="px-2 py-1 bg-purple-100 text-purple-700 rounded-lg text-xs font-bold">{{ data.xp }} XP</span>
+                            <span class="px-2 py-1 bg-[#EBF4DD] text-[#5A7863] rounded-lg text-xs font-bold">{{ data.xp }} XP</span>
                         </td>
                         <td class="px-4 py-3 text-center">
                             <span class="text-sm font-medium {% if data.attendance_rate >= 80 %}text-emerald-600{% elif data.attendance_rate >= 60 %}text-amber-600{% else %}text-red-600{% endif %}">
@@ -321,13 +321,13 @@
                             </span>
                         </td>
                         <td class="px-4 py-3 text-center">
-                            <span class="text-sm font-medium text-slate-700">{{ data.avg_grade|default:"—" }}</span>
+                            <span class="text-sm font-medium text-[#3B4953]">{{ data.avg_grade|default:"—" }}</span>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="px-4 py-8 text-center text-slate-500">
-                            <i class="ph ph-student text-4xl text-slate-300 mb-2"></i>
+                        <td colspan="6" class="px-4 py-8 text-center text-[#5A7863]">
+                            <i class="ph ph-student text-4xl text-[#90AB8B] mb-2"></i>
                             <p>O'quvchilar topilmadi</p>
                         </td>
                     </tr>

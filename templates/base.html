@@ -31,9 +31,10 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        primary: { 50: '#eef6f8', 100: '#d4eaef', 200: '#a8d5df', 300: '#7ebdca', 400: '#5F9598', 500: '#1D546D', 600: '#174a5f', 700: '#113d50', 800: '#0c3041', 900: '#061E29' },
-                        teal: { 50: '#f0f9f9', 100: '#d4efef', 200: '#a8dede', 300: '#7ecaca', 400: '#5F9598', 500: '#4a8285', 600: '#3a6e71', 700: '#2d5557' },
-                        slate: { 50: '#F3F4F4', 100: '#ebedef', 200: '#dde0e3', 300: '#c4c9ce', 400: '#8e96a0', 500: '#5e6775', 600: '#47505d', 700: '#343c47', 800: '#1e2630', 900: '#061E29' }
+                        primary: { 50: '#EBF4DD', 100: '#d8ecc5', 200: '#c5e3ad', 300: '#a8d48a', 400: '#90AB8B', 500: '#5A7863', 600: '#4a6553', 700: '#3B4953', 800: '#2d3840', 900: '#1e262d' },
+                        brand: { light: '#EBF4DD', medium: '#90AB8B', primary: '#5A7863', dark: '#3B4953' },
+                        sage: { 50: '#EBF4DD', 100: '#dcecc8', 200: '#c5deb0', 300: '#a8c994', 400: '#90AB8B', 500: '#7a9576', 600: '#5A7863', 700: '#4a6553', 800: '#3B4953', 900: '#2d3840' },
+                        slate: { 50: '#f8faf6', 100: '#EBF4DD', 200: '#dde5d5', 300: '#c4cfc0', 400: '#90AB8B', 500: '#5A7863', 600: '#4a6553', 700: '#3B4953', 800: '#2d3840', 900: '#1e262d' }
                     }
                 }
             }
@@ -46,7 +47,7 @@
     </style>
 </head>
 
-<body class="font-sans antialiased overflow-hidden bg-slate-50 text-slate-800">
+<body class="font-sans antialiased overflow-hidden bg-[#EBF4DD] text-[#3B4953]">
 
     <div class="flex h-screen w-full">
 
@@ -57,7 +58,7 @@
 
             <!-- Logo -->
             <div
-                class="h-16 flex items-center justify-center border-b border-slate-200 bg-gradient-to-r from-[#1D546D] to-[#061E29]">
+                class="h-16 flex items-center justify-center border-b border-slate-200 bg-gradient-to-r from-[#5A7863] to-[#3B4953]">
                 <span class="text-xl font-bold flex items-center gap-2 text-white">
                     <i class="ph-fill ph-graduation-cap text-2xl"></i>
                     Smart Edu
@@ -96,18 +97,18 @@
             </script>
 
             <!-- User Profile -->
-            <div class="p-4 border-t border-slate-200 bg-slate-50">
+            <div class="p-4 border-t border-[#90AB8B]/30 bg-[#EBF4DD]">
                 <div class="flex items-center gap-3">
                     <div
-                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1D546D] to-[#061E29] text-white flex items-center justify-center font-bold shadow-md">
+                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#5A7863] to-[#3B4953] text-white flex items-center justify-center font-bold shadow-md">
                         {{ request.user.first_name|first }}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold truncate text-slate-800">{{ request.user.first_name }}</p>
-                        <p class="text-xs truncate text-slate-500">{{ request.user.get_role_display }}</p>
+                        <p class="text-sm font-semibold truncate text-[#3B4953]">{{ request.user.first_name }}</p>
+                        <p class="text-xs truncate text-[#5A7863]">{{ request.user.get_role_display }}</p>
                     </div>
                     <a href="{% url 'logout' %}"
-                        class="transition p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50">
+                        class="transition p-2 rounded-lg text-[#5A7863] hover:text-red-500 hover:bg-red-50">
                         <i class="ph-fill ph-sign-out text-xl"></i>
                     </a>
                 </div>
@@ -115,18 +116,18 @@
         </aside>
 
         <!-- MAIN CONTENT -->
-        <div class="flex-1 flex flex-col h-screen min-w-0 overflow-hidden bg-slate-50">
+        <div class="flex-1 flex flex-col h-screen min-w-0 overflow-hidden bg-[#EBF4DD]">
 
             <!-- Header -->
             <header
-                class="h-16 flex items-center justify-between px-6 z-40 bg-white border-b border-slate-200 shadow-sm">
+                class="h-16 flex items-center justify-between px-6 z-40 bg-white border-b border-[#90AB8B]/30 shadow-sm">
                 <button @click="sidebarOpen = !sidebarOpen"
-                    class="focus:outline-none transition p-2 rounded-lg lg:hidden text-slate-500 hover:text-[#1D546D] hover:bg-primary-50">
+                    class="focus:outline-none transition p-2 rounded-lg lg:hidden text-[#5A7863] hover:text-[#3B4953] hover:bg-[#EBF4DD]">
                     <i class="ph ph-list text-2xl"></i>
                 </button>
 
                 <h1
-                    class="text-lg font-bold hidden sm:block bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
+                    class="text-lg font-bold hidden sm:block bg-gradient-to-r from-[#5A7863] to-[#3B4953] bg-clip-text text-transparent">
                     {{ organization.name|default:"Smart Edu Center" }}
                 </h1>
 
