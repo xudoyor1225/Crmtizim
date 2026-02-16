@@ -1,9 +1,5 @@
 <!-- Dashboard -->
 <a href="{% url 'dashboard' %}"
-    hx-get="{% url 'dashboard' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
     <i class="ph-fill ph-squares-four"></i>
     <span>Dashboard</span>
@@ -14,10 +10,6 @@
 <p class="sidebar-section">Boshqaruv</p>
 
 <a href="{% url 'users:user_list' %}"
-    hx-get="{% url 'users:user_list' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'users' in request.path %}active{% endif %}">
     <i class="ph-fill ph-users"></i>
     <span>Foydalanuvchilar</span>
@@ -25,10 +17,6 @@
 
 {% if full_access or 'automation' in user_modules %}
 <a href="{% url 'automation:template_list' %}"
-    hx-get="{% url 'automation:template_list' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'automation' in request.path %}active{% endif %}">
     <i class="ph-fill ph-robot"></i>
     <span>Avtomatizatsiya</span>
@@ -41,10 +29,6 @@
 <p class="sidebar-section">Sotuv & CRM</p>
 
 <a href="{% url 'crm:pipeline' %}"
-    hx-get="{% url 'crm:pipeline' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'crm' in request.path %}active{% endif %}">
     <i class="ph-fill ph-funnel"></i>
     <span>Sotuv & CRM</span>
@@ -56,20 +40,12 @@
 <p class="sidebar-section">O'quv Jarayoni</p>
 
 <a href="{% url 'group_list' %}"
-    hx-get="{% url 'group_list' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'groups' in request.path %}active{% endif %}">
     <i class="ph-fill ph-users-three"></i>
     <span>Guruhlar</span>
 </a>
 
 <a href="{% url 'course_list' %}"
-    hx-get="{% url 'course_list' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'courses' in request.path %}active{% endif %}">
     <i class="ph-fill ph-books"></i>
     <span>Kurslar</span>
@@ -77,10 +53,6 @@
 
 {% if full_access %}
 <a href="{% url 'room_list' %}"
-    hx-get="{% url 'room_list' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'rooms' in request.path %}active{% endif %}">
     <i class="ph-fill ph-door"></i>
     <span>Xonalar</span>
@@ -88,10 +60,6 @@
 {% endif %}
 
 <a href="{% url 'material_list' %}"
-    hx-get="{% url 'material_list' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'materials' in request.path %}active{% endif %}">
     <i class="ph-fill ph-file-video"></i>
     <span>Materiallar</span>
@@ -103,10 +71,6 @@
 <p class="sidebar-section">Operatsiyalar</p>
 
 <a href="{% url 'operations:lesson_list' %}"
-    hx-get="{% url 'operations:lesson_list' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'lessons' in request.path or 'schedule' in request.path %}active{% endif %}">
     <i class="ph-fill ph-chalkboard"></i>
     <span>Darslar & Jadval</span>
@@ -117,20 +81,12 @@
 <p class="sidebar-section">Reytinglar</p>
 
 <a href="{% url 'operations:teacher_ratings' %}"
-    hx-get="{% url 'operations:teacher_ratings' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'ratings' in request.path %}active{% endif %}">
     <i class="ph-fill ph-trophy"></i>
     <span>Reytinglar</span>
 </a>
 
 <a href="{% url 'operations:shop' %}"
-    hx-get="{% url 'operations:shop' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'shop' in request.path %}active{% endif %}">
     <i class="ph-fill ph-storefront"></i>
     <span>Do'kon</span>
@@ -141,20 +97,12 @@
 <p class="sidebar-section">To'lov</p>
 
 <a href="{% url 'finance:student_payment_page' %}"
-    hx-get="{% url 'finance:student_payment_page' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if '/finance/pay' in request.path %}active{% endif %}">
     <i class="ph-fill ph-credit-card"></i>
     <span>To'lov qilish</span>
 </a>
 
 <a href="{% url 'finance:my_payments' %}"
-    hx-get="{% url 'finance:my_payments' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'my-payments' in request.path %}active{% endif %}">
     <i class="ph-fill ph-receipt"></i>
     <span>To'lovlar tarixi</span>
@@ -166,80 +114,48 @@
 <p class="sidebar-section">Moliya</p>
 
 <a href="{% url 'finance:account_list' %}"
-    hx-get="{% url 'finance:account_list' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'accounts' in request.path %}active{% endif %}">
     <i class="ph-fill ph-vault"></i>
     <span>Kassalar</span>
 </a>
 
 <a href="{% url 'finance:category_list' %}"
-    hx-get="{% url 'finance:category_list' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'categories' in request.path %}active{% endif %}">
     <i class="ph-fill ph-folders"></i>
     <span>Kategoriyalar</span>
 </a>
 
 <a href="{% url 'finance:transaction_list' %}"
-    hx-get="{% url 'finance:transaction_list' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'transactions' in request.path %}active{% endif %}">
     <i class="ph-fill ph-arrows-left-right"></i>
     <span>Kirim-Chiqim</span>
 </a>
 
 <a href="{% url 'finance:report' %}"
-    hx-get="{% url 'finance:report' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'report' in request.path %}active{% endif %}">
     <i class="ph-fill ph-chart-bar"></i>
     <span>Hisobotlar</span>
 </a>
 
 <a href="{% url 'finance:payroll_list' %}"
-    hx-get="{% url 'finance:payroll_list' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'payroll' in request.path %}active{% endif %}">
     <i class="ph-fill ph-money"></i>
     <span>Oyliklar</span>
 </a>
 
 <a href="{% url 'finance:staff_attendance_list' %}"
-    hx-get="{% url 'finance:staff_attendance_list' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'hr' in request.path %}active{% endif %}">
     <i class="ph-fill ph-fingerprint"></i>
     <span>HR Davomat</span>
 </a>
 
 <a href="{% url 'finance:supply_list' %}"
-    hx-get="{% url 'finance:supply_list' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'supplies' in request.path %}active{% endif %}">
     <i class="ph-fill ph-package"></i>
     <span>Sklad</span>
 </a>
 
 <a href="{% url 'finance:pending_receipts' %}"
-    hx-get="{% url 'finance:pending_receipts' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'receipts' in request.path %}active{% endif %}">
     <i class="ph-fill ph-receipt"></i>
     <span>Chek Tekshirish</span>
@@ -249,23 +165,14 @@
 <!-- SETTINGS -->
 {% if full_access or 'settings' in user_modules %}
 <a href="{% url 'core:settings' %}"
-    hx-get="{% url 'core:settings' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'settings' in request.path %}active{% endif %}">
     <i class="ph-fill ph-gear"></i>
     <span>Sozlamalar</span>
 </a>
 
 <a href="{% url 'core:history_list' %}"
-    hx-get="{% url 'core:history_list' %}"
-    hx-target="#main-content"
-    hx-push-url="true"
-    hx-swap="innerHTML show:top"
     class="sidebar-link {% if 'history' in request.path %}active{% endif %}">
     <i class="ph-fill ph-clock-counter-clockwise"></i>
     <span>Tarix</span>
 </a>
 {% endif %}
-

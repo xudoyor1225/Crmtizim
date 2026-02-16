@@ -1,28 +1,4 @@
 {% load static %}
-{% if request.htmx %}
-{# HTMX so'rov - faqat content qismini qaytarish #}
-{% if messages %}
-<div class="mb-6 space-y-3">
-    {% for message in messages %}
-    <div class="p-4 rounded-xl flex items-center gap-3 animate-fadeIn
-        {% if message.tags == 'error' %}
-        bg-rose-50 text-rose-600 border border-rose-200
-        {% else %}
-        bg-emerald-50 text-emerald-600 border border-emerald-200
-        {% endif %}">
-        <i class="ph-fill {% if message.tags == 'error' %}ph-warning{% else %}ph-check-circle{% endif %} text-xl"></i>
-        <span class="flex-1">{{ message }}</span>
-        <button onclick="this.parentElement.remove()" class="p-1 hover:bg-black/5 rounded-lg">
-            <i class="ph ph-x"></i>
-        </button>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
-{% block content %}{% endblock %}
-{% block extra_js %}{% endblock %}
-{% else %}
-{# Oddiy so'rov - to'liq sahifa #}
 <!DOCTYPE html>
 <html lang="uz" x-data="{ sidebarOpen: window.innerWidth >= 1024 }">
 
@@ -41,37 +17,19 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- HTMX - Tez AJAX so'rovlar uchun (sahifani qayta yuklamasdan) -->
-    <script src="https://unpkg.com/htmx.org@1.9.10"
-            integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
-            crossorigin="anonymous"></script>
+    <!-- InstantClick - Sahifalarni oldindan yuklash (2-3x tezroq) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/instantclick/3.1.0/instantclick.min.js"
+            data-no-instant></script>
 
-    <!-- HTMX Extensions -->
-    <script>
-        // HTMX global konfiguratsiya
+    <script data-no-instant>
         document.addEventListener('DOMContentLoaded', function() {
-            // Barcha HTMX so'rovlarga timeout
-            htmx.config.timeout = 10000;
+            // InstantClick - hover qilganda sahifani oldindan yuklaydi
+            InstantClick.init('mousedown');
 
-            // HTMX so'rov boshlanganda
-            document.body.addEventListener('htmx:beforeRequest', function(evt) {
-                document.body.classList.add('htmx-requesting');
-            });
-
-            // HTMX so'rov tugaganda
-            document.body.addEventListener('htmx:afterRequest', function(evt) {
-                document.body.classList.remove('htmx-requesting');
-            });
-
-            // Sahifa yuklanganda scroll tepaga
-            document.body.addEventListener('htmx:afterSwap', function(evt) {
-                if (evt.detail.target.id === 'main-content') {
-                    evt.detail.target.scrollTop = 0;
-                    // Alpine.js ni qayta init qilish
-                    if (window.Alpine) {
-                        Alpine.initTree(evt.detail.target);
-                    }
-                }
+            // Sahifa o'zgarganda loading indikator
+            InstantClick.on('change', function() {
+                // Scroll tepaga
+                window.scrollTo(0, 0);
             });
         });
     </script>
@@ -99,37 +57,34 @@
             display: none !important;
         }
 
-        /* HTMX Loading Indicator */
-        .htmx-indicator {
+        /* InstantClick loading animation */
+        #instant-click-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #5A7863, #90AB8B, #5A7863);
+            background-size: 200% 100%;
+            animation: loading 1s linear infinite;
+            z-index: 9999;
             opacity: 0;
-            transition: opacity 200ms ease-in;
+            transition: opacity 0.2s;
         }
-        .htmx-request .htmx-indicator,
-        .htmx-requesting .htmx-indicator {
+        .instant-click-loading #instant-click-loading {
             opacity: 1;
         }
-
-        /* Page transitions */
-        #main-content {
-            transition: opacity 150ms ease-out;
-        }
-        .htmx-requesting #main-content {
-            opacity: 0.6;
-        }
-
-        /* Smooth content swap */
-        .htmx-swapping {
-            opacity: 0;
-            transition: opacity 100ms ease-out;
-        }
-        .htmx-settling {
-            opacity: 1;
-            transition: opacity 150ms ease-in;
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
     </style>
 </head>
 
 <body class="font-sans antialiased overflow-hidden bg-[#EBF4DD] text-[#3B4953]">
+
+    <!-- Loading indicator -->
+    <div id="instant-click-loading"></div>
 
     <div class="flex h-screen w-full">
 
@@ -331,12 +286,7 @@
             </header>
 
             <!-- Main Content -->
-            <main id="main-content" class="flex-1 overflow-y-auto p-6 bg-[#EBF4DD]" hx-indicator="#page-loader">
-
-                <!-- Loading Indicator -->
-                <div id="page-loader" class="htmx-indicator fixed top-0 left-0 right-0 z-[100]">
-                    <div class="h-1 bg-gradient-to-r from-[#5A7863] via-[#90AB8B] to-[#5A7863] animate-pulse"></div>
-                </div>
+            <main id="main-content" class="flex-1 overflow-y-auto p-6 bg-[#EBF4DD]">
 
                 {% if messages %}
                 <div class="mb-6 space-y-3">
@@ -426,40 +376,9 @@
         window.addEventListener('offline', () => {
             console.log('Internet uzildi');
         });
-
-        // HTMX sidebar active state yangilash
-        document.body.addEventListener('htmx:afterSwap', function(evt) {
-            if (evt.detail.target.id === 'main-content') {
-                // Barcha sidebar linklardan active ni olib tashlash
-                document.querySelectorAll('.sidebar-link').forEach(link => {
-                    link.classList.remove('active');
-                });
-
-                // Joriy URL ga mos linkni active qilish
-                const currentPath = window.location.pathname;
-                document.querySelectorAll('.sidebar-link').forEach(link => {
-                    const href = link.getAttribute('href');
-                    if (href && currentPath.startsWith(href) && href !== '/') {
-                        link.classList.add('active');
-                    } else if (href === '/' && currentPath === '/') {
-                        link.classList.add('active');
-                    }
-                });
-            }
-        });
-
-        // Browser back/forward tugmalari uchun
-        window.addEventListener('popstate', function(e) {
-            // Sahifani HTMX orqali qayta yuklash
-            htmx.ajax('GET', window.location.pathname, {
-                target: '#main-content',
-                swap: 'innerHTML'
-            });
-        });
     </script>
 
     {% block extra_js %}{% endblock %}
 </body>
 
 </html>
-{% endif %}
