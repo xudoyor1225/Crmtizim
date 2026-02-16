@@ -3,7 +3,8 @@
 {% block title %}Darslar & Jadval{% endblock %}
 
 {% block content %}
-<div class="space-y-6" x-data="{ activeTab: 'today' }">
+{% with current_tab=request.GET.tab|default:"today" %}
+<div class="space-y-6" x-data="{ activeTab: '{{ current_tab }}' }">
 
     <!-- HEADER -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -16,7 +17,8 @@
         </div>
         <div class="flex gap-2">
             <!-- Haftalik jadval tugmasi -->
-            <button type="button" @click="activeTab = 'weekly'"
+            <button type="button"
+                @click="activeTab = 'weekly'; $nextTick(() => document.getElementById('tabs-section').scrollIntoView({behavior: 'smooth'}))"
                 :class="activeTab === 'weekly' ? 'ring-2 ring-purple-300' : ''"
                 class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:shadow-lg hover:shadow-purple-500/25 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm">
                 <i class="ph ph-calendar"></i> Haftalik jadval
@@ -83,7 +85,7 @@
     </div>
 
     <!-- TABS - Bugungi / Haftalik Jadval -->
-    <div class="space-y-4">
+    <div class="space-y-4" id="tabs-section">
         <!-- Tab Buttons -->
         <div class="flex gap-2 border-b border-slate-200 pb-0">
             <button @click="activeTab = 'today'"
@@ -305,4 +307,5 @@
     </div>
 
 </div>
+{% endwith %}
 {% endblock %}
