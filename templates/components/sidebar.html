@@ -27,19 +27,9 @@
 {% if full_access or 'crm' in user_modules %}
 <p class="sidebar-section">Sotuv & CRM</p>
 
-<a href="{% url 'crm:pipeline' %}" class="sidebar-link {% if 'pipeline' in request.path %}active{% endif %}">
-    <i class="ph-fill ph-kanban"></i>
-    <span>Voronka</span>
-</a>
-
-<a href="{% url 'crm:stage_list' %}" class="sidebar-link {% if 'stages' in request.path %}active{% endif %}">
-    <i class="ph-fill ph-rows"></i>
-    <span>Bosqichlar</span>
-</a>
-
-<a href="{% url 'crm:source_list' %}" class="sidebar-link {% if 'sources' in request.path %}active{% endif %}">
-    <i class="ph-fill ph-megaphone"></i>
-    <span>Manbalar</span>
+<a href="{% url 'crm:pipeline' %}" class="sidebar-link {% if 'crm' in request.path %}active{% endif %}">
+    <i class="ph-fill ph-funnel"></i>
+    <span>Sotuv & CRM</span>
 </a>
 {% endif %}
 
@@ -74,14 +64,9 @@
 {% if full_access or 'operations' in user_modules or request.user.role == 'teacher' %}
 <p class="sidebar-section">Operatsiyalar</p>
 
-<a href="{% url 'operations:lesson_list' %}" class="sidebar-link {% if 'lessons' in request.path %}active{% endif %}">
+<a href="{% url 'operations:lesson_list' %}" class="sidebar-link {% if 'lessons' in request.path or 'schedule' in request.path %}active{% endif %}">
     <i class="ph-fill ph-chalkboard"></i>
-    <span>Darslar</span>
-</a>
-
-<a href="{% url 'operations:schedule' %}" class="sidebar-link {% if 'schedule' in request.path %}active{% endif %}">
-    <i class="ph-fill ph-calendar"></i>
-    <span>Jadval</span>
+    <span>Darslar & Jadval</span>
 </a>
 {% endif %}
 

@@ -371,87 +371,8 @@ def take_attendance(request, pk):
 
 @login_required
 def schedule_view(request):
-    """Haftalik jadval - Group.schedule_days asosida"""
-    org = request.user.organization
-    user = request.user
-    today = timezone.now().date()
-    
-    # Hafta boshi va oxiri
-    start_of_week = today - timedelta(days=today.weekday())
-    end_of_week = start_of_week + timedelta(days=6)
-    
-    # Week offset (ketma-ket haftalarni ko'rish uchun)
-    week_offset = int(request.GET.get('week', 0))
-    start_of_week += timedelta(weeks=week_offset)
-    end_of_week += timedelta(weeks=week_offset)
-    
-    # Faol guruhlarni olish
-    # Super admin barcha guruhlarni ko'radi
-    if user.role == 'super_admin' or not org:
-        groups = Group.objects.filter(
-            is_deleted=False,
-            status__in=['active', 'pending']
-        ).select_related('teacher', 'room', 'course')
-    else:
-        groups = Group.objects.filter(
-            organization=org,
-            is_deleted=False,
-            status__in=['active', 'pending']
-        ).select_related('teacher', 'room', 'course')
-
-    # Agar o'qituvchi bo'lsa
-    if user.role == 'teacher':
-        groups = groups.filter(teacher=user)
-    # Agar o'quvchi bo'lsa
-    elif user.role == 'student':
-        my_groups = GroupStudent.objects.filter(
-            student=user, status='active'
-        ).values_list('group_id', flat=True)
-        groups = groups.filter(id__in=my_groups)
-    
-    # Hafta kunlari (1=Dushanba, 2=Seshanba, ... 7=Yakshanba)
-    day_names = ['', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba']
-    
-    week_days = []
-    for i in range(7):
-        day_number = i + 1  # 1-7 (Dushanba-Yakshanba)
-        day_date = start_of_week + timedelta(days=i)
-        
-        # Shu kunda dars bo'ladigan guruhlar
-        day_groups = []
-        for group in groups:
-            # schedule_days = [1, 3, 5] kabi ro'yxat (1=Dushanba)
-            if group.schedule_days and day_number in group.schedule_days:
-                day_groups.append({
-                    'group': group,
-                    'name': group.name,
-                    'start_time': group.start_time,
-                    'end_time': group.end_time,
-                    'room': group.room,
-                    'teacher': group.teacher,
-                    'course': group.course,
-                })
-        
-        # Vaqtiga ko'ra tartiblash
-        day_groups.sort(key=lambda x: x['start_time'] if x['start_time'] else timezone.now().time())
-        
-        week_days.append({
-            'day_number': day_number,
-            'day_name': day_names[day_number],
-            'date': day_date,
-            'is_today': day_date == today,
-            'groups': day_groups,
-        })
-    
-    context = {
-        'week_days': week_days,
-        'start_of_week': start_of_week,
-        'end_of_week': end_of_week,
-        'week_offset': week_offset,
-        'today': today,
-    }
-    
-    return render(request, 'operations/schedule.html', context)
+    """Haftalik jadval - lesson_list ga redirect"""
+    return redirect('operations:lesson_list')
 
 
 # ===========================================
