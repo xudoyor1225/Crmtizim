@@ -3,7 +3,7 @@
 {% block title %}Darslar & Jadval{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
+<div class="space-y-6" x-data="{ activeTab: 'today' }">
 
     <!-- HEADER -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -14,12 +14,20 @@
             </h1>
             <p class="text-slate-500 mt-1">Kunlik darslar va haftalik jadvalni boshqaring</p>
         </div>
-        {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' or request.user.role == 'teacher' %}
-        <a href="{% url 'operations:lesson_add' %}"
-            class="bg-[#1D546D] hover:bg-[#061E29] text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm">
-            <i class="ph ph-plus"></i> Yangi dars
-        </a>
-        {% endif %}
+        <div class="flex gap-2">
+            <!-- Haftalik jadval tugmasi -->
+            <button type="button" @click="activeTab = 'weekly'"
+                :class="activeTab === 'weekly' ? 'ring-2 ring-purple-300' : ''"
+                class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:shadow-lg hover:shadow-purple-500/25 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm">
+                <i class="ph ph-calendar"></i> Haftalik jadval
+            </button>
+            {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' or request.user.role == 'teacher' %}
+            <a href="{% url 'operations:lesson_add' %}"
+                class="bg-[#1D546D] hover:bg-[#061E29] text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm">
+                <i class="ph ph-plus"></i> Yangi dars
+            </a>
+            {% endif %}
+        </div>
     </div>
 
     <!-- STATISTIKA KARTOCHKALARI -->
@@ -75,7 +83,7 @@
     </div>
 
     <!-- TABS - Bugungi / Haftalik Jadval -->
-    <div x-data="{ activeTab: 'today' }" class="space-y-4">
+    <div class="space-y-4">
         <!-- Tab Buttons -->
         <div class="flex gap-2 border-b border-slate-200 pb-0">
             <button @click="activeTab = 'today'"
@@ -217,20 +225,34 @@
 
             <!-- Hafta navigatsiyasi -->
             <div class="flex items-center justify-between bg-white rounded-xl p-3 border border-slate-200 mb-4">
-                <a href="?week={{ week_offset|add:'-1' }}&tab=weekly"
-                    class="px-3 py-1.5 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 transition text-sm flex items-center gap-1">
-                    <i class="ph ph-caret-left"></i> Oldingi
-                </a>
+                <div class="flex items-center gap-2">
+                    <a href="?week={{ week_offset|add:'-1' }}&tab=weekly"
+                        class="px-3 py-1.5 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 transition text-sm flex items-center gap-1">
+                        <i class="ph ph-caret-left"></i> Oldingi
+                    </a>
+                    {% if week_offset != 0 %}
+                    <a href="?week=0&tab=weekly"
+                        class="px-3 py-1.5 bg-[#1D546D]/10 rounded-lg text-[#1D546D] hover:bg-[#1D546D]/20 transition text-sm font-medium">
+                        Bu hafta
+                    </a>
+                    {% endif %}
+                </div>
                 <div class="text-center">
                     <span class="font-semibold text-slate-800">{{ start_of_week|date:"d M" }} - {{ end_of_week|date:"d M, Y" }}</span>
                     {% if week_offset == 0 %}
                     <span class="ml-2 px-2 py-0.5 bg-[#1D546D]/10 text-[#1D546D] rounded text-xs font-medium">Bu hafta</span>
                     {% endif %}
                 </div>
-                <a href="?week={{ week_offset|add:'1' }}&tab=weekly"
-                    class="px-3 py-1.5 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 transition text-sm flex items-center gap-1">
-                    Keyingi <i class="ph ph-caret-right"></i>
-                </a>
+                <div class="flex items-center gap-2">
+                    <a href="?week={{ week_offset|add:'1' }}&tab=weekly"
+                        class="px-3 py-1.5 bg-slate-100 rounded-lg text-slate-600 hover:bg-slate-200 transition text-sm flex items-center gap-1">
+                        Keyingi <i class="ph ph-caret-right"></i>
+                    </a>
+                    <button type="button" @click="activeTab = 'today'"
+                        class="px-3 py-1.5 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-lg hover:shadow-lg hover:shadow-emerald-500/25 transition text-sm font-medium flex items-center gap-1">
+                        <i class="ph ph-calendar-check"></i> Bugungi
+                    </button>
+                </div>
             </div>
 
             <!-- Jadval -->
