@@ -284,7 +284,7 @@ def lesson_add(request):
 
 @login_required
 def lesson_detail(request, pk):
-    """Dars tafsilotlari va o'qituvchi bahosi"""
+    """Dars tafsilotlari"""
     org = request.user.organization
     user = request.user
 
@@ -297,20 +297,12 @@ def lesson_detail(request, pk):
     # Ushbu darsdagi davomatlar
     attendances = Attendance.objects.filter(lesson=lesson).select_related('student')
     
-    # O'qituvchi bahosi
-    from apps.operations.models import TeacherLessonRating
-    teacher_rating = None
-    try:
-        teacher_rating = lesson.teacher_rating
-    except TeacherLessonRating.DoesNotExist:
-        pass
-
     # O'qituvchining umumiy reytingi
     teacher_avg_rating = None
     total_ratings_count = 0
     if lesson.teacher:
-        from django.db.models import Avg
-        ratings = TeacherLessonRating.objects.filter(teacher=lesson.teacher)
+        from apps.operations.models import TeacherWeeklyRating
+        ratings = TeacherWeeklyRating.objects.filter(teacher=lesson.teacher)
         total_ratings_count = ratings.count()
         if total_ratings_count > 0:
             avg_data = ratings.aggregate(
@@ -328,34 +320,6 @@ def lesson_detail(request, pk):
                 (avg_data['avg_overall'] or 0)
             ) / 5, 1)
 
-    # Baho qo'yish (faqat super_admin va owner)
-    if request.method == 'POST' and user.role in ['super_admin', 'owner']:
-        preparation = int(request.POST.get('preparation', 5))
-        delivery = int(request.POST.get('delivery', 5))
-        engagement = int(request.POST.get('engagement', 5))
-        punctuality = int(request.POST.get('punctuality', 5))
-        overall = int(request.POST.get('overall', 5))
-        comment = request.POST.get('rating_comment', '')
-
-        # Mavjud bahoni yangilash yoki yangi yaratish
-        rating, created = TeacherLessonRating.objects.update_or_create(
-            lesson=lesson,
-            defaults={
-                'organization': org or lesson.organization,
-                'teacher': lesson.teacher,
-                'rated_by': user,
-                'preparation': min(5, max(1, preparation)),
-                'delivery': min(5, max(1, delivery)),
-                'engagement': min(5, max(1, engagement)),
-                'punctuality': min(5, max(1, punctuality)),
-                'overall': min(5, max(1, overall)),
-                'comment': comment,
-            }
-        )
-
-        messages.success(request, "O'qituvchi bahosi saqlandi!")
-        return redirect('operations:lesson_detail', pk=pk)
-
     # Davomat statistikasi
     present_count = attendances.filter(status='present').count()
     total_students = attendances.count()
@@ -363,12 +327,10 @@ def lesson_detail(request, pk):
     context = {
         'lesson': lesson,
         'attendances': attendances,
-        'teacher_rating': teacher_rating,
         'teacher_avg_rating': teacher_avg_rating,
         'total_ratings_count': total_ratings_count,
         'present_count': present_count,
         'total_students': total_students,
-        'can_rate': user.role in ['super_admin', 'owner'],
     }
     
     return render(request, 'operations/lesson_detail.html', context)
@@ -523,14 +485,55 @@ def schedule_view(request):
 
 @login_required
 def teacher_ratings(request):
-    """O'qituvchilar reytingi"""
+    """O'qituvchilar reytingi va haftalik baho qo'yish"""
     org = request.user.organization
-    
-    teachers = User.objects.filter(
-        organization=org,
-        role='teacher',
-        is_deleted=False
-    ).annotate(
+    user = request.user
+    today = timezone.now().date()
+
+    # Joriy hafta
+    current_week_start = today - timedelta(days=today.weekday())
+    current_week_end = current_week_start + timedelta(days=6)
+
+    # Baho qo'yish (faqat super_admin va owner)
+    if request.method == 'POST' and user.role in ['super_admin', 'owner']:
+        teacher_id = request.POST.get('teacher_id')
+        preparation = int(request.POST.get('preparation', 5))
+        delivery = int(request.POST.get('delivery', 5))
+        engagement = int(request.POST.get('engagement', 5))
+        punctuality = int(request.POST.get('punctuality', 5))
+        overall = int(request.POST.get('overall', 5))
+        comment = request.POST.get('rating_comment', '')
+
+        teacher = get_object_or_404(User, pk=teacher_id, role='teacher')
+
+        from apps.operations.models import TeacherWeeklyRating
+        rating, created = TeacherWeeklyRating.objects.update_or_create(
+            teacher=teacher,
+            week_start=current_week_start,
+            defaults={
+                'organization': org or teacher.organization,
+                'rated_by': user,
+                'week_end': current_week_end,
+                'preparation': min(5, max(1, preparation)),
+                'delivery': min(5, max(1, delivery)),
+                'engagement': min(5, max(1, engagement)),
+                'punctuality': min(5, max(1, punctuality)),
+                'overall': min(5, max(1, overall)),
+                'comment': comment,
+            }
+        )
+
+        action = "yangilandi" if not created else "qo'yildi"
+        messages.success(request, f"{teacher.first_name} uchun haftalik baho {action}!")
+        return redirect('operations:teacher_ratings')
+
+    # O'qituvchilar ro'yxati
+    if user.role == 'super_admin' or not org:
+        teachers = User.objects.filter(role='teacher', is_deleted=False)
+    else:
+        teachers = User.objects.filter(organization=org, role='teacher', is_deleted=False)
+
+    teachers = teachers.annotate(
         group_count=Count('teaching_groups', filter=Q(teaching_groups__status='active')),
         student_count=Count(
             'teaching_groups__students',
@@ -539,9 +542,37 @@ def teacher_ratings(request):
         lesson_count=Count('lesson', filter=Q(lesson__status='finished')),
     ).order_by('-student_count')
     
-    # O'rtacha davomat hisoblash
+    # O'qituvchilar ma'lumotlarini to'plash
+    from apps.operations.models import TeacherWeeklyRating
     teachers_data = []
+
     for teacher in teachers:
+        # Joriy hafta bahosi
+        current_rating = TeacherWeeklyRating.objects.filter(
+            teacher=teacher,
+            week_start=current_week_start
+        ).first()
+
+        # Umumiy o'rtacha reyting
+        all_ratings = TeacherWeeklyRating.objects.filter(teacher=teacher)
+        total_ratings = all_ratings.count()
+        avg_rating = None
+        if total_ratings > 0:
+            avg_data = all_ratings.aggregate(
+                avg_prep=Avg('preparation'),
+                avg_del=Avg('delivery'),
+                avg_eng=Avg('engagement'),
+                avg_punc=Avg('punctuality'),
+                avg_overall=Avg('overall')
+            )
+            avg_rating = round((
+                (avg_data['avg_prep'] or 0) +
+                (avg_data['avg_del'] or 0) +
+                (avg_data['avg_eng'] or 0) +
+                (avg_data['avg_punc'] or 0) +
+                (avg_data['avg_overall'] or 0)
+            ) / 5, 1)
+
         # O'rtacha davomat foizi
         total_att = Attendance.objects.filter(
             lesson__teacher=teacher,
@@ -554,22 +585,25 @@ def teacher_ratings(request):
         ).count()
         att_rate = (present_att / total_att * 100) if total_att > 0 else 0
         
-        # O'rtacha baho
-        avg_grade = Attendance.objects.filter(
-            lesson__teacher=teacher,
-            grade__isnull=False
-        ).aggregate(avg=Avg('grade'))['avg'] or 0
-        
         teachers_data.append({
             'teacher': teacher,
             'group_count': teacher.group_count,
             'student_count': teacher.student_count,
             'lesson_count': teacher.lesson_count,
             'attendance_rate': round(att_rate, 1),
-            'avg_grade': round(avg_grade, 1),
+            'current_rating': current_rating,
+            'avg_rating': avg_rating,
+            'total_ratings': total_ratings,
         })
     
-    return render(request, 'operations/teacher_ratings.html', {'teachers_data': teachers_data})
+    context = {
+        'teachers_data': teachers_data,
+        'current_week_start': current_week_start,
+        'current_week_end': current_week_end,
+        'can_rate': user.role in ['super_admin', 'owner'],
+    }
+
+    return render(request, 'operations/teacher_ratings.html', context)
 
 
 @login_required

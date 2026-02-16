@@ -76,24 +76,28 @@ class Attendance(TenantAwareModel):
         verbose_name_plural = "Davomatlar"
 
 
-class TeacherLessonRating(TenantAwareModel):
+class TeacherWeeklyRating(TenantAwareModel):
     """
-    O'qituvchiga dars uchun berilgan baho.
-    Super admin yoki owner tomonidan qo'yiladi.
+    O'qituvchiga haftalik baho.
+    Super admin yoki owner tomonidan haftada bir marta qo'yiladi.
     """
-    lesson = models.OneToOneField(Lesson, on_delete=models.CASCADE, related_name='teacher_rating')
-    teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='lesson_ratings')
-    rated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='given_ratings')
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='weekly_ratings')
+    rated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='given_teacher_ratings')
+
+    # Hafta
+    week_start = models.DateField(verbose_name="Hafta boshlanishi")
+    week_end = models.DateField(verbose_name="Hafta tugashi")
 
     # Baholash mezonlari (1-5 ball)
-    preparation = models.PositiveSmallIntegerField(default=5, verbose_name="Tayyorgarlik")  # Darsga tayyorgarlik
-    delivery = models.PositiveSmallIntegerField(default=5, verbose_name="Tushuntirish")  # Materialni yetkazish
-    engagement = models.PositiveSmallIntegerField(default=5, verbose_name="Faollik")  # O'quvchilarni jalb qilish
-    punctuality = models.PositiveSmallIntegerField(default=5, verbose_name="Vaqtga rioya")  # Vaqtga rioya qilish
-    overall = models.PositiveSmallIntegerField(default=5, verbose_name="Umumiy baho")  # Umumiy baho
+    preparation = models.PositiveSmallIntegerField(default=5, verbose_name="Tayyorgarlik")
+    delivery = models.PositiveSmallIntegerField(default=5, verbose_name="Tushuntirish")
+    engagement = models.PositiveSmallIntegerField(default=5, verbose_name="Faollik")
+    punctuality = models.PositiveSmallIntegerField(default=5, verbose_name="Vaqtga rioya")
+    overall = models.PositiveSmallIntegerField(default=5, verbose_name="Umumiy baho")
 
     comment = models.TextField(blank=True, verbose_name="Izoh")
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     @property
     def average_score(self):
@@ -101,6 +105,8 @@ class TeacherLessonRating(TenantAwareModel):
         return round((self.preparation + self.delivery + self.engagement + self.punctuality + self.overall) / 5, 1)
 
     class Meta:
-        db_table = 'teacher_lesson_ratings'
-        verbose_name = "O'qituvchi bahosi"
-        verbose_name_plural = "O'qituvchi baholari"
+        db_table = 'teacher_weekly_ratings'
+        unique_together = ('teacher', 'week_start')  # Har hafta faqat 1 ta baho
+        verbose_name = "O'qituvchi haftalik bahosi"
+        verbose_name_plural = "O'qituvchi haftalik baholari"
+        ordering = ['-week_start']
