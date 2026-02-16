@@ -74,3 +74,33 @@ class Attendance(TenantAwareModel):
         unique_together = ('lesson', 'student')  # Bir darsda ikki marta belgilab bo'lmaydi
         verbose_name = "Davomat"
         verbose_name_plural = "Davomatlar"
+
+
+class TeacherLessonRating(TenantAwareModel):
+    """
+    O'qituvchiga dars uchun berilgan baho.
+    Super admin yoki owner tomonidan qo'yiladi.
+    """
+    lesson = models.OneToOneField(Lesson, on_delete=models.CASCADE, related_name='teacher_rating')
+    teacher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='lesson_ratings')
+    rated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='given_ratings')
+
+    # Baholash mezonlari (1-5 ball)
+    preparation = models.PositiveSmallIntegerField(default=5, verbose_name="Tayyorgarlik")  # Darsga tayyorgarlik
+    delivery = models.PositiveSmallIntegerField(default=5, verbose_name="Tushuntirish")  # Materialni yetkazish
+    engagement = models.PositiveSmallIntegerField(default=5, verbose_name="Faollik")  # O'quvchilarni jalb qilish
+    punctuality = models.PositiveSmallIntegerField(default=5, verbose_name="Vaqtga rioya")  # Vaqtga rioya qilish
+    overall = models.PositiveSmallIntegerField(default=5, verbose_name="Umumiy baho")  # Umumiy baho
+
+    comment = models.TextField(blank=True, verbose_name="Izoh")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def average_score(self):
+        """O'rtacha ball"""
+        return round((self.preparation + self.delivery + self.engagement + self.punctuality + self.overall) / 5, 1)
+
+    class Meta:
+        db_table = 'teacher_lesson_ratings'
+        verbose_name = "O'qituvchi bahosi"
+        verbose_name_plural = "O'qituvchi baholari"

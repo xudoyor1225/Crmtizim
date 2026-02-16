@@ -284,7 +284,7 @@ def lesson_add(request):
 
 @login_required
 def lesson_detail(request, pk):
-    """Dars tafsilotlari"""
+    """Dars tafsilotlari va o'qituvchi bahosi"""
     org = request.user.organization
     user = request.user
 
@@ -297,9 +297,78 @@ def lesson_detail(request, pk):
     # Ushbu darsdagi davomatlar
     attendances = Attendance.objects.filter(lesson=lesson).select_related('student')
     
+    # O'qituvchi bahosi
+    from apps.operations.models import TeacherLessonRating
+    teacher_rating = None
+    try:
+        teacher_rating = lesson.teacher_rating
+    except TeacherLessonRating.DoesNotExist:
+        pass
+
+    # O'qituvchining umumiy reytingi
+    teacher_avg_rating = None
+    total_ratings_count = 0
+    if lesson.teacher:
+        from django.db.models import Avg
+        ratings = TeacherLessonRating.objects.filter(teacher=lesson.teacher)
+        total_ratings_count = ratings.count()
+        if total_ratings_count > 0:
+            avg_data = ratings.aggregate(
+                avg_prep=Avg('preparation'),
+                avg_del=Avg('delivery'),
+                avg_eng=Avg('engagement'),
+                avg_punc=Avg('punctuality'),
+                avg_overall=Avg('overall')
+            )
+            teacher_avg_rating = round((
+                (avg_data['avg_prep'] or 0) +
+                (avg_data['avg_del'] or 0) +
+                (avg_data['avg_eng'] or 0) +
+                (avg_data['avg_punc'] or 0) +
+                (avg_data['avg_overall'] or 0)
+            ) / 5, 1)
+
+    # Baho qo'yish (faqat super_admin va owner)
+    if request.method == 'POST' and user.role in ['super_admin', 'owner']:
+        preparation = int(request.POST.get('preparation', 5))
+        delivery = int(request.POST.get('delivery', 5))
+        engagement = int(request.POST.get('engagement', 5))
+        punctuality = int(request.POST.get('punctuality', 5))
+        overall = int(request.POST.get('overall', 5))
+        comment = request.POST.get('rating_comment', '')
+
+        # Mavjud bahoni yangilash yoki yangi yaratish
+        rating, created = TeacherLessonRating.objects.update_or_create(
+            lesson=lesson,
+            defaults={
+                'organization': org or lesson.organization,
+                'teacher': lesson.teacher,
+                'rated_by': user,
+                'preparation': min(5, max(1, preparation)),
+                'delivery': min(5, max(1, delivery)),
+                'engagement': min(5, max(1, engagement)),
+                'punctuality': min(5, max(1, punctuality)),
+                'overall': min(5, max(1, overall)),
+                'comment': comment,
+            }
+        )
+
+        messages.success(request, "O'qituvchi bahosi saqlandi!")
+        return redirect('operations:lesson_detail', pk=pk)
+
+    # Davomat statistikasi
+    present_count = attendances.filter(status='present').count()
+    total_students = attendances.count()
+
     context = {
         'lesson': lesson,
         'attendances': attendances,
+        'teacher_rating': teacher_rating,
+        'teacher_avg_rating': teacher_avg_rating,
+        'total_ratings_count': total_ratings_count,
+        'present_count': present_count,
+        'total_students': total_students,
+        'can_rate': user.role in ['super_admin', 'owner'],
     }
     
     return render(request, 'operations/lesson_detail.html', context)
