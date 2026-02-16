@@ -74,15 +74,9 @@
 <p class="sidebar-section">Reytinglar</p>
 
 <a href="{% url 'operations:teacher_ratings' %}"
-    class="sidebar-link {% if 'ratings/teachers' in request.path %}active{% endif %}">
+    class="sidebar-link {% if 'ratings' in request.path %}active{% endif %}">
     <i class="ph-fill ph-trophy"></i>
-    <span>O'qituvchilar</span>
-</a>
-
-<a href="{% url 'operations:student_ratings' %}"
-    class="sidebar-link {% if 'ratings/students' in request.path %}active{% endif %}">
-    <i class="ph-fill ph-medal"></i>
-    <span>O'quvchilar</span>
+    <span>Reytinglar</span>
 </a>
 
 <a href="{% url 'operations:shop' %}" class="sidebar-link {% if 'shop' in request.path %}active{% endif %}">
