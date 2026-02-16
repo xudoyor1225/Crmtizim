@@ -15,90 +15,46 @@
             </h1>
             <p class="text-slate-500 mt-1">Kunlik darslar va haftalik jadvalni boshqaring</p>
         </div>
-        <div class="flex gap-2">
-            <!-- Haftalik jadval tugmasi -->
-            <button type="button"
-                @click="activeTab = 'weekly'; $nextTick(() => document.getElementById('tabs-section').scrollIntoView({behavior: 'smooth'}))"
-                :class="activeTab === 'weekly' ? 'ring-2 ring-purple-300' : ''"
-                class="bg-gradient-to-r from-purple-500 to-indigo-600 hover:shadow-lg hover:shadow-purple-500/25 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm">
-                <i class="ph ph-calendar"></i> Haftalik jadval
-            </button>
+        <div class="flex gap-3">
             {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' or request.user.role == 'teacher' %}
             <a href="{% url 'operations:lesson_add' %}"
-                class="bg-[#1D546D] hover:bg-[#061E29] text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm">
+                class="bg-[#1D546D] hover:bg-[#061E29] text-white px-4 py-2.5 rounded-xl font-medium flex items-center gap-2 transition shadow-sm">
                 <i class="ph ph-plus"></i> Yangi dars
             </a>
             {% endif %}
         </div>
     </div>
 
-    <!-- STATISTIKA KARTOCHKALARI -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <!-- Bugungi darslar -->
-        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-[#1D546D]/10 flex items-center justify-center">
-                    <i class="ph ph-calendar-check text-xl text-[#1D546D]"></i>
-                </div>
-                <div>
-                    <p class="text-2xl font-bold text-slate-800">{{ today_lessons_count }}</p>
-                    <p class="text-sm text-slate-500">Bugungi</p>
-                </div>
+    <!-- TEZKOR NAVIGATSIYA - KATTA TUGMALAR -->
+    <div class="grid grid-cols-2 gap-4">
+        <button type="button" @click="activeTab = 'today'"
+            :class="activeTab === 'today' ? 'ring-4 ring-[#1D546D]/30 border-[#1D546D]' : 'border-slate-200 hover:border-[#1D546D]/50'"
+            class="bg-white rounded-2xl p-5 border-2 transition-all flex items-center gap-4 text-left">
+            <div class="w-14 h-14 rounded-xl bg-[#1D546D]/10 flex items-center justify-center">
+                <i class="ph-fill ph-calendar-check text-2xl text-[#1D546D]"></i>
             </div>
-        </div>
-        <!-- Davomat olingan -->
-        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                    <i class="ph ph-check-circle text-xl text-green-600"></i>
-                </div>
-                <div>
-                    <p class="text-2xl font-bold text-slate-800">{{ attendance_taken_count }}</p>
-                    <p class="text-sm text-slate-500">Davomat olindi</p>
-                </div>
+            <div>
+                <h3 class="text-lg font-bold text-slate-800">Bugungi Darslar</h3>
+                <p class="text-sm text-slate-500">{{ today_lessons_count }} ta dars</p>
             </div>
-        </div>
-        <!-- Davom etayotgan -->
-        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center">
-                    <i class="ph ph-play text-xl text-purple-600"></i>
-                </div>
-                <div>
-                    <p class="text-2xl font-bold text-slate-800">{{ ongoing_count }}</p>
-                    <p class="text-sm text-slate-500">Davom etmoqda</p>
-                </div>
+        </button>
+
+        <button type="button" @click="activeTab = 'weekly'"
+            :class="activeTab === 'weekly' ? 'ring-4 ring-purple-300 border-purple-500' : 'border-slate-200 hover:border-purple-300'"
+            class="bg-white rounded-2xl p-5 border-2 transition-all flex items-center gap-4 text-left">
+            <div class="w-14 h-14 rounded-xl bg-purple-100 flex items-center justify-center">
+                <i class="ph-fill ph-calendar text-2xl text-purple-600"></i>
             </div>
-        </div>
-        <!-- Haftalik -->
-        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center">
-                    <i class="ph ph-calendar text-xl text-orange-600"></i>
-                </div>
-                <div>
-                    <p class="text-2xl font-bold text-slate-800">{{ weekly_lessons_count }}</p>
-                    <p class="text-sm text-slate-500">Haftalik</p>
-                </div>
+            <div>
+                <h3 class="text-lg font-bold text-slate-800">Haftalik Jadval</h3>
+                <p class="text-sm text-slate-500">{{ weekly_lessons_count }} ta dars</p>
             </div>
-        </div>
+        </button>
     </div>
+
 
     <!-- TABS - Bugungi / Haftalik Jadval -->
     <div class="space-y-4" id="tabs-section">
-        <!-- Tab Buttons -->
-        <div class="flex gap-2 border-b border-slate-200 pb-0">
-            <button @click="activeTab = 'today'"
-                :class="activeTab === 'today' ? 'border-[#1D546D] text-[#1D546D] bg-[#1D546D]/5' : 'border-transparent text-slate-500 hover:text-slate-700'"
-                class="px-4 py-2 border-b-2 font-medium transition-all flex items-center gap-2 rounded-t-lg">
-                <i class="ph ph-calendar-check"></i> Bugungi Darslar
-            </button>
-            <button @click="activeTab = 'weekly'"
-                :class="activeTab === 'weekly' ? 'border-[#1D546D] text-[#1D546D] bg-[#1D546D]/5' : 'border-transparent text-slate-500 hover:text-slate-700'"
-                class="px-4 py-2 border-b-2 font-medium transition-all flex items-center gap-2 rounded-t-lg">
-                <i class="ph ph-calendar"></i> Haftalik Jadval
-            </button>
-        </div>
 
         <!-- TAB 1: BUGUNGI DARSLAR -->
         <div x-show="activeTab === 'today'" x-transition:enter="transition ease-out duration-200"
