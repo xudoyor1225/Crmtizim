@@ -85,7 +85,7 @@ def get_groups_for_filter(user, org):
 
 @login_required
 def lesson_list(request):
-    """Bugungi darslar ro'yxati"""
+    """Darslar va Jadval - birlashtirilgan dashboard"""
     org = request.user.organization
     user = request.user
     today = timezone.now().date()
@@ -116,8 +116,14 @@ def lesson_list(request):
 
     # Davomat olinganligini tekshirish
     lessons_data = []
+    attendance_taken_count = 0
+    ongoing_count = 0
     for lesson in lessons:
         attendance_count = lesson.attendances.count()
+        if attendance_count > 0:
+            attendance_taken_count += 1
+        if lesson.status == 'started':
+            ongoing_count += 1
         lessons_data.append({
             'lesson': lesson,
             'attendance_taken': attendance_count > 0,
@@ -133,7 +139,64 @@ def lesson_list(request):
     else:
         groups = Group.objects.filter(organization=org, is_deleted=False)
 
+    # ========== HAFTALIK JADVAL ==========
+    start_of_week = today - timedelta(days=today.weekday())
+    end_of_week = start_of_week + timedelta(days=6)
+
+    week_offset = int(request.GET.get('week', 0))
+    start_of_week += timedelta(weeks=week_offset)
+    end_of_week += timedelta(weeks=week_offset)
+
+    # Faol guruhlar
+    if user.role == 'super_admin' or not org:
+        schedule_groups = Group.objects.filter(
+            is_deleted=False, status__in=['active', 'pending']
+        ).select_related('teacher', 'room', 'course')
+    else:
+        schedule_groups = Group.objects.filter(
+            organization=org, is_deleted=False, status__in=['active', 'pending']
+        ).select_related('teacher', 'room', 'course')
+
+    if user.role == 'teacher':
+        schedule_groups = schedule_groups.filter(teacher=user)
+    elif user.role == 'student':
+        my_groups = GroupStudent.objects.filter(student=user, status='active').values_list('group_id', flat=True)
+        schedule_groups = schedule_groups.filter(id__in=my_groups)
+
+    # Hafta kunlari
+    day_names = ['', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba']
+    week_days = []
+    weekly_lessons_count = 0
+
+    for i in range(7):
+        day_number = i + 1
+        day_date = start_of_week + timedelta(days=i)
+        day_groups = []
+
+        for group in schedule_groups:
+            if group.schedule_days and day_number in group.schedule_days:
+                weekly_lessons_count += 1
+                day_groups.append({
+                    'group': group,
+                    'name': group.name,
+                    'start_time': group.start_time,
+                    'end_time': group.end_time,
+                    'room': group.room,
+                    'teacher': group.teacher,
+                })
+
+        day_groups.sort(key=lambda x: x['start_time'] if x['start_time'] else timezone.now().time())
+
+        week_days.append({
+            'day_number': day_number,
+            'day_name': day_names[day_number],
+            'date': day_date,
+            'is_today': day_date == today,
+            'groups': day_groups,
+        })
+
     context = {
+        # Bugungi darslar
         'lessons_data': lessons_data,
         'lessons': lessons,
         'groups': groups,
@@ -141,9 +204,19 @@ def lesson_list(request):
         'date_filter': date_filter,
         'group_filter': group_filter,
         'status_filter': status_filter,
+        # Statistika
+        'today_lessons_count': len(lessons_data),
+        'attendance_taken_count': attendance_taken_count,
+        'ongoing_count': ongoing_count,
+        'weekly_lessons_count': weekly_lessons_count,
+        # Haftalik jadval
+        'week_days': week_days,
+        'start_of_week': start_of_week,
+        'end_of_week': end_of_week,
+        'week_offset': week_offset,
     }
     
-    return render(request, 'operations/lesson_list.html', context)
+    return render(request, 'operations/lessons_dashboard.html', context)
 
 
 @login_required
