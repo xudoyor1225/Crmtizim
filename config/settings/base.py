@@ -59,6 +59,7 @@ MIDDLEWARE = [
 
     # BIZNING MIDDLEWARE
     'apps.core.middleware.TenantMiddleware',
+    'apps.core.middleware.HTMXMiddleware',  # HTMX optimallashtirish
 ]
 
 ROOT_URLCONF = 'config.urls'

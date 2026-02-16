@@ -22,6 +22,36 @@
             integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
             crossorigin="anonymous"></script>
 
+    <!-- HTMX Extensions -->
+    <script>
+        // HTMX global konfiguratsiya
+        document.addEventListener('DOMContentLoaded', function() {
+            // Barcha HTMX so'rovlarga timeout
+            htmx.config.timeout = 10000;
+
+            // HTMX so'rov boshlanganda
+            document.body.addEventListener('htmx:beforeRequest', function(evt) {
+                document.body.classList.add('htmx-requesting');
+            });
+
+            // HTMX so'rov tugaganda
+            document.body.addEventListener('htmx:afterRequest', function(evt) {
+                document.body.classList.remove('htmx-requesting');
+            });
+
+            // Sahifa yuklanganda scroll tepaga
+            document.body.addEventListener('htmx:afterSwap', function(evt) {
+                if (evt.detail.target.id === 'main-content') {
+                    evt.detail.target.scrollTop = 0;
+                    // Alpine.js ni qayta init qilish
+                    if (window.Alpine) {
+                        Alpine.initTree(evt.detail.target);
+                    }
+                }
+            });
+        });
+    </script>
+
     <!-- CUSTOM PREMIUM CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
@@ -43,6 +73,34 @@
     <style>
         [x-cloak] {
             display: none !important;
+        }
+
+        /* HTMX Loading Indicator */
+        .htmx-indicator {
+            opacity: 0;
+            transition: opacity 200ms ease-in;
+        }
+        .htmx-request .htmx-indicator,
+        .htmx-requesting .htmx-indicator {
+            opacity: 1;
+        }
+
+        /* Page transitions */
+        #main-content {
+            transition: opacity 150ms ease-out;
+        }
+        .htmx-requesting #main-content {
+            opacity: 0.6;
+        }
+
+        /* Smooth content swap */
+        .htmx-swapping {
+            opacity: 0;
+            transition: opacity 100ms ease-out;
+        }
+        .htmx-settling {
+            opacity: 1;
+            transition: opacity 150ms ease-in;
         }
     </style>
 </head>
@@ -249,7 +307,13 @@
             </header>
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto p-6 bg-slate-50">
+            <main id="main-content" class="flex-1 overflow-y-auto p-6 bg-[#EBF4DD]" hx-indicator="#page-loader">
+
+                <!-- Loading Indicator -->
+                <div id="page-loader" class="htmx-indicator fixed top-0 left-0 right-0 z-[100]">
+                    <div class="h-1 bg-gradient-to-r from-[#5A7863] via-[#90AB8B] to-[#5A7863] animate-pulse"></div>
+                </div>
+
                 {% if messages %}
                 <div class="mb-6 space-y-3">
                     {% for message in messages %}
@@ -337,6 +401,36 @@
 
         window.addEventListener('offline', () => {
             console.log('Internet uzildi');
+        });
+
+        // HTMX sidebar active state yangilash
+        document.body.addEventListener('htmx:afterSwap', function(evt) {
+            if (evt.detail.target.id === 'main-content') {
+                // Barcha sidebar linklardan active ni olib tashlash
+                document.querySelectorAll('.sidebar-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+
+                // Joriy URL ga mos linkni active qilish
+                const currentPath = window.location.pathname;
+                document.querySelectorAll('.sidebar-link').forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href && currentPath.startsWith(href) && href !== '/') {
+                        link.classList.add('active');
+                    } else if (href === '/' && currentPath === '/') {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+
+        // Browser back/forward tugmalari uchun
+        window.addEventListener('popstate', function(e) {
+            // Sahifani HTMX orqali qayta yuklash
+            htmx.ajax('GET', window.location.pathname, {
+                target: '#main-content',
+                swap: 'innerHTML'
+            });
         });
     </script>
 

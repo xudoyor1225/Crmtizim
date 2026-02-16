@@ -80,3 +80,28 @@ class TenantMiddleware:
         response = self.get_response(request)
         return response
 
+
+class HTMXMiddleware:
+    """
+    HTMX middleware - so'rovlarni optimallashtirish uchun.
+    HTMX so'rovi bo'lsa, faqat content qismini qaytaradi.
+    """
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # HTMX so'rov ekanligini belgilash
+        request.htmx = request.headers.get('HX-Request') == 'true'
+        request.htmx_target = request.headers.get('HX-Target', '')
+        request.htmx_trigger = request.headers.get('HX-Trigger', '')
+
+        response = self.get_response(request)
+
+        # HTMX so'rovi uchun qo'shimcha headerlar
+        if request.htmx:
+            # Sidebar active holatini yangilash uchun
+            response['HX-Trigger-After-Swap'] = 'updateSidebar'
+
+        return response
+
+
