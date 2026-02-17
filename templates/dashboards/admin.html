@@ -185,196 +185,196 @@
     {% endif %}
 
     <!-- MOLIYAVIY GRAFIK -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold text-[#061E29] flex items-center gap-2">
-                    <i class="ph ph-chart-line text-[#1D546D]"></i> Moliyaviy O'sish
-                </h3>
-                <div class="flex items-center gap-2">
-                    <button onclick="loadChartData(7)"
-                        class="px-3 py-1 text-xs rounded-lg bg-slate-100 hover:bg-[#5F9598]/10 text-slate-600 hover:text-[#1D546D] transition">7
-                        kun</button>
-                    <button onclick="loadChartData(30)"
-                        class="px-3 py-1 text-xs rounded-lg bg-[#1D546D]/10 text-[#1D546D] font-medium">30 kun</button>
-                    <button onclick="loadChartData(90)"
-                        class="px-3 py-1 text-xs rounded-lg bg-slate-100 hover:bg-[#5F9598]/10 text-slate-600 hover:text-[#1D546D] transition">90
-                        kun</button>
-                </div>
-            </div>
-            <div class="h-64">
-                <canvas id="financeChart"></canvas>
+    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-[#061E29] flex items-center gap-2">
+                <i class="ph ph-chart-line text-[#1D546D]"></i> Moliyaviy O'sish
+            </h3>
+            <div class="flex items-center gap-2">
+                <button onclick="loadChartData(7)"
+                    class="px-3 py-1 text-xs rounded-lg bg-slate-100 hover:bg-[#5F9598]/10 text-slate-600 hover:text-[#1D546D] transition">7
+                    kun</button>
+                <button onclick="loadChartData(30)"
+                    class="px-3 py-1 text-xs rounded-lg bg-[#1D546D]/10 text-[#1D546D] font-medium">30 kun</button>
+                <button onclick="loadChartData(90)"
+                    class="px-3 py-1 text-xs rounded-lg bg-slate-100 hover:bg-[#5F9598]/10 text-slate-600 hover:text-[#1D546D] transition">90
+                    kun</button>
             </div>
         </div>
+        <div class="h-64">
+            <canvas id="financeChart"></canvas>
+        </div>
+    </div>
 
-        <script>
-            let financeChart = null;
+    <script>
+        let financeChart = null;
 
-            async function loadChartData(days = 30) {
-                const response = await fetch(`/api/chart-data/?days=${days}`);
-                const data = await response.json();
+        async function loadChartData(days = 30) {
+            const response = await fetch(`/api/chart-data/?days=${days}`);
+            const data = await response.json();
 
-                if (financeChart) {
-                    financeChart.destroy();
-                }
+            if (financeChart) {
+                financeChart.destroy();
+            }
 
-                const ctx = document.getElementById('financeChart').getContext('2d');
+            const ctx = document.getElementById('financeChart').getContext('2d');
 
-                financeChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: data.labels,
-                        datasets: [
-                            {
-                                label: 'Kirim',
-                                data: data.income,
-                                borderColor: '#10b981',
-                                backgroundColor: 'rgba(16, 185, 129, 0.08)',
-                                fill: true,
-                                tension: 0.4,
-                                pointRadius: 0,
-                            },
-                            {
-                                label: 'Chiqim',
-                                data: data.expense,
-                                borderColor: '#f43f5e',
-                                backgroundColor: 'rgba(244, 63, 94, 0.08)',
-                                fill: true,
-                                tension: 0.4,
-                                pointRadius: 0,
-                            }
-                        ]
+            financeChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [
+                        {
+                            label: 'Kirim',
+                            data: data.income,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                        },
+                        {
+                            label: 'Chiqim',
+                            data: data.expense,
+                            borderColor: '#f43f5e',
+                            backgroundColor: 'rgba(244, 63, 94, 0.08)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        interaction: {
-                            intersect: false,
-                            mode: 'index'
-                        },
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                                labels: {
-                                    usePointStyle: true,
-                                    color: '#47505d'
-                                }
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                color: '#47505d'
                             }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#8e96a0' }
                         },
-                        scales: {
-                            x: {
-                                grid: { display: false },
-                                ticks: { color: '#8e96a0' }
-                            },
-                            y: {
-                                grid: { color: 'rgba(6,30,41,0.04)' },
-                                ticks: {
-                                    color: '#8e96a0',
-                                    callback: function (value) {
-                                        return value.toLocaleString('uz-UZ');
-                                    }
+                        y: {
+                            grid: { color: 'rgba(6,30,41,0.04)' },
+                            ticks: {
+                                color: '#8e96a0',
+                                callback: function (value) {
+                                    return value.toLocaleString('uz-UZ');
                                 }
                             }
                         }
                     }
-                });
-            }
+                }
+            });
+        }
 
-            // Sahifa yuklanganda
-            document.addEventListener('DOMContentLoaded', () => loadChartData(30));
-        </script>
+        // Sahifa yuklanganda
+        document.addEventListener('DOMContentLoaded', () => loadChartData(30));
+    </script>
 
-        <!-- DARSLAR VA LIDLAR -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- DARSLAR VA LIDLAR -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-            <!-- Bugungi Darslar -->
-            <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-[#061E29] flex items-center gap-2">
-                        <i class="ph ph-calendar-check text-emerald-500"></i> Bugungi Darslar
-                    </h3>
-                    <a href="{% url 'group_list' %}"
-                        class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm text-slate-600 transition">
-                        To'liq ko'rish
-                    </a>
-                </div>
-
-                <div class="space-y-3">
-                    {% for lesson in today_lessons %}
-                    <div
-                        class="flex items-center p-4 bg-slate-50 rounded-xl border border-slate-100 hover:bg-white hover:shadow-md hover:shadow-[#5F9598]/5 transition-all duration-300 group">
-                        <div class="w-20 text-center border-r border-slate-200 pr-4">
-                            <span
-                                class="block text-lg font-bold text-[#061E29] group-hover:text-[#1D546D] transition">{{
-                                lesson.start_time|time:"H:i" }}</span>
-                            <span class="block text-xs text-[#5F9598]">{{ lesson.end_time|time:"H:i" }}</span>
-                        </div>
-                        <div class="flex-1 px-4">
-                            <h4 class="font-bold text-[#061E29] text-lg">{{ lesson.group.name }}</h4>
-                            <p class="text-sm text-[#5F9598] flex items-center gap-3 mt-1">
-                                <span class="flex items-center gap-1"><i class="ph ph-door text-slate-400"></i> {{
-                                    lesson.room.name|default:"-" }}</span>
-                                <span class="flex items-center gap-1"><i class="ph ph-user text-slate-400"></i> {{
-                                    lesson.teacher.first_name|default:"-" }}</span>
-                            </p>
-                        </div>
-                        <span class="px-3 py-1 text-xs font-bold rounded-full border
-                        {% if lesson.status == 'started' %}text-[#1D546D] bg-[#1D546D]/10 border-[#5F9598]/20
-                        {% elif lesson.status == 'finished' %}text-emerald-700 bg-emerald-50 border-emerald-200
-                        {% else %}text-slate-600 bg-slate-50 border-slate-200{% endif %}">
-                            {{ lesson.get_status_display }}
-                        </span>
-                    </div>
-                    {% empty %}
-                    <div class="text-center py-12 text-[#5F9598]">
-                        <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="ph ph-calendar-blank text-4xl text-slate-300"></i>
-                        </div>
-                        <p class="font-medium">Bugun darslar yo'q</p>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <!-- Yangi Lidlar -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col h-full">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-[#061E29] flex items-center gap-2">
-                        <i class="ph ph-sparkle text-amber-500"></i> So'nggi Lidlar
-                    </h3>
-                    <a href="{% url 'crm:pipeline' %}" class="text-sm text-[#1D546D] hover:text-[#061E29]">Voronka</a>
-                </div>
-
-                <div class="space-y-3 flex-1 overflow-y-auto max-h-[400px]">
-                    {% for lead in recent_leads %}
-                    <div class="flex items-center gap-4 p-3 hover:bg-slate-50 rounded-xl transition cursor-default">
-                        <div
-                            class="w-12 h-12 rounded-full bg-gradient-to-br from-[#1D546D] to-[#5F9598] text-white flex items-center justify-center font-bold text-lg shadow-md shadow-[#1D546D]/20">
-                            {{ lead.full_name|first }}
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h4 class="font-bold text-[#061E29] truncate">{{ lead.full_name }}</h4>
-                            <p class="text-xs text-[#5F9598] flex items-center gap-1">
-                                <i class="ph ph-arrow-elbow-down-right"></i> {{ lead.source.name|default:"Noma'lum" }}
-                            </p>
-                        </div>
-                        <div class="text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500 whitespace-nowrap">
-                            {{ lead.created_at|timesince }}
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div class="flex-1 flex flex-col items-center justify-center text-[#5F9598]">
-                        <p>Hozircha lidlar yo'q</p>
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <a href="{% url 'crm:lead_create' %}"
-                    class="w-full mt-6 py-3 text-sm font-semibold text-center text-white bg-gradient-to-r from-[#1D546D] to-[#061E29] rounded-xl hover:shadow-lg hover:shadow-[#1D546D]/30 transition-all active:scale-95 flex items-center justify-center gap-2">
-                    <i class="ph ph-plus-circle text-lg"></i> Yangi Lid
+        <!-- Bugungi Darslar -->
+        <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-[#061E29] flex items-center gap-2">
+                    <i class="ph ph-calendar-check text-emerald-500"></i> Bugungi Darslar
+                </h3>
+                <a href="{% url 'group_list' %}"
+                    class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm text-slate-600 transition">
+                    To'liq ko'rish
                 </a>
             </div>
 
+            <div class="space-y-3">
+                {% for lesson in today_lessons %}
+                <div
+                    class="flex items-center p-4 bg-slate-50 rounded-xl border border-slate-100 hover:bg-white hover:shadow-md hover:shadow-[#5F9598]/5 transition-all duration-300 group">
+                    <div class="w-20 text-center border-r border-slate-200 pr-4">
+                        <span
+                            class="block text-lg font-bold text-[#061E29] group-hover:text-[#1D546D] transition">{{
+                            lesson.start_time|time:"H:i" }}</span>
+                        <span class="block text-xs text-[#5F9598]">{{ lesson.end_time|time:"H:i" }}</span>
+                    </div>
+                    <div class="flex-1 px-4">
+                        <h4 class="font-bold text-[#061E29] text-lg">{{ lesson.group.name }}</h4>
+                        <p class="text-sm text-[#5F9598] flex items-center gap-3 mt-1">
+                            <span class="flex items-center gap-1"><i class="ph ph-door text-slate-400"></i> {{
+                                lesson.room.name|default:"-" }}</span>
+                            <span class="flex items-center gap-1"><i class="ph ph-user text-slate-400"></i> {{
+                                lesson.teacher.first_name|default:"-" }}</span>
+                        </p>
+                    </div>
+                    <span class="px-3 py-1 text-xs font-bold rounded-full border
+                    {% if lesson.status == 'started' %}text-[#1D546D] bg-[#1D546D]/10 border-[#5F9598]/20
+                    {% elif lesson.status == 'finished' %}text-emerald-700 bg-emerald-50 border-emerald-200
+                    {% else %}text-slate-600 bg-slate-50 border-slate-200{% endif %}">
+                        {{ lesson.get_status_display }}
+                    </span>
+                </div>
+                {% empty %}
+                <div class="text-center py-12 text-[#5F9598]">
+                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="ph ph-calendar-blank text-4xl text-slate-300"></i>
+                    </div>
+                    <p class="font-medium">Bugun darslar yo'q</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Yangi Lidlar -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col h-full">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-bold text-[#061E29] flex items-center gap-2">
+                    <i class="ph ph-sparkle text-amber-500"></i> So'nggi Lidlar
+                </h3>
+                <a href="{% url 'crm:pipeline' %}" class="text-sm text-[#1D546D] hover:text-[#061E29]">Voronka</a>
+            </div>
+
+            <div class="space-y-3 flex-1 overflow-y-auto max-h-[400px]">
+                {% for lead in recent_leads %}
+                <div class="flex items-center gap-4 p-3 hover:bg-slate-50 rounded-xl transition cursor-default">
+                    <div
+                        class="w-12 h-12 rounded-full bg-gradient-to-br from-[#1D546D] to-[#5F9598] text-white flex items-center justify-center font-bold text-lg shadow-md shadow-[#1D546D]/20">
+                        {{ lead.full_name|first }}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-[#061E29] truncate">{{ lead.full_name }}</h4>
+                        <p class="text-xs text-[#5F9598] flex items-center gap-1">
+                            <i class="ph ph-arrow-elbow-down-right"></i> {{ lead.source.name|default:"Noma'lum" }}
+                        </p>
+                    </div>
+                    <div class="text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500 whitespace-nowrap">
+                        {{ lead.created_at|timesince }}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="flex-1 flex flex-col items-center justify-center text-[#5F9598]">
+                    <p>Hozircha lidlar yo'q</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            <a href="{% url 'crm:lead_create' %}"
+                class="w-full mt-6 py-3 text-sm font-semibold text-center text-white bg-gradient-to-r from-[#1D546D] to-[#061E29] rounded-xl hover:shadow-lg hover:shadow-[#1D546D]/30 transition-all active:scale-95 flex items-center justify-center gap-2">
+                <i class="ph ph-plus-circle text-lg"></i> Yangi Lid
+            </a>
         </div>
 
     </div>
-    {% endblock %}
+
+</div>
+{% endblock %}
