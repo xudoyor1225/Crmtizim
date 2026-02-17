@@ -43,10 +43,38 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        primary: { 50: '#EBF4DD', 100: '#d8ecc5', 200: '#c5e3ad', 300: '#a8d48a', 400: '#90AB8B', 500: '#5A7863', 600: '#4a6553', 700: '#3B4953', 800: '#2d3840', 900: '#1e262d' },
-                        brand: { light: '#EBF4DD', medium: '#90AB8B', primary: '#5A7863', dark: '#3B4953' },
-                        sage: { 50: '#EBF4DD', 100: '#dcecc8', 200: '#c5deb0', 300: '#a8c994', 400: '#90AB8B', 500: '#7a9576', 600: '#5A7863', 700: '#4a6553', 800: '#3B4953', 900: '#2d3840' },
-                        slate: { 50: '#f8faf6', 100: '#EBF4DD', 200: '#dde5d5', 300: '#c4cfc0', 400: '#90AB8B', 500: '#5A7863', 600: '#4a6553', 700: '#3B4953', 800: '#2d3840', 900: '#1e262d' }
+                        // Yangi rang palitasi
+                        primary: {
+                            50: '#F9F7F7',
+                            100: '#e8f0ed',
+                            200: '#c5d9d2',
+                            300: '#93B1A6',
+                            400: '#5C8374',
+                            500: '#183D3D',
+                            600: '#143434',
+                            700: '#0f2828',
+                            800: '#0a1c1c',
+                            900: '#040D12'
+                        },
+                        brand: {
+                            lightest: '#F9F7F7',
+                            light: '#93B1A6',
+                            medium: '#5C8374',
+                            primary: '#183D3D',
+                            dark: '#040D12'
+                        },
+                        forest: {
+                            50: '#F9F7F7',
+                            100: '#e8f0ed',
+                            200: '#c5d9d2',
+                            300: '#93B1A6',
+                            400: '#5C8374',
+                            500: '#183D3D',
+                            600: '#143434',
+                            700: '#0f2828',
+                            800: '#0a1c1c',
+                            900: '#040D12'
+                        }
                     }
                 }
             }
@@ -64,7 +92,7 @@
             left: 0;
             right: 0;
             height: 3px;
-            background: linear-gradient(90deg, #5A7863, #90AB8B, #5A7863);
+            background: linear-gradient(90deg, #183D3D, #5C8374, #93B1A6, #5C8374, #183D3D);
             background-size: 200% 100%;
             animation: loading 1s linear infinite;
             z-index: 9999;
@@ -81,7 +109,7 @@
     </style>
 </head>
 
-<body class="font-sans antialiased overflow-hidden bg-[#EBF4DD] text-[#3B4953]">
+<body class="font-sans antialiased overflow-hidden bg-[#F9F7F7] text-[#040D12]">
 
     <!-- Loading indicator -->
     <div id="instant-click-loading"></div>
@@ -90,20 +118,20 @@
 
         <!-- SIDEBAR -->
         <aside
-            class="flex-shrink-0 w-64 flex flex-col transition-all duration-300 transform lg:transform-none z-50 absolute lg:relative h-full bg-white border-r border-slate-200 shadow-sm"
+            class="flex-shrink-0 w-64 flex flex-col transition-all duration-300 transform lg:transform-none z-50 absolute lg:relative h-full bg-[#040D12] border-r border-[#183D3D] shadow-xl"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
             <!-- Logo -->
             <div
-                class="h-16 flex items-center justify-center border-b border-slate-200 bg-gradient-to-r from-[#5A7863] to-[#3B4953]">
-                <span class="text-xl font-bold flex items-center gap-2 text-white">
-                    <i class="ph-fill ph-graduation-cap text-2xl"></i>
+                class="h-16 flex items-center justify-center border-b border-[#183D3D] bg-gradient-to-r from-[#183D3D] to-[#040D12]">
+                <span class="text-xl font-bold flex items-center gap-2 text-[#F9F7F7]">
+                    <i class="ph-fill ph-graduation-cap text-2xl text-[#5C8374]"></i>
                     Smart Edu
                 </span>
             </div>
 
             <!-- Navigation -->
-            <div id="sidebar-nav" class="flex-1 overflow-y-auto py-4 px-3 space-y-1 bg-white">
+            <div id="sidebar-nav" class="flex-1 overflow-y-auto py-4 px-3 space-y-1 bg-[#040D12]">
                 {% include 'components/sidebar.html' %}
             </div>
 
@@ -134,18 +162,18 @@
             </script>
 
             <!-- User Profile -->
-            <div class="p-4 border-t border-[#90AB8B]/30 bg-[#EBF4DD]">
+            <div class="p-4 border-t border-[#183D3D] bg-[#0a1c1c]">
                 <div class="flex items-center gap-3">
                     <div
-                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#5A7863] to-[#3B4953] text-white flex items-center justify-center font-bold shadow-md">
+                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#5C8374] to-[#183D3D] text-[#F9F7F7] flex items-center justify-center font-bold shadow-md">
                         {{ request.user.first_name|first }}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold truncate text-[#3B4953]">{{ request.user.first_name }}</p>
-                        <p class="text-xs truncate text-[#5A7863]">{{ request.user.get_role_display }}</p>
+                        <p class="text-sm font-semibold truncate text-[#F9F7F7]">{{ request.user.first_name }}</p>
+                        <p class="text-xs truncate text-[#93B1A6]">{{ request.user.get_role_display }}</p>
                     </div>
                     <a href="{% url 'logout' %}"
-                        class="transition p-2 rounded-lg text-[#5A7863] hover:text-red-500 hover:bg-red-50">
+                        class="transition p-2 rounded-lg text-[#93B1A6] hover:text-red-400 hover:bg-red-500/10">
                         <i class="ph-fill ph-sign-out text-xl"></i>
                     </a>
                 </div>
@@ -153,18 +181,18 @@
         </aside>
 
         <!-- MAIN CONTENT -->
-        <div class="flex-1 flex flex-col h-screen min-w-0 overflow-hidden bg-[#EBF4DD]">
+        <div class="flex-1 flex flex-col h-screen min-w-0 overflow-hidden bg-[#F9F7F7]">
 
             <!-- Header -->
             <header
-                class="h-16 flex items-center justify-between px-6 z-40 bg-white border-b border-[#90AB8B]/30 shadow-sm">
+                class="h-16 flex items-center justify-between px-6 z-40 bg-white border-b border-[#93B1A6]/30 shadow-sm">
                 <button @click="sidebarOpen = !sidebarOpen"
-                    class="focus:outline-none transition p-2 rounded-lg lg:hidden text-[#5A7863] hover:text-[#3B4953] hover:bg-[#EBF4DD]">
+                    class="focus:outline-none transition p-2 rounded-lg lg:hidden text-[#5C8374] hover:text-[#183D3D] hover:bg-[#93B1A6]/20">
                     <i class="ph ph-list text-2xl"></i>
                 </button>
 
                 <h1
-                    class="text-lg font-bold hidden sm:block bg-gradient-to-r from-[#5A7863] to-[#3B4953] bg-clip-text text-transparent">
+                    class="text-lg font-bold hidden sm:block bg-gradient-to-r from-[#183D3D] to-[#5C8374] bg-clip-text text-transparent">
                     {{ organization.name|default:"Smart Edu Center" }}
                 </h1>
 
@@ -173,7 +201,7 @@
                     <!-- Notification Dropdown -->
                     <div class="relative">
                         <button @click="notifOpen = !notifOpen"
-                            class="relative p-2.5 rounded-xl transition text-slate-500 hover:text-amber-500 hover:bg-amber-50">
+                            class="relative p-2.5 rounded-xl transition text-[#5C8374] hover:text-[#183D3D] hover:bg-[#93B1A6]/20">
                             <i class="ph ph-bell text-xl"></i>
                             {% if unread_notifications_count > 0 %}
                             <span class="absolute top-1 right-1 min-w-[18px] h-[18px] bg-rose-500 rounded-full text-white text-[10px] flex items-center justify-center font-bold animate-pulse">
@@ -184,12 +212,12 @@
 
                         <!-- Dropdown -->
                         <div x-show="notifOpen" @click.away="notifOpen = false" x-transition
-                            class="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-xl shadow-xl z-50"
+                            class="absolute right-0 mt-2 w-80 bg-white border border-[#93B1A6]/30 rounded-xl shadow-xl z-50"
                             x-cloak>
                             <div
-                                class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50 rounded-t-xl">
-                                <h3 class="font-bold text-slate-800 flex items-center gap-2">
-                                    <i class="ph-fill ph-bell text-amber-500"></i> Bildirishnomalar
+                                class="p-4 border-b border-[#93B1A6]/20 flex items-center justify-between bg-[#F9F7F7] rounded-t-xl">
+                                <h3 class="font-bold text-[#040D12] flex items-center gap-2">
+                                    <i class="ph-fill ph-bell text-[#5C8374]"></i> Bildirishnomalar
                                 </h3>
                                 {% if unread_notifications_count > 0 %}
                                 <span class="text-xs bg-rose-100 text-rose-600 px-2 py-0.5 rounded-full font-medium">
@@ -286,7 +314,7 @@
             </header>
 
             <!-- Main Content -->
-            <main id="main-content" class="flex-1 overflow-y-auto p-6 bg-[#EBF4DD]">
+            <main id="main-content" class="flex-1 overflow-y-auto p-6 bg-[#F9F7F7]">
 
                 {% if messages %}
                 <div class="mb-6 space-y-3">

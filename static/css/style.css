@@ -1,43 +1,43 @@
 /* ============================================
-   SMART EDU - PREMIUM LIGHT THEME
-   Sage & Forest Color Palette
-   #EBF4DD · #90AB8B · #5A7863 · #3B4953
+   SMART EDU - PREMIUM DARK FOREST THEME
+   Forest & Sage Color Palette
+   #040D12 · #183D3D · #5C8374 · #93B1A6 · #F9F7F7
    ============================================ */
 
 :root {
-    /* Primary Colors - Sage Green Palette */
-    --primary-50: #EBF4DD;
-    --primary-100: #dcecc8;
-    --primary-200: #c5deb0;
-    --primary-300: #a8c994;
-    --primary-400: #90AB8B;
-    --primary-500: #5A7863;
-    --primary-600: #4a6553;
-    --primary-700: #3B4953;
-    --primary-800: #2d3840;
-    --primary-900: #1e262d;
+    /* Primary Colors - Dark Forest Palette */
+    --primary-50: #F9F7F7;
+    --primary-100: #e8f0ed;
+    --primary-200: #c5d9d2;
+    --primary-300: #93B1A6;
+    --primary-400: #5C8374;
+    --primary-500: #183D3D;
+    --primary-600: #143434;
+    --primary-700: #0f2828;
+    --primary-800: #0a1c1c;
+    --primary-900: #040D12;
 
     /* Slate/Gray Colors */
-    --slate-50: #f8faf6;
-    --slate-100: #EBF4DD;
-    --slate-200: #dde5d5;
-    --slate-300: #c4cfc0;
-    --slate-400: #90AB8B;
-    --slate-500: #5A7863;
-    --slate-600: #4a6553;
-    --slate-700: #3B4953;
-    --slate-800: #2d3840;
-    --slate-900: #1e262d;
+    --slate-50: #F9F7F7;
+    --slate-100: #e8f0ed;
+    --slate-200: #c5d9d2;
+    --slate-300: #93B1A6;
+    --slate-400: #5C8374;
+    --slate-500: #183D3D;
+    --slate-600: #143434;
+    --slate-700: #0f2828;
+    --slate-800: #0a1c1c;
+    --slate-900: #040D12;
 
-    /* Accent Sage */
-    --teal-50: #EBF4DD;
-    --teal-100: #dcecc8;
-    --teal-200: #c5deb0;
-    --teal-300: #a8c994;
-    --teal-400: #90AB8B;
-    --teal-500: #7a9576;
-    --teal-600: #5A7863;
-    --teal-700: #4a6553;
+    /* Accent Forest */
+    --teal-50: #F9F7F7;
+    --teal-100: #e8f0ed;
+    --teal-200: #c5d9d2;
+    --teal-300: #93B1A6;
+    --teal-400: #5C8374;
+    --teal-500: #183D3D;
+    --teal-600: #143434;
+    --teal-700: #0f2828;
 
     /* Success Colors */
     --emerald-50: #ecfdf5;
@@ -67,14 +67,14 @@
     --purple-600: #9333ea;
     --purple-700: #7e22ce;
 
-    /* Shadows - Teal tinted */
-    --shadow-sm: 0 1px 2px 0 rgba(6, 30, 41, 0.04);
-    --shadow: 0 1px 3px 0 rgba(6, 30, 41, 0.08), 0 1px 2px -1px rgba(6, 30, 41, 0.06);
-    --shadow-md: 0 4px 6px -1px rgba(6, 30, 41, 0.07), 0 2px 4px -2px rgba(6, 30, 41, 0.04);
-    --shadow-lg: 0 10px 20px -3px rgba(6, 30, 41, 0.1), 0 4px 8px -4px rgba(6, 30, 41, 0.06);
-    --shadow-xl: 0 20px 30px -5px rgba(6, 30, 41, 0.12), 0 8px 12px -6px rgba(6, 30, 41, 0.06);
-    --shadow-colored: 0 4px 14px 0 rgba(29, 84, 109, 0.2);
-    --shadow-teal: 0 4px 14px 0 rgba(95, 149, 152, 0.2);
+    /* Shadows - Forest tinted */
+    --shadow-sm: 0 1px 2px 0 rgba(4, 13, 18, 0.06);
+    --shadow: 0 1px 3px 0 rgba(4, 13, 18, 0.1), 0 1px 2px -1px rgba(4, 13, 18, 0.08);
+    --shadow-md: 0 4px 6px -1px rgba(4, 13, 18, 0.1), 0 2px 4px -2px rgba(4, 13, 18, 0.06);
+    --shadow-lg: 0 10px 20px -3px rgba(4, 13, 18, 0.15), 0 4px 8px -4px rgba(4, 13, 18, 0.08);
+    --shadow-xl: 0 20px 30px -5px rgba(4, 13, 18, 0.18), 0 8px 12px -6px rgba(4, 13, 18, 0.08);
+    --shadow-colored: 0 4px 14px 0 rgba(24, 61, 61, 0.25);
+    --shadow-forest: 0 4px 14px 0 rgba(92, 131, 116, 0.2);
 }
 
 /* ============================================
@@ -118,7 +118,7 @@ body {
 }
 
 /* ============================================
-   SIDEBAR
+   SIDEBAR (Dark Forest Theme)
    ============================================ */
 
 .sidebar-link {
@@ -126,7 +126,7 @@ body {
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 1rem;
-    color: var(--slate-600);
+    color: #93B1A6;
     border-radius: 12px;
     transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
@@ -136,33 +136,33 @@ body {
 }
 
 .sidebar-link:hover {
-    background: linear-gradient(135deg, var(--primary-50), var(--teal-50));
-    color: var(--primary-700);
+    background: linear-gradient(135deg, rgba(92, 131, 116, 0.15), rgba(147, 177, 166, 0.1));
+    color: #F9F7F7;
     transform: translateX(4px);
 }
 
 .sidebar-link.active {
-    background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
-    color: var(--primary-700);
+    background: linear-gradient(135deg, rgba(92, 131, 116, 0.25), rgba(24, 61, 61, 0.4));
+    color: #F9F7F7;
     font-weight: 600;
-    border-left: 3px solid var(--primary-500);
-    box-shadow: 0 2px 8px rgba(29, 84, 109, 0.1);
+    border-left: 3px solid #5C8374;
+    box-shadow: 0 2px 8px rgba(92, 131, 116, 0.15);
 }
 
 .sidebar-link i {
     font-size: 1.25rem;
     width: 1.5rem;
     text-align: center;
-    color: var(--teal-400);
+    color: #5C8374;
     transition: all 200ms ease;
 }
 
 .sidebar-link.active i {
-    color: var(--primary-500);
+    color: #93B1A6;
 }
 
 .sidebar-link:hover i {
-    color: var(--primary-500);
+    color: #F9F7F7;
     transform: scale(1.15);
 }
 
@@ -173,7 +173,7 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: var(--teal-400);
+    color: #5C8374;
 }
 
 /* ============================================

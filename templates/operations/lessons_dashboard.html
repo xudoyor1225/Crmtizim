@@ -9,16 +9,16 @@
     <!-- HEADER -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-[#3B4953] flex items-center gap-2">
-                <i class="ph ph-chalkboard text-[#5A7863]"></i>
+            <h1 class="text-2xl font-bold text-[#040D12] flex items-center gap-2">
+                <i class="ph ph-chalkboard text-[#5C8374]"></i>
                 Darslar & Jadval
             </h1>
-            <p class="text-[#5A7863] mt-1">Kunlik darslar va haftalik jadvalni boshqaring</p>
+            <p class="text-[#5C8374] mt-1">Kunlik darslar va haftalik jadvalni boshqaring</p>
         </div>
         <div class="flex gap-3">
             {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' or request.user.role == 'teacher' %}
             <a href="{% url 'operations:lesson_add' %}"
-                class="bg-[#5A7863] hover:bg-[#3B4953] text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 transition shadow-lg shadow-[#5A7863]/20">
+                class="bg-[#183D3D] hover:bg-[#040D12] text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 transition shadow-lg shadow-[#183D3D]/25">
                 <i class="ph ph-plus-circle text-lg"></i> Yangi dars
             </a>
             {% endif %}
@@ -33,9 +33,9 @@
         <!-- 📅 BUGUNGI DARSLAR TUGMASI -->
         <a href="?tab=today" class="group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl
             {% if current_tab == 'today' %}
-            bg-gradient-to-br from-[#5A7863] to-[#3B4953] text-white shadow-lg shadow-[#5A7863]/30
+            bg-gradient-to-br from-[#183D3D] to-[#040D12] text-white shadow-lg shadow-[#183D3D]/30
             {% else %}
-            bg-white border-2 border-[#90AB8B]/30 hover:border-[#5A7863]/50 text-[#3B4953]
+            bg-white border-2 border-[#93B1A6]/30 hover:border-[#5C8374]/50 text-[#040D12]
             {% endif %}">
 
             <!-- Orqa fon effekti -->
@@ -44,8 +44,8 @@
             <div class="relative flex items-center gap-5">
                 <!-- Ikonka -->
                 <div class="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110
-                    {% if current_tab == 'today' %}bg-white/20{% else %}bg-[#EBF4DD]{% endif %}">
-                    <i class="ph-fill ph-calendar-check text-3xl {% if current_tab == 'today' %}text-white{% else %}text-[#5A7863]{% endif %}"></i>
+                    {% if current_tab == 'today' %}bg-white/20{% else %}bg-[#93B1A6]/20{% endif %}">
+                    <i class="ph-fill ph-calendar-check text-3xl {% if current_tab == 'today' %}text-[#93B1A6]{% else %}text-[#183D3D]{% endif %}"></i>
                 </div>
 
                 <!-- Matn -->
@@ -53,16 +53,16 @@
                     <h3 class="text-xl font-bold flex items-center gap-2">
                         📅 Bugungi Darslar
                         {% if current_tab == 'today' %}
-                        <i class="ph-fill ph-check-circle text-[#EBF4DD]"></i>
+                        <i class="ph-fill ph-check-circle text-[#93B1A6]"></i>
                         {% endif %}
                     </h3>
-                    <p class="mt-1 {% if current_tab == 'today' %}text-white/70{% else %}text-[#5A7863]{% endif %}">
-                        <span class="text-2xl font-bold {% if current_tab == 'today' %}text-white{% else %}text-[#5A7863]{% endif %}">{{ today_lessons_count }}</span> ta dars bugun
+                    <p class="mt-1 {% if current_tab == 'today' %}text-[#93B1A6]{% else %}text-[#5C8374]{% endif %}">
+                        <span class="text-2xl font-bold {% if current_tab == 'today' %}text-white{% else %}text-[#183D3D]{% endif %}">{{ today_lessons_count }}</span> ta dars bugun
                     </p>
                 </div>
 
                 <!-- Strelka -->
-                <div class="{% if current_tab == 'today' %}text-white/50{% else %}text-[#90AB8B] group-hover:text-[#5A7863]{% endif %} transition-all group-hover:translate-x-1">
+                <div class="{% if current_tab == 'today' %}text-[#93B1A6]/50{% else %}text-[#93B1A6] group-hover:text-[#183D3D]{% endif %} transition-all group-hover:translate-x-1">
                     <i class="ph ph-arrow-right text-2xl"></i>
                 </div>
             </div>
@@ -71,9 +71,9 @@
         <!-- 📆 HAFTALIK JADVAL TUGMASI -->
         <a href="?tab=weekly" class="group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl
             {% if current_tab == 'weekly' %}
-            bg-gradient-to-br from-[#90AB8B] to-[#5A7863] text-white shadow-lg shadow-[#90AB8B]/30
+            bg-gradient-to-br from-[#5C8374] to-[#183D3D] text-white shadow-lg shadow-[#5C8374]/30
             {% else %}
-            bg-white border-2 border-[#90AB8B]/30 hover:border-[#90AB8B] text-[#3B4953]
+            bg-white border-2 border-[#93B1A6]/30 hover:border-[#5C8374] text-[#040D12]
             {% endif %}">
 
             <!-- Orqa fon effekti -->
@@ -82,8 +82,8 @@
             <div class="relative flex items-center gap-5">
                 <!-- Ikonka -->
                 <div class="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110
-                    {% if current_tab == 'weekly' %}bg-white/20{% else %}bg-[#EBF4DD]{% endif %}">
-                    <i class="ph-fill ph-calendar text-3xl {% if current_tab == 'weekly' %}text-white{% else %}text-[#5A7863]{% endif %}"></i>
+                    {% if current_tab == 'weekly' %}bg-white/20{% else %}bg-[#93B1A6]/20{% endif %}">
+                    <i class="ph-fill ph-calendar text-3xl {% if current_tab == 'weekly' %}text-[#93B1A6]{% else %}text-[#183D3D]{% endif %}"></i>
                 </div>
 
                 <!-- Matn -->
@@ -91,16 +91,16 @@
                     <h3 class="text-xl font-bold flex items-center gap-2">
                         📆 Haftalik Jadval
                         {% if current_tab == 'weekly' %}
-                        <i class="ph-fill ph-check-circle text-[#EBF4DD]"></i>
+                        <i class="ph-fill ph-check-circle text-[#93B1A6]"></i>
                         {% endif %}
                     </h3>
-                    <p class="mt-1 {% if current_tab == 'weekly' %}text-white/70{% else %}text-[#5A7863]{% endif %}">
-                        <span class="text-2xl font-bold {% if current_tab == 'weekly' %}text-white{% else %}text-[#90AB8B]{% endif %}">{{ weekly_lessons_count }}</span> ta dars haftada
+                    <p class="mt-1 {% if current_tab == 'weekly' %}text-[#93B1A6]{% else %}text-[#5C8374]{% endif %}">
+                        <span class="text-2xl font-bold {% if current_tab == 'weekly' %}text-white{% else %}text-[#5C8374]{% endif %}">{{ weekly_lessons_count }}</span> ta dars haftada
                     </p>
                 </div>
 
                 <!-- Strelka -->
-                <div class="{% if current_tab == 'weekly' %}text-white/50{% else %}text-[#90AB8B] group-hover:text-[#5A7863]{% endif %} transition-all group-hover:translate-x-1">
+                <div class="{% if current_tab == 'weekly' %}text-[#93B1A6]/50{% else %}text-[#93B1A6] group-hover:text-[#183D3D]{% endif %} transition-all group-hover:translate-x-1">
                     <i class="ph ph-arrow-right text-2xl"></i>
                 </div>
             </div>
@@ -116,18 +116,18 @@
     <div class="space-y-4">
 
         <!-- Filterlar -->
-        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">
+        <div class="bg-white rounded-2xl p-4 border border-[#93B1A6]/30 shadow-sm">
             <form method="GET" class="flex flex-wrap gap-3 items-end">
                 <input type="hidden" name="tab" value="today">
                 <div>
-                    <label class="block text-xs mb-1.5 font-semibold text-slate-500 uppercase tracking-wide">Sana</label>
+                    <label class="block text-xs mb-1.5 font-semibold text-[#5C8374] uppercase tracking-wide">Sana</label>
                     <input type="date" name="date" value="{{ date_filter }}"
-                        class="px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#1D546D]/30 focus:border-[#1D546D]">
+                        class="px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition bg-[#F9F7F7] border-[#93B1A6]/30 text-[#040D12] focus:ring-[#5C8374]/30 focus:border-[#5C8374]">
                 </div>
                 <div>
-                    <label class="block text-xs mb-1.5 font-semibold text-slate-500 uppercase tracking-wide">Guruh</label>
+                    <label class="block text-xs mb-1.5 font-semibold text-[#5C8374] uppercase tracking-wide">Guruh</label>
                     <select name="group"
-                        class="px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#1D546D]/30 focus:border-[#1D546D] min-w-[150px]">
+                        class="px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition bg-[#F9F7F7] border-[#93B1A6]/30 text-[#040D12] focus:ring-[#5C8374]/30 focus:border-[#5C8374] min-w-[150px]">
                         <option value="">Barchasi</option>
                         {% for group in groups %}
                         <option value="{{ group.id }}" {% if group_filter == group.id|stringformat:"s" %}selected{% endif %}>
