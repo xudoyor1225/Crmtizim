@@ -12,7 +12,7 @@
             <p class="text-slate-400">Tashkilot kassalari va hisob raqamlari</p>
         </div>
         <a href="{% url 'finance:account_create' %}"
-            class="px-4 py-2 bg-gradient-to-r from-[#5F9598] to-violet-600 text-slate-800 rounded-lg hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2">
+            class="px-4 py-2 bg-gradient-to-r from-[#7A9CC5] to-violet-600 text-slate-800 rounded-lg hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2">
             <i class="ph ph-plus"></i> Yangi kassa
         </a>
     </div>
@@ -30,7 +30,7 @@
             <div class="flex items-center justify-between mb-4">
                 <div class="p-3 rounded-xl
                     {% if account.account_type == 'cash' %}bg-emerald-500/20 text-emerald-600
-                    {% elif account.account_type == 'bank' %}bg-[#1D546D]/15 text-[#1D546D]
+                    {% elif account.account_type == 'bank' %}bg-[#3F72AF]/15 text-[#3F72AF]
                     {% elif account.account_type == 'card' %}bg-purple-500/20 text-purple-400
                     {% else %}bg-orange-500/20 text-orange-400{% endif %}">
                     {% if account.account_type == 'cash' %}<i class="ph ph-money text-2xl"></i>

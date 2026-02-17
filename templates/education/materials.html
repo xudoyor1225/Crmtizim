@@ -20,7 +20,7 @@
                 <span>Kategoriyalar</span>
             </a>
             <a href="{% url 'material_upload' %}"
-                class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#5F9598] to-purple-600 text-white rounded-xl font-medium shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all hover:-translate-y-0.5">
+                class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#7A9CC5] to-purple-600 text-white rounded-xl font-medium shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all hover:-translate-y-0.5">
                 <i class="ph ph-upload-simple text-lg"></i>
                 <span>Yangi Material</span>
             </a>
@@ -56,7 +56,7 @@
                     <option value="audio" {% if material_type == 'audio' %}selected{% endif %}>?? Audio</option>
                 </select>
             </div>
-            <button type="submit" class="px-6 py-2 bg-[#1D546D]/50 text-white rounded-lg hover:bg-[#1D546D] transition">
+            <button type="submit" class="px-6 py-2 bg-[#3F72AF]/50 text-white rounded-lg hover:bg-[#3F72AF] transition">
                 <i class="ph ph-magnifying-glass mr-1"></i> Qidirish
             </button>
         </form>
@@ -111,7 +111,7 @@
             <div
                 class="w-full h-28 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
                 <span class="text-4xl">
-                    {% if m.material_type == 'video' %}<i class="ph-fill ph-video-camera text-[#1D546D]"></i>
+                    {% if m.material_type == 'video' %}<i class="ph-fill ph-video-camera text-[#3F72AF]"></i>
                     {% elif m.material_type == 'pdf' %}<i class="ph-fill ph-file-pdf text-red-500"></i>
                     {% elif m.material_type == 'audio' %}<i class="ph-fill ph-music-notes text-purple-500"></i>
                     {% else %}<i class="ph-fill ph-file text-slate-500"></i>{% endif %}

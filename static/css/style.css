@@ -1,43 +1,43 @@
 /* ============================================
    SMART EDU - PREMIUM LIGHT THEME
-   Teal & Sage Color Palette
-   #061E29 · #1D546D · #5F9598 · #F3F4F4
+   Classic Blue Color Palette
+   #F9F7F7 · #DBE2EF · #3F72AF · #112D4E
    ============================================ */
 
 :root {
-    /* Primary Colors - Teal Palette */
-    --primary-50: #eef6f8;
-    --primary-100: #d4eaef;
-    --primary-200: #a8d5df;
-    --primary-300: #7ebdca;
-    --primary-400: #5F9598;
-    --primary-500: #1D546D;
-    --primary-600: #174a5f;
-    --primary-700: #113d50;
-    --primary-800: #0c3041;
-    --primary-900: #061E29;
+    /* Primary Colors - Blue Palette */
+    --primary-50: #F9F7F7;
+    --primary-100: #EEF2F9;
+    --primary-200: #DBE2EF;
+    --primary-300: #B5C7DE;
+    --primary-400: #7A9CC5;
+    --primary-500: #3F72AF;
+    --primary-600: #355F93;
+    --primary-700: #2B4D78;
+    --primary-800: #1C3A5E;
+    --primary-900: #112D4E;
 
     /* Slate/Gray Colors */
-    --slate-50: #F3F4F4;
-    --slate-100: #ebedef;
-    --slate-200: #dde0e3;
-    --slate-300: #c4c9ce;
-    --slate-400: #8e96a0;
-    --slate-500: #5e6775;
-    --slate-600: #47505d;
-    --slate-700: #343c47;
-    --slate-800: #1e2630;
-    --slate-900: #061E29;
+    --slate-50: #F9F7F7;
+    --slate-100: #F0EFF2;
+    --slate-200: #DBE2EF;
+    --slate-300: #C4CCDB;
+    --slate-400: #8A95A8;
+    --slate-500: #5B6A80;
+    --slate-600: #3D4E64;
+    --slate-700: #2A3B51;
+    --slate-800: #1C2E44;
+    --slate-900: #112D4E;
 
-    /* Accent Teal */
-    --teal-50: #f0f9f9;
-    --teal-100: #d4efef;
-    --teal-200: #a8dede;
-    --teal-300: #7ecaca;
-    --teal-400: #5F9598;
-    --teal-500: #4a8285;
-    --teal-600: #3a6e71;
-    --teal-700: #2d5557;
+    /* Accent Blue */
+    --teal-50: #F4F7FB;
+    --teal-100: #E5ECF5;
+    --teal-200: #DBE2EF;
+    --teal-300: #B5C7DE;
+    --teal-400: #7A9CC5;
+    --teal-500: #5584B5;
+    --teal-600: #3F72AF;
+    --teal-700: #2B4D78;
 
     /* Success Colors */
     --emerald-50: #ecfdf5;
@@ -67,14 +67,14 @@
     --purple-600: #9333ea;
     --purple-700: #7e22ce;
 
-    /* Shadows - Teal tinted */
-    --shadow-sm: 0 1px 2px 0 rgba(6, 30, 41, 0.04);
-    --shadow: 0 1px 3px 0 rgba(6, 30, 41, 0.08), 0 1px 2px -1px rgba(6, 30, 41, 0.06);
-    --shadow-md: 0 4px 6px -1px rgba(6, 30, 41, 0.07), 0 2px 4px -2px rgba(6, 30, 41, 0.04);
-    --shadow-lg: 0 10px 20px -3px rgba(6, 30, 41, 0.1), 0 4px 8px -4px rgba(6, 30, 41, 0.06);
-    --shadow-xl: 0 20px 30px -5px rgba(6, 30, 41, 0.12), 0 8px 12px -6px rgba(6, 30, 41, 0.06);
-    --shadow-colored: 0 4px 14px 0 rgba(29, 84, 109, 0.2);
-    --shadow-teal: 0 4px 14px 0 rgba(95, 149, 152, 0.2);
+    /* Shadows - Blue tinted */
+    --shadow-sm: 0 1px 2px 0 rgba(17, 45, 78, 0.04);
+    --shadow: 0 1px 3px 0 rgba(17, 45, 78, 0.08), 0 1px 2px -1px rgba(17, 45, 78, 0.06);
+    --shadow-md: 0 4px 6px -1px rgba(17, 45, 78, 0.07), 0 2px 4px -2px rgba(17, 45, 78, 0.04);
+    --shadow-lg: 0 10px 20px -3px rgba(17, 45, 78, 0.1), 0 4px 8px -4px rgba(17, 45, 78, 0.06);
+    --shadow-xl: 0 20px 30px -5px rgba(17, 45, 78, 0.12), 0 8px 12px -6px rgba(17, 45, 78, 0.06);
+    --shadow-colored: 0 4px 14px 0 rgba(63, 114, 175, 0.2);
+    --shadow-teal: 0 4px 14px 0 rgba(63, 114, 175, 0.2);
 }
 
 /* ============================================
@@ -146,7 +146,7 @@ body {
     color: var(--primary-700);
     font-weight: 600;
     border-left: 3px solid var(--primary-500);
-    box-shadow: 0 2px 8px rgba(29, 84, 109, 0.1);
+    box-shadow: 0 2px 8px rgba(63, 114, 175, 0.1);
 }
 
 .sidebar-link i {
@@ -286,12 +286,12 @@ body {
 .btn-primary {
     background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
     color: white;
-    box-shadow: 0 4px 14px rgba(29, 84, 109, 0.3);
+    box-shadow: 0 4px 14px rgba(63, 114, 175, 0.3);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(29, 84, 109, 0.4);
+    box-shadow: 0 6px 20px rgba(63, 114, 175, 0.4);
 }
 
 .btn-success {
@@ -344,12 +344,12 @@ body {
 .btn-teal {
     background: linear-gradient(135deg, var(--teal-400), var(--teal-600));
     color: white;
-    box-shadow: 0 4px 14px rgba(95, 149, 152, 0.3);
+    box-shadow: 0 4px 14px rgba(63, 114, 175, 0.3);
 }
 
 .btn-teal:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(95, 149, 152, 0.4);
+    box-shadow: 0 6px 20px rgba(63, 114, 175, 0.4);
 }
 
 /* ============================================
@@ -386,7 +386,7 @@ select:focus,
 textarea:focus {
     outline: none;
     border-color: var(--primary-500);
-    box-shadow: 0 0 0 4px rgba(29, 84, 109, 0.08);
+    box-shadow: 0 0 0 4px rgba(63, 114, 175, 0.08);
     background: white;
 }
 
@@ -502,7 +502,7 @@ table td {
 .badge-teal {
     background: var(--teal-100);
     color: var(--teal-700);
-    border: 1px solid rgba(95, 149, 152, 0.2);
+    border: 1px solid rgba(63, 114, 175, 0.2);
 }
 
 .badge-success,
@@ -529,7 +529,7 @@ table td {
 .badge-blue {
     background: var(--primary-50);
     color: var(--primary-700);
-    border: 1px solid rgba(29, 84, 109, 0.15);
+    border: 1px solid rgba(63, 114, 175, 0.15);
 }
 
 .badge-purple {
@@ -576,19 +576,19 @@ table td {
 .icon-primary {
     background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
     color: white;
-    box-shadow: 0 4px 12px rgba(29, 84, 109, 0.25);
+    box-shadow: 0 4px 12px rgba(63, 114, 175, 0.25);
 }
 
 .icon-teal {
     background: linear-gradient(135deg, var(--teal-100), var(--teal-200));
     color: var(--teal-600);
-    box-shadow: 0 4px 12px rgba(95, 149, 152, 0.15);
+    box-shadow: 0 4px 12px rgba(63, 114, 175, 0.15);
 }
 
 .icon-blue {
     background: linear-gradient(135deg, var(--primary-100), var(--primary-200));
     color: var(--primary-600);
-    box-shadow: 0 4px 12px rgba(29, 84, 109, 0.12);
+    box-shadow: 0 4px 12px rgba(63, 114, 175, 0.12);
 }
 
 .icon-success,
@@ -623,7 +623,7 @@ table td {
    ============================================ */
 
 .modal-overlay {
-    background: rgba(6, 30, 41, 0.4);
+    background: rgba(17, 45, 78, 0.4);
     backdrop-filter: blur(6px);
 }
 
@@ -787,11 +787,11 @@ table td {
 
     0%,
     100% {
-        box-shadow: 0 0 0 0 rgba(95, 149, 152, 0.3);
+        box-shadow: 0 0 0 0 rgba(63, 114, 175, 0.3);
     }
 
     50% {
-        box-shadow: 0 0 0 8px rgba(95, 149, 152, 0);
+        box-shadow: 0 0 0 8px rgba(63, 114, 175, 0);
     }
 }
 
@@ -852,14 +852,14 @@ table td {
 
 .stat-card-teal:hover {
     border-color: var(--teal-300);
-    box-shadow: 0 10px 20px -3px rgba(95, 149, 152, 0.15), 0 4px 8px -4px rgba(29, 84, 109, 0.1);
+    box-shadow: 0 10px 20px -3px rgba(63, 114, 175, 0.15), 0 4px 8px -4px rgba(63, 114, 175, 0.1);
     transform: translateY(-3px);
 }
 
 /* Teal panel with subtle background */
 .teal-panel {
-    background: linear-gradient(135deg, rgba(95, 149, 152, 0.05), rgba(29, 84, 109, 0.03));
-    border: 1px solid rgba(95, 149, 152, 0.15);
+    background: linear-gradient(135deg, rgba(63, 114, 175, 0.05), rgba(63, 114, 175, 0.03));
+    border: 1px solid rgba(63, 114, 175, 0.15);
     border-radius: 16px;
     padding: 1.5rem;
 }
@@ -963,7 +963,7 @@ img.lazy.loaded {
 }
 
 .search-input:focus {
-    box-shadow: 0 0 0 3px rgba(29, 84, 109, 0.15);
+    box-shadow: 0 0 0 3px rgba(63, 114, 175, 0.15);
 }
 
 /* Infinite scroll trigger */

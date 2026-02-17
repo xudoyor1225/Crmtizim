@@ -5,19 +5,19 @@
     <a href="{{ result.url }}"
         class="flex items-center gap-3 p-3 hover:bg-slate-50 transition group">
         <div class="w-10 h-10 rounded-xl 
-                {% if result.type == 'user' %}bg-[#5F9598]/10 text-[#1D546D]
+                {% if result.type == 'user' %}bg-[#7A9CC5]/10 text-[#3F72AF]
                 {% elif result.type == 'lead' %}bg-green-100 text-green-600
                 {% else %}bg-purple-100 text-purple-600{% endif %}
                 flex items-center justify-center">
             <i class="ph {{ result.icon }} text-xl"></i>
         </div>
         <div class="flex-1 min-w-0">
-            <p class="font-medium text-slate-800 truncate group-hover:text-[#1D546D]">
+            <p class="font-medium text-slate-800 truncate group-hover:text-[#3F72AF]">
                 {{ result.title }}
             </p>
             <p class="text-xs text-slate-500 truncate">{{ result.subtitle }}</p>
         </div>
-        <i class="ph ph-arrow-right text-slate-400 group-hover:text-[#1D546D] transition"></i>
+        <i class="ph ph-arrow-right text-slate-400 group-hover:text-[#3F72AF] transition"></i>
     </a>
     {% endfor %}
     {% else %}

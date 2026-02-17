@@ -8,14 +8,14 @@
     <!-- Sarlavha -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-            <h1 class="text-3xl font-bold text-[#061E29]">
+            <h1 class="text-3xl font-bold text-[#112D4E]">
                 Xush kelibsiz, {{ request.user.first_name }}! 👋
             </h1>
-            <p class="text-[#5F9598] mt-1">{{ organization.name|default:"Tashkilot" }} - Boshqaruv Paneli</p>
+            <p class="text-[#7A9CC5] mt-1">{{ organization.name|default:"Tashkilot" }} - Boshqaruv Paneli</p>
         </div>
         <div class="flex flex-wrap gap-2">
             <a href="{% url 'users:student_create' %}"
-                class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#1D546D] to-[#061E29] text-white rounded-xl font-medium shadow-lg shadow-[#1D546D]/25 hover:shadow-[#1D546D]/40 transition-all hover:-translate-y-0.5">
+                class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#3F72AF] to-[#112D4E] text-white rounded-xl font-medium shadow-lg shadow-[#3F72AF]/25 hover:shadow-[#3F72AF]/40 transition-all hover:-translate-y-0.5">
                 <i class="ph ph-student"></i> O'quvchi
             </a>
             <a href="{% url 'users:teacher_create' %}"
@@ -38,21 +38,21 @@
 
         <!-- O'quvchilar -->
         <div
-            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group hover:-translate-y-1 hover:shadow-lg hover:shadow-[#1D546D]/8 transition-all duration-300">
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group hover:-translate-y-1 hover:shadow-lg hover:shadow-[#3F72AF]/8 transition-all duration-300">
             <div
-                class="absolute right-0 top-0 w-32 h-32 bg-[#1D546D]/5 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-[#1D546D]/10">
+                class="absolute right-0 top-0 w-32 h-32 bg-[#3F72AF]/5 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-[#3F72AF]/10">
             </div>
             <div class="flex items-center justify-between relative">
                 <div>
-                    <p class="text-sm font-medium text-[#5F9598]">Jami O'quvchilar</p>
-                    <p class="text-3xl font-bold text-[#061E29] mt-2">{{ total_students }}</p>
+                    <p class="text-sm font-medium text-[#7A9CC5]">Jami O'quvchilar</p>
+                    <p class="text-3xl font-bold text-[#112D4E] mt-2">{{ total_students }}</p>
                     <div class="flex items-center gap-1 mt-2">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                         <span class="text-xs text-emerald-600 font-medium">Aktiv</span>
                     </div>
                 </div>
                 <div
-                    class="w-12 h-12 bg-[#1D546D]/10 text-[#1D546D] rounded-2xl flex items-center justify-center text-2xl">
+                    class="w-12 h-12 bg-[#3F72AF]/10 text-[#3F72AF] rounded-2xl flex items-center justify-center text-2xl">
                     <i class="ph ph-student"></i>
                 </div>
             </div>
@@ -66,8 +66,8 @@
             </div>
             <div class="flex items-center justify-between relative">
                 <div>
-                    <p class="text-sm font-medium text-[#5F9598]">Yangi Lidlar</p>
-                    <p class="text-3xl font-bold text-[#061E29] mt-2">{{ total_leads }}</p>
+                    <p class="text-sm font-medium text-[#7A9CC5]">Yangi Lidlar</p>
+                    <p class="text-3xl font-bold text-[#112D4E] mt-2">{{ total_leads }}</p>
                     <span
                         class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-full font-medium inline-block mt-2">
                         +{{ new_leads }} bugun
@@ -88,8 +88,8 @@
             </div>
             <div class="flex items-center justify-between relative">
                 <div>
-                    <p class="text-sm font-medium text-[#5F9598]">Oylik Tushum</p>
-                    <p class="text-3xl font-bold text-[#061E29] mt-2">{{ monthly_income|floatformat:0 }}</p>
+                    <p class="text-sm font-medium text-[#7A9CC5]">Oylik Tushum</p>
+                    <p class="text-3xl font-bold text-[#112D4E] mt-2">{{ monthly_income|floatformat:0 }}</p>
                     <span class="text-xs text-slate-400 mt-1 block">UZS</span>
                 </div>
                 <div
@@ -107,7 +107,7 @@
             </div>
             <div class="flex items-center justify-between relative">
                 <div>
-                    <p class="text-sm font-medium text-[#5F9598]">Qarzdorlik</p>
+                    <p class="text-sm font-medium text-[#7A9CC5]">Qarzdorlik</p>
                     <p class="text-3xl font-bold text-rose-600 mt-2">{{ total_debt|floatformat:0 }}</p>
                     <span class="text-xs text-rose-600 bg-rose-50 px-2 py-1 rounded-full font-medium inline-block mt-2">
                         Talab qilinadi
@@ -125,15 +125,15 @@
     <!-- IKKINCHI QATOR: Guruhlar va O'qituvchilar -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div
-            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-lg hover:shadow-[#5F9598]/8 transition-all duration-300">
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-lg hover:shadow-[#7A9CC5]/8 transition-all duration-300">
             <div class="flex items-center gap-4">
                 <div
-                    class="w-14 h-14 bg-[#5F9598]/10 text-[#1D546D] rounded-2xl flex items-center justify-center text-3xl">
+                    class="w-14 h-14 bg-[#7A9CC5]/10 text-[#3F72AF] rounded-2xl flex items-center justify-center text-3xl">
                     <i class="ph ph-users-three"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-[#5F9598]">Aktiv Guruhlar</p>
-                    <p class="text-2xl font-bold text-[#061E29]">{{ active_groups }}</p>
+                    <p class="text-sm font-medium text-[#7A9CC5]">Aktiv Guruhlar</p>
+                    <p class="text-2xl font-bold text-[#112D4E]">{{ active_groups }}</p>
                 </div>
             </div>
             <i class="ph ph-caret-right text-slate-300"></i>
@@ -146,8 +146,8 @@
                     <i class="ph ph-chalkboard-teacher"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-[#5F9598]">O'qituvchilar</p>
-                    <p class="text-2xl font-bold text-[#061E29]">{{ total_teachers }}</p>
+                    <p class="text-sm font-medium text-[#7A9CC5]">O'qituvchilar</p>
+                    <p class="text-2xl font-bold text-[#112D4E]">{{ total_teachers }}</p>
                 </div>
             </div>
             <i class="ph ph-caret-right text-slate-300"></i>
@@ -157,8 +157,8 @@
     <!-- VORONKA BOSQICHLARI -->
     {% if stages %}
     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-        <h3 class="text-xl font-bold text-[#061E29] mb-6 flex items-center gap-2">
-            <i class="ph ph-funnel-simple text-[#1D546D]"></i> Sotuv Voronkasi
+        <h3 class="text-xl font-bold text-[#112D4E] mb-6 flex items-center gap-2">
+            <i class="ph ph-funnel-simple text-[#3F72AF]"></i> Sotuv Voronkasi
         </h3>
         <div class="flex gap-4 overflow-x-auto pb-4">
             {% for stage in stages %}
@@ -171,8 +171,8 @@
                 </div>
                 <div class="flex items-end justify-between">
                     <div>
-                        <p class="text-3xl font-bold text-[#061E29]">{{ stage.lead_count }}</p>
-                        <p class="text-xs text-[#5F9598] font-medium">lid mavjud</p>
+                        <p class="text-3xl font-bold text-[#112D4E]">{{ stage.lead_count }}</p>
+                        <p class="text-xs text-[#7A9CC5] font-medium">lid mavjud</p>
                     </div>
                     <div style="color: {{ stage.color }}" class="opacity-50 text-3xl">
                         <i class="ph ph-user"></i>
@@ -186,17 +186,17 @@
         <!-- MOLIYAVIY GRAFIK -->
         <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold text-[#061E29] flex items-center gap-2">
-                    <i class="ph ph-chart-line text-[#1D546D]"></i> Moliyaviy O'sish
+                <h3 class="text-xl font-bold text-[#112D4E] flex items-center gap-2">
+                    <i class="ph ph-chart-line text-[#3F72AF]"></i> Moliyaviy O'sish
                 </h3>
                 <div class="flex items-center gap-2">
                     <button onclick="loadChartData(7)"
-                        class="px-3 py-1 text-xs rounded-lg bg-slate-100 hover:bg-[#5F9598]/10 text-slate-600 hover:text-[#1D546D] transition">7
+                        class="px-3 py-1 text-xs rounded-lg bg-slate-100 hover:bg-[#7A9CC5]/10 text-slate-600 hover:text-[#3F72AF] transition">7
                         kun</button>
                     <button onclick="loadChartData(30)"
-                        class="px-3 py-1 text-xs rounded-lg bg-[#1D546D]/10 text-[#1D546D] font-medium">30 kun</button>
+                        class="px-3 py-1 text-xs rounded-lg bg-[#3F72AF]/10 text-[#3F72AF] font-medium">30 kun</button>
                     <button onclick="loadChartData(90)"
-                        class="px-3 py-1 text-xs rounded-lg bg-slate-100 hover:bg-[#5F9598]/10 text-slate-600 hover:text-[#1D546D] transition">90
+                        class="px-3 py-1 text-xs rounded-lg bg-slate-100 hover:bg-[#7A9CC5]/10 text-slate-600 hover:text-[#3F72AF] transition">90
                         kun</button>
                 </div>
             </div>
@@ -288,7 +288,7 @@
             <!-- Bugungi Darslar -->
             <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-[#061E29] flex items-center gap-2">
+                    <h3 class="text-xl font-bold text-[#112D4E] flex items-center gap-2">
                         <i class="ph ph-calendar-check text-emerald-500"></i> Bugungi Darslar
                     </h3>
                     <a href="{% url 'group_list' %}"
@@ -300,16 +300,16 @@
                 <div class="space-y-3">
                     {% for lesson in today_lessons %}
                     <div
-                        class="flex items-center p-4 bg-slate-50 rounded-xl border border-slate-100 hover:bg-white hover:shadow-md hover:shadow-[#5F9598]/5 transition-all duration-300 group">
+                        class="flex items-center p-4 bg-slate-50 rounded-xl border border-slate-100 hover:bg-white hover:shadow-md hover:shadow-[#7A9CC5]/5 transition-all duration-300 group">
                         <div class="w-20 text-center border-r border-slate-200 pr-4">
                             <span
-                                class="block text-lg font-bold text-[#061E29] group-hover:text-[#1D546D] transition">{{
+                                class="block text-lg font-bold text-[#112D4E] group-hover:text-[#3F72AF] transition">{{
                                 lesson.start_time|time:"H:i" }}</span>
-                            <span class="block text-xs text-[#5F9598]">{{ lesson.end_time|time:"H:i" }}</span>
+                            <span class="block text-xs text-[#7A9CC5]">{{ lesson.end_time|time:"H:i" }}</span>
                         </div>
                         <div class="flex-1 px-4">
-                            <h4 class="font-bold text-[#061E29] text-lg">{{ lesson.group.name }}</h4>
-                            <p class="text-sm text-[#5F9598] flex items-center gap-3 mt-1">
+                            <h4 class="font-bold text-[#112D4E] text-lg">{{ lesson.group.name }}</h4>
+                            <p class="text-sm text-[#7A9CC5] flex items-center gap-3 mt-1">
                                 <span class="flex items-center gap-1"><i class="ph ph-door text-slate-400"></i> {{
                                     lesson.room.name|default:"-" }}</span>
                                 <span class="flex items-center gap-1"><i class="ph ph-user text-slate-400"></i> {{
@@ -317,14 +317,14 @@
                             </p>
                         </div>
                         <span class="px-3 py-1 text-xs font-bold rounded-full border
-                        {% if lesson.status == 'started' %}text-[#1D546D] bg-[#1D546D]/10 border-[#5F9598]/20
+                        {% if lesson.status == 'started' %}text-[#3F72AF] bg-[#3F72AF]/10 border-[#7A9CC5]/20
                         {% elif lesson.status == 'finished' %}text-emerald-700 bg-emerald-50 border-emerald-200
                         {% else %}text-slate-600 bg-slate-50 border-slate-200{% endif %}">
                             {{ lesson.get_status_display }}
                         </span>
                     </div>
                     {% empty %}
-                    <div class="text-center py-12 text-[#5F9598]">
+                    <div class="text-center py-12 text-[#7A9CC5]">
                         <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
                             <i class="ph ph-calendar-blank text-4xl text-slate-300"></i>
                         </div>
@@ -337,22 +337,22 @@
             <!-- Yangi Lidlar -->
             <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col h-full">
                 <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-[#061E29] flex items-center gap-2">
+                    <h3 class="text-xl font-bold text-[#112D4E] flex items-center gap-2">
                         <i class="ph ph-sparkle text-amber-500"></i> So'nggi Lidlar
                     </h3>
-                    <a href="{% url 'crm:pipeline' %}" class="text-sm text-[#1D546D] hover:text-[#061E29]">Voronka</a>
+                    <a href="{% url 'crm:pipeline' %}" class="text-sm text-[#3F72AF] hover:text-[#112D4E]">Voronka</a>
                 </div>
 
                 <div class="space-y-3 flex-1 overflow-y-auto max-h-[400px]">
                     {% for lead in recent_leads %}
                     <div class="flex items-center gap-4 p-3 hover:bg-slate-50 rounded-xl transition cursor-default">
                         <div
-                            class="w-12 h-12 rounded-full bg-gradient-to-br from-[#1D546D] to-[#5F9598] text-white flex items-center justify-center font-bold text-lg shadow-md shadow-[#1D546D]/20">
+                            class="w-12 h-12 rounded-full bg-gradient-to-br from-[#3F72AF] to-[#7A9CC5] text-white flex items-center justify-center font-bold text-lg shadow-md shadow-[#3F72AF]/20">
                             {{ lead.full_name|first }}
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h4 class="font-bold text-[#061E29] truncate">{{ lead.full_name }}</h4>
-                            <p class="text-xs text-[#5F9598] flex items-center gap-1">
+                            <h4 class="font-bold text-[#112D4E] truncate">{{ lead.full_name }}</h4>
+                            <p class="text-xs text-[#7A9CC5] flex items-center gap-1">
                                 <i class="ph ph-arrow-elbow-down-right"></i> {{ lead.source.name|default:"Noma'lum" }}
                             </p>
                         </div>
@@ -361,14 +361,14 @@
                         </div>
                     </div>
                     {% empty %}
-                    <div class="flex-1 flex flex-col items-center justify-center text-[#5F9598]">
+                    <div class="flex-1 flex flex-col items-center justify-center text-[#7A9CC5]">
                         <p>Hozircha lidlar yo'q</p>
                     </div>
                     {% endfor %}
                 </div>
 
                 <a href="{% url 'crm:lead_create' %}"
-                    class="w-full mt-6 py-3 text-sm font-semibold text-center text-white bg-gradient-to-r from-[#1D546D] to-[#061E29] rounded-xl hover:shadow-lg hover:shadow-[#1D546D]/30 transition-all active:scale-95 flex items-center justify-center gap-2">
+                    class="w-full mt-6 py-3 text-sm font-semibold text-center text-white bg-gradient-to-r from-[#3F72AF] to-[#112D4E] rounded-xl hover:shadow-lg hover:shadow-[#3F72AF]/30 transition-all active:scale-95 flex items-center justify-center gap-2">
                     <i class="ph ph-plus-circle text-lg"></i> Yangi Lid
                 </a>
             </div>

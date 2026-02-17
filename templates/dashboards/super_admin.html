@@ -38,16 +38,16 @@
     <!-- Period Toggle -->
     <div class="flex items-center justify-between">
         <h3 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
-            <span class="w-1 h-6 bg-gradient-to-b from-[#1D546D] to-purple-500 rounded-full"></span>
+            <span class="w-1 h-6 bg-gradient-to-b from-[#3F72AF] to-purple-500 rounded-full"></span>
             Moliya Statistikasi
         </h3>
         <div class="flex gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
             <a href="?period=weekly"
-                class="px-4 py-2 rounded-lg text-sm font-medium transition {% if period == 'weekly' %}bg-[#1D546D] text-white shadow-md{% else %}text-slate-500 hover:text-slate-800 hover:bg-white{% endif %}">
+                class="px-4 py-2 rounded-lg text-sm font-medium transition {% if period == 'weekly' %}bg-[#3F72AF] text-white shadow-md{% else %}text-slate-500 hover:text-slate-800 hover:bg-white{% endif %}">
                 Haftalik
             </a>
             <a href="?period=monthly"
-                class="px-4 py-2 rounded-lg text-sm font-medium transition {% if period != 'weekly' %}bg-[#1D546D] text-white shadow-md{% else %}text-slate-500 hover:text-slate-800 hover:bg-white{% endif %}">
+                class="px-4 py-2 rounded-lg text-sm font-medium transition {% if period != 'weekly' %}bg-[#3F72AF] text-white shadow-md{% else %}text-slate-500 hover:text-slate-800 hover:bg-white{% endif %}">
                 Oylik
             </a>
         </div>
@@ -146,7 +146,7 @@
                     {{ active_students|default:"0" }} faol
                 </span>
                 <span class="badge badge-blue">
-                    <span class="w-1.5 h-1.5 bg-[#1D546D]/50 rounded-full mr-1.5"></span>
+                    <span class="w-1.5 h-1.5 bg-[#3F72AF]/50 rounded-full mr-1.5"></span>
                     {{ frozen_students|default:"0" }} muzlatilgan
                 </span>
             </div>
