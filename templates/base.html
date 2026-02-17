@@ -106,32 +106,67 @@
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
+
+        /* Glass/Blur Effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(147, 177, 166, 0.2);
+        }
+        .glass-dark {
+            background: rgba(24, 61, 61, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(92, 131, 116, 0.3);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(147, 177, 166, 0.25);
+            box-shadow: 0 8px 32px rgba(4, 13, 18, 0.08);
+        }
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 12px 40px rgba(4, 13, 18, 0.12);
+        }
+        .glass-button {
+            background: rgba(24, 61, 61, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .glass-input {
+            background: rgba(249, 247, 247, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
     </style>
 </head>
 
-<body class="font-sans antialiased overflow-hidden bg-[#F9F7F7] text-[#040D12]">
+<body class="font-sans antialiased overflow-hidden bg-gradient-to-br from-[#F9F7F7] via-[#e8f0ed] to-[#F9F7F7] text-[#040D12]">
 
     <!-- Loading indicator -->
     <div id="instant-click-loading"></div>
 
     <div class="flex h-screen w-full">
 
-        <!-- SIDEBAR -->
+        <!-- SIDEBAR - Ochiqroq rang, glass effect -->
         <aside
-            class="flex-shrink-0 w-64 flex flex-col transition-all duration-300 transform lg:transform-none z-50 absolute lg:relative h-full bg-[#040D12] border-r border-[#183D3D] shadow-xl"
+            class="flex-shrink-0 w-64 flex flex-col transition-all duration-300 transform lg:transform-none z-50 absolute lg:relative h-full bg-gradient-to-b from-[#183D3D] via-[#1a4444] to-[#183D3D] border-r border-[#5C8374]/30 shadow-2xl"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
             <!-- Logo -->
             <div
-                class="h-16 flex items-center justify-center border-b border-[#183D3D] bg-gradient-to-r from-[#183D3D] to-[#040D12]">
+                class="h-16 flex items-center justify-center border-b border-[#5C8374]/30 bg-[#183D3D]/80 backdrop-blur-xl">
                 <span class="text-xl font-bold flex items-center gap-2 text-[#F9F7F7]">
-                    <i class="ph-fill ph-graduation-cap text-2xl text-[#5C8374]"></i>
+                    <i class="ph-fill ph-graduation-cap text-2xl text-[#93B1A6]"></i>
                     Smart Edu
                 </span>
             </div>
 
             <!-- Navigation -->
-            <div id="sidebar-nav" class="flex-1 overflow-y-auto py-4 px-3 space-y-1 bg-[#040D12]">
+            <div id="sidebar-nav" class="flex-1 overflow-y-auto py-4 px-3 space-y-1 bg-transparent">
                 {% include 'components/sidebar.html' %}
             </div>
 
@@ -162,10 +197,10 @@
             </script>
 
             <!-- User Profile -->
-            <div class="p-4 border-t border-[#183D3D] bg-[#0a1c1c]">
+            <div class="p-4 border-t border-[#5C8374]/30 bg-[#183D3D]/60 backdrop-blur-xl">
                 <div class="flex items-center gap-3">
                     <div
-                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#5C8374] to-[#183D3D] text-[#F9F7F7] flex items-center justify-center font-bold shadow-md">
+                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#93B1A6] to-[#5C8374] text-[#040D12] flex items-center justify-center font-bold shadow-lg">
                         {{ request.user.first_name|first }}
                     </div>
                     <div class="flex-1 min-w-0">

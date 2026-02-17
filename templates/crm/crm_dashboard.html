@@ -12,15 +12,15 @@
     <!-- HEADER -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                <i class="ph ph-funnel text-[#1D546D]"></i>
+            <h1 class="text-2xl font-bold text-[#040D12] flex items-center gap-2">
+                <i class="ph ph-funnel text-[#5C8374]"></i>
                 Sotuv & CRM
             </h1>
-            <p class="text-slate-500 mt-1">Lidlar, voronka va manbalarni boshqaring</p>
+            <p class="text-[#5C8374] mt-1">Lidlar, voronka va manbalarni boshqaring</p>
         </div>
         <div class="flex flex-wrap gap-2">
             <a href="{% url 'crm:lead_create' %}"
-                class="bg-[#1D546D] hover:bg-[#061E29] text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm">
+                class="bg-[#183D3D] hover:bg-[#040D12] text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm">
                 <i class="ph ph-plus"></i> Yangi Lid
             </a>
         </div>
@@ -29,50 +29,50 @@
     <!-- STATISTIKA KARTOCHKALARI -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <!-- Jami Lidlar -->
-        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+        <div class="bg-white rounded-xl p-4 border border-[#93B1A6]/30 shadow-sm">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-[#1D546D]/10 flex items-center justify-center">
-                    <i class="ph ph-users text-xl text-[#1D546D]"></i>
+                <div class="w-12 h-12 rounded-xl bg-[#183D3D]/10 flex items-center justify-center">
+                    <i class="ph ph-users text-xl text-[#183D3D]"></i>
                 </div>
                 <div>
-                    <p class="text-2xl font-bold text-slate-800">{{ total_leads }}</p>
-                    <p class="text-sm text-slate-500">Jami Lidlar</p>
+                    <p class="text-2xl font-bold text-[#040D12]">{{ total_leads }}</p>
+                    <p class="text-sm text-[#5C8374]">Jami Lidlar</p>
                 </div>
             </div>
         </div>
         <!-- Bugungi -->
-        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+        <div class="bg-white rounded-xl p-4 border border-[#93B1A6]/30 shadow-sm">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                    <i class="ph ph-calendar-check text-xl text-green-600"></i>
+                <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center">
+                    <i class="ph ph-calendar-check text-xl text-emerald-600"></i>
                 </div>
                 <div>
-                    <p class="text-2xl font-bold text-slate-800">{{ today_leads }}</p>
-                    <p class="text-sm text-slate-500">Bugungi</p>
+                    <p class="text-2xl font-bold text-[#040D12]">{{ today_leads }}</p>
+                    <p class="text-sm text-[#5C8374]">Bugungi</p>
                 </div>
             </div>
         </div>
         <!-- Bosqichlar -->
-        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+        <div class="bg-white rounded-xl p-4 border border-[#93B1A6]/30 shadow-sm">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center">
-                    <i class="ph ph-kanban text-xl text-purple-600"></i>
+                <div class="w-12 h-12 rounded-xl bg-[#5C8374]/20 flex items-center justify-center">
+                    <i class="ph ph-kanban text-xl text-[#183D3D]"></i>
                 </div>
                 <div>
-                    <p class="text-2xl font-bold text-slate-800">{{ stages|length }}</p>
-                    <p class="text-sm text-slate-500">Bosqichlar</p>
+                    <p class="text-2xl font-bold text-[#040D12]">{{ stages|length }}</p>
+                    <p class="text-sm text-[#5C8374]">Bosqichlar</p>
                 </div>
             </div>
         </div>
         <!-- Manbalar -->
-        <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+        <div class="bg-white rounded-xl p-4 border border-[#93B1A6]/30 shadow-sm">
             <div class="flex items-center gap-3">
                 <div class="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center">
                     <i class="ph ph-megaphone text-xl text-orange-600"></i>
                 </div>
                 <div>
-                    <p class="text-2xl font-bold text-slate-800">{{ sources|length }}</p>
-                    <p class="text-sm text-slate-500">Manbalar</p>
+                    <p class="text-2xl font-bold text-[#040D12]">{{ sources|length }}</p>
+                    <p class="text-sm text-[#5C8374]">Manbalar</p>
                 </div>
             </div>
         </div>
@@ -81,19 +81,19 @@
     <!-- TABS - Pipeline / Sozlamalar -->
     <div x-data="{ activeTab: 'pipeline' }" class="space-y-4">
         <!-- Tab Buttons -->
-        <div class="flex gap-2 border-b border-slate-200 pb-0">
+        <div class="flex gap-2 border-b border-[#93B1A6]/30 pb-0">
             <button @click="activeTab = 'pipeline'"
-                :class="activeTab === 'pipeline' ? 'border-[#1D546D] text-[#1D546D] bg-[#1D546D]/5' : 'border-transparent text-slate-500 hover:text-slate-700'"
+                :class="activeTab === 'pipeline' ? 'border-[#183D3D] text-[#183D3D] bg-[#183D3D]/5' : 'border-transparent text-[#5C8374] hover:text-[#183D3D]'"
                 class="px-4 py-2 border-b-2 font-medium transition-all flex items-center gap-2 rounded-t-lg">
                 <i class="ph ph-funnel"></i> Voronka
             </button>
             <button @click="activeTab = 'stages'"
-                :class="activeTab === 'stages' ? 'border-[#1D546D] text-[#1D546D] bg-[#1D546D]/5' : 'border-transparent text-slate-500 hover:text-slate-700'"
+                :class="activeTab === 'stages' ? 'border-[#183D3D] text-[#183D3D] bg-[#183D3D]/5' : 'border-transparent text-[#5C8374] hover:text-[#183D3D]'"
                 class="px-4 py-2 border-b-2 font-medium transition-all flex items-center gap-2 rounded-t-lg">
                 <i class="ph ph-kanban"></i> Bosqichlar
             </button>
             <button @click="activeTab = 'sources'"
-                :class="activeTab === 'sources' ? 'border-[#1D546D] text-[#1D546D] bg-[#1D546D]/5' : 'border-transparent text-slate-500 hover:text-slate-700'"
+                :class="activeTab === 'sources' ? 'border-[#183D3D] text-[#183D3D] bg-[#183D3D]/5' : 'border-transparent text-[#5C8374] hover:text-[#183D3D]'"
                 class="px-4 py-2 border-b-2 font-medium transition-all flex items-center gap-2 rounded-t-lg">
                 <i class="ph ph-megaphone"></i> Manbalar
             </button>
@@ -105,15 +105,15 @@
 
             <div class="flex gap-4 overflow-x-auto pb-4 items-start" style="min-height: 500px;">
                 {% for stage in stages %}
-                <div class="flex-shrink-0 w-72 flex flex-col bg-white/60 backdrop-blur-md rounded-2xl border border-white/20 shadow-sm">
+                <div class="flex-shrink-0 w-72 flex flex-col bg-white/80 backdrop-blur-md rounded-2xl border border-[#93B1A6]/20 shadow-sm">
 
                     <!-- STAGE HEADER -->
-                    <div class="p-3 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 rounded-t-2xl">
+                    <div class="p-3 border-b border-[#93B1A6]/20 flex justify-between items-center bg-[#F9F7F7] rounded-t-2xl">
                         <div class="flex items-center gap-2">
                             <span class="w-2 h-8 rounded-full" style="background-color: {{ stage.color }};"></span>
-                            <h3 class="font-semibold text-slate-800 text-sm">{{ stage.name }}</h3>
+                            <h3 class="font-semibold text-[#040D12] text-sm">{{ stage.name }}</h3>
                         </div>
-                        <span class="bg-white text-slate-600 text-xs px-2 py-0.5 rounded-full font-bold border border-slate-200">
+                        <span class="bg-white text-[#183D3D] text-xs px-2 py-0.5 rounded-full font-bold border border-[#93B1A6]/30">
                             {{ stage.leads.count }}
                         </span>
                     </div>
