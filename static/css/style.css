@@ -118,7 +118,7 @@ body {
 }
 
 /* ============================================
-   SIDEBAR (Dark Forest Theme)
+   SIDEBAR (Dark Forest Theme - Lighter)
    ============================================ */
 
 .sidebar-link {
@@ -133,20 +133,23 @@ body {
     font-weight: 500;
     font-size: 0.875rem;
     position: relative;
+    background: transparent;
 }
 
 .sidebar-link:hover {
-    background: linear-gradient(135deg, rgba(92, 131, 116, 0.15), rgba(147, 177, 166, 0.1));
+    background: rgba(147, 177, 166, 0.15);
     color: #F9F7F7;
     transform: translateX(4px);
+    backdrop-filter: blur(8px);
 }
 
 .sidebar-link.active {
-    background: linear-gradient(135deg, rgba(92, 131, 116, 0.25), rgba(24, 61, 61, 0.4));
+    background: linear-gradient(135deg, rgba(92, 131, 116, 0.3), rgba(147, 177, 166, 0.2));
     color: #F9F7F7;
     font-weight: 600;
-    border-left: 3px solid #5C8374;
-    box-shadow: 0 2px 8px rgba(92, 131, 116, 0.15);
+    border-left: 3px solid #93B1A6;
+    box-shadow: 0 4px 15px rgba(92, 131, 116, 0.2);
+    backdrop-filter: blur(10px);
 }
 
 .sidebar-link i {
@@ -173,7 +176,7 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #5C8374;
+    color: #93B1A6;
 }
 
 /* ============================================
