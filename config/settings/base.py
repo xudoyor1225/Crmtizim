@@ -34,6 +34,7 @@ INSTALLED_APPS = [
 
     # UCHINCHI TOMON KUTUBXONALARI
     'widget_tweaks',  # pip install django-widget-tweaks
+    'django.contrib.humanize',  # Number formatting (intcomma, naturaltime)
 
     # BIZNING APPLAR (To'liq yo'l bilan)
     'apps.core',

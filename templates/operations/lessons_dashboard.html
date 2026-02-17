@@ -9,16 +9,17 @@
     <!-- HEADER -->
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-[#040D12] flex items-center gap-2">
-                <i class="ph ph-chalkboard text-[#5C8374]"></i>
+            <h1 class="text-2xl font-bold text-[#112D4E] flex items-center gap-2">
+                <i class="ph ph-chalkboard text-[#3F72AF]"></i>
                 Darslar & Jadval
             </h1>
-            <p class="text-[#5C8374] mt-1">Kunlik darslar va haftalik jadvalni boshqaring</p>
+            <p class="text-[#3F72AF] mt-1">Kunlik darslar va haftalik jadvalni boshqaring</p>
         </div>
         <div class="flex gap-3">
-            {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' or request.user.role == 'teacher' %}
+            {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' or
+            request.user.role == 'teacher' %}
             <a href="{% url 'operations:lesson_add' %}"
-                class="bg-[#183D3D] hover:bg-[#040D12] text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 transition shadow-lg shadow-[#183D3D]/25">
+                class="bg-[#112D4E] hover:bg-[#0B1C30] text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 transition shadow-lg shadow-[#112D4E]/25">
                 <i class="ph ph-plus-circle text-lg"></i> Yangi dars
             </a>
             {% endif %}
@@ -33,19 +34,22 @@
         <!-- 📅 BUGUNGI DARSLAR TUGMASI -->
         <a href="?tab=today" class="group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl
             {% if current_tab == 'today' %}
-            bg-gradient-to-br from-[#183D3D] to-[#040D12] text-white shadow-lg shadow-[#183D3D]/30
+            bg-gradient-to-br from-[#112D4E] to-[#0B1C30] text-white shadow-lg shadow-[#112D4E]/30
             {% else %}
-            bg-white border-2 border-[#93B1A6]/30 hover:border-[#5C8374]/50 text-[#040D12]
+            bg-white border-2 border-[#9DB2D6]/30 hover:border-[#3F72AF]/50 text-[#112D4E]
             {% endif %}">
 
             <!-- Orqa fon effekti -->
-            <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div
+                class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+            </div>
 
             <div class="relative flex items-center gap-5">
                 <!-- Ikonka -->
                 <div class="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110
-                    {% if current_tab == 'today' %}bg-white/20{% else %}bg-[#93B1A6]/20{% endif %}">
-                    <i class="ph-fill ph-calendar-check text-3xl {% if current_tab == 'today' %}text-[#93B1A6]{% else %}text-[#183D3D]{% endif %}"></i>
+                    {% if current_tab == 'today' %}bg-white/20{% else %}bg-[#9DB2D6]/20{% endif %}">
+                    <i
+                        class="ph-fill ph-calendar-check text-3xl {% if current_tab == 'today' %}text-[#9DB2D6]{% else %}text-[#112D4E]{% endif %}"></i>
                 </div>
 
                 <!-- Matn -->
@@ -53,16 +57,19 @@
                     <h3 class="text-xl font-bold flex items-center gap-2">
                         📅 Bugungi Darslar
                         {% if current_tab == 'today' %}
-                        <i class="ph-fill ph-check-circle text-[#93B1A6]"></i>
+                        <i class="ph-fill ph-check-circle text-[#9DB2D6]"></i>
                         {% endif %}
                     </h3>
-                    <p class="mt-1 {% if current_tab == 'today' %}text-[#93B1A6]{% else %}text-[#5C8374]{% endif %}">
-                        <span class="text-2xl font-bold {% if current_tab == 'today' %}text-white{% else %}text-[#183D3D]{% endif %}">{{ today_lessons_count }}</span> ta dars bugun
+                    <p class="mt-1 {% if current_tab == 'today' %}text-[#9DB2D6]{% else %}text-[#3F72AF]{% endif %}">
+                        <span
+                            class="text-2xl font-bold {% if current_tab == 'today' %}text-white{% else %}text-[#112D4E]{% endif %}">{{
+                            today_lessons_count }}</span> ta dars bugun
                     </p>
                 </div>
 
                 <!-- Strelka -->
-                <div class="{% if current_tab == 'today' %}text-[#93B1A6]/50{% else %}text-[#93B1A6] group-hover:text-[#183D3D]{% endif %} transition-all group-hover:translate-x-1">
+                <div
+                    class="{% if current_tab == 'today' %}text-[#9DB2D6]/50{% else %}text-[#9DB2D6] group-hover:text-[#112D4E]{% endif %} transition-all group-hover:translate-x-1">
                     <i class="ph ph-arrow-right text-2xl"></i>
                 </div>
             </div>
@@ -71,19 +78,22 @@
         <!-- 📆 HAFTALIK JADVAL TUGMASI -->
         <a href="?tab=weekly" class="group relative overflow-hidden rounded-2xl p-6 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl
             {% if current_tab == 'weekly' %}
-            bg-gradient-to-br from-[#5C8374] to-[#183D3D] text-white shadow-lg shadow-[#5C8374]/30
+            bg-gradient-to-br from-[#3F72AF] to-[#112D4E] text-white shadow-lg shadow-[#3F72AF]/30
             {% else %}
-            bg-white border-2 border-[#93B1A6]/30 hover:border-[#5C8374] text-[#040D12]
+            bg-white border-2 border-[#9DB2D6]/30 hover:border-[#3F72AF] text-[#112D4E]
             {% endif %}">
 
             <!-- Orqa fon effekti -->
-            <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div
+                class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+            </div>
 
             <div class="relative flex items-center gap-5">
                 <!-- Ikonka -->
                 <div class="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110
-                    {% if current_tab == 'weekly' %}bg-white/20{% else %}bg-[#93B1A6]/20{% endif %}">
-                    <i class="ph-fill ph-calendar text-3xl {% if current_tab == 'weekly' %}text-[#93B1A6]{% else %}text-[#183D3D]{% endif %}"></i>
+                    {% if current_tab == 'weekly' %}bg-white/20{% else %}bg-[#9DB2D6]/20{% endif %}">
+                    <i
+                        class="ph-fill ph-calendar text-3xl {% if current_tab == 'weekly' %}text-[#9DB2D6]{% else %}text-[#112D4E]{% endif %}"></i>
                 </div>
 
                 <!-- Matn -->
@@ -91,16 +101,19 @@
                     <h3 class="text-xl font-bold flex items-center gap-2">
                         📆 Haftalik Jadval
                         {% if current_tab == 'weekly' %}
-                        <i class="ph-fill ph-check-circle text-[#93B1A6]"></i>
+                        <i class="ph-fill ph-check-circle text-[#9DB2D6]"></i>
                         {% endif %}
                     </h3>
-                    <p class="mt-1 {% if current_tab == 'weekly' %}text-[#93B1A6]{% else %}text-[#5C8374]{% endif %}">
-                        <span class="text-2xl font-bold {% if current_tab == 'weekly' %}text-white{% else %}text-[#5C8374]{% endif %}">{{ weekly_lessons_count }}</span> ta dars haftada
+                    <p class="mt-1 {% if current_tab == 'weekly' %}text-[#9DB2D6]{% else %}text-[#3F72AF]{% endif %}">
+                        <span
+                            class="text-2xl font-bold {% if current_tab == 'weekly' %}text-white{% else %}text-[#3F72AF]{% endif %}">{{
+                            weekly_lessons_count }}</span> ta dars haftada
                     </p>
                 </div>
 
                 <!-- Strelka -->
-                <div class="{% if current_tab == 'weekly' %}text-[#93B1A6]/50{% else %}text-[#93B1A6] group-hover:text-[#183D3D]{% endif %} transition-all group-hover:translate-x-1">
+                <div
+                    class="{% if current_tab == 'weekly' %}text-[#9DB2D6]/50{% else %}text-[#9DB2D6] group-hover:text-[#112D4E]{% endif %} transition-all group-hover:translate-x-1">
                     <i class="ph ph-arrow-right text-2xl"></i>
                 </div>
             </div>
@@ -116,36 +129,43 @@
     <div class="space-y-4">
 
         <!-- Filterlar -->
-        <div class="bg-white rounded-2xl p-4 border border-[#93B1A6]/30 shadow-sm">
+        <div class="bg-white rounded-2xl p-4 border border-[#9DB2D6]/30 shadow-sm">
             <form method="GET" class="flex flex-wrap gap-3 items-end">
                 <input type="hidden" name="tab" value="today">
                 <div>
-                    <label class="block text-xs mb-1.5 font-semibold text-[#5C8374] uppercase tracking-wide">Sana</label>
+                    <label
+                        class="block text-xs mb-1.5 font-semibold text-[#3F72AF] uppercase tracking-wide">Sana</label>
                     <input type="date" name="date" value="{{ date_filter }}"
-                        class="px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition bg-[#F9F7F7] border-[#93B1A6]/30 text-[#040D12] focus:ring-[#5C8374]/30 focus:border-[#5C8374]">
+                        class="px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition bg-[#F9F7F7] border-[#9DB2D6]/30 text-[#112D4E] focus:ring-[#3F72AF]/30 focus:border-[#3F72AF]">
                 </div>
                 <div>
-                    <label class="block text-xs mb-1.5 font-semibold text-[#5C8374] uppercase tracking-wide">Guruh</label>
+                    <label
+                        class="block text-xs mb-1.5 font-semibold text-[#3F72AF] uppercase tracking-wide">Guruh</label>
                     <select name="group"
-                        class="px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition bg-[#F9F7F7] border-[#93B1A6]/30 text-[#040D12] focus:ring-[#5C8374]/30 focus:border-[#5C8374] min-w-[150px]">
+                        class="px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition bg-[#F9F7F7] border-[#9DB2D6]/30 text-[#112D4E] focus:ring-[#3F72AF]/30 focus:border-[#3F72AF] min-w-[150px]">
                         <option value="">Barchasi</option>
                         {% for group in groups %}
-                        <option value="{{ group.id }}" {% if group_filter == group.id|stringformat:"s" %}selected{% endif %}>
+                        <option value="{{ group.id }}" {% if group_filter==group.id|stringformat:"s" %}selected{% endif
+                            %}>
                             {{ group.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs mb-1.5 font-semibold text-slate-500 uppercase tracking-wide">Holat</label>
+                    <label
+                        class="block text-xs mb-1.5 font-semibold text-slate-500 uppercase tracking-wide">Holat</label>
                     <select name="status"
-                        class="px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#1D546D]/30 focus:border-[#1D546D] min-w-[140px]">
+                        class="px-4 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#3F72AF]/30 focus:border-[#3F72AF] min-w-[140px]">
                         <option value="">Barchasi</option>
-                        <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Rejalashtirilgan</option>
-                        <option value="started" {% if status_filter == 'started' %}selected{% endif %}>Darsda</option>
-                        <option value="finished" {% if status_filter == 'finished' %}selected{% endif %}>Yakunlangan</option>
+                        <option value="scheduled" {% if status_filter=='scheduled' %}selected{% endif %}>
+                            Rejalashtirilgan</option>
+                        <option value="started" {% if status_filter=='started' %}selected{% endif %}>Darsda</option>
+                        <option value="finished" {% if status_filter=='finished' %}selected{% endif %}>Yakunlangan
+                        </option>
                     </select>
                 </div>
-                <button type="submit" class="px-5 py-2.5 rounded-xl font-medium transition bg-[#1D546D] text-white hover:bg-[#061E29] shadow-sm hover:shadow-md flex items-center gap-2">
+                <button type="submit"
+                    class="px-5 py-2.5 rounded-xl font-medium transition bg-[#3F72AF] text-white hover:bg-[#112D4E] shadow-sm hover:shadow-md flex items-center gap-2">
                     <i class="ph ph-funnel"></i> Filtrlash
                 </button>
             </form>
@@ -155,7 +175,8 @@
         <div class="space-y-3">
             {% for item in lessons_data %}
             {% with lesson=item.lesson %}
-            <div class="bg-white rounded-2xl p-5 border border-slate-200 hover:border-[#1D546D]/30 hover:shadow-lg transition-all duration-200">
+            <div
+                class="bg-white rounded-2xl p-5 border border-slate-200 hover:border-[#3F72AF]/30 hover:shadow-lg transition-all duration-200">
                 <div class="flex items-center gap-5">
                     <!-- Vaqt -->
                     <div class="w-20 text-center flex-shrink-0">
@@ -165,7 +186,7 @@
 
                     <!-- Status indikator -->
                     <div class="w-1.5 h-14 rounded-full flex-shrink-0
-                        {% if lesson.status == 'started' %}bg-gradient-to-b from-[#1D546D] to-[#5F9598] animate-pulse
+                        {% if lesson.status == 'started' %}bg-gradient-to-b from-[#3F72AF] to-[#6B93C9] animate-pulse
                         {% elif lesson.status == 'finished' %}bg-gradient-to-b from-green-400 to-emerald-600
                         {% elif lesson.status == 'cancelled' %}bg-gradient-to-b from-red-400 to-red-600
                         {% else %}bg-gradient-to-b from-slate-200 to-slate-400{% endif %}"></div>
@@ -175,7 +196,8 @@
                         <h3 class="text-lg font-bold text-slate-800 truncate">{{ lesson.group.name }}</h3>
                         <div class="flex items-center gap-4 text-sm mt-1 text-slate-500">
                             <span class="flex items-center gap-1.5">
-                                <i class="ph ph-user"></i> {{ lesson.teacher.first_name }} {{ lesson.teacher.last_name|slice:":1" }}.
+                                <i class="ph ph-user"></i> {{ lesson.teacher.first_name }} {{
+                                lesson.teacher.last_name|slice:":1" }}.
                             </span>
                             <span class="flex items-center gap-1.5">
                                 <i class="ph ph-door"></i> {{ lesson.room.name|default:"—" }}
@@ -191,9 +213,11 @@
                     <!-- Davomat holati -->
                     <div class="hidden sm:block flex-shrink-0">
                         {% if item.attendance_taken %}
-                        <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200">
+                        <div
+                            class="flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-50 border border-emerald-200">
                             <i class="ph-fill ph-check-circle text-emerald-500 text-lg"></i>
-                            <span class="text-sm font-semibold text-emerald-700">{{ item.present_count }}/{{ item.attendance_count }}</span>
+                            <span class="text-sm font-semibold text-emerald-700">{{ item.present_count }}/{{
+                                item.attendance_count }}</span>
                         </div>
                         {% else %}
                         <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 border border-amber-200">
@@ -205,7 +229,7 @@
 
                     <!-- Status badge -->
                     <span class="px-3 py-1.5 text-xs font-bold rounded-xl hidden md:inline-block flex-shrink-0
-                        {% if lesson.status == 'started' %}text-[#1D546D] bg-[#1D546D]/10 border border-[#1D546D]/20
+                        {% if lesson.status == 'started' %}text-[#3F72AF] bg-[#3F72AF]/10 border border-[#3F72AF]/20
                         {% elif lesson.status == 'finished' %}text-emerald-700 bg-emerald-50 border border-emerald-200
                         {% elif lesson.status == 'cancelled' %}text-red-700 bg-red-50 border border-red-200
                         {% else %}text-slate-600 bg-slate-100 border border-slate-200{% endif %}">
@@ -216,7 +240,7 @@
                     <div class="flex items-center gap-2 flex-shrink-0">
                         {% if lesson.status == 'scheduled' %}
                         <a href="{% url 'operations:start_lesson' lesson.pk %}"
-                            class="px-4 py-2.5 bg-gradient-to-r from-[#1D546D] to-[#0D3A4D] text-white rounded-xl hover:shadow-lg hover:shadow-[#1D546D]/30 transition-all font-medium flex items-center gap-2">
+                            class="px-4 py-2.5 bg-gradient-to-r from-[#3F72AF] to-[#112D4E] text-white rounded-xl hover:shadow-lg hover:shadow-[#3F72AF]/30 transition-all font-medium flex items-center gap-2">
                             <i class="ph-fill ph-play"></i> Boshlash
                         </a>
                         {% elif lesson.status == 'started' %}
@@ -241,7 +265,8 @@
                 </div>
                 <h3 class="text-lg font-bold text-slate-700 mb-2">Darslar topilmadi</h3>
                 <p class="text-slate-500 mb-4">Bu sana uchun rejalashtirilgan darslar yo'q</p>
-                <a href="?tab=weekly" class="inline-flex items-center gap-2 px-5 py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition">
+                <a href="?tab=weekly"
+                    class="inline-flex items-center gap-2 px-5 py-2.5 bg-purple-600 text-white rounded-xl font-medium hover:bg-purple-700 transition">
                     <i class="ph ph-calendar"></i> Haftalik jadvalga o'tish
                 </a>
             </div>
@@ -263,16 +288,18 @@
                     </a>
                     {% if week_offset != 0 %}
                     <a href="?week=0&tab=weekly"
-                        class="px-4 py-2.5 bg-[#1D546D]/10 rounded-xl text-[#1D546D] hover:bg-[#1D546D]/20 transition font-medium">
+                        class="px-4 py-2.5 bg-[#3F72AF]/10 rounded-xl text-[#3F72AF] hover:bg-[#3F72AF]/20 transition font-medium">
                         Bu hafta
                     </a>
                     {% endif %}
                 </div>
 
                 <div class="text-center">
-                    <span class="text-lg font-bold text-slate-800">{{ start_of_week|date:"d M" }} — {{ end_of_week|date:"d M, Y" }}</span>
+                    <span class="text-lg font-bold text-slate-800">{{ start_of_week|date:"d M" }} — {{
+                        end_of_week|date:"d M, Y" }}</span>
                     {% if week_offset == 0 %}
-                    <span class="ml-3 px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-xs font-bold">Bu hafta</span>
+                    <span class="ml-3 px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-xs font-bold">Bu
+                        hafta</span>
                     {% endif %}
                 </div>
 
@@ -290,7 +317,8 @@
             <!-- Kunlar headeri -->
             <div class="grid grid-cols-7 bg-slate-50 text-center text-sm font-bold text-slate-600">
                 {% for day in week_days %}
-                <div class="py-3 border-r border-slate-200 last:border-r-0 {% if day.is_today %}bg-[#1D546D] text-white{% endif %}">
+                <div
+                    class="py-3 border-r border-slate-200 last:border-r-0 {% if day.is_today %}bg-[#3F72AF] text-white{% endif %}">
                     <div>{{ day.day_name }}</div>
                     <div class="text-lg mt-0.5 {% if day.is_today %}text-white{% else %}text-slate-800{% endif %}">
                         {{ day.date|date:"d" }}
@@ -303,15 +331,16 @@
             <div class="grid grid-cols-7 min-h-[400px]">
                 {% for day in week_days %}
                 <div class="border-r border-slate-100 p-2 space-y-2 last:border-r-0 overflow-y-auto max-h-[500px]
-                    {% if day.is_today %}bg-[#1D546D]/5{% endif %}">
+                    {% if day.is_today %}bg-[#3F72AF]/5{% endif %}">
 
                     {% for item in day.groups %}
-                    <div class="p-3 rounded-xl bg-white border border-slate-200 hover:shadow-md hover:border-[#1D546D]/30 transition-all cursor-pointer">
+                    <div
+                        class="p-3 rounded-xl bg-white border border-slate-200 hover:shadow-md hover:border-[#3F72AF]/30 transition-all cursor-pointer">
                         <p class="font-bold text-slate-800 text-sm truncate">{{ item.name }}</p>
                         <div class="flex items-center gap-1.5 text-xs text-slate-500 mt-1.5">
                             <i class="ph ph-clock"></i>
                             {% if item.start_time %}
-                            <span class="font-semibold text-[#1D546D]">{{ item.start_time|time:"H:i" }}</span>
+                            <span class="font-semibold text-[#3F72AF]">{{ item.start_time|time:"H:i" }}</span>
                             {% else %}
                             <span class="text-slate-300">--:--</span>
                             {% endif %}

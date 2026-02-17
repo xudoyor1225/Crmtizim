@@ -630,7 +630,31 @@ def staff_dashboard(request):
     """
     Oddiy xodim uchun - umumiy ma'lumotlar.
     """
+    user = request.user
+    today = timezone.now().date()
+    org = user.organization
+    
+    # Bugungi darslar (tashkilot bo'yicha)
+    today_lessons_count = 0
+    total_students_count = 0
+    active_groups_count = 0
+    
+    if org:
+        today_lessons_count = Lesson.objects.filter(
+            organization=org, date=today
+        ).count()
+        total_students_count = User.objects.filter(
+            organization=org, role='student', is_active=True, is_deleted=False
+        ).count()
+        active_groups_count = Group.objects.filter(
+            organization=org, status='active', is_deleted=False
+        ).count()
+    
     context = {
-        'user': request.user,
+        'user': user,
+        'today': today,
+        'today_lessons_count': today_lessons_count,
+        'total_students_count': total_students_count,
+        'active_groups_count': active_groups_count,
     }
     return render(request, 'dashboards/staff.html', context)
