@@ -92,7 +92,7 @@
                         <span class="block text-xs text-[#5F9598]">{{ lesson.end_time|time:"H:i" }}</span>
                     </div>
                     <div
-                        class="w-1 h-10 rounded-full mx-4 {% if lesson.status == 'in_progress' %}bg-[#1D546D]{% elif lesson.status == 'completed' %}bg-emerald-500{% else %}bg-slate-300{% endif %}">
+                        class="w-1 h-10 rounded-full mx-4 {% if lesson.status == 'started' %}bg-[#1D546D]{% elif lesson.status == 'finished' %}bg-emerald-500{% else %}bg-slate-300{% endif %}">
                     </div>
                     <div class="flex-1">
                         <h4 class="font-bold text-[#061E29]">{{ lesson.group.name }}</h4>
@@ -101,10 +101,10 @@
                         </p>
                     </div>
                     <div class="ml-auto">
-                        {% if lesson.status == 'in_progress' %}
+                        {% if lesson.status == 'started' %}
                         <span
                             class="px-3 py-1 text-xs font-bold rounded-full text-[#1D546D] bg-[#1D546D]/10">Darsda</span>
-                        {% elif lesson.status == 'completed' %}
+                        {% elif lesson.status == 'finished' %}
                         <span
                             class="px-3 py-1 text-xs font-bold rounded-full text-emerald-600 bg-emerald-50">Tugadi</span>
                         {% else %}

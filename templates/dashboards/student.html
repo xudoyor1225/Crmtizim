@@ -267,7 +267,7 @@
                             {{ lesson.start_time|time:"H:i" }} - {{ lesson.end_time|time:"H:i" }}
                         </span>
                         <h4 class="text-2xl font-bold mb-1">{{ lesson.group.name }}</h4>
-                        <p class="text-[#1D546D] text-sm flex items-center gap-2">
+                        <p class="text-white/70 text-sm flex items-center gap-2">
                             <i class="ph-fill ph-chalkboard-teacher"></i> {{ lesson.teacher.first_name }} {{
                             lesson.teacher.last_name }}
                         </p>
@@ -278,7 +278,7 @@
                     </div>
                 </div>
                 <div class="mt-4 pt-4 border-t border-white/10 flex items-center justify-between">
-                    <p class="text-xs text-[#1D546D] flex items-center gap-1">
+                    <p class="text-xs text-white/70 flex items-center gap-1">
                         <i class="ph ph-door"></i> {{ lesson.room.name|default:"Xona yo'q" }}
                     </p>
                     <span class="px-2 py-0.5 text-[10px] font-bold uppercase bg-white text-[#1D546D] rounded">
