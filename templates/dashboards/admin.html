@@ -183,7 +183,7 @@
                         </p>
                     </div>
                     <span
-                        class="px-2 py-0.5 text-[10px] font-bold rounded-md flex-shrink-0 {% if lesson.status == 'started' %}text-[#3F72AF] bg-[#DBE2EF]{% elif lesson.status == 'finished' %}text-emerald-700 bg-emerald-50{% else %}text-[#3F72AF] bg-slate-100{% endif %}">{{
+                        class="px-2 py-0.5 text-[10px] font-bold rounded-md flex-shrink-0 {% if lesson.status == 'started' %}text-[#3F72AF] bg-[#DBE2EF]{% elif lesson.status == 'finished' %}text-emerald-700 bg-emerald-50{% else %}text-[#3F72AF] bg-[#DBE2EF]{% endif %}">{{
                         lesson.get_status_display }}</span>
                 </div>
                 {% empty %}
