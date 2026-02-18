@@ -7,10 +7,13 @@ from django.views.decorators.http import require_POST
 from django.db.models import Sum, Q
 from decimal import Decimal, InvalidOperation
 from datetime import timedelta
+import logging
 from .models import Account, Transaction, TransactionCategory
 from apps.users.models import User
 from apps.core.audit import log_user_action
 from apps.core.permissions import permission_required, check_permission
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -426,4 +429,5 @@ def quick_payment(request):
             'transaction_id': transaction.id,
         })
     except Exception:
+        logger.exception("Quick payment da kutilmagan xatolik")
         return JsonResponse({'success': False, 'error': "Xatolik yuz berdi. Iltimos qayta urinib ko'ring."}, status=500)
