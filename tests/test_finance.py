@@ -2,9 +2,11 @@
 Finance moduli uchun testlar.
 Transaction, Account, Balance avtomatik yangilanishi testlari.
 """
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from decimal import Decimal
+import json
 from apps.finance.models import Account, Transaction, TransactionCategory
 from apps.users.models import User
 from apps.organizations.models import Organization, Branch
@@ -192,3 +194,87 @@ class AccountTestCase(TestCase):
 
         expected = "Click (1,500,000)"
         self.assertEqual(str(account), expected)
+
+
+class QuickPaymentTestCase(TestCase):
+    """Quick Payment AJAX view testlari"""
+
+    def setUp(self):
+        self.org = Organization.objects.create(
+            name="Test Markaz",
+            subdomain="test-qp"
+        )
+        self.branch = Branch.objects.create(
+            organization=self.org,
+            name="Test Filial"
+        )
+        self.admin = User.objects.create_user(
+            phone="998903331111",
+            password="test123",
+            first_name="Admin",
+            last_name="QP",
+            role="admin",
+            organization=self.org,
+            branch=self.branch
+        )
+        self.student = User.objects.create_user(
+            phone="998903332222",
+            password="test123",
+            first_name="Student",
+            last_name="QP",
+            role="student",
+            organization=self.org,
+            branch=self.branch
+        )
+        self.account = Account.objects.create(
+            organization=self.org,
+            name="Naqd Kassa",
+            account_type="cash",
+            balance=Decimal("0.00")
+        )
+        self.client = Client()
+        self.client.login(phone="998903331111", password="test123")
+
+    def test_quick_payment_success(self):
+        """Muvaffaqiyatli quick payment"""
+        response = self.client.post(reverse('finance:quick_payment'), {
+            'student_id': self.student.id,
+            'amount': '500000',
+            'payment_method': 'cash',
+            'account_id': self.account.id,
+        })
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertTrue(data['success'])
+        self.assertIn('transaction_id', data)
+        # Tranzaksiya yaratilganini tekshirish
+        self.assertTrue(Transaction.objects.filter(
+            student=self.student, amount=Decimal('500000')
+        ).exists())
+
+    def test_quick_payment_missing_fields(self):
+        """Maydonlar to'ldirilmaganida xatolik"""
+        response = self.client.post(reverse('finance:quick_payment'), {
+            'student_id': self.student.id,
+            # amount va account_id yo'q
+        })
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.content)
+        self.assertFalse(data['success'])
+
+    def test_quick_payment_invalid_amount(self):
+        """Noto'g'ri summa kiritilganida xatolik"""
+        response = self.client.post(reverse('finance:quick_payment'), {
+            'student_id': self.student.id,
+            'amount': '-100',
+            'payment_method': 'cash',
+            'account_id': self.account.id,
+        })
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.content)
+        self.assertFalse(data['success'])
+
+    def test_quick_payment_get_not_allowed(self):
+        """GET so'rovi rad etilishi kerak"""
+        response = self.client.get(reverse('finance:quick_payment'))
+        self.assertEqual(response.status_code, 405)
