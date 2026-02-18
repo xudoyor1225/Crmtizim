@@ -85,10 +85,10 @@
         <!-- O'quvchi qo'shish -->
         {% if available_students %}
         <form method="POST" action="{% url 'add_student_to_group' group.pk %}"
-            class="p-4 bg-[#3F72AF]/5 border-b flex items-center gap-4">
+            class="p-4 bg-[#526D82]/5 border-b flex items-center gap-4">
             {% csrf_token %}
             <select name="student_id"
-                class="flex-1 px-4 py-2 rounded-lg border border-[#7A9CC5]/25 focus:outline-none focus:ring-2 focus:ring-primary bg-white">
+                class="flex-1 px-4 py-2 rounded-lg border border-[#9DB2BF]/25 focus:outline-none focus:ring-2 focus:ring-primary bg-white">
                 <option value="">O'quvchi tanlang...</option>
                 {% for student in available_students %}
                 <option value="{{ student.id }}">{{ student.first_name }} {{ student.last_name }} ({{ student.phone }})
@@ -96,7 +96,7 @@
                 {% endfor %}
             </select>
             <button type="submit"
-                class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#3F72AF]/10 transition flex items-center gap-2">
+                class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-[#526D82]/10 transition flex items-center gap-2">
                 <i class="ph ph-plus"></i> Qo'shish
             </button>
         </form>
@@ -121,7 +121,7 @@
                     <td class="p-4">
                         <div class="flex items-center gap-3">
                             <div
-                                class="w-10 h-10 rounded-full bg-gradient-to-br from-[#3F72AF] to-[#7A9CC5] text-white flex items-center justify-center font-bold">
+                                class="w-10 h-10 rounded-full bg-gradient-to-br from-[#526D82] to-[#9DB2BF] text-white flex items-center justify-center font-bold">
                                 {{ e.student.first_name|first }}
                             </div>
                             <div>
@@ -135,7 +135,7 @@
                     <td class="p-4 text-center">
                         <span class="px-2 py-1 text-xs rounded-full font-medium
                             {% if e.status == 'active' %}bg-green-100 text-green-700
-                            {% elif e.status == 'frozen' %}bg-[#3F72AF]/10 text-[#112D4E]
+                            {% elif e.status == 'frozen' %}bg-[#526D82]/10 text-[#27374D]
                             {% else %}bg-slate-100 text-slate-700{% endif %}">
                             {{ e.get_status_display }}
                         </span>

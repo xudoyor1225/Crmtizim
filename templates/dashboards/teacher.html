@@ -12,34 +12,34 @@
 
     <!-- Header -->
     <div class="flex items-center justify-between relative z-10">
-        <h1 class="text-xl font-bold text-[#112D4E] flex items-center gap-2">
-            <i class="ph-fill ph-chalkboard-teacher text-[#3F72AF]"></i>
+        <h1 class="text-xl font-bold text-[#27374D] flex items-center gap-2">
+            <i class="ph-fill ph-chalkboard-teacher text-[#526D82]"></i>
             Salom, {{ request.user.first_name }}! 📚
         </h1>
-        <span class="px-3 py-1.5 liquid-glass rounded-lg text-xs font-medium text-[#3F72AF]">{% now "d F Y, l" %}</span>
+        <span class="px-3 py-1.5 liquid-glass rounded-lg text-xs font-medium text-[#526D82]">{% now "d F Y, l" %}</span>
     </div>
 
     <!-- Stats + KPI -->
     <div class="grid grid-cols-3 lg:grid-cols-7 gap-3 relative z-10">
         <div class="liquid-glass p-3 stagger-1 text-center">
-            <p class="text-[10px] font-bold text-[#9DB2D6] uppercase">Guruhlarim</p>
-            <p class="text-2xl font-bold text-[#112D4E] mt-1">{{ my_groups.count|default:"0" }}</p>
+            <p class="text-[10px] font-bold text-[#9DB2BF] uppercase">Guruhlarim</p>
+            <p class="text-2xl font-bold text-[#27374D] mt-1">{{ my_groups.count|default:"0" }}</p>
         </div>
         <div class="liquid-glass p-3 stagger-2 text-center">
-            <p class="text-[10px] font-bold text-[#9DB2D6] uppercase">Bugungi dars</p>
-            <p class="text-2xl font-bold text-[#112D4E] mt-1">{{ today_lessons.count|default:"0" }}</p>
+            <p class="text-[10px] font-bold text-[#9DB2BF] uppercase">Bugungi dars</p>
+            <p class="text-2xl font-bold text-[#27374D] mt-1">{{ today_lessons.count|default:"0" }}</p>
         </div>
         <div class="liquid-glass p-3 stagger-3 text-center">
-            <p class="text-[10px] font-bold text-[#9DB2D6] uppercase">O'quvchilar</p>
-            <p class="text-2xl font-bold text-[#112D4E] mt-1">{{ total_students|default:"0" }}</p>
+            <p class="text-[10px] font-bold text-[#9DB2BF] uppercase">O'quvchilar</p>
+            <p class="text-2xl font-bold text-[#27374D] mt-1">{{ total_students|default:"0" }}</p>
         </div>
         <div class="liquid-glass p-3 stagger-4 text-center">
             <p class="text-[10px] font-bold text-emerald-600 uppercase">Dars bajarish</p>
             <p class="text-2xl font-bold text-emerald-600 mt-1">{{ lesson_completion_rate|default:"0" }}%</p>
         </div>
         <div class="liquid-glass p-3 stagger-5 text-center">
-            <p class="text-[10px] font-bold text-[#112D4E] uppercase">Davomat</p>
-            <p class="text-2xl font-bold text-[#112D4E] mt-1">{{ student_attendance_rate|default:"0" }}%</p>
+            <p class="text-[10px] font-bold text-[#27374D] uppercase">Davomat</p>
+            <p class="text-2xl font-bold text-[#27374D] mt-1">{{ student_attendance_rate|default:"0" }}%</p>
         </div>
         <div class="liquid-glass p-3 stagger-5 text-center">
             <p class="text-[10px] font-bold text-amber-600 uppercase">O'rt. baho</p>
@@ -57,36 +57,36 @@
         <!-- Bugungi Darslar -->
         <div class="lg:col-span-7 glass-section p-5">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-bold text-[#112D4E] flex items-center gap-2">
-                    <i class="ph-fill ph-calendar-check text-[#3F72AF]"></i> Bugungi Darslarim
+                <h3 class="text-sm font-bold text-[#27374D] flex items-center gap-2">
+                    <i class="ph-fill ph-calendar-check text-[#526D82]"></i> Bugungi Darslarim
                 </h3>
             </div>
             <div class="space-y-2 max-h-72 overflow-y-auto" style="scrollbar-width: none;">
                 {% for lesson in today_lessons %}
                 <div class="flex items-center gap-3 p-3 liquid-glass rounded-xl group">
                     <div
-                        class="text-center flex-shrink-0 w-14 bg-white/60 rounded-lg py-1.5 border border-[#9DB2D6]/15">
-                        <span class="block text-sm font-bold text-[#112D4E]">{{ lesson.start_time|time:"H:i" }}</span>
-                        <span class="block text-[10px] text-[#9DB2D6]">{{ lesson.end_time|time:"H:i" }}</span>
+                        class="text-center flex-shrink-0 w-14 bg-white/60 rounded-lg py-1.5 border border-[#9DB2BF]/15">
+                        <span class="block text-sm font-bold text-[#27374D]">{{ lesson.start_time|time:"H:i" }}</span>
+                        <span class="block text-[10px] text-[#9DB2BF]">{{ lesson.end_time|time:"H:i" }}</span>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-semibold text-[#112D4E] text-sm truncate">{{ lesson.group.name }}</h4>
-                        <p class="text-[10px] text-[#3F72AF]">
+                        <h4 class="font-semibold text-[#27374D] text-sm truncate">{{ lesson.group.name }}</h4>
+                        <p class="text-[10px] text-[#526D82]">
                             <i class="ph ph-door"></i> {{ lesson.room.name|default:"-" }}
                         </p>
                     </div>
                     <div class="flex items-center gap-2 flex-shrink-0">
                         <span
                             class="px-2 py-0.5 text-[10px] font-bold rounded-md
-                                {% if lesson.status == 'started' %}bg-[#112D4E]/10 text-[#112D4E]{% elif lesson.status == 'finished' %}bg-emerald-50/80 text-emerald-700{% else %}bg-[#9DB2D6]/15 text-[#3F72AF]{% endif %}">
+                                {% if lesson.status == 'started' %}bg-[#27374D]/10 text-[#27374D]{% elif lesson.status == 'finished' %}bg-emerald-50/80 text-emerald-700{% else %}bg-[#9DB2BF]/15 text-[#526D82]{% endif %}">
                             {{ lesson.get_status_display }}
                         </span>
                     </div>
                 </div>
                 {% empty %}
-                <div class="flex flex-col items-center justify-center text-[#9DB2D6] py-8">
+                <div class="flex flex-col items-center justify-center text-[#9DB2BF] py-8">
                     <i class="ph-fill ph-sun text-3xl text-amber-400 mb-2"></i>
-                    <p class="text-sm font-medium text-[#112D4E]">Bugun darslar yo'q!</p>
+                    <p class="text-sm font-medium text-[#27374D]">Bugun darslar yo'q!</p>
                 </div>
                 {% endfor %}
             </div>
@@ -96,24 +96,24 @@
         <div class="lg:col-span-5 space-y-4">
             <!-- Guruhlarim -->
             <div class="glass-section p-5">
-                <h3 class="text-sm font-bold text-[#112D4E] mb-3 flex items-center gap-2">
-                    <i class="ph-fill ph-users text-[#112D4E]"></i> Guruhlarim
+                <h3 class="text-sm font-bold text-[#27374D] mb-3 flex items-center gap-2">
+                    <i class="ph-fill ph-users text-[#27374D]"></i> Guruhlarim
                 </h3>
                 <div class="space-y-2 max-h-44 overflow-y-auto" style="scrollbar-width: none;">
                     {% for group in my_groups %}
                     <div class="flex items-center gap-3 p-2.5 liquid-glass rounded-xl group">
                         <div
-                            class="w-9 h-9 bg-gradient-to-br from-[#112D4E] to-[#3F72AF] rounded-lg text-white flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0">
+                            class="w-9 h-9 bg-gradient-to-br from-[#27374D] to-[#526D82] rounded-lg text-white flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0">
                             {{ group.name|first }}
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h4 class="font-semibold text-[#112D4E] text-sm truncate">{{ group.name }}</h4>
-                            <p class="text-[10px] text-[#3F72AF]">{{ group.course.name }}</p>
+                            <h4 class="font-semibold text-[#27374D] text-sm truncate">{{ group.name }}</h4>
+                            <p class="text-[10px] text-[#526D82]">{{ group.course.name }}</p>
                         </div>
-                        <span class="text-sm font-bold text-[#112D4E] flex-shrink-0">{{ group.student_count }}</span>
+                        <span class="text-sm font-bold text-[#27374D] flex-shrink-0">{{ group.student_count }}</span>
                     </div>
                     {% empty %}
-                    <p class="text-[#9DB2D6] text-sm text-center py-4">Guruhlar yo'q</p>
+                    <p class="text-[#9DB2BF] text-sm text-center py-4">Guruhlar yo'q</p>
                     {% endfor %}
                 </div>
             </div>
@@ -121,7 +121,7 @@
             <!-- Kutilayotgan Davomat -->
             {% if pending_attendance %}
             <div class="glass-section p-5">
-                <h3 class="text-sm font-bold text-[#112D4E] mb-3 flex items-center gap-2">
+                <h3 class="text-sm font-bold text-[#27374D] mb-3 flex items-center gap-2">
                     <i class="ph-fill ph-clock-counter-clockwise text-amber-500"></i> Kutilmoqda
                 </h3>
                 <div class="space-y-2">
@@ -131,8 +131,8 @@
                         <div class="flex items-center gap-2">
                             <i class="ph-fill ph-warning-circle text-amber-500"></i>
                             <div>
-                                <h4 class="font-semibold text-[#112D4E] text-sm">{{ lesson.group.name }}</h4>
-                                <p class="text-[10px] text-[#3F72AF]">{{ lesson.date|date:"d M" }}</p>
+                                <h4 class="font-semibold text-[#27374D] text-sm">{{ lesson.group.name }}</h4>
+                                <p class="text-[10px] text-[#526D82]">{{ lesson.date|date:"d M" }}</p>
                             </div>
                         </div>
                         <span
@@ -149,20 +149,20 @@
     <!-- Kelgusi Darslar -->
     {% if upcoming_lessons %}
     <div class="glass-section p-5 relative z-10">
-        <h3 class="text-sm font-bold text-[#112D4E] mb-3 flex items-center gap-2">
-            <i class="ph-fill ph-calendar-dots text-[#3F72AF]"></i> Kelgusi 5 Kun
+        <h3 class="text-sm font-bold text-[#27374D] mb-3 flex items-center gap-2">
+            <i class="ph-fill ph-calendar-dots text-[#526D82]"></i> Kelgusi 5 Kun
         </h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-48 overflow-y-auto"
             style="scrollbar-width: none;">
             {% for lesson in upcoming_lessons %}
             <div class="flex items-center gap-3 p-2.5 liquid-glass rounded-xl">
-                <div class="text-center flex-shrink-0 w-12 bg-white/60 rounded-lg py-1 border border-[#9DB2D6]/15">
-                    <span class="block text-[10px] font-bold text-[#112D4E]">{{ lesson.date|date:"d.m" }}</span>
-                    <span class="block text-[10px] text-[#9DB2D6]">{{ lesson.start_time|time:"H:i" }}</span>
+                <div class="text-center flex-shrink-0 w-12 bg-white/60 rounded-lg py-1 border border-[#9DB2BF]/15">
+                    <span class="block text-[10px] font-bold text-[#27374D]">{{ lesson.date|date:"d.m" }}</span>
+                    <span class="block text-[10px] text-[#9DB2BF]">{{ lesson.start_time|time:"H:i" }}</span>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <h4 class="font-semibold text-[#112D4E] text-xs truncate">{{ lesson.group.name }}</h4>
-                    <p class="text-[10px] text-[#3F72AF]"><i class="ph ph-door"></i> {{ lesson.room.name|default:"-" }}
+                    <h4 class="font-semibold text-[#27374D] text-xs truncate">{{ lesson.group.name }}</h4>
+                    <p class="text-[10px] text-[#526D82]"><i class="ph ph-door"></i> {{ lesson.room.name|default:"-" }}
                     </p>
                 </div>
             </div>

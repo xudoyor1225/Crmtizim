@@ -38,13 +38,13 @@
                 <div>
                     <label class="block text-sm font-medium text-slate-600 mb-2">Ism *</label>
                     <input type="text" name="first_name" value="{{ form.first_name.value|default:'' }}"
-                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]/30 focus:border-[#3F72AF]"
+                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#526D82]/30 focus:border-[#526D82]"
                         placeholder="Ismni kiriting" required>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-600 mb-2">Familiya *</label>
                     <input type="text" name="last_name" value="{{ form.last_name.value|default:'' }}"
-                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]/30 focus:border-[#3F72AF]"
+                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#526D82]/30 focus:border-[#526D82]"
                         placeholder="Familiyani kiriting" required>
                 </div>
             </div>
@@ -52,7 +52,7 @@
             <div>
                 <label class="block text-sm font-medium text-slate-600 mb-2">Telefon *</label>
                 <input type="text" name="phone" value="{{ form.phone.value|default:'' }}"
-                    class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]/30 focus:border-[#3F72AF]"
+                    class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#526D82]/30 focus:border-[#526D82]"
                     placeholder="+998901234567" required>
             </div>
 
@@ -60,7 +60,7 @@
                 <div>
                     <label class="block text-sm font-medium text-slate-600 mb-2">Roli *</label>
                     <select name="role" required
-                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]/30 focus:border-[#3F72AF]">
+                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#526D82]/30 focus:border-[#526D82]">
                         {% for value, label in form.fields.role.choices %}
                         <option value="{{ value }}" {% if form.role.value == value %}selected{% endif %}>{{ label }}</option>
                         {% endfor %}
@@ -69,7 +69,7 @@
                 <div>
                     <label class="block text-sm font-medium text-slate-600 mb-2">Filial</label>
                     <select name="branch"
-                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]/30 focus:border-[#3F72AF]">
+                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#526D82]/30 focus:border-[#526D82]">
                         <option value="">Tanlang...</option>
                         {% for value, label in form.fields.branch.choices %}
                         {% if value %}
@@ -83,13 +83,13 @@
             <div>
                 <label class="block text-sm font-medium text-slate-600 mb-2">Parol {% if not form.instance.pk %}*{% else %}(Agar o'zgartirsangiz){% endif %}</label>
                 <input type="password" name="password"
-                    class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3F72AF]/30 focus:border-[#3F72AF]"
+                    class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#526D82]/30 focus:border-[#526D82]"
                     placeholder="••••••••" {% if not form.instance.pk %}required{% endif %}>
             </div>
 
             <div class="flex items-center gap-3 pt-2">
                 <input type="checkbox" name="is_active" id="is_active"
-                    class="w-5 h-5 rounded border-slate-200 bg-slate-50 text-[#3F72AF] focus:ring-[#3F72AF]/30"
+                    class="w-5 h-5 rounded border-slate-200 bg-slate-50 text-[#526D82] focus:ring-[#526D82]/30"
                     {% if form.is_active.value %}checked{% endif %}>
                 <label for="is_active" class="text-sm text-slate-600">Aktiv foydalanuvchi</label>
             </div>
@@ -101,7 +101,7 @@
                     Bekor qilish
                 </a>
                 <button type="submit"
-                    class="px-6 py-3 bg-gradient-to-r from-[#7A9CC5] to-violet-600 text-slate-800 rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2 font-medium">
+                    class="px-6 py-3 bg-gradient-to-r from-[#9DB2BF] to-violet-600 text-slate-800 rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2 font-medium">
                     <i class="ph ph-check"></i> Saqlash
                 </button>
             </div>
