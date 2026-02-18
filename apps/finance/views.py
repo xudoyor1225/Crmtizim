@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import JsonResponse
 from django.utils import timezone
+from django.views.decorators.http import require_POST
 from django.db.models import Sum, Q
+from decimal import Decimal, InvalidOperation
 from datetime import timedelta
 from .models import Account, Transaction, TransactionCategory
 from apps.users.models import User
@@ -359,3 +362,52 @@ def verify_receipt(request, pk):
 @login_required
 def reject_receipt(request, pk):
     return reject_transaction(request, pk)
+
+
+@login_required
+@require_POST
+def quick_payment(request):
+    """Quick Payment modal dan kelgan AJAX so'rovni qayta ishlash."""
+    org = request.user.organization
+
+    student_id = request.POST.get('student_id')
+    amount = request.POST.get('amount')
+    payment_method = request.POST.get('payment_method', 'cash')
+    account_id = request.POST.get('account_id')
+
+    if not student_id or not amount or not account_id:
+        return JsonResponse({'success': False, 'error': "Barcha maydonlarni to'ldiring."}, status=400)
+
+    try:
+        amount_decimal = Decimal(amount)
+        if amount_decimal <= 0:
+            return JsonResponse({'success': False, 'error': "Summa musbat bo'lishi kerak."}, status=400)
+    except (InvalidOperation, ValueError):
+        return JsonResponse({'success': False, 'error': "Noto'g'ri summa formati."}, status=400)
+
+    student = get_object_or_404(User, pk=student_id, organization=org, role='student')
+    account = get_object_or_404(Account, pk=account_id, organization=org)
+
+    # Kurs to'lovi kategoriyasini topish yoki None
+    category = TransactionCategory.objects.filter(
+        organization=org, transaction_type='income'
+    ).first()
+
+    transaction = Transaction.objects.create(
+        organization=org,
+        account=account,
+        category=category,
+        student=student,
+        amount=amount_decimal,
+        transaction_type='income',
+        payment_method=payment_method,
+        description=f"Tezkor to'lov: {student.get_full_name()}",
+        status='pending',
+        created_by=request.user,
+    )
+
+    return JsonResponse({
+        'success': True,
+        'message': f"{student.get_full_name()} uchun {amount_decimal:,.0f} UZS to'lov qabul qilindi.",
+        'transaction_id': transaction.id,
+    })

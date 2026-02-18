@@ -3,6 +3,7 @@ Rol asosli Dashboard viewlari.
 Har bir rol uchun alohida ma'lumotlar va statistikalar.
 Cache bilan optimizatsiya qilingan.
 """
+import json
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count, Q
@@ -322,6 +323,16 @@ def admin_dashboard(request):
         lead_count=Count('leads', filter=Q(leads__is_deleted=False))
     ).order_by('order')
     
+    # Quick Payment uchun o'quvchilar ro'yxati
+    students_for_payment = json.dumps(list(
+        User.objects.filter(
+            organization=org, role='student', is_active=True, is_deleted=False
+        ).values('id', 'first_name', 'last_name', 'phone').order_by('first_name', 'last_name')
+    ))
+    
+    # Kassalar ro'yxati (Quick Payment uchun)
+    accounts = Account.objects.filter(organization=org, is_deleted=False)
+    
     context = {
         'total_students': total_students,
         'total_teachers': total_teachers,
@@ -333,6 +344,8 @@ def admin_dashboard(request):
         'today_lessons': today_lessons,
         'recent_leads': recent_leads,
         'stages': stages,
+        'students_for_payment': students_for_payment,
+        'accounts': accounts,
     }
     
     return render(request, 'dashboards/admin.html', context)
