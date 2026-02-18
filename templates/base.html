@@ -31,9 +31,9 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        primary: { 50: '#F9F7F7', 100: '#EEF2F9', 200: '#DBE2EF', 300: '#B5C7DE', 400: '#7A9CC5', 500: '#3F72AF', 600: '#355F93', 700: '#2B4D78', 800: '#1C3A5E', 900: '#112D4E' },
-                        teal: { 50: '#F4F7FB', 100: '#E5ECF5', 200: '#DBE2EF', 300: '#B5C7DE', 400: '#7A9CC5', 500: '#5584B5', 600: '#3F72AF', 700: '#2B4D78' },
-                        slate: { 50: '#F9F7F7', 100: '#F0EFF2', 200: '#DBE2EF', 300: '#C4CCDB', 400: '#8A95A8', 500: '#5B6A80', 600: '#3D4E64', 700: '#2A3B51', 800: '#1C2E44', 900: '#112D4E' }
+                        primary: { 50: '#F0F4F8', 100: '#E8EDF2', 200: '#DDE6ED', 300: '#B0C4D0', 400: '#9DB2BF', 500: '#526D82', 600: '#3D5466', 700: '#344D5E', 800: '#2D4054', 900: '#27374D' },
+                        teal: { 50: '#EDF2F7', 100: '#E5ECF5', 200: '#DDE6ED', 300: '#B0C4D0', 400: '#9DB2BF', 500: '#5584B5', 600: '#526D82', 700: '#344D5E' },
+                        slate: { 50: '#F0F4F8', 100: '#F0EFF2', 200: '#DDE6ED', 300: '#C4CCDB', 400: '#8A95A8', 500: '#5B6A80', 600: '#3D4E64', 700: '#2A3B51', 800: '#1C2E44', 900: '#27374D' }
                     }
                 }
             }
@@ -57,7 +57,7 @@
 
             <!-- Logo -->
             <div
-                class="h-16 flex items-center justify-center border-b border-slate-200 bg-gradient-to-r from-[#3F72AF] to-[#112D4E]">
+                class="h-16 flex items-center justify-center border-b border-slate-200 bg-gradient-to-r from-[#526D82] to-[#27374D]">
                 <span class="text-xl font-bold flex items-center gap-2 text-white">
                     <i class="ph-fill ph-graduation-cap text-2xl"></i>
                     Smart Edu
@@ -99,7 +99,7 @@
             <div class="p-4 border-t border-slate-200 bg-slate-50">
                 <div class="flex items-center gap-3">
                     <div
-                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#3F72AF] to-[#112D4E] text-white flex items-center justify-center font-bold shadow-md">
+                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#526D82] to-[#27374D] text-white flex items-center justify-center font-bold shadow-md">
                         {{ request.user.first_name|first }}
                     </div>
                     <div class="flex-1 min-w-0">
@@ -121,7 +121,7 @@
             <header
                 class="h-16 flex items-center justify-between px-6 z-40 bg-white border-b border-slate-200 shadow-sm">
                 <button @click="sidebarOpen = !sidebarOpen"
-                    class="focus:outline-none transition p-2 rounded-lg lg:hidden text-slate-500 hover:text-[#3F72AF] hover:bg-primary-50">
+                    class="focus:outline-none transition p-2 rounded-lg lg:hidden text-slate-500 hover:text-[#526D82] hover:bg-primary-50">
                     <i class="ph ph-list text-2xl"></i>
                 </button>
 
@@ -166,7 +166,7 @@
                                     <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
                                         {% if notification.message_type == 'sms' %}bg-green-100 text-green-600
                                         {% elif notification.message_type == 'telegram' %}bg-blue-100 text-blue-600
-                                        {% else %}bg-[#3F72AF]/10 text-[#3F72AF]{% endif %}">
+                                        {% else %}bg-[#526D82]/10 text-[#526D82]{% endif %}">
                                         {% if notification.message_type == 'sms' %}
                                         <i class="ph-fill ph-chat-circle-text"></i>
                                         {% elif notification.message_type == 'telegram' %}
@@ -196,7 +196,7 @@
                             </div>
                             {% if notifications %}
                             <a href="{% url 'core:notifications' %}"
-                                class="block p-3 text-center text-sm text-[#3F72AF] hover:bg-primary-50 transition border-t border-slate-100 rounded-b-xl font-medium">
+                                class="block p-3 text-center text-sm text-[#526D82] hover:bg-primary-50 transition border-t border-slate-100 rounded-b-xl font-medium">
                                 Barchasini ko'rish →
                             </a>
                             {% endif %}
@@ -205,7 +205,7 @@
 
                     <!-- Settings -->
                     <a href="{% url 'core:settings' %}"
-                        class="p-2.5 text-slate-500 hover:text-[#3F72AF] hover:bg-primary-50 rounded-xl transition">
+                        class="p-2.5 text-slate-500 hover:text-[#526D82] hover:bg-primary-50 rounded-xl transition">
                         <i class="ph ph-gear text-xl"></i>
                     </a>
 
