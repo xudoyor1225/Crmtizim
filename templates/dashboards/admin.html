@@ -376,7 +376,7 @@
         <!-- Success state -->
         <div id="qpSuccess" class="hidden p-8 text-center">
             <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="ph-fill ph-check-circle text-3xl text-emerald-500"></i>
+                <i class="ph-fill ph-check-circle text-3xl text-emerald-600"></i>
             </div>
             <h3 class="text-lg font-bold text-[#0F172A] mb-2">To'lov qabul qilindi!</h3>
             <p class="text-sm text-[#64748B] mb-6" id="qpSuccessMessage"></p>
@@ -413,6 +413,12 @@
         overlay.classList.remove('flex');
     }
 
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     function filterStudents(query) {
         const dropdown = document.getElementById('qpStudentDropdown');
         if (query.length < 1) {
@@ -426,20 +432,37 @@
             return fullName.includes(q) || phone.includes(q);
         }).slice(0, 8);
 
+        dropdown.innerHTML = '';
         if (filtered.length === 0) {
             dropdown.innerHTML = '<div class="p-3 text-center text-sm text-[#94A3B8]">Topilmadi</div>';
         } else {
-            dropdown.innerHTML = filtered.map(s => {
+            filtered.forEach(s => {
                 const name = (s.first_name || '') + ' ' + (s.last_name || '');
                 const initial = (s.first_name || '?')[0].toUpperCase();
-                return `<div class="flex items-center gap-3 p-3 hover:bg-slate-50 cursor-pointer transition" onclick="selectStudent(${s.id}, '${name.replace(/'/g, "\\'")}', '${s.phone || ''}', '${initial}')">
-                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-[#4F46E5] to-[#818CF8] text-white flex items-center justify-center font-bold text-xs flex-shrink-0">${initial}</div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-[#0F172A] truncate">${name}</p>
-                        <p class="text-xs text-[#94A3B8]">${s.phone || ''}</p>
-                    </div>
-                </div>`;
-            }).join('');
+                const phone = s.phone || '';
+                const item = document.createElement('div');
+                item.className = 'flex items-center gap-3 p-3 hover:bg-slate-50 cursor-pointer transition';
+                item.addEventListener('click', () => selectStudent(s.id, name, phone, initial));
+
+                const avatar = document.createElement('div');
+                avatar.className = 'w-8 h-8 rounded-lg bg-gradient-to-br from-[#4F46E5] to-[#818CF8] text-white flex items-center justify-center font-bold text-xs flex-shrink-0';
+                avatar.textContent = initial;
+
+                const info = document.createElement('div');
+                info.className = 'flex-1 min-w-0';
+                const nameEl = document.createElement('p');
+                nameEl.className = 'text-sm font-medium text-[#0F172A] truncate';
+                nameEl.textContent = name;
+                const phoneEl = document.createElement('p');
+                phoneEl.className = 'text-xs text-[#94A3B8]';
+                phoneEl.textContent = phone;
+                info.appendChild(nameEl);
+                info.appendChild(phoneEl);
+
+                item.appendChild(avatar);
+                item.appendChild(info);
+                dropdown.appendChild(item);
+            });
         }
         dropdown.classList.remove('hidden');
     }
