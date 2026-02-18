@@ -1450,96 +1450,129 @@ img.lazy.loaded {
 }
 
 /* ============================================
-   QUICK ACTIONS SECTION
+   QUICK ACTIONS SECTION (Premium)
    ============================================ */
 
-.quick-actions {
+.quick-actions-premium {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
 }
 
-@media (max-width: 1024px) {
-    .quick-actions {
+@media (max-width: 768px) {
+    .quick-actions-premium {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 480px) {
-    .quick-actions {
+    .quick-actions-premium {
         grid-template-columns: 1fr;
     }
 }
 
-.quick-action-btn {
+.qa-card {
+    position: relative;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.875rem;
-    padding: 1rem 1.25rem;
-    border-radius: 12px;
-    border: 1px solid var(--slate-200);
-    background: var(--bg-card);
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1.25rem 1rem;
+    border-radius: 16px;
+    color: #fff;
     text-decoration: none;
-    color: var(--text-main);
-    font-weight: 600;
-    font-size: 0.9rem;
-    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.quick-action-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lg);
+.qa-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
-.quick-action-btn .qa-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
+.qa-card:active .qa-card-ripple {
+    animation: qa-ripple-effect 0.5s ease-out;
+}
+
+.qa-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
+    background: rgba(255, 255, 255, 0.2);
     flex-shrink: 0;
 }
 
-.quick-action-btn.qa-primary .qa-icon {
-    background: rgba(79, 70, 229, 0.1);
-    color: var(--primary);
+.qa-card-label {
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-align: center;
+    line-height: 1.3;
 }
 
-.quick-action-btn.qa-primary:hover {
-    border-color: var(--primary-200);
-    box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.15);
+.qa-card-ripple {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
 }
 
-.quick-action-btn.qa-success .qa-icon {
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--emerald-600);
+@keyframes qa-ripple-effect {
+    0% {
+        background: rgba(255, 255, 255, 0.35);
+    }
+    100% {
+        background: rgba(255, 255, 255, 0);
+    }
 }
 
-.quick-action-btn.qa-success:hover {
-    border-color: var(--emerald-100);
-    box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.15);
+/* Payment — PRIORITY (slightly larger) */
+.qa-card.qa-payment {
+    background: linear-gradient(135deg, #34d399, #059669);
+    padding: 1.5rem 1rem;
 }
 
-.quick-action-btn.qa-info .qa-icon {
-    background: rgba(59, 130, 246, 0.1);
-    color: var(--blue-500);
+.qa-card.qa-payment .qa-card-icon {
+    width: 54px;
+    height: 54px;
 }
 
-.quick-action-btn.qa-info:hover {
-    border-color: var(--blue-100);
-    box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.15);
+.qa-card.qa-payment .qa-card-label {
+    font-size: 0.9rem;
 }
 
-.quick-action-btn.qa-accent .qa-icon {
-    background: rgba(168, 85, 247, 0.1);
-    color: var(--purple-600);
+.qa-card.qa-payment:hover {
+    box-shadow: 0 12px 28px rgba(5, 150, 105, 0.35);
 }
 
-.quick-action-btn.qa-accent:hover {
-    border-color: var(--purple-100);
-    box-shadow: 0 10px 20px -5px rgba(168, 85, 247, 0.15);
+/* Student — Indigo */
+.qa-card.qa-student {
+    background: linear-gradient(135deg, #818cf8, #4f46e5);
+}
+
+.qa-card.qa-student:hover {
+    box-shadow: 0 12px 28px rgba(79, 70, 229, 0.35);
+}
+
+/* Attendance — Amber/Orange */
+.qa-card.qa-attendance {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+}
+
+.qa-card.qa-attendance:hover {
+    box-shadow: 0 12px 28px rgba(245, 158, 11, 0.35);
+}
+
+/* Expense — Rose/Red */
+.qa-card.qa-expense {
+    background: linear-gradient(135deg, #fb7185, #e11d48);
+}
+
+.qa-card.qa-expense:hover {
+    box-shadow: 0 12px 28px rgba(225, 29, 72, 0.35);
 }
