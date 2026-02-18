@@ -260,7 +260,7 @@
                                 {% cycle 'bg-[#4F46E5]' 'bg-purple-500' 'bg-emerald-500' 'bg-orange-500' 'bg-pink-500' %}"></div>
                             <p class="font-bold text-slate-800 text-xs truncate group-hover:text-[#4F46E5] transition-colors">{{ item.name }}</p>
                             <div class="flex items-center gap-1 text-slate-500 mt-1.5">
-                                <i class="ph ph-clock text-[10px]"></i>
+                                <i class="ph ph-clock text-xs"></i>
                                 {% if item.start_time %}
                                 <span class="text-[11px] font-medium">{{ item.start_time|time:"H:i" }}</span>
                                 {% if item.end_time %}
@@ -273,13 +273,13 @@
                             </div>
                             {% if item.room %}
                             <div class="flex items-center gap-1 text-slate-400 mt-1">
-                                <i class="ph ph-door text-[10px]"></i>
+                                <i class="ph ph-door text-xs"></i>
                                 <span class="truncate text-[11px]">{{ item.room.name }}</span>
                             </div>
                             {% endif %}
                             {% if item.teacher %}
                             <div class="flex items-center gap-1 text-slate-400 mt-1">
-                                <i class="ph ph-user text-[10px]"></i>
+                                <i class="ph ph-user text-xs"></i>
                                 <span class="truncate text-[11px]">{{ item.teacher.first_name }}</span>
                             </div>
                             {% endif %}
@@ -287,7 +287,7 @@
                         {% empty %}
                         <div class="flex flex-col items-center justify-center text-slate-300 py-6">
                             <i class="ph ph-sun text-lg mb-1"></i>
-                            <p class="text-[10px] font-medium">Dam olish</p>
+                            <p class="text-xs font-medium">Dam olish</p>
                         </div>
                         {% endfor %}
                     </div>

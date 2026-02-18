@@ -60,7 +60,7 @@
                             <div class="flex-1 min-w-0">
                                 <h4 class="font-semibold text-slate-800 text-sm truncate">{{ lead.full_name }}</h4>
                                 <p class="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-                                    <i class="ph ph-phone text-[10px]"></i>
+                                    <i class="ph ph-phone text-xs"></i>
                                     {{ lead.phone }}
                                 </p>
                             </div>
@@ -75,7 +75,7 @@
                     {% if lead.interested_course %}
                     <div class="px-3 pb-2">
                         <span class="inline-flex items-center gap-1 text-xs font-medium text-[#64748B] bg-[#4F46E5]/5 px-2 py-1 rounded-md">
-                            <i class="ph ph-book-open text-[10px]"></i>
+                            <i class="ph ph-book-open text-xs"></i>
                             {{ lead.interested_course.name|truncatewords:3 }}
                         </span>
                     </div>
@@ -83,11 +83,11 @@
 
                     <!-- Card Footer -->
                     <div class="px-3 py-2 border-t border-slate-50 flex items-center justify-between">
-                        <span class="text-[10px] text-slate-400 flex items-center gap-1">
+                        <span class="text-xs text-slate-400 flex items-center gap-1">
                             <i class="ph ph-flow-arrow text-xs"></i>
                             {{ lead.source.name|default:"Noma'lum"|truncatewords:1 }}
                         </span>
-                        <span class="text-[10px] text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded">
+                        <span class="text-xs text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded">
                             {{ lead.created_at|date:"d.m" }}
                         </span>
                     </div>

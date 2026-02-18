@@ -7,8 +7,8 @@
 
     <!-- Sarlavha -->
     <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold text-[#0F172A]">Xush kelibsiz, {{ request.user.first_name }}! 👋</h1>
-        <div class="text-sm text-[#94A3B8]">Bugun: {% now "d F Y" %}</div>
+        <h1 class="text-3xl font-bold text-[#0F172A]">Xush kelibsiz, {{ request.user.first_name }}! 👋</h1>
+        <div class="text-base text-[#94A3B8]">Bugun: {% now "d F Y" %}</div>
     </div>
 
     <!-- STATISTIKA VIDJETLARI (Cards) -->
@@ -18,8 +18,8 @@
         <div
             class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-lg hover:shadow-[#4F46E5]/8 hover:-translate-y-1 transition-all duration-300">
             <div>
-                <p class="text-sm font-medium text-[#94A3B8]">Jami O'quvchilar</p>
-                <p class="text-2xl font-bold mt-1 text-[#0F172A]">{{ total_students|default:"0" }}</p>
+                <p class="text-sm font-semibold text-[#94A3B8]">Jami O'quvchilar</p>
+                <p class="text-3xl font-bold mt-1 text-[#0F172A]">{{ total_students|default:"0" }}</p>
                 <span class="text-xs px-2 py-1 rounded-full font-medium text-emerald-600 bg-emerald-50">+12%
                     o'sish</span>
             </div>
@@ -32,8 +32,8 @@
         <div
             class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-lg hover:shadow-amber-500/8 hover:-translate-y-1 transition-all duration-300">
             <div>
-                <p class="text-sm font-medium text-[#94A3B8]">Yangi Lidlar</p>
-                <p class="text-2xl font-bold mt-1 text-[#0F172A]">{{ total_leads|default:"0" }}</p>
+                <p class="text-sm font-semibold text-[#94A3B8]">Yangi Lidlar</p>
+                <p class="text-3xl font-bold mt-1 text-[#0F172A]">{{ total_leads|default:"0" }}</p>
                 <span class="text-xs px-2 py-1 rounded-full font-medium text-amber-600 bg-amber-50">Bu oy</span>
             </div>
             <div class="p-3 rounded-xl bg-amber-100/60 text-amber-600">
@@ -45,8 +45,8 @@
         <div
             class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-lg hover:shadow-emerald-500/8 hover:-translate-y-1 transition-all duration-300">
             <div>
-                <p class="text-sm font-medium text-[#94A3B8]">Oylik Tushum</p>
-                <p class="text-2xl font-bold mt-1 text-[#0F172A]">{{ monthly_income|default:"0" }}</p>
+                <p class="text-sm font-semibold text-[#94A3B8]">Oylik Tushum</p>
+                <p class="text-3xl font-bold mt-1 text-[#0F172A]">{{ monthly_income|default:"0" }}</p>
                 <span class="text-xs text-[#94A3B8]">UZS</span>
             </div>
             <div class="p-3 rounded-xl bg-emerald-100/60 text-emerald-600">
@@ -58,8 +58,8 @@
         <div
             class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-lg hover:shadow-rose-500/8 hover:-translate-y-1 transition-all duration-300">
             <div>
-                <p class="text-sm font-medium text-[#94A3B8]">Qarzdorlik</p>
-                <p class="text-2xl font-bold mt-1 text-rose-600">{{ total_debt|default:"0" }}</p>
+                <p class="text-sm font-semibold text-[#94A3B8]">Qarzdorlik</p>
+                <p class="text-3xl font-bold mt-1 text-rose-600">{{ total_debt|default:"0" }}</p>
                 <span class="text-xs px-2 py-1 rounded-full font-medium text-rose-600 bg-rose-50">Talab qilinadi</span>
             </div>
             <div class="p-3 rounded-xl bg-rose-100/60 text-rose-600">
@@ -75,7 +75,7 @@
         <!-- Chap tomon: Dars Jadvali -->
         <div class="lg:col-span-2 rounded-2xl p-6 bg-white border border-slate-200 shadow-sm">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-[#0F172A] flex items-center gap-2">
+                <h3 class="text-base font-bold text-[#0F172A] flex items-center gap-2">
                     <i class="ph ph-calendar-check text-[#64748B]"></i> Bugungi Darslar
                 </h3>
                 <a href="{% url 'operations:schedule' %}" class="text-sm hover:underline text-[#64748B]">To'liq
@@ -124,7 +124,7 @@
 
         <!-- O'ng tomon: Yangi Lidlar -->
         <div class="rounded-2xl p-6 bg-white border border-slate-200 shadow-sm">
-            <h3 class="font-bold mb-4 text-[#0F172A] flex items-center gap-2">
+            <h3 class="text-base font-bold mb-4 text-[#0F172A] flex items-center gap-2">
                 <i class="ph ph-sparkle text-amber-500"></i> So'nggi Lidlar
             </h3>
             <div class="space-y-3">
