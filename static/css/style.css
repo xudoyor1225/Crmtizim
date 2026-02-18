@@ -83,6 +83,12 @@
     --rose-600: #DC2626;
     --rose-700: #B91C1C;
 
+    /* Blue Colors */
+    --blue-50: #eff6ff;
+    --blue-100: #bfdbfe;
+    --blue-500: #3b82f6;
+    --blue-600: #2563eb;
+
     /* Purple Colors */
     --purple-50: #faf5ff;
     --purple-100: #f3e8ff;
@@ -1520,11 +1526,11 @@ img.lazy.loaded {
 
 .quick-action-btn.qa-info .qa-icon {
     background: rgba(59, 130, 246, 0.1);
-    color: #3b82f6;
+    color: var(--blue-500);
 }
 
 .quick-action-btn.qa-info:hover {
-    border-color: #bfdbfe;
+    border-color: var(--blue-100);
     box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.15);
 }
 
