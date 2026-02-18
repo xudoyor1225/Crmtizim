@@ -1,54 +1,128 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
-{% block title %}Xodim Kabineti{% endblock %}
+{% block title %}Xodim Paneli{% endblock %}
 
 {% block content %}
-<div class="space-y-8 animate-fadeIn">
+<div class="space-y-5 animate-fadeIn relative">
 
-    <!-- Header -->
-    <div class="flex items-center justify-between">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
-                Xush kelibsiz, {{ request.user.first_name }}! 👋
-                <span class="icon-box-lg icon-blue">
-                    <i class="ph-fill ph-briefcase"></i>
-                </span>
-            </h1>
-            <p class="text-slate-500 mt-1">Xodim kabineti</p>
-        </div>
-        <div class="px-4 py-2 bg-white rounded-xl text-sm font-medium text-slate-600 border border-slate-200 shadow-sm">
-            {% now "d F Y" %}
-        </div>
-    </div>
+    <!-- Floating Orbs -->
+    <div class="dash-orb dash-orb-1"></div>
+    <div class="dash-orb dash-orb-2"></div>
 
-    <!-- PROFIL KARTASI -->
-    <div class="card p-8">
-        <div class="flex items-center gap-6">
+    <!-- Profile Card -->
+    <div class="glass-section p-6 relative z-10">
+        <div class="flex items-center gap-5">
             <div
-                class="w-20 h-20 bg-gradient-to-br from-[#3F72AF] to-[#112D4E] rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-[#3F72AF]/20">
-                {{ request.user.first_name|first }}
+                class="w-16 h-16 bg-gradient-to-br from-[#112D4E] to-[#3F72AF] rounded-2xl text-white flex items-center justify-center font-bold text-2xl shadow-xl">
+                {{ request.user.first_name|first }}{{ request.user.last_name|first }}
             </div>
-            <div>
-                <h2 class="text-xl font-bold text-slate-800">{{ request.user.first_name }} {{ request.user.last_name }}
-                </h2>
-                <p class="text-slate-500">{{ request.user.get_role_display }}</p>
-                <p class="text-sm text-slate-400 flex items-center gap-1 mt-1">
-                    <i class="ph-fill ph-phone"></i> {{ request.user.phone }}
-                </p>
+            <div class="flex-1">
+                <h1 class="text-xl font-bold text-[#112D4E]">{{ request.user.first_name }} {{ request.user.last_name }}
+                </h1>
+                <div class="flex items-center gap-3 mt-1.5">
+                    <span class="px-2.5 py-0.5 bg-[#112D4E]/10 text-[#112D4E] rounded-lg text-xs font-semibold">{{
+                        request.user.get_role_display }}</span>
+                    {% if request.user.organization %}
+                    <span class="text-xs text-[#3F72AF] flex items-center gap-1">
+                        <i class="ph ph-buildings"></i> {{ request.user.organization.name }}
+                    </span>
+                    {% endif %}
+                </div>
             </div>
+            <span class="px-3 py-1.5 liquid-glass rounded-lg text-xs font-medium text-[#3F72AF]">{% now "d F Y, l"
+                %}</span>
         </div>
     </div>
 
-    <!-- MA'LUMOT -->
-    <div class="card bg-[#3F72AF]/5 border-[#7A9CC5]/25 p-8 text-center">
-        <div class="w-16 h-16 bg-[#3F72AF]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <i class="ph-fill ph-info text-3xl text-[#3F72AF]"></i>
+    <!-- Tezkor Statistika -->
+    <div class="grid grid-cols-3 gap-3 relative z-10">
+        <div class="liquid-glass p-4 text-center stagger-1">
+            <div
+                class="w-10 h-10 mx-auto bg-[#112D4E]/10 text-[#112D4E] rounded-xl flex items-center justify-center glass-icon mb-2">
+                <i class="ph-fill ph-calendar-check text-lg"></i>
+            </div>
+            <p class="text-[10px] font-semibold text-[#9DB2D6] uppercase">Bugungi Darslar</p>
+            <p class="text-2xl font-bold text-[#112D4E] mt-1">{{ today_lessons_count|default:"0" }}</p>
         </div>
-        <h3 class="text-lg font-bold text-slate-800 mb-2">Maxsus funksiyalar mavjud emas</h3>
-        <p class="text-sm text-slate-600 max-w-md mx-auto">
-            Sizning rolingiz uchun maxsus funksiyalar mavjud emas. Qo'shimcha huquqlar uchun administratorga murojaat
-            qiling.
-        </p>
+        <div class="liquid-glass p-4 text-center stagger-2">
+            <div
+                class="w-10 h-10 mx-auto bg-purple-100/60 text-purple-600 rounded-xl flex items-center justify-center glass-icon mb-2">
+                <i class="ph-fill ph-student text-lg"></i>
+            </div>
+            <p class="text-[10px] font-semibold text-[#9DB2D6] uppercase">O'quvchilar</p>
+            <p class="text-2xl font-bold text-[#112D4E] mt-1">{{ total_students_count|default:"0" }}</p>
+        </div>
+        <div class="liquid-glass p-4 text-center stagger-3">
+            <div
+                class="w-10 h-10 mx-auto bg-emerald-100/60 text-emerald-600 rounded-xl flex items-center justify-center glass-icon mb-2">
+                <i class="ph-fill ph-users-three text-lg"></i>
+            </div>
+            <p class="text-[10px] font-semibold text-[#9DB2D6] uppercase">Faol Guruhlar</p>
+            <p class="text-2xl font-bold text-[#112D4E] mt-1">{{ active_groups_count|default:"0" }}</p>
+        </div>
+    </div>
+
+    <!-- Ma'lumotlar -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+        <!-- Shaxsiy ma'lumotlar -->
+        <div class="glass-section p-5">
+            <h3 class="text-sm font-bold text-[#112D4E] mb-4 flex items-center gap-2">
+                <i class="ph-fill ph-user-circle text-[#112D4E]"></i> Shaxsiy ma'lumotlar
+            </h3>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between py-2 border-b border-[#9DB2D6]/10">
+                    <span class="text-xs text-[#3F72AF]"><i class="ph ph-phone"></i> Telefon</span>
+                    <span class="text-sm font-medium text-[#112D4E]">{{ request.user.phone|default:"—" }}</span>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-[#9DB2D6]/10">
+                    <span class="text-xs text-[#3F72AF]"><i class="ph ph-envelope-simple"></i> Email</span>
+                    <span class="text-sm font-medium text-[#112D4E]">{{ request.user.email|default:"—" }}</span>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-[#9DB2D6]/10">
+                    <span class="text-xs text-[#3F72AF]"><i class="ph ph-cake"></i> Tug'ilgan kun</span>
+                    <span class="text-sm font-medium text-[#112D4E]">{{ request.user.birth_date|date:"d F Y"|default:"—"
+                        }}</span>
+                </div>
+                <div class="flex items-center justify-between py-2">
+                    <span class="text-xs text-[#3F72AF]"><i class="ph ph-calendar"></i> Ro'yxatdan o'tgan</span>
+                    <span class="text-sm font-medium text-[#112D4E]">{{ request.user.date_joined|date:"d F Y" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tez havolalar -->
+        <div class="glass-section p-5">
+            <h3 class="text-sm font-bold text-[#112D4E] mb-4 flex items-center gap-2">
+                <i class="ph-fill ph-squares-four text-[#3F72AF]"></i> Tez Havolalar
+            </h3>
+            <div class="grid grid-cols-2 gap-3">
+                <a href="{% url 'operations:schedule' %}"
+                    class="p-4 liquid-glass rounded-xl text-center hover:-translate-y-0.5 transition-all group">
+                    <i
+                        class="ph-fill ph-calendar-dots text-2xl text-[#112D4E] mb-2 block group-hover:scale-110 transition"></i>
+                    <span class="text-xs font-medium text-[#112D4E]">Jadval</span>
+                </a>
+                <a href="{% url 'operations:lessons' %}"
+                    class="p-4 liquid-glass rounded-xl text-center hover:-translate-y-0.5 transition-all group">
+                    <i
+                        class="ph-fill ph-chalkboard text-2xl text-purple-600 mb-2 block group-hover:scale-110 transition"></i>
+                    <span class="text-xs font-medium text-[#112D4E]">Darslar</span>
+                </a>
+                <a href="{% url 'users:user_list' %}"
+                    class="p-4 liquid-glass rounded-xl text-center hover:-translate-y-0.5 transition-all group">
+                    <i
+                        class="ph-fill ph-users text-2xl text-emerald-600 mb-2 block group-hover:scale-110 transition"></i>
+                    <span class="text-xs font-medium text-[#112D4E]">Foydalanuvchilar</span>
+                </a>
+                <a href="{% url 'group_list' %}"
+                    class="p-4 liquid-glass rounded-xl text-center hover:-translate-y-0.5 transition-all group">
+                    <i
+                        class="ph-fill ph-users-three text-2xl text-amber-600 mb-2 block group-hover:scale-110 transition"></i>
+                    <span class="text-xs font-medium text-[#112D4E]">Guruhlar</span>
+                </a>
+            </div>
+        </div>
     </div>
 
 </div>

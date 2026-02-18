@@ -1,379 +1,267 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
 {% block title %}Boshqaruv Paneli{% endblock %}
 
 {% block content %}
-<div class="space-y-8">
+<div class="space-y-5 animate-fadeIn relative">
 
-    <!-- Sarlavha -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div class="dash-orb dash-orb-1"></div>
+    <div class="dash-orb dash-orb-2"></div>
+
+    <!-- Header -->
+    <div class="flex items-center justify-between relative z-10">
         <div>
-            <h1 class="text-3xl font-bold text-[#112D4E]">
+            <h1 class="text-xl font-bold text-[#112D4E] flex items-center gap-2">
                 Xush kelibsiz, {{ request.user.first_name }}! 👋
             </h1>
-            <p class="text-[#7A9CC5] mt-1">{{ organization.name|default:"Tashkilot" }} - Boshqaruv Paneli</p>
+            <p class="text-sm text-[#3F72AF] font-semibold">{{ request.user.organization.name }}</p>
         </div>
-        <div class="flex flex-wrap gap-2">
+        <div class="flex gap-2">
             <a href="{% url 'users:student_create' %}"
-                class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#3F72AF] to-[#112D4E] text-white rounded-xl font-medium shadow-lg shadow-[#3F72AF]/25 hover:shadow-[#3F72AF]/40 transition-all hover:-translate-y-0.5">
-                <i class="ph ph-student"></i> O'quvchi
-            </a>
-            <a href="{% url 'users:teacher_create' %}"
-                class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-xl font-medium shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all hover:-translate-y-0.5">
-                <i class="ph ph-chalkboard-teacher"></i> O'qituvchi
-            </a>
-            <a href="{% url 'users:staff_create' %}"
-                class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl font-medium shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 transition-all hover:-translate-y-0.5">
-                <i class="ph ph-user-gear"></i> Xodim
+                class="inline-flex items-center gap-1.5 px-3 py-2 glass-button text-white rounded-lg text-sm font-medium transition-all hover:-translate-y-0.5">
+                <i class="ph ph-plus"></i> O'quvchi
             </a>
             <a href="{% url 'crm:lead_create' %}"
-                class="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition border border-slate-200">
-                <i class="ph ph-funnel"></i> Lid
+                class="inline-flex items-center gap-1.5 px-3 py-2 liquid-glass text-[#3F72AF] rounded-lg text-sm font-medium hover:bg-white/80 transition">
+                <i class="ph ph-plus"></i> Lid
             </a>
         </div>
     </div>
 
-    <!-- STATISTIKA KARTALAR -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-        <!-- O'quvchilar -->
-        <div
-            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group hover:-translate-y-1 hover:shadow-lg hover:shadow-[#3F72AF]/8 transition-all duration-300">
-            <div
-                class="absolute right-0 top-0 w-32 h-32 bg-[#3F72AF]/5 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-[#3F72AF]/10">
-            </div>
-            <div class="flex items-center justify-between relative">
-                <div>
-                    <p class="text-sm font-medium text-[#7A9CC5]">Jami O'quvchilar</p>
-                    <p class="text-3xl font-bold text-[#112D4E] mt-2">{{ total_students }}</p>
-                    <div class="flex items-center gap-1 mt-2">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-xs text-emerald-600 font-medium">Aktiv</span>
-                    </div>
-                </div>
+    <!-- 6-ta Stat Kartalar -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 relative z-10">
+        <div class="liquid-glass p-4 stagger-1">
+            <div class="flex items-center gap-3">
                 <div
-                    class="w-12 h-12 bg-[#3F72AF]/10 text-[#3F72AF] rounded-2xl flex items-center justify-center text-2xl">
-                    <i class="ph ph-student"></i>
+                    class="w-9 h-9 bg-[#DBE2EF] text-[#3F72AF] rounded-xl flex items-center justify-center text-lg flex-shrink-0">
+                    <i class="ph-fill ph-student"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-[#9DB2D6] uppercase tracking-wider">O'quvchilar</p>
+                    <p class="text-xl font-extrabold text-[#3F72AF] leading-tight">{{ total_students|default:"0" }}</p>
                 </div>
             </div>
         </div>
 
-        <!-- Lidlar -->
-        <div
-            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group hover:-translate-y-1 hover:shadow-lg hover:shadow-amber-500/8 transition-all duration-300">
-            <div
-                class="absolute right-0 top-0 w-32 h-32 bg-amber-500/5 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-amber-500/10">
-            </div>
-            <div class="flex items-center justify-between relative">
-                <div>
-                    <p class="text-sm font-medium text-[#7A9CC5]">Yangi Lidlar</p>
-                    <p class="text-3xl font-bold text-[#112D4E] mt-2">{{ total_leads }}</p>
-                    <span
-                        class="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-full font-medium inline-block mt-2">
-                        +{{ new_leads }} bugun
-                    </span>
-                </div>
+        <div class="liquid-glass p-4 stagger-2">
+            <div class="flex items-center gap-3">
                 <div
-                    class="w-12 h-12 bg-amber-100/60 text-amber-600 rounded-2xl flex items-center justify-center text-2xl">
-                    <i class="ph ph-funnel"></i>
+                    class="w-9 h-9 bg-[#DBE2EF] text-[#3F72AF] rounded-xl flex items-center justify-center text-lg flex-shrink-0">
+                    <i class="ph-fill ph-users-three"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-[#9DB2D6] uppercase tracking-wider">Guruhlar</p>
+                    <p class="text-xl font-extrabold text-[#3F72AF] leading-tight">{{ active_groups|default:"0" }}</p>
                 </div>
             </div>
         </div>
 
-        <!-- Tushum -->
-        <div
-            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/8 transition-all duration-300">
-            <div
-                class="absolute right-0 top-0 w-32 h-32 bg-emerald-500/5 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-emerald-500/10">
-            </div>
-            <div class="flex items-center justify-between relative">
-                <div>
-                    <p class="text-sm font-medium text-[#7A9CC5]">Oylik Tushum</p>
-                    <p class="text-3xl font-bold text-[#112D4E] mt-2">{{ monthly_income|floatformat:0 }}</p>
-                    <span class="text-xs text-slate-400 mt-1 block">UZS</span>
-                </div>
+        <div class="liquid-glass p-4 stagger-3">
+            <div class="flex items-center gap-3">
                 <div
-                    class="w-12 h-12 bg-emerald-100/60 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl">
-                    <i class="ph ph-wallet"></i>
+                    class="w-9 h-9 bg-[#DBE2EF] text-[#3F72AF] rounded-xl flex items-center justify-center text-lg flex-shrink-0">
+                    <i class="ph-fill ph-chalkboard-teacher"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-[#9DB2D6] uppercase tracking-wider">O'qituvchilar</p>
+                    <p class="text-xl font-extrabold text-[#3F72AF] leading-tight">{{ total_teachers|default:"0" }}</p>
                 </div>
             </div>
         </div>
 
-        <!-- Qarzdorlik -->
-        <div
-            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden group hover:-translate-y-1 hover:shadow-lg hover:shadow-rose-500/8 transition-all duration-300">
-            <div
-                class="absolute right-0 top-0 w-32 h-32 bg-rose-500/5 rounded-full blur-3xl -mr-16 -mt-16 transition-all group-hover:bg-rose-500/10">
-            </div>
-            <div class="flex items-center justify-between relative">
-                <div>
-                    <p class="text-sm font-medium text-[#7A9CC5]">Qarzdorlik</p>
-                    <p class="text-3xl font-bold text-rose-600 mt-2">{{ total_debt|floatformat:0 }}</p>
-                    <span class="text-xs text-rose-600 bg-rose-50 px-2 py-1 rounded-full font-medium inline-block mt-2">
-                        Talab qilinadi
-                    </span>
-                </div>
+        <div class="liquid-glass p-4 stagger-4">
+            <div class="flex items-center gap-3">
                 <div
-                    class="w-12 h-12 bg-rose-100/60 text-rose-600 rounded-2xl flex items-center justify-center text-2xl">
-                    <i class="ph ph-warning-circle"></i>
+                    class="w-9 h-9 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center text-lg flex-shrink-0">
+                    <i class="ph-fill ph-funnel"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-[#9DB2D6] uppercase tracking-wider">Lidlar</p>
+                    <p class="text-xl font-extrabold text-amber-600 leading-tight">{{ total_leads|default:"0" }}{% if
+                        new_leads %} <span class="text-xs text-emerald-500 font-bold">+{{ new_leads }}</span>{% endif %}
+                    </p>
                 </div>
             </div>
         </div>
 
-    </div>
-
-    <!-- IKKINCHI QATOR: Guruhlar va O'qituvchilar -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div
-            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-lg hover:shadow-[#7A9CC5]/8 transition-all duration-300">
-            <div class="flex items-center gap-4">
+        <div class="liquid-glass p-4 stagger-5">
+            <div class="flex items-center gap-3">
                 <div
-                    class="w-14 h-14 bg-[#7A9CC5]/10 text-[#3F72AF] rounded-2xl flex items-center justify-center text-3xl">
-                    <i class="ph ph-users-three"></i>
+                    class="w-9 h-9 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-lg flex-shrink-0">
+                    <i class="ph-fill ph-wallet"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-[#7A9CC5]">Aktiv Guruhlar</p>
-                    <p class="text-2xl font-bold text-[#112D4E]">{{ active_groups }}</p>
+                    <p class="text-[10px] font-bold text-[#9DB2D6] uppercase tracking-wider">Tushum</p>
+                    <p class="text-xl font-extrabold text-emerald-600 leading-tight">{{
+                        monthly_income|default:0|floatformat:0|intcomma }}</p>
                 </div>
             </div>
-            <i class="ph ph-caret-right text-slate-300"></i>
         </div>
-        <div
-            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-lg hover:shadow-purple-500/8 transition-all duration-300">
-            <div class="flex items-center gap-4">
+
+        <div class="liquid-glass p-4 stagger-6">
+            <div class="flex items-center gap-3">
                 <div
-                    class="w-14 h-14 bg-purple-100/60 text-purple-600 rounded-2xl flex items-center justify-center text-3xl">
-                    <i class="ph ph-chalkboard-teacher"></i>
+                    class="w-9 h-9 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center text-lg flex-shrink-0">
+                    <i class="ph-fill ph-warning-circle"></i>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-[#7A9CC5]">O'qituvchilar</p>
-                    <p class="text-2xl font-bold text-[#112D4E]">{{ total_teachers }}</p>
+                    <p class="text-[10px] font-bold text-[#9DB2D6] uppercase tracking-wider">Qarz</p>
+                    <p class="text-xl font-extrabold text-rose-600 leading-tight">{{
+                        total_debt|default:0|floatformat:0|intcomma }}</p>
                 </div>
             </div>
-            <i class="ph ph-caret-right text-slate-300"></i>
         </div>
     </div>
 
-    <!-- VORONKA BOSQICHLARI -->
-    {% if stages %}
-    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-        <h3 class="text-xl font-bold text-[#112D4E] mb-6 flex items-center gap-2">
-            <i class="ph ph-funnel-simple text-[#3F72AF]"></i> Sotuv Voronkasi
-        </h3>
-        <div class="flex gap-4 overflow-x-auto pb-4">
-            {% for stage in stages %}
-            <div class="flex-shrink-0 min-w-[200px] p-5 rounded-2xl border transition-all hover:shadow-md hover:-translate-y-1"
-                style="border-color: {{ stage.color }}; background: linear-gradient(145deg, #ffffff, {{ stage.color }}15);">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="w-3 h-3 rounded-full shadow-sm"
-                        style="background-color: {{ stage.color }}; box-shadow: 0 0 10px {{ stage.color }};"></span>
-                    <span class="font-bold text-slate-700">{{ stage.name }}</span>
+    <!-- Voronka + Chart -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 relative z-10">
+        {% if stages %}
+        <div class="glass-section p-5">
+            <h3 class="text-sm font-bold text-[#112D4E] mb-4 flex items-center gap-2">
+                <i class="ph-fill ph-funnel-simple text-[#3F72AF]"></i> Sotuv Voronkasi
+            </h3>
+            <div class="flex gap-2 flex-wrap">
+                {% for stage in stages %}
+                <div
+                    class="px-4 py-3 rounded-xl liquid-glass text-center min-w-[90px] hover:-translate-y-0.5 transition-all">
+                    <span class="w-2.5 h-2.5 rounded-full inline-block mb-1.5"
+                        style="background-color: {{ stage.color }}"></span>
+                    <p class="text-xl font-extrabold text-[#112D4E] leading-tight">{{ stage.lead_count }}</p>
+                    <p class="text-[10px] text-[#9DB2D6] font-semibold truncate">{{ stage.name }}</p>
                 </div>
-                <div class="flex items-end justify-between">
-                    <div>
-                        <p class="text-3xl font-bold text-[#112D4E]">{{ stage.lead_count }}</p>
-                        <p class="text-xs text-[#7A9CC5] font-medium">lid mavjud</p>
-                    </div>
-                    <div style="color: {{ stage.color }}" class="opacity-50 text-3xl">
-                        <i class="ph ph-user"></i>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
         {% endif %}
 
-        <!-- MOLIYAVIY GRAFIK -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-bold text-[#112D4E] flex items-center gap-2">
-                    <i class="ph ph-chart-line text-[#3F72AF]"></i> Moliyaviy O'sish
+        <!-- Moliyaviy Grafik -->
+        <div class="glass-section p-5">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="text-sm font-bold text-[#112D4E] flex items-center gap-2">
+                    <i class="ph-fill ph-chart-line text-emerald-600"></i> Moliyaviy O'sish
                 </h3>
-                <div class="flex items-center gap-2">
+                <div class="flex gap-1">
                     <button onclick="loadChartData(7)"
-                        class="px-3 py-1 text-xs rounded-lg bg-slate-100 hover:bg-[#7A9CC5]/10 text-slate-600 hover:text-[#3F72AF] transition">7
-                        kun</button>
+                        class="px-2 py-0.5 text-[10px] rounded-md text-[#9DB2D6] hover:bg-[#DBE2EF] hover:text-[#3F72AF] transition">7K</button>
                     <button onclick="loadChartData(30)"
-                        class="px-3 py-1 text-xs rounded-lg bg-[#3F72AF]/10 text-[#3F72AF] font-medium">30 kun</button>
+                        class="px-2 py-0.5 text-[10px] rounded-md bg-[#DBE2EF] text-[#3F72AF] font-bold">30K</button>
                     <button onclick="loadChartData(90)"
-                        class="px-3 py-1 text-xs rounded-lg bg-slate-100 hover:bg-[#7A9CC5]/10 text-slate-600 hover:text-[#3F72AF] transition">90
-                        kun</button>
+                        class="px-2 py-0.5 text-[10px] rounded-md text-[#9DB2D6] hover:bg-[#DBE2EF] hover:text-[#3F72AF] transition">90K</button>
                 </div>
             </div>
-            <div class="h-64">
+            <div class="h-44">
                 <canvas id="financeChart"></canvas>
             </div>
         </div>
+    </div>
 
-        <script>
-            let financeChart = null;
-
-            async function loadChartData(days = 30) {
-                const response = await fetch(`/api/chart-data/?days=${days}`);
-                const data = await response.json();
-
-                if (financeChart) {
-                    financeChart.destroy();
-                }
-
-                const ctx = document.getElementById('financeChart').getContext('2d');
-
-                financeChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: data.labels,
-                        datasets: [
-                            {
-                                label: 'Kirim',
-                                data: data.income,
-                                borderColor: '#10b981',
-                                backgroundColor: 'rgba(16, 185, 129, 0.08)',
-                                fill: true,
-                                tension: 0.4,
-                                pointRadius: 0,
-                            },
-                            {
-                                label: 'Chiqim',
-                                data: data.expense,
-                                borderColor: '#f43f5e',
-                                backgroundColor: 'rgba(244, 63, 94, 0.08)',
-                                fill: true,
-                                tension: 0.4,
-                                pointRadius: 0,
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        interaction: {
-                            intersect: false,
-                            mode: 'index'
-                        },
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                                labels: {
-                                    usePointStyle: true,
-                                    color: '#47505d'
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                grid: { display: false },
-                                ticks: { color: '#8e96a0' }
-                            },
-                            y: {
-                                grid: { color: 'rgba(6,30,41,0.04)' },
-                                ticks: {
-                                    color: '#8e96a0',
-                                    callback: function (value) {
-                                        return value.toLocaleString('uz-UZ');
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            // Sahifa yuklanganda
-            document.addEventListener('DOMContentLoaded', () => loadChartData(30));
-        </script>
-
-        <!-- DARSLAR VA LIDLAR -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            <!-- Bugungi Darslar -->
-            <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-[#112D4E] flex items-center gap-2">
-                        <i class="ph ph-calendar-check text-emerald-500"></i> Bugungi Darslar
-                    </h3>
-                    <a href="{% url 'group_list' %}"
-                        class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm text-slate-600 transition">
-                        To'liq ko'rish
-                    </a>
-                </div>
-
-                <div class="space-y-3">
-                    {% for lesson in today_lessons %}
-                    <div
-                        class="flex items-center p-4 bg-slate-50 rounded-xl border border-slate-100 hover:bg-white hover:shadow-md hover:shadow-[#7A9CC5]/5 transition-all duration-300 group">
-                        <div class="w-20 text-center border-r border-slate-200 pr-4">
-                            <span
-                                class="block text-lg font-bold text-[#112D4E] group-hover:text-[#3F72AF] transition">{{
-                                lesson.start_time|time:"H:i" }}</span>
-                            <span class="block text-xs text-[#7A9CC5]">{{ lesson.end_time|time:"H:i" }}</span>
-                        </div>
-                        <div class="flex-1 px-4">
-                            <h4 class="font-bold text-[#112D4E] text-lg">{{ lesson.group.name }}</h4>
-                            <p class="text-sm text-[#7A9CC5] flex items-center gap-3 mt-1">
-                                <span class="flex items-center gap-1"><i class="ph ph-door text-slate-400"></i> {{
-                                    lesson.room.name|default:"-" }}</span>
-                                <span class="flex items-center gap-1"><i class="ph ph-user text-slate-400"></i> {{
-                                    lesson.teacher.first_name|default:"-" }}</span>
-                            </p>
-                        </div>
-                        <span class="px-3 py-1 text-xs font-bold rounded-full border
-                        {% if lesson.status == 'started' %}text-[#3F72AF] bg-[#3F72AF]/10 border-[#7A9CC5]/20
-                        {% elif lesson.status == 'finished' %}text-emerald-700 bg-emerald-50 border-emerald-200
-                        {% else %}text-slate-600 bg-slate-50 border-slate-200{% endif %}">
-                            {{ lesson.get_status_display }}
-                        </span>
-                    </div>
-                    {% empty %}
-                    <div class="text-center py-12 text-[#7A9CC5]">
-                        <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="ph ph-calendar-blank text-4xl text-slate-300"></i>
-                        </div>
-                        <p class="font-medium">Bugun darslar yo'q</p>
-                    </div>
-                    {% endfor %}
-                </div>
+    <!-- Darslar + Lidlar -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 relative z-10">
+        <div class="lg:col-span-2 glass-section p-5">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-bold text-[#112D4E] flex items-center gap-2">
+                    <i class="ph-fill ph-calendar-check text-[#3F72AF]"></i> Bugungi Darslar
+                </h3>
+                <a href="{% url 'group_list' %}"
+                    class="text-[10px] text-[#3F72AF] hover:text-[#112D4E] font-bold">Barchasi →</a>
             </div>
-
-            <!-- Yangi Lidlar -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col h-full">
-                <div class="flex items-center justify-between mb-6">
-                    <h3 class="text-xl font-bold text-[#112D4E] flex items-center gap-2">
-                        <i class="ph ph-sparkle text-amber-500"></i> So'nggi Lidlar
-                    </h3>
-                    <a href="{% url 'crm:pipeline' %}" class="text-sm text-[#3F72AF] hover:text-[#112D4E]">Voronka</a>
-                </div>
-
-                <div class="space-y-3 flex-1 overflow-y-auto max-h-[400px]">
-                    {% for lead in recent_leads %}
-                    <div class="flex items-center gap-4 p-3 hover:bg-slate-50 rounded-xl transition cursor-default">
-                        <div
-                            class="w-12 h-12 rounded-full bg-gradient-to-br from-[#3F72AF] to-[#7A9CC5] text-white flex items-center justify-center font-bold text-lg shadow-md shadow-[#3F72AF]/20">
-                            {{ lead.full_name|first }}
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h4 class="font-bold text-[#112D4E] truncate">{{ lead.full_name }}</h4>
-                            <p class="text-xs text-[#7A9CC5] flex items-center gap-1">
-                                <i class="ph ph-arrow-elbow-down-right"></i> {{ lead.source.name|default:"Noma'lum" }}
-                            </p>
-                        </div>
-                        <div class="text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500 whitespace-nowrap">
-                            {{ lead.created_at|timesince }}
-                        </div>
+            <div class="space-y-2 max-h-60 overflow-y-auto" style="scrollbar-width: none;">
+                {% for lesson in today_lessons %}
+                <div class="flex items-center gap-3 p-3 rounded-xl liquid-glass hover:bg-white/80 transition-all group">
+                    <div class="text-center flex-shrink-0 w-12">
+                        <span class="block text-sm font-bold text-[#112D4E] leading-tight">{{
+                            lesson.start_time|time:"H:i" }}</span>
+                        <span class="block text-[10px] text-[#9DB2D6]">{{ lesson.end_time|time:"H:i" }}</span>
                     </div>
-                    {% empty %}
-                    <div class="flex-1 flex flex-col items-center justify-center text-[#7A9CC5]">
-                        <p>Hozircha lidlar yo'q</p>
+                    <div class="w-px h-8 bg-[#DBE2EF] flex-shrink-0"></div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-[#112D4E] text-sm truncate">{{ lesson.group.name }}</h4>
+                        <p class="text-[10px] text-[#9DB2D6] font-medium">
+                            <i class="ph ph-door"></i> {{ lesson.room.name|default:"-" }} ·
+                            <i class="ph ph-user"></i> {{ lesson.teacher.first_name|default:"-" }}
+                        </p>
                     </div>
-                    {% endfor %}
+                    <span
+                        class="px-2 py-0.5 text-[10px] font-bold rounded-md flex-shrink-0 {% if lesson.status == 'started' %}text-[#3F72AF] bg-[#DBE2EF]{% elif lesson.status == 'finished' %}text-emerald-700 bg-emerald-50{% else %}text-[#3F72AF] bg-[#DBE2EF]{% endif %}">{{
+                        lesson.get_status_display }}</span>
                 </div>
-
-                <a href="{% url 'crm:lead_create' %}"
-                    class="w-full mt-6 py-3 text-sm font-semibold text-center text-white bg-gradient-to-r from-[#3F72AF] to-[#112D4E] rounded-xl hover:shadow-lg hover:shadow-[#3F72AF]/30 transition-all active:scale-95 flex items-center justify-center gap-2">
-                    <i class="ph ph-plus-circle text-lg"></i> Yangi Lid
-                </a>
+                {% empty %}
+                <div class="flex flex-col items-center justify-center text-[#9DB2D6] py-8">
+                    <i class="ph ph-sun text-3xl mb-2 text-amber-400"></i>
+                    <p class="text-sm font-medium">Bugun darslar yo'q</p>
+                </div>
+                {% endfor %}
             </div>
-
         </div>
 
+        <!-- Yangi Lidlar -->
+        <div class="glass-section p-5">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-bold text-[#112D4E] flex items-center gap-2">
+                    <i class="ph-fill ph-sparkle text-amber-500"></i> So'nggi Lidlar
+                </h3>
+                <a href="{% url 'crm:pipeline' %}"
+                    class="text-[10px] text-[#3F72AF] hover:text-[#112D4E] font-bold">Voronka →</a>
+            </div>
+            <div class="space-y-2 max-h-52 overflow-y-auto" style="scrollbar-width: none;">
+                {% for lead in recent_leads %}
+                <div class="flex items-center gap-3 p-2.5 hover:bg-white/60 rounded-lg transition">
+                    <div
+                        class="w-9 h-9 rounded-lg bg-gradient-to-br from-[#112D4E] to-[#3F72AF] text-white flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0">
+                        {{ lead.full_name|first }}</div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-[#112D4E] text-sm truncate">{{ lead.full_name }}</h4>
+                        <p class="text-[10px] text-[#9DB2D6] font-medium">{{ lead.created_at|timesince }}</p>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-sm text-[#9DB2D6] text-center py-4 font-medium">Lidlar yo'q</p>
+                {% endfor %}
+            </div>
+            <a href="{% url 'crm:lead_create' %}"
+                class="w-full mt-4 py-2.5 text-xs font-bold text-center text-white bg-gradient-to-r from-[#112D4E] to-[#3F72AF] rounded-xl hover:shadow-lg hover:shadow-[#3F72AF]/25 transition-all active:scale-[0.98] flex items-center justify-center gap-1.5">
+                <i class="ph ph-plus-circle"></i> Yangi Lid
+            </a>
+        </div>
     </div>
-    {% endblock %}
+
+</div>
+
+<style>
+    [style*="scrollbar-width"]::-webkit-scrollbar {
+        display: none;
+    }
+</style>
+
+<script>
+    let financeChart = null;
+
+    async function loadChartData(days = 30) {
+        const response = await fetch(`/api/chart-data/?days=${days}`);
+        const data = await response.json();
+        if (financeChart) financeChart.destroy();
+        const ctx = document.getElementById('financeChart').getContext('2d');
+        financeChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [
+                    { label: 'Kirim', data: data.income, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.08)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 },
+                    { label: 'Chiqim', data: data.expense, borderColor: '#f43f5e', backgroundColor: 'rgba(244,63,94,0.05)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                interaction: { intersect: false, mode: 'index' },
+                plugins: { legend: { position: 'top', labels: { usePointStyle: true, color: '#64748b', font: { size: 10 }, padding: 8 } } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 9 } } },
+                    y: { grid: { color: 'rgba(0,0,0,0.03)' }, ticks: { color: '#94a3b8', font: { size: 9 }, callback: v => v.toLocaleString('uz-UZ') } }
+                }
+            }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', () => loadChartData(30));
+</script>
+{% endblock %}

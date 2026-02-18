@@ -1,224 +1,124 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
-{% block title %}Ota-ona Kabineti{% endblock %}
+{% block title %}Ota-ona Paneli{% endblock %}
 
 {% block content %}
-<div class="space-y-8 animate-fadeIn">
+<div class="space-y-5 animate-fadeIn relative">
+
+    <!-- Floating Orbs -->
+    <div class="dash-orb dash-orb-1"></div>
+    <div class="dash-orb dash-orb-2"></div>
 
     <!-- Header -->
-    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div>
-            <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
-                Assalomu alaykum, {{ request.user.first_name }}! 👨‍👩‍👧
-                <span class="icon-box-lg icon-blue">
-                    <i class="ph-fill ph-users"></i>
-                </span>
-            </h1>
-            <p class="text-slate-500 mt-1">Ota-ona kabineti - Farzandlaringiz nazorati</p>
+    <div class="flex items-center justify-between relative z-10">
+        <h1 class="text-xl font-bold text-[#112D4E] flex items-center gap-2">
+            <i class="ph-fill ph-house text-[#112D4E]"></i>
+            Salom, {{ request.user.first_name }}! 👨‍👩‍👧‍👦
+        </h1>
+        {% if has_any_debt %}
+        <div
+            class="px-3 py-1.5 bg-rose-50/80 border border-rose-200 text-rose-600 rounded-lg text-xs font-semibold flex items-center gap-1.5">
+            <i class="ph-fill ph-warning-circle"></i>
+            Umumiy qarz: {{ total_debt|floatformat:0|intcomma }} so'm
         </div>
-        <div class="flex flex-wrap items-center gap-3">
-            {% if has_any_debt %}
-            <a href="{% url 'finance:add_income' %}" class="btn btn-danger">
-                <i class="ph-fill ph-credit-card"></i>
-                To'lov qilish
-                <span class="px-2 py-0.5 bg-white/20 rounded-full text-xs font-bold">{{ total_debt|floatformat:0 }}
-                    so'm</span>
-            </a>
-            {% endif %}
-            <button onclick="openChatModal()" class="btn btn-primary">
-                <i class="ph-fill ph-chat-circle-dots"></i>
-                Administrator bilan gaplashish
-            </button>
+        {% endif %}
+    </div>
+
+    <!-- Farzandlar -->
+    {% for data in children_data %}
+    <div class="glass-section p-5 relative z-10">
+        <!-- Farzand Header -->
+        <div class="flex items-center gap-4 mb-4 pb-3 border-b border-[#9DB2D6]/10">
             <div
-                class="px-4 py-2 bg-white rounded-xl text-sm font-medium text-slate-600 border border-slate-200 shadow-sm">
-                {% now "d F Y" %}
+                class="w-12 h-12 bg-gradient-to-br from-[#112D4E] to-[#3F72AF] rounded-xl text-white flex items-center justify-center font-bold text-lg shadow-lg">
+                {{ data.child.first_name|first }}
             </div>
-        </div>
-    </div>
-
-    <!-- Farzandlar Ro'yxati -->
-    {% if children_data %}
-    <div class="space-y-8">
-        {% for data in children_data %}
-        <div class="card overflow-hidden transition hover:shadow-lg duration-300 p-0">
-
-            <!-- Farzand Header -->
-            <div class="bg-gradient-to-r from-[#3F72AF] to-[#112D4E] p-8 text-white relative overflow-hidden">
-                <div class="absolute right-0 top-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
-                <div class="flex items-center gap-6 relative z-10">
-                    <div
-                        class="w-20 h-20 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-3xl font-bold shadow-inner border border-white/30">
-                        {{ data.child.first_name|first }}
-                    </div>
-                    <div>
-                        <h2 class="text-3xl font-bold mb-1">{{ data.child.first_name }} {{ data.child.last_name }}</h2>
-                        <div class="flex items-center gap-4 text-[#3F72AF] text-sm font-medium">
-                            <span class="bg-white/20 px-3 py-1 rounded-lg backdrop-blur-sm">{{ data.relation_type
-                                }}</span>
-                            <span class="flex items-center gap-1"><i class="ph ph-phone"></i> {{ data.child.phone
-                                }}</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="flex-1">
+                <h3 class="text-base font-bold text-[#112D4E]">{{ data.child.first_name }} {{ data.child.last_name }}
+                </h3>
+                <p class="text-xs text-[#3F72AF]">{{ data.relation_type }}</p>
             </div>
-
-            <!-- Statistika -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 border-b border-slate-100 bg-slate-50">
-                <div class="text-center p-4 rounded-xl hover:bg-white transition duration-200">
-                    <div
-                        class="inline-flex items-center justify-center w-10 h-10 mb-2 rounded-full bg-emerald-50 text-emerald-600">
-                        <i class="ph-fill ph-check-circle text-xl"></i>
-                    </div>
-                    <p class="text-3xl font-bold text-slate-800">{{ data.attendance_rate }}%</p>
-                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Davomat</p>
+            <div class="flex gap-3">
+                <div class="text-center">
+                    <p class="text-[10px] text-[#9DB2D6] uppercase font-semibold">Davomat</p>
+                    <p class="text-lg font-bold text-[#112D4E]">{{ data.attendance_rate }}%</p>
                 </div>
-                <div class="text-center p-4 rounded-xl hover:bg-white transition duration-200">
-                    <div
-                        class="inline-flex items-center justify-center w-10 h-10 mb-2 rounded-full bg-[#3F72AF]/5 text-[#3F72AF]">
-                        <i class="ph-fill ph-star text-xl"></i>
-                    </div>
-                    <p class="text-3xl font-bold text-slate-800">{{ data.avg_grade }}</p>
-                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide">O'rtacha Baho</p>
+                <div class="text-center">
+                    <p class="text-[10px] text-[#9DB2D6] uppercase font-semibold">O'rt. baho</p>
+                    <span class="text-[10px] font-bold text-amber-600 bg-amber-50/80 px-2 py-0.5 rounded-full">#{{
+                        student_rank }}</span>
                 </div>
-                <div class="text-center p-4 rounded-xl hover:bg-white transition duration-200">
-                    <div
-                        class="inline-flex items-center justify-center w-10 h-10 mb-2 rounded-full bg-purple-50 text-purple-600">
-                        <i class="ph-fill ph-lightning text-xl"></i>
-                    </div>
-                    <p class="text-3xl font-bold text-slate-800">{{ data.xp }}</p>
-                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide">XP Ochko</p>
+                <div class="text-center">
+                    <p class="text-[10px] text-[#9DB2D6] uppercase font-semibold">XP</p>
+                    <p class="text-lg font-bold text-purple-600">{{ data.xp }}</p>
                 </div>
-                <div class="text-center p-4 rounded-xl hover:bg-white transition duration-200">
-                    <div
-                        class="inline-flex items-center justify-center w-10 h-10 mb-2 rounded-full {% if data.balance < 0 %}bg-rose-50 text-rose-500{% else %}bg-slate-100 text-slate-500{% endif %}">
-                        <i class="ph-fill ph-wallet text-xl"></i>
-                    </div>
+                <div class="text-center">
+                    <p class="text-[10px] text-[#9DB2D6] uppercase font-semibold">Balans</p>
                     <p
-                        class="text-3xl font-bold {% if data.balance < 0 %}text-rose-500{% else %}text-slate-800{% endif %}">
-                        {{ data.balance|floatformat:0 }}
-                    </p>
-                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide">Balans (UZS)</p>
+                        class="text-lg font-bold {% if data.has_debt %}text-rose-600{% else %}text-emerald-600{% endif %}">
+                        {{ data.balance|floatformat:0|intcomma }}</p>
                 </div>
             </div>
+        </div>
 
+        <!-- Farzand Guruhlari + Davomat -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <!-- Guruhlar -->
-            <div class="p-8 bg-white">
-                <h3 class="font-bold text-slate-800 mb-6 flex items-center gap-2 text-lg">
-                    <i class="ph-fill ph-books text-[#3F72AF]"></i> O'qiyotgan Guruhlari
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <h4 class="text-xs font-bold text-[#112D4E] mb-2 flex items-center gap-1.5">
+                    <i class="ph-fill ph-books text-[#3F72AF]"></i> Guruhlar
+                </h4>
+                <div class="space-y-2">
                     {% for enrollment in data.enrollments %}
-                    <div
-                        class="flex items-center gap-4 p-5 bg-slate-50 border border-slate-100 rounded-xl hover:border-primary-200 hover:shadow-md transition duration-300">
+                    <div class="flex items-center gap-3 p-2.5 liquid-glass rounded-xl">
                         <div
-                            class="w-14 h-14 bg-gradient-to-br from-[#3F72AF] to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md shadow-[#3F72AF]/20">
-                            {{ enrollment.group.course.name|first }}
+                            class="w-8 h-8 bg-gradient-to-br from-[#112D4E] to-[#3F72AF] rounded-lg text-white flex items-center justify-center font-bold text-xs shadow-sm flex-shrink-0">
+                            {{ enrollment.group.name|first }}
                         </div>
-                        <div class="flex-1">
-                            <h4 class="font-bold text-slate-800 text-lg">{{ enrollment.group.name }}</h4>
-                            <p class="text-sm font-medium text-slate-500">{{ enrollment.group.course.name }}</p>
-                            <p class="text-xs text-slate-400 mt-1 flex items-center gap-1">
-                                <i class="ph-fill ph-chalkboard-teacher"></i> {{ enrollment.group.teacher.first_name }}
-                            </p>
+                        <div class="flex-1 min-w-0">
+                            <h5 class="font-semibold text-[#112D4E] text-xs truncate">{{ enrollment.group.name }}</h5>
+                            <p class="text-[10px] text-[#3F72AF]">{{ enrollment.group.course.name }} · {{
+                                enrollment.group.teacher.first_name|default:"-" }}</p>
                         </div>
                     </div>
                     {% empty %}
-                    <p class="text-slate-400 col-span-2 text-center py-8 italic">Hozircha guruhlarga yozilmagan</p>
+                    <p class="text-[#9DB2D6] text-xs text-center py-3">Guruhlar yo'q</p>
                     {% endfor %}
                 </div>
             </div>
 
-            <!-- So'nggi Davomatlar -->
-            <div class="p-8 border-t border-slate-100 bg-slate-50">
-                <h3 class="font-bold text-slate-800 mb-6 flex items-center gap-2 text-lg">
-                    <i class="ph-fill ph-chart-line-up text-[#3F72AF]"></i> So'nggi Davomatlar
-                </h3>
-                <div class="flex flex-wrap gap-3">
+            <!-- So'nggi Davomat -->
+            <div>
+                <h4 class="text-xs font-bold text-[#112D4E] mb-2 flex items-center gap-1.5">
+                    <i class="ph-fill ph-clock-counter-clockwise text-[#3F72AF]"></i> So'nggi davomat
+                </h4>
+                <div class="space-y-1">
                     {% for att in data.recent_attendance %}
-                    <div class="flex flex-col items-center justify-center w-20 p-2 rounded-xl border transition-all hover:scale-105
-                        {% if att.status == 'present' %}bg-emerald-50 text-emerald-600 border-emerald-200
-                        {% elif att.status == 'absent' %}bg-rose-50 text-rose-500 border-rose-200
-                        {% elif att.status == 'late' %}bg-amber-50 text-amber-600 border-amber-200
-                        {% else %}bg-slate-50 text-slate-400 border-slate-200{% endif %}">
-
-                        <span class="text-xs font-bold mb-1">{{ att.lesson.date|date:"d.m" }}</span>
-                        <span class="text-2xl mb-1">
-                            {% if att.status == 'present' %}<i class="ph-fill ph-check"></i>
-                            {% elif att.status == 'absent' %}<i class="ph-fill ph-x"></i>
-                            {% elif att.status == 'late' %}<i class="ph-fill ph-clock"></i>
-                            {% else %}-{% endif %}
+                    <div class="flex items-center justify-between p-2 rounded-lg hover:bg-white/60 transition text-xs">
+                        <span class="text-[#112D4E] font-medium">{{ att.lesson.date|date:"d.m" }}</span>
+                        <span class="text-[#3F72AF] truncate mx-2 flex-1">{{ att.lesson.group.name }}</span>
+                        <span class="px-1.5 py-0.5 text-[10px] font-bold rounded
+                            {% if att.status == 'present' %}bg-emerald-50/80 text-emerald-700
+                            {% elif att.status == 'absent' %}bg-rose-50/80 text-rose-700
+                            {% else %}bg-amber-50/80 text-amber-700{% endif %}">
+                            {% if att.status == 'present' %}✓{% elif att.status == 'absent' %}✗{% else %}...{% endif %}
                         </span>
-                        {% if att.grade %}
-                        <span class="text-[10px] font-bold bg-white px-1.5 rounded border border-slate-200">{{ att.grade
-                            }}</span>
-                        {% endif %}
+                        <span class="font-bold text-[#112D4E] ml-2 w-6 text-center">{{ att.grade|default:"—" }}</span>
                     </div>
                     {% empty %}
-                    <p class="text-slate-400 italic">Hozircha davomat yo'q</p>
+                    <p class="text-[#9DB2D6] text-xs text-center py-3">Ma'lumot yo'q</p>
                     {% endfor %}
                 </div>
             </div>
-
         </div>
-        {% endfor %}
     </div>
-    {% else %}
-    <div class="card p-16 text-center">
-        <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <i class="ph ph-users text-5xl text-slate-400"></i>
-        </div>
-        <h3 class="text-2xl font-bold text-slate-800 mb-2">Farzandlar topilmadi</h3>
-        <p class="text-slate-500 max-w-md mx-auto">Sizga hech qanday o'quvchi biriktirilmagan. Iltimos, o'quv markazi
-            ma'muriyati bilan bog'laning.</p>
+    {% empty %}
+    <div class="glass-section p-8 text-center relative z-10">
+        <i class="ph-fill ph-user-circle text-4xl text-[#9DB2D6] mb-3"></i>
+        <p class="text-[#3F72AF] font-medium">Farzandlar topilmadi</p>
     </div>
-    {% endif %}
+    {% endfor %}
 
 </div>
-
-<!-- Chat Modal -->
-<div id="chatModal" class="fixed inset-0 z-50 hidden">
-    <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeChatModal()"></div>
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-lg">
-        <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden">
-            <div class="bg-gradient-to-r from-[#3F72AF] to-[#112D4E] p-4 text-white flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                        <i class="ph-fill ph-chat-circle-text text-xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold">Bog'lanish</h3>
-                        <p class="text-xs text-[#3F72AF]">Admin/O'qituvchi bilan</p>
-                    </div>
-                </div>
-                <button onclick="closeChatModal()" class="p-2 hover:bg-white/20 rounded-lg transition">
-                    <i class="ph ph-x text-xl"></i>
-                </button>
-            </div>
-            <div class="p-6">
-                <div class="bg-[#3F72AF]/5 border border-[#7A9CC5]/20 rounded-xl p-4 text-center">
-                    <i class="ph-fill ph-info text-4xl text-[#3F72AF] mb-3"></i>
-                    <h4 class="font-bold text-slate-800 mb-2">Tez orada mavjud!</h4>
-                    <p class="text-sm text-slate-500">
-                        Chat funksiyasi ishlab chiqilmoqda. Hozircha telefon orqali bog'laning.
-                    </p>
-                </div>
-                <div class="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                    <p class="text-xs text-slate-400 uppercase mb-2">Bog'lanish</p>
-                    <p class="font-semibold text-slate-800 flex items-center gap-2">
-                        <i class="ph-fill ph-phone text-emerald-500"></i> +998 90 123 45 67
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    function openChatModal() {
-        document.getElementById('chatModal').classList.remove('hidden');
-    }
-    function closeChatModal() {
-        document.getElementById('chatModal').classList.add('hidden');
-    }
-</script>
 {% endblock %}
