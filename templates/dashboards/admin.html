@@ -12,10 +12,10 @@
     <!-- Header -->
     <div class="flex items-center justify-between relative z-10">
         <div>
-            <h1 class="text-xl font-bold text-[#0F172A] flex items-center gap-2">
+            <h1 class="text-2xl font-bold text-[#0F172A] flex items-center gap-2">
                 Xush kelibsiz, {{ request.user.first_name }}! 👋
             </h1>
-            <p class="text-sm text-[#64748B] font-semibold">{{ request.user.organization.name }}</p>
+            <p class="text-base text-[#64748B] font-semibold">{{ request.user.organization.name }}</p>
         </div>
         <div class="flex gap-2 flex-wrap">
             <a href="{% url 'users:student_create' %}"
@@ -46,8 +46,8 @@
                     <i class="ph-fill ph-student"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider">O'quvchilar</p>
-                    <p class="text-xl font-extrabold text-[#0F172A] leading-tight">{{ total_students|default:"0" }}</p>
+                    <p class="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">O'quvchilar</p>
+                    <p class="text-2xl font-extrabold text-[#0F172A] leading-tight">{{ total_students|default:"0" }}</p>
                 </div>
             </div>
         </div>
@@ -59,8 +59,8 @@
                     <i class="ph-fill ph-users-three"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider">Guruhlar</p>
-                    <p class="text-xl font-extrabold text-[#0F172A] leading-tight">{{ active_groups|default:"0" }}</p>
+                    <p class="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">Guruhlar</p>
+                    <p class="text-2xl font-extrabold text-[#0F172A] leading-tight">{{ active_groups|default:"0" }}</p>
                 </div>
             </div>
         </div>
@@ -72,8 +72,8 @@
                     <i class="ph-fill ph-chalkboard-teacher"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider">O'qituvchilar</p>
-                    <p class="text-xl font-extrabold text-[#0F172A] leading-tight">{{ total_teachers|default:"0" }}</p>
+                    <p class="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">O'qituvchilar</p>
+                    <p class="text-2xl font-extrabold text-[#0F172A] leading-tight">{{ total_teachers|default:"0" }}</p>
                 </div>
             </div>
         </div>
@@ -85,8 +85,8 @@
                     <i class="ph-fill ph-funnel"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider">Lidlar</p>
-                    <p class="text-xl font-extrabold text-amber-600 leading-tight">{{ total_leads|default:"0" }}{% if
+                    <p class="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">Lidlar</p>
+                    <p class="text-2xl font-extrabold text-amber-600 leading-tight">{{ total_leads|default:"0" }}{% if
                         new_leads %} <span class="text-xs text-emerald-500 font-bold">+{{ new_leads }}</span>{% endif %}
                     </p>
                 </div>
@@ -100,8 +100,8 @@
                     <i class="ph-fill ph-wallet"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider">Tushum</p>
-                    <p class="text-xl font-extrabold text-emerald-600 leading-tight">{{
+                    <p class="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">Tushum</p>
+                    <p class="text-2xl font-extrabold text-emerald-600 leading-tight">{{
                         monthly_income|default:0|floatformat:0|intcomma }}</p>
                 </div>
             </div>
@@ -114,8 +114,8 @@
                     <i class="ph-fill ph-warning-circle"></i>
                 </div>
                 <div>
-                    <p class="text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider">Qarz</p>
-                    <p class="text-xl font-extrabold text-rose-600 leading-tight">{{
+                    <p class="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">Qarz</p>
+                    <p class="text-2xl font-extrabold text-rose-600 leading-tight">{{
                         total_debt|default:0|floatformat:0|intcomma }}</p>
                 </div>
             </div>
@@ -126,7 +126,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 relative z-10">
         {% if stages %}
         <div class="glass-section p-5">
-            <h3 class="text-sm font-bold text-[#0F172A] mb-4 flex items-center gap-2">
+            <h3 class="text-base font-bold text-[#0F172A] mb-4 flex items-center gap-2">
                 <i class="ph-fill ph-funnel-simple text-[#64748B]"></i> Sotuv Voronkasi
             </h3>
             <div class="flex gap-2 flex-wrap">
@@ -135,8 +135,8 @@
                     class="px-4 py-3 rounded-xl liquid-glass text-center min-w-[90px] hover:-translate-y-0.5 transition-all">
                     <span class="w-2.5 h-2.5 rounded-full inline-block mb-1.5"
                         style="background-color: {{ stage.color }}"></span>
-                    <p class="text-xl font-extrabold text-[#0F172A] leading-tight">{{ stage.lead_count }}</p>
-                    <p class="text-[10px] text-[#94A3B8] font-semibold truncate">{{ stage.name }}</p>
+                    <p class="text-2xl font-extrabold text-[#0F172A] leading-tight">{{ stage.lead_count }}</p>
+                    <p class="text-xs text-[#94A3B8] font-semibold truncate">{{ stage.name }}</p>
                 </div>
                 {% endfor %}
             </div>
@@ -146,16 +146,16 @@
         <!-- Moliyaviy Grafik -->
         <div class="glass-section p-5">
             <div class="flex items-center justify-between mb-3">
-                <h3 class="text-sm font-bold text-[#0F172A] flex items-center gap-2">
+                <h3 class="text-base font-bold text-[#0F172A] flex items-center gap-2">
                     <i class="ph-fill ph-chart-line text-emerald-600"></i> Moliyaviy O'sish
                 </h3>
                 <div class="flex gap-1">
                     <button onclick="loadChartData(7)"
-                        class="px-2 py-0.5 text-[10px] rounded-md text-[#94A3B8] hover:bg-[#E0E7FF] hover:text-[#4F46E5] transition">7K</button>
+                        class="px-2 py-0.5 text-xs rounded-md text-[#94A3B8] hover:bg-[#E0E7FF] hover:text-[#4F46E5] transition">7K</button>
                     <button onclick="loadChartData(30)"
-                        class="px-2 py-0.5 text-[10px] rounded-md bg-[#E0E7FF] text-[#64748B] font-bold">30K</button>
+                        class="px-2 py-0.5 text-xs rounded-md bg-[#E0E7FF] text-[#64748B] font-bold">30K</button>
                     <button onclick="loadChartData(90)"
-                        class="px-2 py-0.5 text-[10px] rounded-md text-[#94A3B8] hover:bg-[#E0E7FF] hover:text-[#4F46E5] transition">90K</button>
+                        class="px-2 py-0.5 text-xs rounded-md text-[#94A3B8] hover:bg-[#E0E7FF] hover:text-[#4F46E5] transition">90K</button>
                 </div>
             </div>
             <div class="h-44">
@@ -168,30 +168,30 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 relative z-10">
         <div class="lg:col-span-2 glass-section p-5">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-bold text-[#0F172A] flex items-center gap-2">
+                <h3 class="text-base font-bold text-[#0F172A] flex items-center gap-2">
                     <i class="ph-fill ph-calendar-check text-[#64748B]"></i> Bugungi Darslar
                 </h3>
                 <a href="{% url 'group_list' %}"
-                    class="text-[10px] text-[#64748B] hover:text-[#0F172A] font-bold">Barchasi →</a>
+                    class="text-xs text-[#64748B] hover:text-[#0F172A] font-bold">Barchasi →</a>
             </div>
-            <div class="space-y-2 max-h-60 overflow-y-auto" style="scrollbar-width: none;">
+            <div class="space-y-2 overflow-y-auto" style="scrollbar-width: none;">
                 {% for lesson in today_lessons %}
                 <div class="flex items-center gap-3 p-3 rounded-xl liquid-glass hover:bg-white/80 transition-all group">
                     <div class="text-center flex-shrink-0 w-12">
                         <span class="block text-sm font-bold text-[#0F172A] leading-tight">{{
                             lesson.start_time|time:"H:i" }}</span>
-                        <span class="block text-[10px] text-[#94A3B8]">{{ lesson.end_time|time:"H:i" }}</span>
+                        <span class="block text-xs text-[#94A3B8]">{{ lesson.end_time|time:"H:i" }}</span>
                     </div>
                     <div class="w-px h-8 bg-[#E0E7FF] flex-shrink-0"></div>
                     <div class="flex-1 min-w-0">
                         <h4 class="font-bold text-[#0F172A] text-sm truncate">{{ lesson.group.name }}</h4>
-                        <p class="text-[10px] text-[#94A3B8] font-medium">
+                        <p class="text-xs text-[#94A3B8] font-medium">
                             <i class="ph ph-door"></i> {{ lesson.room.name|default:"-" }} ·
                             <i class="ph ph-user"></i> {{ lesson.teacher.first_name|default:"-" }}
                         </p>
                     </div>
                     <span
-                        class="px-2 py-0.5 text-[10px] font-bold rounded-md flex-shrink-0 {% if lesson.status == 'started' %}text-[#64748B] bg-[#E0E7FF]{% elif lesson.status == 'finished' %}text-emerald-700 bg-emerald-50{% else %}text-[#64748B] bg-[#E0E7FF]{% endif %}">{{
+                        class="px-2 py-0.5 text-xs font-bold rounded-md flex-shrink-0 {% if lesson.status == 'started' %}text-[#64748B] bg-[#E0E7FF]{% elif lesson.status == 'finished' %}text-emerald-700 bg-emerald-50{% else %}text-[#64748B] bg-[#E0E7FF]{% endif %}">{{
                         lesson.get_status_display }}</span>
                 </div>
                 {% empty %}
@@ -206,13 +206,13 @@
         <!-- Yangi Lidlar -->
         <div class="glass-section p-5">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-bold text-[#0F172A] flex items-center gap-2">
+                <h3 class="text-base font-bold text-[#0F172A] flex items-center gap-2">
                     <i class="ph-fill ph-sparkle text-amber-500"></i> So'nggi Lidlar
                 </h3>
                 <a href="{% url 'crm:pipeline' %}"
-                    class="text-[10px] text-[#64748B] hover:text-[#0F172A] font-bold">Voronka →</a>
+                    class="text-xs text-[#64748B] hover:text-[#0F172A] font-bold">Voronka →</a>
             </div>
-            <div class="space-y-2 max-h-52 overflow-y-auto" style="scrollbar-width: none;">
+            <div class="space-y-2 overflow-y-auto" style="scrollbar-width: none;">
                 {% for lead in recent_leads %}
                 <div class="flex items-center gap-3 p-2.5 hover:bg-white/60 rounded-lg transition">
                     <div
@@ -220,7 +220,7 @@
                         {{ lead.full_name|first }}</div>
                     <div class="flex-1 min-w-0">
                         <h4 class="font-bold text-[#0F172A] text-sm truncate">{{ lead.full_name }}</h4>
-                        <p class="text-[10px] text-[#94A3B8] font-medium">{{ lead.created_at|timesince }}</p>
+                        <p class="text-xs text-[#94A3B8] font-medium">{{ lead.created_at|timesince }}</p>
                     </div>
                 </div>
                 {% empty %}

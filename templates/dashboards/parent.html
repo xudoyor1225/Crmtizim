@@ -12,7 +12,7 @@
 
     <!-- Header -->
     <div class="flex items-center justify-between relative z-10">
-        <h1 class="text-xl font-bold text-[#0F172A] flex items-center gap-2">
+        <h1 class="text-2xl font-bold text-[#0F172A] flex items-center gap-2">
             <i class="ph-fill ph-house text-[#0F172A]"></i>
             Salom, {{ request.user.first_name }}! 👨‍👩‍👧‍👦
         </h1>
@@ -41,20 +41,20 @@
             </div>
             <div class="flex gap-3">
                 <div class="text-center">
-                    <p class="text-[10px] text-[#94A3B8] uppercase font-semibold">Davomat</p>
+                    <p class="text-xs text-[#94A3B8] uppercase font-semibold">Davomat</p>
                     <p class="text-lg font-bold text-[#0F172A]">{{ data.attendance_rate }}%</p>
                 </div>
                 <div class="text-center">
-                    <p class="text-[10px] text-[#94A3B8] uppercase font-semibold">O'rt. baho</p>
-                    <span class="text-[10px] font-bold text-amber-600 bg-amber-50/80 px-2 py-0.5 rounded-full">#{{
+                    <p class="text-xs text-[#94A3B8] uppercase font-semibold">O'rt. baho</p>
+                    <span class="text-xs font-bold text-amber-600 bg-amber-50/80 px-2 py-0.5 rounded-full">#{{
                         student_rank }}</span>
                 </div>
                 <div class="text-center">
-                    <p class="text-[10px] text-[#94A3B8] uppercase font-semibold">XP</p>
+                    <p class="text-xs text-[#94A3B8] uppercase font-semibold">XP</p>
                     <p class="text-lg font-bold text-purple-600">{{ data.xp }}</p>
                 </div>
                 <div class="text-center">
-                    <p class="text-[10px] text-[#94A3B8] uppercase font-semibold">Balans</p>
+                    <p class="text-xs text-[#94A3B8] uppercase font-semibold">Balans</p>
                     <p
                         class="text-lg font-bold {% if data.has_debt %}text-rose-600{% else %}text-emerald-600{% endif %}">
                         {{ data.balance|floatformat:0|intcomma }}</p>
@@ -66,7 +66,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <!-- Guruhlar -->
             <div>
-                <h4 class="text-xs font-bold text-[#0F172A] mb-2 flex items-center gap-1.5">
+                <h4 class="text-sm font-bold text-[#0F172A] mb-2 flex items-center gap-1.5">
                     <i class="ph-fill ph-books text-[#64748B]"></i> Guruhlar
                 </h4>
                 <div class="space-y-2">
@@ -78,7 +78,7 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             <h5 class="font-semibold text-[#0F172A] text-xs truncate">{{ enrollment.group.name }}</h5>
-                            <p class="text-[10px] text-[#64748B]">{{ enrollment.group.course.name }} · {{
+                            <p class="text-xs text-[#64748B]">{{ enrollment.group.course.name }} · {{
                                 enrollment.group.teacher.first_name|default:"-" }}</p>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
 
             <!-- So'nggi Davomat -->
             <div>
-                <h4 class="text-xs font-bold text-[#0F172A] mb-2 flex items-center gap-1.5">
+                <h4 class="text-sm font-bold text-[#0F172A] mb-2 flex items-center gap-1.5">
                     <i class="ph-fill ph-clock-counter-clockwise text-[#64748B]"></i> So'nggi davomat
                 </h4>
                 <div class="space-y-1">
@@ -98,7 +98,7 @@
                     <div class="flex items-center justify-between p-2 rounded-lg hover:bg-white/60 transition text-xs">
                         <span class="text-[#0F172A] font-medium">{{ att.lesson.date|date:"d.m" }}</span>
                         <span class="text-[#64748B] truncate mx-2 flex-1">{{ att.lesson.group.name }}</span>
-                        <span class="px-1.5 py-0.5 text-[10px] font-bold rounded
+                        <span class="px-1.5 py-0.5 text-xs font-bold rounded
                             {% if att.status == 'present' %}bg-emerald-50/80 text-emerald-700
                             {% elif att.status == 'absent' %}bg-rose-50/80 text-rose-700
                             {% else %}bg-amber-50/80 text-amber-700{% endif %}">
