@@ -274,7 +274,90 @@ class QuickPaymentTestCase(TestCase):
         data = json.loads(response.content)
         self.assertFalse(data['success'])
 
+    def test_quick_payment_invalid_student(self):
+        """Mavjud bo'lmagan o'quvchi uchun JSON xatolik qaytarilishi kerak"""
+        response = self.client.post(reverse('finance:quick_payment'), {
+            'student_id': 99999,
+            'amount': '500000',
+            'payment_method': 'cash',
+            'account_id': self.account.id,
+        })
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.content)
+        self.assertFalse(data['success'])
+        self.assertIn('error', data)
+
+    def test_quick_payment_invalid_account(self):
+        """Mavjud bo'lmagan kassa uchun JSON xatolik qaytarilishi kerak"""
+        response = self.client.post(reverse('finance:quick_payment'), {
+            'student_id': self.student.id,
+            'amount': '500000',
+            'payment_method': 'cash',
+            'account_id': 99999,
+        })
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.content)
+        self.assertFalse(data['success'])
+        self.assertIn('error', data)
+
     def test_quick_payment_get_not_allowed(self):
         """GET so'rovi rad etilishi kerak"""
         response = self.client.get(reverse('finance:quick_payment'))
         self.assertEqual(response.status_code, 405)
+
+
+class QuickPaymentSuperAdminTestCase(TestCase):
+    """Super Admin Quick Payment testlari"""
+
+    def setUp(self):
+        self.org = Organization.objects.create(
+            name="Test Markaz",
+            subdomain="test-sa"
+        )
+        self.branch = Branch.objects.create(
+            organization=self.org,
+            name="Test Filial"
+        )
+        # Super admin without organization
+        self.super_admin = User.objects.create_user(
+            phone="998904441111",
+            password="test123",
+            first_name="Super",
+            last_name="Admin",
+            role="super_admin",
+            organization=None,
+        )
+        self.student = User.objects.create_user(
+            phone="998904442222",
+            password="test123",
+            first_name="Student",
+            last_name="SA",
+            role="student",
+            organization=self.org,
+            branch=self.branch
+        )
+        self.account = Account.objects.create(
+            organization=self.org,
+            name="Naqd Kassa",
+            account_type="cash",
+            balance=Decimal("0.00")
+        )
+        self.client = Client()
+        self.client.login(phone="998904441111", password="test123")
+
+    def test_super_admin_quick_payment_success(self):
+        """Super admin muvaffaqiyatli quick payment"""
+        response = self.client.post(reverse('finance:quick_payment'), {
+            'student_id': self.student.id,
+            'amount': '500000',
+            'payment_method': 'cash',
+            'account_id': self.account.id,
+        })
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertTrue(data['success'])
+        self.assertIn('transaction_id', data)
+        # Tranzaksiya yaratilganini tekshirish
+        self.assertTrue(Transaction.objects.filter(
+            student=self.student, amount=Decimal('500000')
+        ).exists())

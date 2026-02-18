@@ -368,46 +368,62 @@ def reject_receipt(request, pk):
 @require_POST
 def quick_payment(request):
     """Quick Payment modal dan kelgan AJAX so'rovni qayta ishlash."""
-    org = request.user.organization
-
-    student_id = request.POST.get('student_id')
-    amount = request.POST.get('amount')
-    payment_method = request.POST.get('payment_method', 'cash')
-    account_id = request.POST.get('account_id')
-
-    if not student_id or not amount or not account_id:
-        return JsonResponse({'success': False, 'error': "Barcha maydonlarni to'ldiring."}, status=400)
-
     try:
-        amount_decimal = Decimal(amount)
-        if amount_decimal <= 0:
-            return JsonResponse({'success': False, 'error': "Summa musbat bo'lishi kerak."}, status=400)
-    except (InvalidOperation, ValueError):
-        return JsonResponse({'success': False, 'error': "Noto'g'ri summa formati."}, status=400)
+        org = request.user.organization
 
-    student = get_object_or_404(User, pk=student_id, organization=org, role='student')
-    account = get_object_or_404(Account, pk=account_id, organization=org)
+        student_id = request.POST.get('student_id')
+        amount = request.POST.get('amount')
+        payment_method = request.POST.get('payment_method', 'cash')
+        account_id = request.POST.get('account_id')
 
-    # Kurs to'lovi kategoriyasini topish yoki None
-    category = TransactionCategory.objects.filter(
-        organization=org, transaction_type='income'
-    ).first()
+        if not student_id or not amount or not account_id:
+            return JsonResponse({'success': False, 'error': "Barcha maydonlarni to'ldiring."}, status=400)
 
-    transaction = Transaction.objects.create(
-        organization=org,
-        account=account,
-        category=category,
-        student=student,
-        amount=amount_decimal,
-        transaction_type='income',
-        payment_method=payment_method,
-        description=f"Tezkor to'lov: {student.get_full_name()}",
-        status='pending',
-        created_by=request.user,
-    )
+        try:
+            amount_decimal = Decimal(amount)
+            if amount_decimal <= 0:
+                return JsonResponse({'success': False, 'error': "Summa musbat bo'lishi kerak."}, status=400)
+        except (InvalidOperation, ValueError):
+            return JsonResponse({'success': False, 'error': "Noto'g'ri summa formati."}, status=400)
 
-    return JsonResponse({
-        'success': True,
-        'message': f"{student.get_full_name()} uchun {amount_decimal:,.0f} UZS to'lov qabul qilindi.",
-        'transaction_id': transaction.id,
-    })
+        # Super admin uchun organization bo'lmasligi mumkin
+        if org:
+            student = User.objects.filter(pk=student_id, organization=org, role='student').first()
+            account = Account.objects.filter(pk=account_id, organization=org).first()
+        else:
+            student = User.objects.filter(pk=student_id, role='student').first()
+            account = Account.objects.filter(pk=account_id).first()
+
+        if not student:
+            return JsonResponse({'success': False, 'error': "O'quvchi topilmadi."}, status=400)
+        if not account:
+            return JsonResponse({'success': False, 'error': "Kassa topilmadi."}, status=400)
+
+        # Tranzaksiya uchun tashkilotni aniqlash
+        transaction_org = org or student.organization
+
+        # Kurs to'lovi kategoriyasini topish yoki None
+        category = TransactionCategory.objects.filter(
+            organization=transaction_org, transaction_type='income'
+        ).first()
+
+        transaction = Transaction.objects.create(
+            organization=transaction_org,
+            account=account,
+            category=category,
+            student=student,
+            amount=amount_decimal,
+            transaction_type='income',
+            payment_method=payment_method,
+            description=f"Tezkor to'lov: {student.get_full_name()}",
+            status='pending',
+            created_by=request.user,
+        )
+
+        return JsonResponse({
+            'success': True,
+            'message': f"{student.get_full_name()} uchun {amount_decimal:,.0f} UZS to'lov qabul qilindi.",
+            'transaction_id': transaction.id,
+        })
+    except Exception:
+        return JsonResponse({'success': False, 'error': "Xatolik yuz berdi. Iltimos qayta urinib ko'ring."}, status=500)

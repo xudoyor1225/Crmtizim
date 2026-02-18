@@ -530,7 +530,16 @@
                 headers: { 'X-CSRFToken': csrfToken },
                 body: formData
             });
-            const data = await response.json();
+            let data;
+            try {
+                data = await response.json();
+            } catch (jsonErr) {
+                errorText.textContent = "Serverdan noto'g'ri javob keldi. Sahifani yangilang.";
+                errorDiv.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="ph-fill ph-check-circle"></i> Tasdiqlash';
+                return;
+            }
             if (data.success) {
                 document.getElementById('qpFormContainer').classList.add('hidden');
                 document.getElementById('qpFooter').classList.add('hidden');
