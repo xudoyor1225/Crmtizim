@@ -10,7 +10,8 @@
     </a>
 
     <!-- Material Card -->
-    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+    <div
+        class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
 
         <!-- Header -->
         <div class="p-6 border-b border-slate-100">
@@ -27,8 +28,7 @@
                     </span>
                     <h1 class="text-2xl font-bold text-slate-800">{{ material.title }}</h1>
                     {% if material.category %}
-                    <p class="text-[#3F72AF] font-medium mt-1">{{ material.category.icon }} {{ material.category.name }}
-                    </p>
+                    <p class="text-[#3F72AF] font-medium mt-1">{{ material.category.icon }} {{ material.category.name }}</p>
                     {% endif %}
                 </div>
 
@@ -88,7 +88,8 @@
             {% endif %}
 
             <!-- Meta info -->
-            <div class="flex flex-wrap items-center gap-4 text-sm text-slate-500 border-t border-slate-100 pt-6">
+            <div
+                class="flex flex-wrap items-center gap-4 text-sm text-slate-500 border-t border-slate-100 pt-6">
                 <span class="flex items-center gap-1">
                     <i class="ph ph-user"></i> {{ material.uploaded_by.first_name }}
                 </span>
@@ -118,8 +119,7 @@
             </a>
             {% endif %}
 
-            {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' or
-            request.user.role == 'teacher' %}
+            {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' or request.user.role == 'teacher' %}
             <a href="{% url 'material_edit' material.id %}"
                 class="px-6 py-3 bg-slate-200 text-slate-700 rounded-xl hover:bg-gray-300 transition flex items-center gap-2">
                 <i class="ph ph-pencil-simple"></i> Tahrirlash

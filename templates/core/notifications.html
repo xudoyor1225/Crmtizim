@@ -9,7 +9,7 @@
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                <i class="ph ph-bell text-[#1D546D]"></i>
+                <i class="ph ph-bell text-[#3F72AF]"></i>
                 Bildirishnomalar
             </h1>
             <p class="text-slate-400">Sizga kelgan barcha xabarlar</p>
@@ -17,7 +17,7 @@
 
         {% if unread_notifications_count > 0 %}
         <a href="{% url 'core:notifications_mark_all_read' %}"
-           class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1D546D] text-white rounded-xl font-medium hover:bg-[#061E29] transition">
+           class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#3F72AF] text-white rounded-xl font-medium hover:bg-[#112D4E] transition">
             <i class="ph ph-checks"></i>
             Barchasini o'qildi deb belgilash
         </a>
@@ -32,7 +32,7 @@
             <div class="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0
                 {% if notification.message_type == 'sms' %}bg-green-100 text-green-600
                 {% elif notification.message_type == 'telegram' %}bg-blue-100 text-blue-600
-                {% else %}bg-[#1D546D]/10 text-[#1D546D]{% endif %}">
+                {% else %}bg-[#3F72AF]/10 text-[#3F72AF]{% endif %}">
                 {% if notification.message_type == 'sms' %}
                 <i class="ph-fill ph-chat-circle-text text-xl"></i>
                 {% elif notification.message_type == 'telegram' %}
@@ -54,7 +54,7 @@
 
                     {% if notification.status == 'sent' %}
                     <a href="{% url 'core:notification_read' notification.pk %}"
-                       class="flex-shrink-0 px-3 py-1 bg-[#1D546D]/10 text-[#1D546D] text-xs rounded-full hover:bg-[#1D546D]/20 transition">
+                       class="flex-shrink-0 px-3 py-1 bg-[#3F72AF]/10 text-[#3F72AF] text-xs rounded-full hover:bg-[#3F72AF]/20 transition">
                         O'qildim
                     </a>
                     {% else %}
@@ -102,7 +102,7 @@
         </a>
         {% endif %}
 
-        <span class="px-4 py-2 bg-[#1D546D] text-white rounded-lg font-medium">
+        <span class="px-4 py-2 bg-[#3F72AF] text-white rounded-lg font-medium">
             {{ notifications.number }} / {{ notifications.paginator.num_pages }}
         </span>
 

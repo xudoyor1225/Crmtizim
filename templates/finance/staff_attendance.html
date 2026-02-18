@@ -37,7 +37,7 @@
                     <td class="px-6 py-4">
                         <div class="flex items-center gap-3">
                             <div
-                                class="w-10 h-10 rounded-full bg-gradient-to-br from-[#5F9598] to-purple-500 flex items-center justify-center text-white font-bold">
+                                class="w-10 h-10 rounded-full bg-gradient-to-br from-[#7A9CC5] to-purple-500 flex items-center justify-center text-white font-bold">
                                 {{ item.staff.first_name|first }}
                             </div>
                             <div>
@@ -80,7 +80,7 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="staff_id" value="{{ item.staff.id }}">
                                 <button type="submit"
-                                    class="px-3 py-1 bg-[#1D546D]/10 text-[#061E29] rounded-lg text-xs font-medium hover:bg-[#1D546D] transition">
+                                    class="px-3 py-1 bg-[#3F72AF]/10 text-[#112D4E] rounded-lg text-xs font-medium hover:bg-[#3F72AF] hover:text-white transition">
                                     <i class="ph ph-sign-out"></i> Ketdi
                                 </button>
                             </form>

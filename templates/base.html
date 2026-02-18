@@ -17,22 +17,10 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- InstantClick - Sahifalarni oldindan yuklash (2-3x tezroq) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/instantclick/3.1.0/instantclick.min.js"
-        data-no-instant></script>
-
-    <script data-no-instant>
-        document.addEventListener('DOMContentLoaded', function () {
-            // InstantClick - hover qilganda sahifani oldindan yuklaydi
-            InstantClick.init('mousedown');
-
-            // Sahifa o'zgarganda loading indikator
-            InstantClick.on('change', function () {
-                // Scroll tepaga
-                window.scrollTo(0, 0);
-            });
-        });
-    </script>
+    <!-- HTMX - Tez AJAX so'rovlar uchun (sahifani qayta yuklamasdan) -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"
+            integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+            crossorigin="anonymous"></script>
 
     <!-- CUSTOM PREMIUM CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -43,38 +31,9 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        // Yangi rang palitasi (Blue/Grey)
-                        primary: {
-                            50: '#F9F7F7',
-                            100: '#F3F6FA',
-                            200: '#DBE2EF',
-                            300: '#9DB2D6',
-                            400: '#6B93C9',
-                            500: '#3F72AF',
-                            600: '#335C8D',
-                            700: '#26466B',
-                            800: '#1A3049',
-                            900: '#112D4E'
-                        },
-                        brand: {
-                            lightest: '#F9F7F7',
-                            light: '#DBE2EF',
-                            medium: '#6B93C9',
-                            primary: '#3F72AF',
-                            dark: '#112D4E'
-                        },
-                        forest: {
-                            50: '#F9F7F7',
-                            100: '#F3F6FA',
-                            200: '#DBE2EF',
-                            300: '#9DB2D6',
-                            400: '#6B93C9',
-                            500: '#3F72AF',
-                            600: '#335C8D',
-                            700: '#26466B',
-                            800: '#1A3049',
-                            900: '#112D4E'
-                        }
+                        primary: { 50: '#F9F7F7', 100: '#EEF2F9', 200: '#DBE2EF', 300: '#B5C7DE', 400: '#7A9CC5', 500: '#3F72AF', 600: '#355F93', 700: '#2B4D78', 800: '#1C3A5E', 900: '#112D4E' },
+                        teal: { 50: '#F4F7FB', 100: '#E5ECF5', 200: '#DBE2EF', 300: '#B5C7DE', 400: '#7A9CC5', 500: '#5584B5', 600: '#3F72AF', 700: '#2B4D78' },
+                        slate: { 50: '#F9F7F7', 100: '#F0EFF2', 200: '#DBE2EF', 300: '#C4CCDB', 400: '#8A95A8', 500: '#5B6A80', 600: '#3D4E64', 700: '#2A3B51', 800: '#1C2E44', 900: '#112D4E' }
                     }
                 }
             }
@@ -84,117 +43,29 @@
         [x-cloak] {
             display: none !important;
         }
-
-        /* InstantClick loading animation */
-        #instant-click-loading {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #112D4E, #3F72AF, #9DB2D6, #3F72AF, #112D4E);
-            background-size: 200% 100%;
-            animation: loading 1s linear infinite;
-            z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .instant-click-loading #instant-click-loading {
-            opacity: 1;
-        }
-
-        @keyframes loading {
-            0% {
-                background-position: 200% 0;
-            }
-
-            100% {
-                background-position: -200% 0;
-            }
-        }
-
-        /* Glass/Blur Effects */
-        .glass {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(157, 178, 214, 0.15);
-        }
-
-        .glass-dark {
-            background: rgba(17, 45, 78, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(63, 114, 175, 0.2);
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(157, 178, 214, 0.2);
-            box-shadow: 0 8px 32px rgba(17, 45, 78, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-        }
-
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 16px 48px rgba(17, 45, 78, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-            transform: translateY(-2px);
-        }
-
-        .glass-button {
-            background: rgba(17, 45, 78, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(63, 114, 175, 0.3);
-            box-shadow: 0 4px 16px rgba(17, 45, 78, 0.2);
-        }
-
-        .glass-button:hover {
-            background: rgba(17, 45, 78, 0.95);
-            box-shadow: 0 8px 24px rgba(17, 45, 78, 0.3);
-        }
-
-        .glass-input {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(157, 178, 214, 0.25);
-        }
-
-        .glass-input:focus {
-            background: rgba(255, 255, 255, 0.9);
-            border-color: #3F72AF;
-            box-shadow: 0 0 0 3px rgba(63, 114, 175, 0.15);
-        }
     </style>
 </head>
 
-<body
-    class="font-sans antialiased min-h-screen overflow-x-hidden overflow-y-auto bg-gradient-to-br from-[#F9F7F7] via-[#F3F6FA] to-[#DBE2EF] text-[#112D4E]">
+<body class="font-sans antialiased overflow-hidden bg-slate-50 text-slate-800">
 
-    <!-- Loading indicator -->
-    <div id="instant-click-loading"></div>
+    <div class="flex h-screen w-full">
 
-    <div class="flex min-h-screen w-full">
-
-        <!-- SIDEBAR - OQ RANG, GLASS EFFECT -->
+        <!-- SIDEBAR -->
         <aside
-            class="flex-shrink-0 w-64 flex flex-col transition-all duration-300 transform lg:transform-none z-50 absolute lg:relative h-full bg-white/80 backdrop-blur-2xl border-r border-[#9DB2D6]/20 shadow-xl shadow-[#112D4E]/5"
+            class="flex-shrink-0 w-64 flex flex-col transition-all duration-300 transform lg:transform-none z-50 absolute lg:relative h-full bg-white border-r border-slate-200 shadow-sm"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
             <!-- Logo -->
             <div
-                class="h-16 flex items-center justify-center border-b border-[#9DB2D6]/20 bg-gradient-to-r from-[#112D4E] to-[#3F72AF]">
+                class="h-16 flex items-center justify-center border-b border-slate-200 bg-gradient-to-r from-[#3F72AF] to-[#112D4E]">
                 <span class="text-xl font-bold flex items-center gap-2 text-white">
-                    <i class="ph-fill ph-graduation-cap text-2xl text-[#9DB2D6]"></i>
+                    <i class="ph-fill ph-graduation-cap text-2xl"></i>
                     Smart Edu
                 </span>
             </div>
 
             <!-- Navigation -->
-            <div id="sidebar-nav" class="flex-1 overflow-y-auto py-4 px-3 space-y-1 bg-transparent">
+            <div id="sidebar-nav" class="flex-1 overflow-y-auto py-4 px-3 space-y-1 bg-white">
                 {% include 'components/sidebar.html' %}
             </div>
 
@@ -224,19 +95,19 @@
                 });
             </script>
 
-            <!-- User Profile - Oq tema, Glass Effect -->
-            <div class="p-4 border-t border-[#9DB2D6]/20 bg-white/60 backdrop-blur-xl">
+            <!-- User Profile -->
+            <div class="p-4 border-t border-slate-200 bg-slate-50">
                 <div class="flex items-center gap-3">
                     <div
-                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#112D4E] to-[#3F72AF] text-white flex items-center justify-center font-bold shadow-lg">
+                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#3F72AF] to-[#112D4E] text-white flex items-center justify-center font-bold shadow-md">
                         {{ request.user.first_name|first }}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold truncate text-[#112D4E]">{{ request.user.first_name }}</p>
-                        <p class="text-xs truncate text-[#3F72AF]">{{ request.user.get_role_display }}</p>
+                        <p class="text-sm font-semibold truncate text-slate-800">{{ request.user.first_name }}</p>
+                        <p class="text-xs truncate text-slate-500">{{ request.user.get_role_display }}</p>
                     </div>
                     <a href="{% url 'logout' %}"
-                        class="transition p-2 rounded-xl text-[#3F72AF] hover:text-rose-500 hover:bg-rose-50/80 backdrop-blur-sm">
+                        class="transition p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50">
                         <i class="ph-fill ph-sign-out text-xl"></i>
                     </a>
                 </div>
@@ -244,19 +115,18 @@
         </aside>
 
         <!-- MAIN CONTENT -->
-        <div
-            class="flex-1 flex flex-col min-h-screen min-w-0 overflow-hidden bg-gradient-to-br from-[#F9F7F7] via-[#F3F6FA] to-[#F9F7F7]">
+        <div class="flex-1 flex flex-col h-screen min-w-0 overflow-hidden bg-slate-50">
 
-            <!-- Header - Glass Effect -->
+            <!-- Header -->
             <header
-                class="h-16 flex items-center justify-between px-6 z-40 bg-white/80 backdrop-blur-xl border-b border-[#9DB2D6]/20 shadow-sm">
+                class="h-16 flex items-center justify-between px-6 z-40 bg-white border-b border-slate-200 shadow-sm">
                 <button @click="sidebarOpen = !sidebarOpen"
-                    class="focus:outline-none transition p-2 rounded-xl lg:hidden text-[#3F72AF] hover:text-[#112D4E] hover:bg-[#9DB2D6]/20 backdrop-blur-sm">
+                    class="focus:outline-none transition p-2 rounded-lg lg:hidden text-slate-500 hover:text-[#3F72AF] hover:bg-primary-50">
                     <i class="ph ph-list text-2xl"></i>
                 </button>
 
                 <h1
-                    class="text-lg font-bold hidden sm:block bg-gradient-to-r from-[#112D4E] to-[#3F72AF] bg-clip-text text-transparent">
+                    class="text-lg font-bold hidden sm:block bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
                     {{ organization.name|default:"Smart Edu Center" }}
                 </h1>
 
@@ -265,24 +135,23 @@
                     <!-- Notification Dropdown -->
                     <div class="relative">
                         <button @click="notifOpen = !notifOpen"
-                            class="relative p-2.5 rounded-xl transition text-[#3F72AF] hover:text-[#112D4E] hover:bg-[#9DB2D6]/20">
+                            class="relative p-2.5 rounded-xl transition text-slate-500 hover:text-amber-500 hover:bg-amber-50">
                             <i class="ph ph-bell text-xl"></i>
                             {% if unread_notifications_count > 0 %}
-                            <span
-                                class="absolute top-1 right-1 min-w-[18px] h-[18px] bg-rose-500 rounded-full text-white text-[10px] flex items-center justify-center font-bold animate-pulse">
+                            <span class="absolute top-1 right-1 min-w-[18px] h-[18px] bg-rose-500 rounded-full text-white text-[10px] flex items-center justify-center font-bold animate-pulse">
                                 {{ unread_notifications_count }}
                             </span>
                             {% endif %}
                         </button>
 
-                        <!-- Dropdown - Glass -->
+                        <!-- Dropdown -->
                         <div x-show="notifOpen" @click.away="notifOpen = false" x-transition
-                            class="absolute right-0 mt-2 w-80 bg-white/95 backdrop-blur-xl border border-[#9DB2D6]/20 rounded-2xl shadow-2xl z-50"
+                            class="absolute right-0 mt-2 w-80 bg-white border border-slate-200 rounded-xl shadow-xl z-50"
                             x-cloak>
                             <div
-                                class="p-4 border-b border-[#9DB2D6]/20 flex items-center justify-between bg-[#F9F7F7] rounded-t-xl">
-                                <h3 class="font-bold text-[#112D4E] flex items-center gap-2">
-                                    <i class="ph-fill ph-bell text-[#3F72AF]"></i> Bildirishnomalar
+                                class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50 rounded-t-xl">
+                                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                    <i class="ph-fill ph-bell text-amber-500"></i> Bildirishnomalar
                                 </h3>
                                 {% if unread_notifications_count > 0 %}
                                 <span class="text-xs bg-rose-100 text-rose-600 px-2 py-0.5 rounded-full font-medium">
@@ -310,8 +179,7 @@
                                         <p class="text-sm text-slate-800 font-medium line-clamp-1">
                                             {{ notification.message|striptags|truncatewords:8 }}
                                         </p>
-                                        <p class="text-xs text-slate-400 mt-1">{{ notification.created_at|timesince }}
-                                            oldin</p>
+                                        <p class="text-xs text-slate-400 mt-1">{{ notification.created_at|timesince }} oldin</p>
                                     </div>
                                     {% if notification.status == 'sent' %}
                                     <span class="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-2"></span>
@@ -319,8 +187,7 @@
                                 </a>
                                 {% empty %}
                                 <div class="p-8 text-center">
-                                    <div
-                                        class="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <div class="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
                                         <i class="ph ph-bell-slash text-2xl text-slate-400"></i>
                                     </div>
                                     <p class="text-slate-500 text-sm">Bildirishnomalar yo'q</p>
@@ -329,7 +196,7 @@
                             </div>
                             {% if notifications %}
                             <a href="{% url 'core:notifications' %}"
-                                class="block p-3 text-center text-sm text-[#112D4E] hover:bg-[#9DB2D6]/10 transition border-t border-[#9DB2D6]/20 rounded-b-xl font-medium">
+                                class="block p-3 text-center text-sm text-[#3F72AF] hover:bg-primary-50 transition border-t border-slate-100 rounded-b-xl font-medium">
                                 Barchasini ko'rish →
                             </a>
                             {% endif %}
@@ -338,34 +205,34 @@
 
                     <!-- Settings -->
                     <a href="{% url 'core:settings' %}"
-                        class="p-2.5 text-[#3F72AF] hover:text-[#112D4E] hover:bg-[#9DB2D6]/15 rounded-xl transition backdrop-blur-sm">
+                        class="p-2.5 text-slate-500 hover:text-[#3F72AF] hover:bg-primary-50 rounded-xl transition">
                         <i class="ph ph-gear text-xl"></i>
                     </a>
 
                     <!-- Logout Button -->
                     <div class="relative">
                         <button @click="logoutOpen = true"
-                            class="p-2.5 text-[#3F72AF] hover:text-rose-500 hover:bg-rose-50/80 rounded-xl transition backdrop-blur-sm">
+                            class="p-2.5 text-slate-500 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition">
                             <i class="ph ph-sign-out text-xl"></i>
                         </button>
 
                         <!-- Logout Confirmation Modal -->
                         <div x-show="logoutOpen" x-transition
                             class="fixed inset-0 z-50 flex items-center justify-center" x-cloak>
-                            <div class="absolute inset-0 bg-[#112D4E]/40 backdrop-blur-md" @click="logoutOpen = false">
+                            <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click="logoutOpen = false">
                             </div>
                             <div
-                                class="relative bg-white/95 backdrop-blur-2xl border border-[#9DB2D6]/20 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6">
+                                class="relative bg-white border border-slate-200 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6">
                                 <div class="text-center">
                                     <div
                                         class="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                         <i class="ph-fill ph-sign-out text-3xl text-rose-500"></i>
                                     </div>
-                                    <h3 class="text-xl font-bold text-[#112D4E] mb-2">Chiqishni tasdiqlang</h3>
-                                    <p class="text-[#3F72AF] text-sm mb-6">Tizimdan chiqmoqchimisiz?</p>
+                                    <h3 class="text-xl font-bold text-slate-800 mb-2">Chiqishni tasdiqlang</h3>
+                                    <p class="text-slate-500 text-sm mb-6">Tizimdan chiqmoqchimisiz?</p>
                                     <div class="flex gap-3">
                                         <button @click="logoutOpen = false"
-                                            class="flex-1 px-4 py-2.5 bg-[#9DB2D6]/20 text-[#112D4E] rounded-xl font-medium hover:bg-[#9DB2D6]/30 transition backdrop-blur-sm">
+                                            class="flex-1 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition">
                                             Bekor qilish
                                         </button>
                                         <a href="{% url 'logout' %}"
@@ -380,18 +247,16 @@
                 </div>
             </header>
 
-            <!-- Main Content - Gradient Background -->
-            <main id="main-content"
-                class="flex-1 overflow-y-auto p-6 bg-gradient-to-br from-[#F9F7F7] via-[#F3F6FA] to-[#F9F7F7]">
-
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto p-6 bg-slate-50">
                 {% if messages %}
                 <div class="mb-6 space-y-3">
                     {% for message in messages %}
-                    <div class="p-4 rounded-xl flex items-center gap-3 animate-fadeIn backdrop-blur-sm
+                    <div class="p-4 rounded-xl flex items-center gap-3 animate-fadeIn
                         {% if message.tags == 'error' %}
-                        bg-rose-50/80 text-rose-600 border border-rose-200
+                        bg-rose-50 text-rose-600 border border-rose-200
                         {% else %}
-                        bg-emerald-50/80 text-emerald-600 border border-emerald-200
+                        bg-emerald-50 text-emerald-600 border border-emerald-200
                         {% endif %}">
                         <i
                             class="ph {% if message.tags == 'error' %}ph-warning-circle{% else %}ph-check-circle{% endif %} text-xl"></i>
@@ -413,20 +278,20 @@
     <!-- FRONTEND OPTIMIZATSIYA SCRIPTI -->
     <script>
         // HTMX konfiguratsiya
-        document.body.addEventListener('htmx:configRequest', function (evt) {
+        document.body.addEventListener('htmx:configRequest', function(evt) {
             // CSRF token avtomatik qo'shish
             evt.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
         });
 
         // Loading indikator
-        document.body.addEventListener('htmx:beforeRequest', function (evt) {
+        document.body.addEventListener('htmx:beforeRequest', function(evt) {
             const target = evt.detail.target;
             if (target) {
                 target.classList.add('opacity-50');
             }
         });
 
-        document.body.addEventListener('htmx:afterRequest', function (evt) {
+        document.body.addEventListener('htmx:afterRequest', function(evt) {
             const target = evt.detail.target;
             if (target) {
                 target.classList.remove('opacity-50');

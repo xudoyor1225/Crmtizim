@@ -40,7 +40,7 @@
                 <!-- Header -->
                 <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
                     <h3 class="font-semibold text-slate-800 flex items-center gap-2">
-                        <i class="ph-fill ph-bell text-[#1D546D]"></i> Bildirishnomalar
+                        <i class="ph-fill ph-bell text-[#3F72AF]"></i> Bildirishnomalar
                     </h3>
                     {% if unread_notifications_count > 0 %}
                     <span class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full font-medium">
@@ -57,7 +57,7 @@
                         <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
                             {% if notification.message_type == 'sms' %}bg-green-100 text-green-600
                             {% elif notification.message_type == 'telegram' %}bg-blue-100 text-blue-600
-                            {% else %}bg-[#1D546D]/10 text-[#1D546D]{% endif %}">
+                            {% else %}bg-[#3F72AF]/10 text-[#3F72AF]{% endif %}">
                             {% if notification.message_type == 'sms' %}
                             <i class="ph-fill ph-chat-circle-text"></i>
                             {% elif notification.message_type == 'telegram' %}
@@ -87,7 +87,7 @@
                 <!-- Footer -->
                 {% if notifications %}
                 <div class="px-4 py-3 bg-slate-50 border-t border-slate-200">
-                    <a href="{% url 'core:notifications' %}" class="text-sm text-[#1D546D] hover:underline font-medium flex items-center justify-center gap-1">
+                    <a href="{% url 'core:notifications' %}" class="text-sm text-[#3F72AF] hover:underline font-medium flex items-center justify-center gap-1">
                         Barchasini ko'rish <i class="ph ph-arrow-right"></i>
                     </a>
                 </div>
@@ -102,7 +102,7 @@
 
         <!-- Admin Panel (faqat super_admin uchun) -->
         {% if request.user.role == 'super_admin' or request.user.is_superuser %}
-        <a href="/admin/" class="p-2 text-slate-400 hover:text-[#1D546D] transition-colors" title="Admin Panel">
+        <a href="/admin/" class="p-2 text-slate-400 hover:text-[#3F72AF] transition-colors" title="Admin Panel">
             <i class="ph ph-arrow-square-out text-xl"></i>
         </a>
         {% endif %}

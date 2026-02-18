@@ -9,7 +9,7 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-bold text-slate-800">O'qituvchilar Reytingi 🏆</h1>
-            <p class="text-slate-500">Haftalik baho: {{ current_week_start|date:"d M" }} - {{ current_week_end|date:"d M, Y" }}</p>
+            <p class="text-slate-400">O'qituvchilar faoliyati va natijalari</p>
         </div>
         <a href="{% url 'operations:student_ratings' %}"
             class="px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition flex items-center gap-2">
@@ -18,215 +18,58 @@
     </div>
 
     <!-- Teachers Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for data in teachers_data %}
-        <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden hover:shadow-lg transition-all duration-300"
-            x-data="{ showRating: false }">
-
+        <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden hover:border-primary-300 transition">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-[#1D546D] to-[#5F9598] p-5 text-white">
+            <div class="bg-gradient-to-r from-[#7A9CC5] to-purple-600 p-6 text-slate-800">
                 <div class="flex items-center gap-4">
-                    <div class="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold">
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold">
                         {{ data.teacher.first_name|first }}
                     </div>
-                    <div class="flex-1">
-                        <h3 class="text-lg font-bold">{{ data.teacher.first_name }} {{ data.teacher.last_name }}</h3>
-                        <p class="text-white/70 text-sm">{{ data.teacher.phone }}</p>
+                    <div>
+                        <h3 class="text-xl font-bold">{{ data.teacher.first_name }} {{ data.teacher.last_name }}</h3>
+                        <p class="text-[#3F72AF]">{{ data.teacher.phone }}</p>
                     </div>
-
-                    <!-- Umumiy reyting -->
-                    {% if data.avg_rating %}
-                    <div class="text-right">
-                        <div class="flex items-center gap-0.5">
-                            {% for i in "12345" %}
-                            <i class="ph-fill ph-star text-sm {% if forloop.counter <= data.avg_rating %}text-amber-300{% else %}text-white/30{% endif %}"></i>
-                            {% endfor %}
-                        </div>
-                        <p class="text-xs text-white/70 mt-0.5">{{ data.avg_rating }}/5 ({{ data.total_ratings }})</p>
-                    </div>
-                    {% endif %}
                 </div>
             </div>
 
             <!-- Stats -->
-            <div class="grid grid-cols-4 gap-2 p-4">
-                <div class="text-center p-2 bg-slate-50 rounded-xl">
-                    <p class="text-xl font-bold text-[#1D546D]">{{ data.group_count }}</p>
+            <div class="grid grid-cols-2 gap-4 p-4">
+                <div class="text-center p-3 bg-slate-50 rounded-xl">
+                    <p class="text-2xl font-bold text-[#3F72AF]">{{ data.group_count }}</p>
                     <p class="text-xs text-slate-500">Guruh</p>
                 </div>
-                <div class="text-center p-2 bg-slate-50 rounded-xl">
-                    <p class="text-xl font-bold text-emerald-600">{{ data.student_count }}</p>
+                <div class="text-center p-3 bg-slate-50 rounded-xl">
+                    <p class="text-2xl font-bold text-emerald-600">{{ data.student_count }}</p>
                     <p class="text-xs text-slate-500">O'quvchi</p>
                 </div>
-                <div class="text-center p-2 bg-slate-50 rounded-xl">
-                    <p class="text-xl font-bold text-purple-600">{{ data.lesson_count }}</p>
+                <div class="text-center p-3 bg-slate-50 rounded-xl">
+                    <p class="text-2xl font-bold text-purple-400">{{ data.lesson_count }}</p>
                     <p class="text-xs text-slate-500">Dars</p>
                 </div>
-                <div class="text-center p-2 bg-slate-50 rounded-xl">
-                    <p class="text-xl font-bold text-orange-500">{{ data.attendance_rate }}%</p>
-                    <p class="text-xs text-slate-500">Davomat</p>
+                <div class="text-center p-3 bg-slate-50 rounded-xl">
+                    <p class="text-2xl font-bold text-orange-400">{{ data.avg_grade }}</p>
+                    <p class="text-xs text-slate-500">O'rt. Baho</p>
                 </div>
             </div>
 
-            <!-- Joriy hafta bahosi -->
-            {% if data.current_rating %}
-            <div class="px-4 pb-3">
-                <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-medium text-emerald-700">Bu hafta bahosi:</span>
-                        <span class="text-sm font-bold text-emerald-700">{{ data.current_rating.average_score }}/5 ⭐</span>
-                    </div>
-                    <div class="flex gap-1">
-                        {% for i in "12345" %}
-                        <div class="flex-1 h-1.5 rounded-full {% if forloop.counter <= data.current_rating.overall %}bg-emerald-500{% else %}bg-emerald-200{% endif %}"></div>
-                        {% endfor %}
-                    </div>
-                    {% if data.current_rating.comment %}
-                    <p class="text-xs text-emerald-600 mt-2 truncate">💬 {{ data.current_rating.comment }}</p>
-                    {% endif %}
-                </div>
-            </div>
-            {% else %}
-            <div class="px-4 pb-3">
-                <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-center">
-                    <p class="text-xs text-amber-700">⚠️ Bu hafta hali baholanmagan</p>
-                </div>
-            </div>
-            {% endif %}
-
-            <!-- Baho qo'yish tugmasi (faqat admin uchun) -->
-            {% if can_rate %}
+            <!-- Attendance Bar -->
             <div class="px-4 pb-4">
-                <button @click="showRating = !showRating"
-                    class="w-full py-2.5 rounded-xl font-medium transition flex items-center justify-center gap-2
-                    {% if data.current_rating %}bg-slate-100 text-slate-600 hover:bg-slate-200{% else %}bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:shadow-lg{% endif %}">
-                    <i class="ph ph-star"></i>
-                    <span x-text="showRating ? 'Yopish' : '{% if data.current_rating %}Bahoni tahrirlash{% else %}Baho qo\'yish{% endif %}'"></span>
-                </button>
-
-                <!-- Baho qo'yish formasi -->
-                <div x-show="showRating" x-transition x-cloak class="mt-4 p-4 bg-slate-50 rounded-xl">
-                    <form method="POST" class="space-y-4">
-                        {% csrf_token %}
-                        <input type="hidden" name="teacher_id" value="{{ data.teacher.id }}">
-
-                        <h4 class="font-medium text-slate-700 text-sm">Haftalik baho qo'yish</h4>
-
-                        <!-- Baholash mezonlari -->
-                        <div class="space-y-3">
-                            <!-- Tayyorgarlik -->
-                            <div x-data="{ rating: {{ data.current_rating.preparation|default:5 }} }">
-                                <div class="flex items-center justify-between mb-1">
-                                    <label class="text-xs text-slate-500">Tayyorgarlik</label>
-                                    <span class="text-xs font-medium text-slate-700" x-text="rating + '/5'"></span>
-                                </div>
-                                <div class="flex gap-1">
-                                    {% for i in "12345" %}
-                                    <button type="button" @click="rating = {{ forloop.counter }}"
-                                        :class="rating >= {{ forloop.counter }} ? 'text-amber-400' : 'text-slate-200'"
-                                        class="text-2xl hover:scale-110 transition">
-                                        <i class="ph-fill ph-star"></i>
-                                    </button>
-                                    {% endfor %}
-                                </div>
-                                <input type="hidden" name="preparation" :value="rating">
-                            </div>
-
-                            <!-- Tushuntirish -->
-                            <div x-data="{ rating: {{ data.current_rating.delivery|default:5 }} }">
-                                <div class="flex items-center justify-between mb-1">
-                                    <label class="text-xs text-slate-500">Tushuntirish</label>
-                                    <span class="text-xs font-medium text-slate-700" x-text="rating + '/5'"></span>
-                                </div>
-                                <div class="flex gap-1">
-                                    {% for i in "12345" %}
-                                    <button type="button" @click="rating = {{ forloop.counter }}"
-                                        :class="rating >= {{ forloop.counter }} ? 'text-amber-400' : 'text-slate-200'"
-                                        class="text-2xl hover:scale-110 transition">
-                                        <i class="ph-fill ph-star"></i>
-                                    </button>
-                                    {% endfor %}
-                                </div>
-                                <input type="hidden" name="delivery" :value="rating">
-                            </div>
-
-                            <!-- Faollik -->
-                            <div x-data="{ rating: {{ data.current_rating.engagement|default:5 }} }">
-                                <div class="flex items-center justify-between mb-1">
-                                    <label class="text-xs text-slate-500">O'quvchilarni jalb qilish</label>
-                                    <span class="text-xs font-medium text-slate-700" x-text="rating + '/5'"></span>
-                                </div>
-                                <div class="flex gap-1">
-                                    {% for i in "12345" %}
-                                    <button type="button" @click="rating = {{ forloop.counter }}"
-                                        :class="rating >= {{ forloop.counter }} ? 'text-amber-400' : 'text-slate-200'"
-                                        class="text-2xl hover:scale-110 transition">
-                                        <i class="ph-fill ph-star"></i>
-                                    </button>
-                                    {% endfor %}
-                                </div>
-                                <input type="hidden" name="engagement" :value="rating">
-                            </div>
-
-                            <!-- Vaqtga rioya -->
-                            <div x-data="{ rating: {{ data.current_rating.punctuality|default:5 }} }">
-                                <div class="flex items-center justify-between mb-1">
-                                    <label class="text-xs text-slate-500">Vaqtga rioya</label>
-                                    <span class="text-xs font-medium text-slate-700" x-text="rating + '/5'"></span>
-                                </div>
-                                <div class="flex gap-1">
-                                    {% for i in "12345" %}
-                                    <button type="button" @click="rating = {{ forloop.counter }}"
-                                        :class="rating >= {{ forloop.counter }} ? 'text-amber-400' : 'text-slate-200'"
-                                        class="text-2xl hover:scale-110 transition">
-                                        <i class="ph-fill ph-star"></i>
-                                    </button>
-                                    {% endfor %}
-                                </div>
-                                <input type="hidden" name="punctuality" :value="rating">
-                            </div>
-
-                            <!-- Umumiy -->
-                            <div x-data="{ rating: {{ data.current_rating.overall|default:5 }} }">
-                                <div class="flex items-center justify-between mb-1">
-                                    <label class="text-xs text-slate-500 font-medium">Umumiy baho</label>
-                                    <span class="text-xs font-bold text-purple-600" x-text="rating + '/5'"></span>
-                                </div>
-                                <div class="flex gap-1">
-                                    {% for i in "12345" %}
-                                    <button type="button" @click="rating = {{ forloop.counter }}"
-                                        :class="rating >= {{ forloop.counter }} ? 'text-purple-500' : 'text-slate-200'"
-                                        class="text-2xl hover:scale-110 transition">
-                                        <i class="ph-fill ph-star"></i>
-                                    </button>
-                                    {% endfor %}
-                                </div>
-                                <input type="hidden" name="overall" :value="rating">
-                            </div>
-                        </div>
-
-                        <!-- Izoh -->
-                        <div>
-                            <label class="block text-xs text-slate-500 mb-1">Izoh (ixtiyoriy)</label>
-                            <textarea name="rating_comment" rows="2"
-                                class="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 focus:ring-2 focus:ring-purple-300 focus:border-purple-400 transition"
-                                placeholder="Hafta davomida kuzatilgan holatlar...">{{ data.current_rating.comment|default:"" }}</textarea>
-                        </div>
-
-                        <button type="submit"
-                            class="w-full py-2.5 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-lg font-medium hover:shadow-lg transition flex items-center justify-center gap-2">
-                            <i class="ph ph-check"></i>
-                            {% if data.current_rating %}Yangilash{% else %}Saqlash{% endif %}
-                        </button>
-                    </form>
+                <div class="flex items-center justify-between text-sm mb-1">
+                    <span class="text-slate-400">Davomat</span>
+                    <span class="font-bold text-slate-800">{{ data.attendance_rate }}%</span>
+                </div>
+                <div class="h-2 bg-slate-50 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full transition-all duration-500"
+                        style="width: {{ data.attendance_rate }}%;"></div>
                 </div>
             </div>
-            {% endif %}
         </div>
         {% empty %}
         <div class="col-span-3 rounded-2xl border border-slate-200 bg-white p-12 text-center">
-            <i class="ph ph-chalkboard-teacher text-5xl text-slate-300 mb-4"></i>
-            <h3 class="text-lg font-bold text-slate-700 mb-2">O'qituvchilar topilmadi</h3>
+            <i class="ph ph-chalkboard-teacher text-5xl text-slate-600 mb-4"></i>
+            <h3 class="text-lg font-bold text-slate-800 mb-2">O'qituvchilar topilmadi</h3>
             <p class="text-slate-500">Hozircha o'qituvchilar mavjud emas</p>
         </div>
         {% endfor %}
