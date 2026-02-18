@@ -17,7 +17,7 @@
             </h1>
             <p class="text-sm text-[#64748B] font-semibold">{{ request.user.organization.name }}</p>
         </div>
-        <div class="flex gap-2">
+        <div class="flex gap-2 flex-wrap">
             <a href="{% url 'users:student_create' %}"
                 class="inline-flex items-center gap-1.5 px-3 py-2 glass-button text-white rounded-lg text-sm font-medium transition-all hover:-translate-y-0.5">
                 <i class="ph ph-plus"></i> O'quvchi
@@ -25,6 +25,14 @@
             <a href="{% url 'crm:lead_create' %}"
                 class="inline-flex items-center gap-1.5 px-3 py-2 liquid-glass text-[#64748B] rounded-lg text-sm font-medium hover:bg-white/80 transition">
                 <i class="ph ph-plus"></i> Lid
+            </a>
+            <a href="{% url 'operations:lesson_add' %}"
+                class="inline-flex items-center gap-1.5 px-3 py-2 liquid-glass text-[#64748B] rounded-lg text-sm font-medium hover:bg-white/80 transition">
+                <i class="ph ph-plus"></i> Dars
+            </a>
+            <a href="{% url 'operations:schedule' %}"
+                class="inline-flex items-center gap-1.5 px-3 py-2 liquid-glass text-[#64748B] rounded-lg text-sm font-medium hover:bg-white/80 transition">
+                <i class="ph ph-calendar"></i> Jadval
             </a>
         </div>
     </div>
