@@ -9,7 +9,7 @@
     <div class="bg-white border border-slate-200 p-6 rounded-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                <i class="ph ph-envelope-simple text-[#526D82]"></i>
+                <i class="ph ph-envelope-simple text-[#64748B]"></i>
                 Xabar Shablonlari
             </h1>
             <p class="text-slate-500">Avtomatik xabarlar matnini boshqarish</p>
@@ -21,7 +21,7 @@
                 <span>Xabar yuborish</span>
             </a>
             <a href="{% url 'automation:template_create' %}"
-                class="px-5 py-2.5 bg-[#526D82] hover:bg-[#27374D] text-white rounded-xl shadow-lg shadow-primary-500/30 transition flex items-center gap-2">
+                class="px-5 py-2.5 bg-[#4F46E5] hover:bg-[#4F46E5] text-white rounded-xl shadow-lg shadow-primary-500/30 transition flex items-center gap-2">
                 <i class="ph ph-plus-circle text-xl"></i>
                 <span>Yangi Shablon</span>
             </a>
@@ -29,10 +29,10 @@
     </div>
 
     <!-- Tushuntirish Banner -->
-    <div class="bg-gradient-to-r from-[#526D82]/5 to-[#9DB2BF]/5 border border-[#526D82]/10 rounded-2xl p-6">
+    <div class="bg-gradient-to-r from-[#4F46E5]/5 to-[#818CF8]/5 border border-[#4F46E5]/10 rounded-2xl p-6">
         <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-[#526D82]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                <i class="ph ph-info text-2xl text-[#526D82]"></i>
+            <div class="w-12 h-12 bg-[#4F46E5]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <i class="ph ph-info text-2xl text-[#64748B]"></i>
             </div>
             <div class="flex-1">
                 <h3 class="font-bold text-slate-800 mb-2">Shablonlar qanday ishlaydi?</h3>
@@ -65,7 +65,7 @@
                     </div>
                     <div class="bg-white rounded-xl p-4 border border-slate-100">
                         <h4 class="font-semibold text-slate-700 mb-2 flex items-center gap-2">
-                            <i class="ph ph-code text-[#526D82]"></i> O'zgaruvchilar:
+                            <i class="ph ph-code text-[#64748B]"></i> O'zgaruvchilar:
                         </h4>
                         <div class="flex flex-wrap gap-2">
                             <code class="text-xs bg-slate-100 px-2 py-1 rounded">{first_name}</code>
@@ -86,8 +86,8 @@
     <!-- Statistika -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-4">
-            <div class="w-12 h-12 bg-[#526D82]/10 rounded-xl flex items-center justify-center">
-                <i class="ph ph-file-text text-2xl text-[#526D82]"></i>
+            <div class="w-12 h-12 bg-[#4F46E5]/10 rounded-xl flex items-center justify-center">
+                <i class="ph ph-file-text text-2xl text-[#64748B]"></i>
             </div>
             <div>
                 <p class="text-2xl font-bold text-slate-800">{{ templates|length }}</p>
@@ -117,7 +117,7 @@
     <!-- Templates Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {% for template in templates %}
-        <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-lg hover:border-[#526D82]/20 transition-all duration-300 group">
+        <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-lg hover:border-[#4F46E5]/20 transition-all duration-300 group">
             <!-- Card Header -->
             <div class="p-4 border-b border-slate-100 flex justify-between items-center">
                 <div class="flex items-center gap-3">
@@ -156,7 +156,7 @@
                         <i class="ph ph-play"></i>
                     </a>
                     <a href="{% url 'automation:template_edit' template.pk %}"
-                       class="p-2 hover:bg-white rounded-lg text-slate-500 hover:text-[#526D82] transition"
+                       class="p-2 hover:bg-white rounded-lg text-slate-500 hover:text-[#64748B] transition"
                        title="Tahrirlash">
                         <i class="ph ph-pencil-simple"></i>
                     </a>
@@ -179,7 +179,7 @@
             <h3 class="text-xl font-bold text-slate-800 mb-2">Shablonlar yo'q</h3>
             <p class="text-slate-500 mb-4">Avtomatik xabarlar uchun shablon yarating</p>
             <a href="{% url 'automation:template_create' %}"
-               class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#526D82] text-white rounded-xl hover:bg-[#27374D] transition">
+               class="inline-flex items-center gap-2 px-5 py-2.5 bg-[#4F46E5] text-white rounded-xl hover:bg-[#4F46E5] transition">
                 <i class="ph ph-plus-circle"></i>
                 Birinchi shablonni yaratish
             </a>

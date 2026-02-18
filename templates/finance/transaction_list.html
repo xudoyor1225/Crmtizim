@@ -58,16 +58,16 @@
             </div>
         </div>
         <!-- Balans -->
-        <div class="rounded-2xl p-6 bg-gradient-to-br from-[#526D82]/20 to-[#526D82]/10 border border-[#9DB2BF]/25">
+        <div class="rounded-2xl p-6 bg-gradient-to-br from-[#4F46E5]/20 to-[#818CF8]/10 border border-[#94A3B8]/25">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-[#526D82]">Balans</p>
-                    <p class="text-2xl font-bold mt-1 {% if balance < 0 %}text-rose-600{% else %}text-[#9DB2BF]{% endif %}">
+                    <p class="text-sm font-medium text-[#64748B]">Balans</p>
+                    <p class="text-2xl font-bold mt-1 {% if balance < 0 %}text-rose-600{% else %}text-[#94A3B8]{% endif %}">
                         {{ balance|floatformat:0 }}
                     </p>
                 </div>
-                <div class="p-3 rounded-xl bg-[#526D82]/15">
-                    <i class="ph-fill ph-equals text-2xl text-[#526D82]"></i>
+                <div class="p-3 rounded-xl bg-[#4F46E5]/15">
+                    <i class="ph-fill ph-equals text-2xl text-[#64748B]"></i>
                 </div>
             </div>
         </div>
@@ -79,17 +79,17 @@
             <div>
                 <label class="block text-xs mb-1.5 font-medium text-slate-400">Boshlanish</label>
                 <input type="date" name="date_from" value="{{ date_from }}"
-                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#526D82]/30">
+                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#4F46E5]/30">
             </div>
             <div>
                 <label class="block text-xs mb-1.5 font-medium text-slate-400">Tugash</label>
                 <input type="date" name="date_to" value="{{ date_to }}"
-                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#526D82]/30">
+                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#4F46E5]/30">
             </div>
             <div>
                 <label class="block text-xs mb-1.5 font-medium text-slate-400">Turi</label>
                 <select name="type"
-                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#526D82]/30">
+                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#4F46E5]/30">
                     <option value="">Barchasi</option>
                     <option value="income" {% if trans_type == 'income' %}selected{% endif %}>Kirim</option>
                     <option value="expense" {% if trans_type == 'expense' %}selected{% endif %}>Chiqim</option>
@@ -98,14 +98,14 @@
             <div>
                 <label class="block text-xs mb-1.5 font-medium text-slate-400">Holat</label>
                 <select name="status"
-                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#526D82]/30">
+                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#4F46E5]/30">
                     <option value="">Barchasi</option>
                     <option value="pending" {% if status == 'pending' %}selected{% endif %}>Kutilmoqda</option>
                     <option value="confirmed" {% if status == 'confirmed' %}selected{% endif %}>Tasdiqlangan</option>
                     <option value="rejected" {% if status == 'rejected' %}selected{% endif %}>Rad etilgan</option>
                 </select>
             </div>
-            <button type="submit" class="px-6 py-2.5 rounded-xl font-medium transition bg-[#526D82] text-white hover:bg-[#27374D] shadow-sm">
+            <button type="submit" class="px-6 py-2.5 rounded-xl font-medium transition bg-[#4F46E5] text-white hover:bg-[#4F46E5] shadow-sm">
                 <i class="ph ph-funnel"></i> Filtrlash
             </button>
 
@@ -155,7 +155,7 @@
                     <td class="p-4 text-sm text-slate-600">{{ trans.account.name }}</td>
                     <td class="p-4 text-sm">
                         {% if trans.student %}
-                        <span class="text-[#526D82]">{{ trans.student.first_name }}</span>
+                        <span class="text-[#64748B]">{{ trans.student.first_name }}</span>
                         {% elif trans.staff %}
                         <span class="text-purple-400">{{ trans.staff.first_name }}</span>
                         {% else %}

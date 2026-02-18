@@ -8,10 +8,10 @@
     <!-- Header -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-[#27374D] flex items-center gap-2">
-                <i class="ph ph-chart-bar text-[#526D82]"></i> Moliyaviy Hisobot
+            <h1 class="text-2xl font-bold text-[#0F172A] flex items-center gap-2">
+                <i class="ph ph-chart-bar text-[#64748B]"></i> Moliyaviy Hisobot
             </h1>
-            <p class="text-[#9DB2BF]">{{ start_date|date:"d M" }} - {{ end_date|date:"d F Y" }}</p>
+            <p class="text-[#94A3B8]">{{ start_date|date:"d M" }} - {{ end_date|date:"d F Y" }}</p>
         </div>
         <div class="flex items-center gap-3">
             <!-- Davr tanlash -->
@@ -47,7 +47,7 @@
                 <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
                     <i class="ph ph-arrow-down text-emerald-600 text-xl"></i>
                 </div>
-                <p class="text-[#9DB2BF] text-sm font-medium">Jami Kirim</p>
+                <p class="text-[#94A3B8] text-sm font-medium">Jami Kirim</p>
             </div>
             <p class="text-3xl font-bold text-emerald-600">+{{ total_income|floatformat:0 }}</p>
         </div>
@@ -57,19 +57,19 @@
                 <div class="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center">
                     <i class="ph ph-arrow-up text-rose-600 text-xl"></i>
                 </div>
-                <p class="text-[#9DB2BF] text-sm font-medium">Jami Chiqim</p>
+                <p class="text-[#94A3B8] text-sm font-medium">Jami Chiqim</p>
             </div>
             <p class="text-3xl font-bold text-rose-600">-{{ total_expense|floatformat:0 }}</p>
         </div>
         <div
-            class="bg-white rounded-2xl p-6 border border-[#9DB2BF]/20 shadow-sm hover:shadow-lg hover:shadow-[#526D82]/10 transition-all duration-300">
+            class="bg-white rounded-2xl p-6 border border-[#94A3B8]/20 shadow-sm hover:shadow-lg hover:shadow-[#4F46E5]/10 transition-all duration-300">
             <div class="flex items-center gap-3 mb-3">
-                <div class="w-10 h-10 bg-[#526D82]/10 rounded-xl flex items-center justify-center">
-                    <i class="ph ph-scales text-[#526D82] text-xl"></i>
+                <div class="w-10 h-10 bg-[#4F46E5]/10 rounded-xl flex items-center justify-center">
+                    <i class="ph ph-scales text-[#64748B] text-xl"></i>
                 </div>
-                <p class="text-[#9DB2BF] text-sm font-medium">Sof Foyda</p>
+                <p class="text-[#94A3B8] text-sm font-medium">Sof Foyda</p>
             </div>
-            <p class="text-3xl font-bold text-[#526D82]">{{ net_profit|floatformat:0 }}</p>
+            <p class="text-3xl font-bold text-[#64748B]">{{ net_profit|floatformat:0 }}</p>
         </div>
     </div>
 
@@ -78,16 +78,16 @@
 
         <!-- Kunlik Grafika -->
         <div class="bg-white rounded-2xl border border-slate-200 p-6 col-span-2 shadow-sm">
-            <h3 class="font-bold text-[#27374D] mb-6 flex items-center gap-2">
-                <i class="ph ph-chart-line text-[#526D82]"></i> 30 kunlik dinamika
+            <h3 class="font-bold text-[#0F172A] mb-6 flex items-center gap-2">
+                <i class="ph ph-chart-line text-[#64748B]"></i> 30 kunlik dinamika
             </h3>
             <div class="h-64 flex items-end gap-2">
                 {% for day in daily_stats %}
                 <div class="flex-1 flex flex-col justify-end h-full gap-1 group relative">
                     <!-- Tooltip -->
                     <div
-                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-white border border-slate-200 text-slate-700 text-xs p-3 rounded-xl z-10 whitespace-nowrap shadow-lg shadow-[#27374D]/8">
-                        <p class="font-bold text-[#27374D]">{{ day.date|date:"d M" }}</p>
+                        class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-white border border-slate-200 text-slate-700 text-xs p-3 rounded-xl z-10 whitespace-nowrap shadow-lg shadow-[#4F46E5]/8">
+                        <p class="font-bold text-[#0F172A]">{{ day.date|date:"d M" }}</p>
                         <p class="text-emerald-600">In: {{ day.income }}</p>
                         <p class="text-rose-600">Out: {{ day.expense }}</p>
                     </div>
@@ -103,7 +103,7 @@
                     {% endif %}
 
                     {% if forloop.counter|divisibleby:5 %}
-                    <span class="text-[10px] text-[#9DB2BF] text-center mt-2">{{ day.date|date:"d" }}</span>
+                    <span class="text-[10px] text-[#94A3B8] text-center mt-2">{{ day.date|date:"d" }}</span>
                     {% endif %}
                 </div>
                 {% endfor %}
@@ -112,8 +112,8 @@
 
         <!-- Kirim Kategoriyalari -->
         <div
-            class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg hover:shadow-[#9DB2BF]/5 transition-all duration-300">
-            <h3 class="font-bold text-[#27374D] mb-4 flex items-center gap-2">
+            class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg hover:shadow-[#94A3B8]/5 transition-all duration-300">
+            <h3 class="font-bold text-[#0F172A] mb-4 flex items-center gap-2">
                 <i class="ph ph-arrow-circle-down text-emerald-500"></i> Kirim Tuzilmasi
             </h3>
             <div class="space-y-4">
@@ -121,8 +121,8 @@
                 {% if cat.total > 0 %}
                 <div>
                     <div class="flex justify-between text-sm mb-1">
-                        <span class="text-[#9DB2BF]">{{ cat.category__name }}</span>
-                        <span class="font-bold text-[#27374D]">{{ cat.total|floatformat:0 }}</span>
+                        <span class="text-[#94A3B8]">{{ cat.category__name }}</span>
+                        <span class="font-bold text-[#0F172A]">{{ cat.total|floatformat:0 }}</span>
                     </div>
                     <div class="w-full bg-slate-100 rounded-full h-2">
                         <div class="bg-emerald-500 h-2 rounded-full transition-all duration-500"
@@ -131,15 +131,15 @@
                 </div>
                 {% endif %}
                 {% empty %}
-                <p class="text-[#9DB2BF] text-center">Ma'lumot yo'q</p>
+                <p class="text-[#94A3B8] text-center">Ma'lumot yo'q</p>
                 {% endfor %}
             </div>
         </div>
 
         <!-- Chiqim Kategoriyalari -->
         <div
-            class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg hover:shadow-[#9DB2BF]/5 transition-all duration-300">
-            <h3 class="font-bold text-[#27374D] mb-4 flex items-center gap-2">
+            class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg hover:shadow-[#94A3B8]/5 transition-all duration-300">
+            <h3 class="font-bold text-[#0F172A] mb-4 flex items-center gap-2">
                 <i class="ph ph-arrow-circle-up text-rose-500"></i> Chiqim Tuzilmasi
             </h3>
             <div class="space-y-4">
@@ -147,8 +147,8 @@
                 {% if cat.total > 0 %}
                 <div>
                     <div class="flex justify-between text-sm mb-1">
-                        <span class="text-[#9DB2BF]">{{ cat.category__name }}</span>
-                        <span class="font-bold text-[#27374D]">{{ cat.total|floatformat:0 }}</span>
+                        <span class="text-[#94A3B8]">{{ cat.category__name }}</span>
+                        <span class="font-bold text-[#0F172A]">{{ cat.total|floatformat:0 }}</span>
                     </div>
                     <div class="w-full bg-slate-100 rounded-full h-2">
                         <div class="bg-rose-500 h-2 rounded-full transition-all duration-500"
@@ -157,7 +157,7 @@
                 </div>
                 {% endif %}
                 {% empty %}
-                <p class="text-[#9DB2BF] text-center">Ma'lumot yo'q</p>
+                <p class="text-[#94A3B8] text-center">Ma'lumot yo'q</p>
                 {% endfor %}
             </div>
         </div>
@@ -169,20 +169,20 @@
 
         <!-- Kassalar balansi -->
         <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-            <h3 class="font-bold text-[#27374D] mb-4 flex items-center gap-2">
-                <i class="ph-fill ph-vault text-[#526D82]"></i> Kassalar balansi
+            <h3 class="font-bold text-[#0F172A] mb-4 flex items-center gap-2">
+                <i class="ph-fill ph-vault text-[#64748B]"></i> Kassalar balansi
             </h3>
             <div class="space-y-3">
                 {% for account in accounts %}
                 <div
                     class="flex items-center justify-between p-3 rounded-xl bg-slate-50 hover:bg-white hover:shadow-sm transition-all">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-[#526D82]/10 flex items-center justify-center">
-                            <i class="ph-fill ph-wallet text-[#526D82]"></i>
+                        <div class="w-10 h-10 rounded-full bg-[#4F46E5]/10 flex items-center justify-center">
+                            <i class="ph-fill ph-wallet text-[#64748B]"></i>
                         </div>
                         <div>
-                            <p class="text-[#27374D] font-medium">{{ account.name }}</p>
-                            <p class="text-xs text-[#9DB2BF]">{{ account.get_account_type_display }}</p>
+                            <p class="text-[#0F172A] font-medium">{{ account.name }}</p>
+                            <p class="text-xs text-[#94A3B8]">{{ account.get_account_type_display }}</p>
                         </div>
                     </div>
                     <p
@@ -191,20 +191,20 @@
                     </p>
                 </div>
                 {% empty %}
-                <p class="text-[#9DB2BF] text-center py-4">Kassalar yo'q</p>
+                <p class="text-[#94A3B8] text-center py-4">Kassalar yo'q</p>
                 {% endfor %}
 
                 <div
-                    class="flex items-center justify-between p-4 rounded-xl bg-[#526D82]/5 border border-[#9DB2BF]/15 mt-4">
-                    <span class="text-[#526D82] font-medium">Jami balans:</span>
-                    <span class="text-xl font-bold text-[#526D82]">{{ total_balance|floatformat:0 }} so'm</span>
+                    class="flex items-center justify-between p-4 rounded-xl bg-[#4F46E5]/5 border border-[#94A3B8]/15 mt-4">
+                    <span class="text-[#64748B] font-medium">Jami balans:</span>
+                    <span class="text-xl font-bold text-[#64748B]">{{ total_balance|floatformat:0 }} so'm</span>
                 </div>
             </div>
         </div>
 
         <!-- Oxirgi tranzaksiyalar -->
         <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-            <h3 class="font-bold text-[#27374D] mb-4 flex items-center gap-2">
+            <h3 class="font-bold text-[#0F172A] mb-4 flex items-center gap-2">
                 <i class="ph-fill ph-clock-counter-clockwise text-purple-500"></i> Oxirgi tranzaksiyalar
             </h3>
             <div class="space-y-2 max-h-[300px] overflow-y-auto">
@@ -222,8 +222,8 @@
                         </div>
                         {% endif %}
                         <div>
-                            <p class="text-[#27374D] text-sm">{{ tx.category.name|default:"Noma'lum" }}</p>
-                            <p class="text-xs text-[#9DB2BF]">{{ tx.created_at|date:"d.m.Y H:i" }}</p>
+                            <p class="text-[#0F172A] text-sm">{{ tx.category.name|default:"Noma'lum" }}</p>
+                            <p class="text-xs text-[#94A3B8]">{{ tx.created_at|date:"d.m.Y H:i" }}</p>
                         </div>
                     </div>
                     <p
@@ -232,7 +232,7 @@
                     </p>
                 </div>
                 {% empty %}
-                <p class="text-[#9DB2BF] text-center py-4">Tranzaksiyalar yo'q</p>
+                <p class="text-[#94A3B8] text-center py-4">Tranzaksiyalar yo'q</p>
                 {% endfor %}
             </div>
         </div>

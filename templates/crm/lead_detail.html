@@ -18,7 +18,7 @@
                 <a href="{% url 'crm:pipeline' %}"
                     class="group p-3 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md hover:scale-105 transition-all duration-300">
                     <i
-                        class="ph ph-arrow-left text-xl text-slate-500 group-hover:text-[#526D82]"></i>
+                        class="ph ph-arrow-left text-xl text-slate-500 group-hover:text-[#64748B]"></i>
                 </a>
                 <div>
                     <h1
@@ -27,7 +27,7 @@
                     <div class="flex items-center gap-2 mt-2 text-slate-500">
                         <span
                             class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 rounded-lg text-sm font-medium">
-                            <i class="ph-fill ph-phone text-[#526D82]"></i> {{ lead.phone }}
+                            <i class="ph-fill ph-phone text-[#64748B]"></i> {{ lead.phone }}
                         </span>
                         <span
                             class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-50 rounded-lg text-sm font-medium">
@@ -59,7 +59,7 @@
             <div
                 class="bg-white rounded-3xl p-6 shadow-xl shadow-gray-100/50 border border-slate-100">
                 <h3 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
-                    <i class="ph-fill ph-flag text-[#526D82] text-xl"></i> Hozirgi holat
+                    <i class="ph-fill ph-flag text-[#64748B] text-xl"></i> Hozirgi holat
                 </h3>
 
                 <div class="relative overflow-hidden rounded-2xl p-6 mb-8 transition-all duration-300"
@@ -105,14 +105,14 @@
             <div
                 class="bg-white rounded-3xl p-6 shadow-xl shadow-gray-100/50 border border-slate-100">
                 <h3 class="font-bold text-slate-800 mb-6 flex items-center gap-2">
-                    <i class="ph-fill ph-info text-[#526D82] text-xl"></i> Ma'lumotlar
+                    <i class="ph-fill ph-info text-[#64748B] text-xl"></i> Ma'lumotlar
                 </h3>
 
                 <div class="space-y-5">
                     <div
                         class="group flex items-center gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-colors">
                         <div
-                            class="w-12 h-12 bg-[#526D82]/5 rounded-2xl flex items-center justify-center text-[#526D82] group-hover:scale-110 transition-transform duration-300">
+                            class="w-12 h-12 bg-[#4F46E5]/5 rounded-2xl flex items-center justify-center text-[#64748B] group-hover:scale-110 transition-transform duration-300">
                             <i class="ph-fill ph-phone text-xl"></i>
                         </div>
                         <div>
@@ -184,7 +184,7 @@
                 <div class="flex items-center justify-between mb-8">
                     <h3 class="text-xl font-bold text-slate-800 flex items-center gap-3">
                         <span
-                            class="w-8 h-8 rounded-lg bg-[#9DB2BF]/10 text-[#526D82] flex items-center justify-center">
+                            class="w-8 h-8 rounded-lg bg-[#94A3B8]/10 text-[#64748B] flex items-center justify-center">
                             <i class="ph-bold ph-clock-counter-clockwise"></i>
                         </span>
                         Faoliyat tarixi
@@ -217,7 +217,7 @@
                                 class="flex-1 bg-transparent border-0 py-3.5 px-4 text-slate-800 placeholder-gray-400 focus:ring-0">
 
                             <button type="submit"
-                                class="p-3.5 bg-[#526D82] hover:bg-[#27374D] text-white rounded-2xl transition-colors shadow-lg shadow-primary-600/20">
+                                class="p-3.5 bg-[#4F46E5] hover:bg-[#4F46E5] text-white rounded-2xl transition-colors shadow-lg shadow-primary-600/20">
                                 <i class="ph-bold ph-paper-plane-right text-lg"></i>
                             </button>
                         </div>
@@ -232,7 +232,7 @@
                         <!-- Timeline Node -->
                         <div class="absolute left-0 sm:left-4 top-1 -translate-x-1/2 w-8 h-8 rounded-full border-4 border-white flex items-center justify-center z-10 
                             {% if activity.activity_type == 'call' %}bg-green-100 text-green-600 ring-2 ring-green-500/20
-                            {% elif activity.activity_type == 'sms' %}bg-[#526D82]/10 text-[#526D82] ring-2 ring-[#526D82]/30
+                            {% elif activity.activity_type == 'sms' %}bg-[#4F46E5]/10 text-[#64748B] ring-2 ring-[#4F46E5]/30
                             {% elif activity.activity_type == 'meeting' %}bg-purple-100 text-purple-600 ring-2 ring-purple-500/20
                             {% elif activity.activity_type == 'status_change' %}bg-orange-100 text-orange-600 ring-2 ring-orange-500/20
                             {% else %}bg-slate-100 text-slate-600 ring-2 ring-gray-500/20{% endif %}">

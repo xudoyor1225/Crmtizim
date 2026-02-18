@@ -18,7 +18,7 @@
             </a>
             {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' or request.user.role == 'teacher' %}
             <a href="{% url 'operations:lesson_add' %}"
-                class="px-4 py-2.5 bg-gradient-to-r from-[#9DB2BF] to-violet-600 text-slate-800 rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2 font-medium">
+                class="px-4 py-2.5 bg-gradient-to-r from-[#818CF8] to-violet-600 text-slate-800 rounded-xl hover:shadow-lg hover:shadow-indigo-500/25 transition flex items-center gap-2 font-medium">
                 <i class="ph ph-plus"></i> Yangi dars
             </a>
             {% endif %}
@@ -31,12 +31,12 @@
             <div>
                 <label class="block text-xs mb-1.5 font-medium text-slate-400">Sana</label>
                 <input type="date" name="date" value="{{ date_filter }}"
-                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#526D82]/30">
+                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#4F46E5]/30">
             </div>
             <div>
                 <label class="block text-xs mb-1.5 font-medium text-slate-400">Guruh</label>
                 <select name="group"
-                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#526D82]/30">
+                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#4F46E5]/30">
                     <option value="">Barchasi</option>
                     {% for group in groups %}
                     <option value="{{ group.id }}" {% if group_filter == group.id|stringformat:"s" %}selected{% endif %}>
@@ -47,14 +47,14 @@
             <div>
                 <label class="block text-xs mb-1.5 font-medium text-slate-400">Holat</label>
                 <select name="status"
-                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#526D82]/30">
+                    class="px-4 py-2.5 rounded-xl border focus:outline-none focus:ring-2 transition bg-slate-50 border-slate-200 text-slate-800 focus:ring-[#4F46E5]/30">
                     <option value="">Barchasi</option>
                     <option value="scheduled" {% if status_filter == 'scheduled' %}selected{% endif %}>Rejalashtirilgan</option>
                     <option value="started" {% if status_filter == 'started' %}selected{% endif %}>Darsda</option>
                     <option value="finished" {% if status_filter == 'finished' %}selected{% endif %}>Yakunlangan</option>
                 </select>
             </div>
-            <button type="submit" class="px-6 py-2.5 rounded-xl font-medium transition bg-[#526D82] text-white hover:bg-[#27374D] shadow-sm">
+            <button type="submit" class="px-6 py-2.5 rounded-xl font-medium transition bg-[#4F46E5] text-white hover:bg-[#4F46E5] shadow-sm">
                 <i class="ph ph-funnel"></i> Filtrlash
             </button>
 
@@ -85,7 +85,7 @@
                 </div>
 
                 <!-- Status indikator -->
-                <div class="w-1 h-16 rounded-full {% if lesson.status == 'started' %}bg-[#526D82]/50 animate-pulse{% elif lesson.status == 'finished' %}bg-green-500{% elif lesson.status == 'cancelled' %}bg-red-500{% else %}bg-gray-600{% endif %}"></div>
+                <div class="w-1 h-16 rounded-full {% if lesson.status == 'started' %}bg-[#4F46E5]/50 animate-pulse{% elif lesson.status == 'finished' %}bg-green-500{% elif lesson.status == 'cancelled' %}bg-red-500{% else %}bg-gray-600{% endif %}"></div>
 
                 <!-- Ma'lumot -->
                 <div class="flex-1">
@@ -115,7 +115,7 @@
 
                 <!-- Status badge -->
                 <span class="px-3 py-1.5 text-xs font-bold rounded-xl
-                    {% if lesson.status == 'started' %}text-[#526D82] bg-[#526D82]/15
+                    {% if lesson.status == 'started' %}text-[#64748B] bg-[#4F46E5]/15
                     {% elif lesson.status == 'finished' %}text-emerald-600 bg-emerald-500/20
                     {% elif lesson.status == 'cancelled' %}text-rose-600 bg-rose-500/20
                     {% else %}text-slate-400 bg-slate-500/20{% endif %}">
@@ -126,7 +126,7 @@
                 <div class="flex items-center gap-2">
                     {% if lesson.status == 'scheduled' %}
                     <a href="{% url 'operations:start_lesson' lesson.pk %}"
-                        class="px-4 py-2.5 bg-gradient-to-r from-[#526D82] to-[#27374D] text-white rounded-xl hover:shadow-lg hover:shadow-[#526D82]/25 transition text-sm font-medium flex items-center gap-1.5">
+                        class="px-4 py-2.5 bg-gradient-to-r from-[#4F46E5] to-[#4338CA] text-white rounded-xl hover:shadow-lg hover:shadow-[#4F46E5]/25 transition text-sm font-medium flex items-center gap-1.5">
                         <i class="ph-fill ph-play"></i> Boshlash
                     </a>
                     {% elif lesson.status == 'started' %}
@@ -151,7 +151,7 @@
             <p class="text-slate-400 mb-4">Tanlangan sana uchun darslar mavjud emas</p>
             <p class="text-sm text-slate-500">
                 Darslar avtomatik yaratilishi uchun
-                <a href="{% url 'operations:schedule' %}" class="font-medium text-[#526D82] hover:underline">haftalik jadval</a>
+                <a href="{% url 'operations:schedule' %}" class="font-medium text-[#64748B] hover:underline">haftalik jadval</a>
                 dan foydalaning
             </p>
         </div>

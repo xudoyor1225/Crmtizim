@@ -28,19 +28,19 @@
         .input-field {
             background: #F0F4F8;
             border: 1.5px solid rgba(82, 109, 130, 0.2);
-            color: #27374D;
+            color: #0F172A;
             transition: all 200ms ease;
         }
 
         .input-field:focus {
-            border-color: #526D82;
+            border-color: #4F46E5;
             box-shadow: 0 0 0 4px rgba(82, 109, 130, 0.08);
             outline: none;
             background: white;
         }
 
         .input-field::placeholder {
-            color: #9DB2BF;
+            color: #94A3B8;
         }
 
         @keyframes float {
@@ -89,10 +89,10 @@
 
     <!-- Background Elements -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-20 left-20 w-72 h-72 bg-[#9DB2BF]/10 rounded-full blur-3xl float-1"></div>
-        <div class="absolute bottom-20 right-20 w-96 h-96 bg-[#526D82]/10 rounded-full blur-3xl float-2"></div>
+        <div class="absolute top-20 left-20 w-72 h-72 bg-[#94A3B8]/10 rounded-full blur-3xl float-1"></div>
+        <div class="absolute bottom-20 right-20 w-96 h-96 bg-[#4F46E5]/10 rounded-full blur-3xl float-2"></div>
         <div
-            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#9DB2BF]/5 rounded-full blur-3xl float-3">
+            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#94A3B8]/5 rounded-full blur-3xl float-3">
         </div>
     </div>
 
@@ -101,11 +101,11 @@
         <!-- Logo/Header -->
         <div class="text-center mb-8">
             <div
-                class="w-20 h-20 bg-gradient-to-br from-[#526D82] to-[#27374D] rounded-2xl mx-auto flex items-center justify-center text-white text-4xl shadow-xl shadow-[#526D82]/25 mb-4">
+                class="w-20 h-20 bg-gradient-to-br from-[#4F46E5] to-[#4338CA] rounded-2xl mx-auto flex items-center justify-center text-white text-4xl shadow-xl shadow-[#4F46E5]/25 mb-4">
                 <i class="ph-fill ph-graduation-cap"></i>
             </div>
-            <h1 class="text-2xl font-bold text-[#27374D]">Smart Edu</h1>
-            <p class="text-[#9DB2BF] text-sm mt-1">Tizimga kirish</p>
+            <h1 class="text-2xl font-bold text-[#0F172A]">Smart Edu</h1>
+            <p class="text-[#94A3B8] text-sm mt-1">Tizimga kirish</p>
         </div>
 
         <form method="post" class="space-y-5">
@@ -121,9 +121,9 @@
             {% endif %}
 
             <div class="space-y-2">
-                <label class="text-xs font-semibold text-[#9DB2BF] uppercase ml-1">Telefon raqam</label>
+                <label class="text-xs font-semibold text-[#94A3B8] uppercase ml-1">Telefon raqam</label>
                 <div class="relative">
-                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#9DB2BF] text-lg">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8] text-lg">
                         <i class="ph-fill ph-phone"></i>
                     </span>
                     <input type="text" name="username" placeholder="998901234567" required
@@ -132,9 +132,9 @@
             </div>
 
             <div class="space-y-2">
-                <label class="text-xs font-semibold text-[#9DB2BF] uppercase ml-1">Parol</label>
+                <label class="text-xs font-semibold text-[#94A3B8] uppercase ml-1">Parol</label>
                 <div class="relative">
-                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#9DB2BF] text-lg">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8] text-lg">
                         <i class="ph-fill ph-lock-key"></i>
                     </span>
                     <input type="password" name="password" placeholder="••••••••" required
@@ -143,15 +143,15 @@
             </div>
 
             <button type="submit"
-                class="w-full py-4 bg-gradient-to-r from-[#526D82] to-[#27374D] hover:from-[#3D5466] hover:to-[#2D4054] text-white font-bold rounded-xl shadow-lg shadow-[#526D82]/25 transition-all transform hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-2 mt-6">
+                class="w-full py-4 bg-gradient-to-r from-[#4F46E5] to-[#4338CA] hover:from-[#3D5466] hover:to-[#2D4054] text-white font-bold rounded-xl shadow-lg shadow-[#4F46E5]/25 transition-all transform hover:-translate-y-0.5 active:scale-[0.98] flex items-center justify-center gap-2 mt-6">
                 <span>Kirish</span>
                 <i class="ph-fill ph-arrow-right"></i>
             </button>
         </form>
 
-        <div class="mt-8 pt-6 border-t border-[#9DB2BF]/15 text-center">
+        <div class="mt-8 pt-6 border-t border-[#94A3B8]/15 text-center">
             <a href="#"
-                class="text-sm text-[#9DB2BF] hover:text-[#526D82] transition-colors flex items-center justify-center gap-2">
+                class="text-sm text-[#94A3B8] hover:text-[#64748B] transition-colors flex items-center justify-center gap-2">
                 <i class="ph-fill ph-question text-lg"></i>
                 Yordam kerakmi?
             </a>
@@ -159,7 +159,7 @@
     </div>
 
     <!-- Version Badge -->
-    <div class="fixed bottom-4 right-4 text-xs text-[#9DB2BF]">
+    <div class="fixed bottom-4 right-4 text-xs text-[#94A3B8]">
         Smart Edu v4.0
     </div>
 

@@ -13,14 +13,14 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
             <h1 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                <i class="ph ph-funnel text-[#526D82]"></i>
+                <i class="ph ph-funnel text-[#64748B]"></i>
                 Sotuv & CRM
             </h1>
             <p class="text-slate-500 mt-1">Lidlar, voronka va manbalarni boshqaring</p>
         </div>
         <div class="flex flex-wrap gap-2">
             <a href="{% url 'crm:lead_create' %}"
-                class="bg-[#526D82] hover:bg-[#27374D] text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm">
+                class="bg-[#4F46E5] hover:bg-[#4F46E5] text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm">
                 <i class="ph ph-plus"></i> Yangi Lid
             </a>
         </div>
@@ -31,8 +31,8 @@
         <!-- Jami Lidlar -->
         <div class="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-[#526D82]/10 flex items-center justify-center">
-                    <i class="ph ph-users text-xl text-[#526D82]"></i>
+                <div class="w-12 h-12 rounded-xl bg-[#4F46E5]/10 flex items-center justify-center">
+                    <i class="ph ph-users text-xl text-[#64748B]"></i>
                 </div>
                 <div>
                     <p class="text-2xl font-bold text-slate-800">{{ total_leads }}</p>
@@ -83,17 +83,17 @@
         <!-- Tab Buttons -->
         <div class="flex gap-2 border-b border-slate-200 pb-0">
             <button @click="activeTab = 'pipeline'"
-                :class="activeTab === 'pipeline' ? 'border-[#526D82] text-[#526D82] bg-[#526D82]/5' : 'border-transparent text-slate-500 hover:text-slate-700'"
+                :class="activeTab === 'pipeline' ? 'border-[#4F46E5] text-[#64748B] bg-[#4F46E5]/5' : 'border-transparent text-slate-500 hover:text-slate-700'"
                 class="px-4 py-2 border-b-2 font-medium transition-all flex items-center gap-2 rounded-t-lg">
                 <i class="ph ph-funnel"></i> Voronka
             </button>
             <button @click="activeTab = 'stages'"
-                :class="activeTab === 'stages' ? 'border-[#526D82] text-[#526D82] bg-[#526D82]/5' : 'border-transparent text-slate-500 hover:text-slate-700'"
+                :class="activeTab === 'stages' ? 'border-[#4F46E5] text-[#64748B] bg-[#4F46E5]/5' : 'border-transparent text-slate-500 hover:text-slate-700'"
                 class="px-4 py-2 border-b-2 font-medium transition-all flex items-center gap-2 rounded-t-lg">
                 <i class="ph ph-kanban"></i> Bosqichlar
             </button>
             <button @click="activeTab = 'sources'"
-                :class="activeTab === 'sources' ? 'border-[#526D82] text-[#526D82] bg-[#526D82]/5' : 'border-transparent text-slate-500 hover:text-slate-700'"
+                :class="activeTab === 'sources' ? 'border-[#4F46E5] text-[#64748B] bg-[#4F46E5]/5' : 'border-transparent text-slate-500 hover:text-slate-700'"
                 class="px-4 py-2 border-b-2 font-medium transition-all flex items-center gap-2 rounded-t-lg">
                 <i class="ph ph-megaphone"></i> Manbalar
             </button>
@@ -121,7 +121,7 @@
                     <!-- LEADS -->
                     <div class="p-2 flex-1 overflow-y-auto space-y-2 sortable-list max-h-96" data-stage-id="{{ stage.id }}">
                         {% for lead in stage.leads.all %}
-                        <div class="bg-white rounded-lg shadow-sm border border-slate-100 hover:shadow-md hover:border-[#526D82]/20 transition-all cursor-grab active:cursor-grabbing group p-3"
+                        <div class="bg-white rounded-lg shadow-sm border border-slate-100 hover:shadow-md hover:border-[#4F46E5]/20 transition-all cursor-grab active:cursor-grabbing group p-3"
                             data-lead-id="{{ lead.id }}">
                             <div class="flex items-start justify-between gap-2">
                                 <div class="flex-1 min-w-0">
@@ -132,12 +132,12 @@
                                     </p>
                                 </div>
                                 <a href="{% url 'crm:lead_detail' lead.id %}"
-                                   class="w-6 h-6 rounded-md bg-slate-50 text-slate-400 hover:bg-[#526D82] hover:text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                                   class="w-6 h-6 rounded-md bg-slate-50 text-slate-400 hover:bg-[#4F46E5] hover:text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
                                     <i class="ph ph-arrow-right text-xs"></i>
                                 </a>
                             </div>
                             {% if lead.interested_course %}
-                            <span class="inline-flex items-center gap-1 text-xs font-medium text-[#526D82] bg-[#526D82]/5 px-2 py-0.5 rounded mt-2">
+                            <span class="inline-flex items-center gap-1 text-xs font-medium text-[#64748B] bg-[#4F46E5]/5 px-2 py-0.5 rounded mt-2">
                                 <i class="ph ph-book-open text-[10px]"></i>
                                 {{ lead.interested_course.name|truncatewords:2 }}
                             </span>
@@ -165,7 +165,7 @@
                     <div class="text-center">
                         <i class="ph ph-kanban text-3xl mb-2 opacity-50"></i>
                         <p class="text-sm">Hozircha bosqichlar yo'q</p>
-                        <button @click="activeTab = 'stages'" class="text-[#526D82] hover:underline text-sm mt-2">Bosqich qo'shish +</button>
+                        <button @click="activeTab = 'stages'" class="text-[#64748B] hover:underline text-sm mt-2">Bosqich qo'shish +</button>
                     </div>
                 </div>
                 {% endfor %}
@@ -183,7 +183,7 @@
                         <i class="ph ph-kanban"></i> Voronka Bosqichlari
                     </h3>
                     <a href="{% url 'crm:stage_create' %}"
-                        class="px-3 py-1.5 bg-[#526D82] text-white text-sm rounded-lg hover:bg-[#27374D] flex items-center gap-1 transition">
+                        class="px-3 py-1.5 bg-[#4F46E5] text-white text-sm rounded-lg hover:bg-[#4F46E5] flex items-center gap-1 transition">
                         <i class="ph ph-plus"></i> Yangi
                     </a>
                 </div>
@@ -209,7 +209,7 @@
                             </span>
                             <div class="flex items-center gap-1">
                                 <a href="{% url 'crm:stage_edit' stage.id %}"
-                                    class="p-2 text-slate-500 hover:text-[#526D82] hover:bg-[#526D82]/5 rounded-lg transition">
+                                    class="p-2 text-slate-500 hover:text-[#64748B] hover:bg-[#4F46E5]/5 rounded-lg transition">
                                     <i class="ph ph-pencil-simple"></i>
                                 </a>
                                 <a href="{% url 'crm:stage_delete' stage.id %}"
@@ -223,7 +223,7 @@
                     <div class="p-8 text-center text-slate-500">
                         <i class="ph ph-kanban text-3xl mb-2 opacity-50"></i>
                         <p>Hozircha bosqichlar yo'q</p>
-                        <a href="{% url 'crm:stage_create' %}" class="text-[#526D82] hover:underline mt-2 inline-block">+ Yangi bosqich</a>
+                        <a href="{% url 'crm:stage_create' %}" class="text-[#64748B] hover:underline mt-2 inline-block">+ Yangi bosqich</a>
                     </div>
                     {% endfor %}
                 </div>
@@ -241,7 +241,7 @@
                         <i class="ph ph-megaphone"></i> Lid Manbalari
                     </h3>
                     <a href="{% url 'crm:source_create' %}"
-                        class="px-3 py-1.5 bg-[#526D82] text-white text-sm rounded-lg hover:bg-[#27374D] flex items-center gap-1 transition">
+                        class="px-3 py-1.5 bg-[#4F46E5] text-white text-sm rounded-lg hover:bg-[#4F46E5] flex items-center gap-1 transition">
                         <i class="ph ph-plus"></i> Yangi
                     </a>
                 </div>
@@ -252,7 +252,7 @@
                         <div class="bg-slate-50 rounded-xl p-4 hover:bg-slate-100 transition group">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[#526D82] to-[#9DB2BF] flex items-center justify-center text-white">
+                                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-[#4F46E5] to-[#818CF8] flex items-center justify-center text-white">
                                         <i class="ph ph-megaphone"></i>
                                     </div>
                                     <div>
@@ -262,7 +262,7 @@
                                 </div>
                                 <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition">
                                     <a href="{% url 'crm:source_edit' source.id %}"
-                                        class="p-1.5 text-slate-500 hover:text-[#526D82] hover:bg-white rounded-lg transition">
+                                        class="p-1.5 text-slate-500 hover:text-[#64748B] hover:bg-white rounded-lg transition">
                                         <i class="ph ph-pencil-simple text-sm"></i>
                                     </a>
                                     <a href="{% url 'crm:source_delete' source.id %}"
@@ -276,7 +276,7 @@
                         <div class="col-span-full text-center py-8 text-slate-500">
                             <i class="ph ph-megaphone text-3xl mb-2 opacity-50"></i>
                             <p>Hozircha manbalar yo'q</p>
-                            <a href="{% url 'crm:source_create' %}" class="text-[#526D82] hover:underline mt-2 inline-block">+ Yangi manba</a>
+                            <a href="{% url 'crm:source_create' %}" class="text-[#64748B] hover:underline mt-2 inline-block">+ Yangi manba</a>
                         </div>
                         {% endfor %}
                     </div>
@@ -296,7 +296,7 @@
             new Sortable(list, {
                 group: 'shared',
                 animation: 150,
-                ghostClass: 'bg-[#526D82]/5',
+                ghostClass: 'bg-[#4F46E5]/5',
 
                 onEnd: function (evt) {
                     const itemEl = evt.item;
