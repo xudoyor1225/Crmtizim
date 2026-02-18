@@ -86,9 +86,7 @@
                 </div>
                 <div>
                     <p class="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">Lidlar</p>
-                    <p class="text-2xl font-extrabold text-amber-600 leading-tight">{{ total_leads|default:"0" }}{% if
-                        new_leads %} <span class="text-xs text-emerald-500 font-bold">+{{ new_leads }}</span>{% endif %}
-                    </p>
+                    <p class="text-2xl font-extrabold text-amber-600 leading-tight">{{ total_leads|default:"0" }}{% if new_leads %} <span class="text-xs text-emerald-500 font-bold">+{{ new_leads }}</span>{% endif %}</p>
                 </div>
             </div>
         </div>
@@ -101,8 +99,7 @@
                 </div>
                 <div>
                     <p class="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">Tushum</p>
-                    <p class="text-2xl font-extrabold text-emerald-600 leading-tight">{{
-                        monthly_income|default:0|floatformat:0|intcomma }}</p>
+                    <p class="text-2xl font-extrabold text-emerald-600 leading-tight">{{ monthly_income|default:0|floatformat:0|intcomma }}</p>
                 </div>
             </div>
         </div>
@@ -115,8 +112,7 @@
                 </div>
                 <div>
                     <p class="text-xs font-bold text-[#94A3B8] uppercase tracking-wider">Qarz</p>
-                    <p class="text-2xl font-extrabold text-rose-600 leading-tight">{{
-                        total_debt|default:0|floatformat:0|intcomma }}</p>
+                    <p class="text-2xl font-extrabold text-rose-600 leading-tight">{{ total_debt|default:0|floatformat:0|intcomma }}</p>
                 </div>
             </div>
         </div>
@@ -178,8 +174,7 @@
                 {% for lesson in today_lessons %}
                 <div class="flex items-center gap-3 p-3 rounded-xl liquid-glass hover:bg-white/80 transition-all group">
                     <div class="text-center flex-shrink-0 w-12">
-                        <span class="block text-sm font-bold text-[#0F172A] leading-tight">{{
-                            lesson.start_time|time:"H:i" }}</span>
+                        <span class="block text-sm font-bold text-[#0F172A] leading-tight">{{ lesson.start_time|time:"H:i" }}</span>
                         <span class="block text-xs text-[#94A3B8]">{{ lesson.end_time|time:"H:i" }}</span>
                     </div>
                     <div class="w-px h-8 bg-[#E0E7FF] flex-shrink-0"></div>
@@ -191,8 +186,7 @@
                         </p>
                     </div>
                     <span
-                        class="px-2 py-0.5 text-xs font-bold rounded-md flex-shrink-0 {% if lesson.status == 'started' %}text-[#64748B] bg-[#E0E7FF]{% elif lesson.status == 'finished' %}text-emerald-700 bg-emerald-50{% else %}text-[#64748B] bg-[#E0E7FF]{% endif %}">{{
-                        lesson.get_status_display }}</span>
+                        class="px-2 py-0.5 text-xs font-bold rounded-md flex-shrink-0 {% if lesson.status == 'started' %}text-[#64748B] bg-[#E0E7FF]{% elif lesson.status == 'finished' %}text-emerald-700 bg-emerald-50{% else %}text-[#64748B] bg-[#E0E7FF]{% endif %}">{{ lesson.get_status_display }}</span>
                 </div>
                 {% empty %}
                 <div class="flex flex-col items-center justify-center text-[#94A3B8] py-8">
