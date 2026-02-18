@@ -169,8 +169,7 @@
                                 {% if att.status == 'present' %}bg-emerald-50/80 text-emerald-700
                                 {% elif att.status == 'absent' %}bg-rose-50/80 text-rose-700
                                 {% else %}bg-amber-50/80 text-amber-700{% endif %}">
-                                {% if att.status == 'present' %}✓{% elif att.status == 'absent' %}✗{% else %}...{% endif
-                                %}
+                                {% if att.status == 'present' %}✓{% elif att.status == 'absent' %}✗{% else %}...{% endif %}
                             </span>
                         </td>
                         <td class="py-2 text-center font-bold text-[#0F172A]">{{ att.grade|default:"—" }}</td>
