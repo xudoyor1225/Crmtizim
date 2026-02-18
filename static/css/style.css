@@ -83,6 +83,12 @@
     --rose-600: #DC2626;
     --rose-700: #B91C1C;
 
+    /* Blue Colors */
+    --blue-50: #eff6ff;
+    --blue-100: #bfdbfe;
+    --blue-500: #3b82f6;
+    --blue-600: #2563eb;
+
     /* Purple Colors */
     --purple-50: #faf5ff;
     --purple-100: #f3e8ff;
@@ -108,6 +114,12 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+html,
+body {
+    overflow-x: hidden;
+    max-width: 100vw;
 }
 
 body {
@@ -1435,4 +1447,99 @@ img.lazy.loaded {
         opacity: 0.7;
         transform: scale(1.1);
     }
+}
+
+/* ============================================
+   QUICK ACTIONS SECTION
+   ============================================ */
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+@media (max-width: 1024px) {
+    .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+}
+
+.quick-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    border: 1px solid var(--slate-200);
+    background: var(--bg-card);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.quick-action-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.quick-action-btn .qa-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.quick-action-btn.qa-primary .qa-icon {
+    background: rgba(79, 70, 229, 0.1);
+    color: var(--primary);
+}
+
+.quick-action-btn.qa-primary:hover {
+    border-color: var(--primary-200);
+    box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.15);
+}
+
+.quick-action-btn.qa-success .qa-icon {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--emerald-600);
+}
+
+.quick-action-btn.qa-success:hover {
+    border-color: var(--emerald-100);
+    box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.15);
+}
+
+.quick-action-btn.qa-info .qa-icon {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--blue-500);
+}
+
+.quick-action-btn.qa-info:hover {
+    border-color: var(--blue-100);
+    box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.15);
+}
+
+.quick-action-btn.qa-accent .qa-icon {
+    background: rgba(168, 85, 247, 0.1);
+    color: var(--purple-600);
+}
+
+.quick-action-btn.qa-accent:hover {
+    border-color: var(--purple-100);
+    box-shadow: 0 10px 20px -5px rgba(168, 85, 247, 0.15);
 }

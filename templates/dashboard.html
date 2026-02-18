@@ -70,6 +70,34 @@
 
     </div>
 
+    <!-- QUICK ACTIONS (Tezkor Amallar) -->
+    <div class="quick-actions">
+        <a href="{% url 'users:student_create' %}" class="quick-action-btn qa-primary">
+            <span class="qa-icon">
+                <i class="ph-fill ph-user-plus"></i>
+            </span>
+            <span>O'quvchi qo'shish</span>
+        </a>
+        <a href="{% url 'finance:add_income' %}" class="quick-action-btn qa-success">
+            <span class="qa-icon">
+                <i class="ph-fill ph-money"></i>
+            </span>
+            <span>To'lov qabul qilish</span>
+        </a>
+        <a href="{% url 'group_create' %}" class="quick-action-btn qa-info">
+            <span class="qa-icon">
+                <i class="ph-fill ph-users-three"></i>
+            </span>
+            <span>Guruh yaratish</span>
+        </a>
+        <a href="{% url 'automation:send_notification' %}" class="quick-action-btn qa-accent">
+            <span class="qa-icon">
+                <i class="ph-fill ph-paper-plane-tilt"></i>
+            </span>
+            <span>Xabar yuborish</span>
+        </a>
+    </div>
+
     <!-- PASTDAGI QISM: JADVAL VA LIDLAR -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
