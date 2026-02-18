@@ -12,17 +12,17 @@
     <!-- Header -->
     <div class="flex items-center justify-between relative z-10">
         <div class="flex items-center gap-3">
-            <h2 class="text-xl font-bold text-[#27374D] flex items-center gap-2">
-                <i class="ph-fill ph-shield-check text-[#27374D]"></i> Super Admin
+            <h2 class="text-xl font-bold text-[#0F172A] flex items-center gap-2">
+                <i class="ph-fill ph-shield-check text-[#0F172A]"></i> Super Admin
             </h2>
-            <span class="text-xs text-[#9DB2BF]">{% now "d F Y" %}</span>
+            <span class="text-xs text-[#94A3B8]">{% now "d F Y" %}</span>
         </div>
         <div class="flex gap-2">
             <div class="flex gap-0.5 liquid-glass p-0.5 rounded-lg">
                 <a href="?period=weekly"
-                    class="px-3 py-1.5 rounded-md text-xs font-medium transition {% if period == 'weekly' %}bg-gradient-to-r from-[#27374D] to-[#526D82] text-white shadow-sm{% else %}text-[#526D82] hover:text-[#27374D]{% endif %}">Hafta</a>
+                    class="px-3 py-1.5 rounded-md text-xs font-medium transition {% if period == 'weekly' %}bg-gradient-to-r from-[#4F46E5] to-[#818CF8] text-white shadow-sm{% else %}text-[#64748B] hover:text-[#0F172A]{% endif %}">Hafta</a>
                 <a href="?period=monthly"
-                    class="px-3 py-1.5 rounded-md text-xs font-medium transition {% if period != 'weekly' %}bg-gradient-to-r from-[#27374D] to-[#526D82] text-white shadow-sm{% else %}text-[#526D82] hover:text-[#27374D]{% endif %}">Oy</a>
+                    class="px-3 py-1.5 rounded-md text-xs font-medium transition {% if period != 'weekly' %}bg-gradient-to-r from-[#4F46E5] to-[#818CF8] text-white shadow-sm{% else %}text-[#64748B] hover:text-[#0F172A]{% endif %}">Oy</a>
             </div>
             <a href="{% url 'users:student_create' %}"
                 class="inline-flex items-center gap-1.5 px-3 py-2 glass-button text-white rounded-lg text-xs font-medium"><i
@@ -35,7 +35,7 @@
     <div class="liquid-glass p-3 relative z-10 flex items-center gap-4 flex-wrap">
         <div class="flex items-center gap-1.5 text-xs">
             <i class="ph-fill ph-bell-ringing text-amber-500"></i>
-            <span class="font-semibold text-[#27374D]">Bugun:</span>
+            <span class="font-semibold text-[#0F172A]">Bugun:</span>
         </div>
         {% if new_users_today > 0 %}
         <span
@@ -54,8 +54,8 @@
         <div class="liquid-glass gradient-bar p-5 stagger-1">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-[10px] font-semibold text-[#9DB2BF] uppercase tracking-wider">Bugungi Kirim</p>
-                    <p class="text-2xl font-bold text-[#27374D] mt-1">{{ today_income|default:0|floatformat:0|intcomma }}</p>
+                    <p class="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wider">Bugungi Kirim</p>
+                    <p class="text-2xl font-bold text-[#0F172A] mt-1">{{ today_income|default:0|floatformat:0|intcomma }}</p>
                     <p class="text-[10px] text-emerald-600 font-medium mt-0.5"><i class="ph-fill ph-trend-up"></i> so'm
                     </p>
                 </div>
@@ -66,8 +66,8 @@
         <div class="liquid-glass gradient-bar p-5 stagger-2">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-[10px] font-semibold text-[#9DB2BF] uppercase tracking-wider">Bugungi Chiqim</p>
-                    <p class="text-2xl font-bold text-[#27374D] mt-1">{{ today_expense|default:0|floatformat:0|intcomma }}</p>
+                    <p class="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wider">Bugungi Chiqim</p>
+                    <p class="text-2xl font-bold text-[#0F172A] mt-1">{{ today_expense|default:0|floatformat:0|intcomma }}</p>
                     <p class="text-[10px] text-rose-500 font-medium mt-0.5"><i class="ph-fill ph-trend-down"></i> so'm
                     </p>
                 </div>
@@ -78,7 +78,7 @@
         <div class="liquid-glass gradient-bar p-5 stagger-3">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-[10px] font-semibold text-[#9DB2BF] uppercase tracking-wider">{{
+                    <p class="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wider">{{
                         period_label|default:"Oylik" }} Foyda</p>
                     <p
                         class="text-2xl font-bold {% if net_profit >= 0 %}text-emerald-600{% else %}text-rose-600{% endif %} mt-1">
@@ -90,7 +90,7 @@
                             period_expense|default:0|floatformat:0|intcomma }}</span>
                     </div>
                 </div>
-                <div class="w-10 h-10 bg-[#27374D]/10 text-[#27374D] rounded-xl flex items-center justify-center"><i
+                <div class="w-10 h-10 bg-[#4F46E5]/10 text-[#0F172A] rounded-xl flex items-center justify-center"><i
                         class="ph-fill ph-chart-line-up text-lg"></i></div>
             </div>
         </div>
@@ -98,7 +98,7 @@
             class="liquid-glass gradient-bar p-5 stagger-4 group block">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-[10px] font-semibold text-[#9DB2BF] uppercase tracking-wider">Qarzdorlik</p>
+                    <p class="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wider">Qarzdorlik</p>
                     <p class="text-2xl font-bold text-amber-600 mt-1">{{ total_debt|default:0|floatformat:0|intcomma }}
                     </p>
                     <p class="text-[10px] text-amber-600 font-medium mt-0.5"><i class="ph-fill ph-users"></i> {{
@@ -114,11 +114,11 @@
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
         <div class="liquid-glass p-5 stagger-5">
             <div class="flex items-center justify-between mb-3">
-                <h4 class="text-xs font-bold text-[#27374D]">O'quvchilar</h4>
+                <h4 class="text-xs font-bold text-[#0F172A]">O'quvchilar</h4>
                 <div class="w-8 h-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center"><i
                         class="ph-fill ph-student text-sm"></i></div>
             </div>
-            <p class="text-3xl font-bold text-[#27374D]">{{ total_students|default:"0" }}</p>
+            <p class="text-3xl font-bold text-[#0F172A]">{{ total_students|default:"0" }}</p>
             <div class="flex gap-2 mt-2 text-[10px]">
                 <span class="px-1.5 py-0.5 bg-emerald-50 text-emerald-700 rounded">{{ active_students|default:"0" }}
                     faol</span>
@@ -128,31 +128,31 @@
         </div>
         <div class="liquid-glass p-5 stagger-5">
             <div class="flex items-center justify-between mb-3">
-                <h4 class="text-xs font-bold text-[#27374D]">Guruhlar</h4>
-                <div class="w-8 h-8 bg-[#27374D]/10 text-[#27374D] rounded-lg flex items-center justify-center"><i
+                <h4 class="text-xs font-bold text-[#0F172A]">Guruhlar</h4>
+                <div class="w-8 h-8 bg-[#4F46E5]/10 text-[#0F172A] rounded-lg flex items-center justify-center"><i
                         class="ph-fill ph-users-three text-sm"></i></div>
             </div>
-            <p class="text-3xl font-bold text-[#27374D]">{{ total_groups|default:"0" }}</p>
+            <p class="text-3xl font-bold text-[#0F172A]">{{ total_groups|default:"0" }}</p>
             <span class="text-[10px] px-1.5 py-0.5 bg-emerald-50 text-emerald-700 rounded mt-2 inline-block">{{
                 active_groups|default:"0" }} faol</span>
         </div>
         <div class="liquid-glass p-5 stagger-6">
             <div class="flex items-center justify-between mb-3">
-                <h4 class="text-xs font-bold text-[#27374D]">Bugungi Davomat</h4>
+                <h4 class="text-xs font-bold text-[#0F172A]">Bugungi Davomat</h4>
                 <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center"><i
                         class="ph-fill ph-check-circle text-sm"></i></div>
             </div>
             <p class="text-3xl font-bold text-emerald-600">{{ attendance_rate|default:0|floatformat:0 }}%</p>
-            <p class="text-[10px] text-[#526D82] mt-2">{{ finished_lessons|default:"0" }}/{{
+            <p class="text-[10px] text-[#64748B] mt-2">{{ finished_lessons|default:"0" }}/{{
                 total_today_lessons|default:"0" }} dars</p>
         </div>
         <div class="liquid-glass p-5 stagger-6">
             <div class="flex items-center justify-between mb-3">
-                <h4 class="text-xs font-bold text-[#27374D]">Tashkilotlar</h4>
-                <div class="w-8 h-8 bg-[#DDE6ED] text-[#526D82] rounded-lg flex items-center justify-center"><i
+                <h4 class="text-xs font-bold text-[#0F172A]">Tashkilotlar</h4>
+                <div class="w-8 h-8 bg-[#E0E7FF] text-[#4F46E5] rounded-lg flex items-center justify-center"><i
                         class="ph-fill ph-buildings text-sm"></i></div>
             </div>
-            <p class="text-3xl font-bold text-[#526D82]">{{ total_orgs|default:"0" }}</p>
+            <p class="text-3xl font-bold text-[#0F172A]">{{ total_orgs|default:"0" }}</p>
             <span class="text-[10px] px-1.5 py-0.5 bg-emerald-50 text-emerald-700 rounded mt-2 inline-block">{{
                 active_orgs|default:"0" }} faol</span>
         </div>
@@ -163,7 +163,7 @@
         <!-- Tug'ilgan Kunlar -->
         <div class="glass-section p-5">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-bold text-[#27374D] flex items-center gap-2"><i
+                <h3 class="text-sm font-bold text-[#0F172A] flex items-center gap-2"><i
                         class="ph-fill ph-cake text-rose-500"></i> Tug'ilgan Kunlar</h3>
                 <span class="px-2 py-0.5 bg-rose-50 text-rose-600 rounded-full text-[10px] font-bold">{{
                     today_birthdays|length }}</span>
@@ -175,15 +175,15 @@
                         class="w-9 h-9 bg-gradient-to-br from-rose-400 to-rose-600 rounded-lg text-white flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0">
                         {{ person.first_name|first }}</div>
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-semibold text-[#27374D] text-sm truncate">{{ person.first_name }} {{
+                        <h4 class="font-semibold text-[#0F172A] text-sm truncate">{{ person.first_name }} {{
                             person.last_name }}</h4>
-                        <p class="text-[10px] text-[#526D82]">{{ person.get_role_display }}{% if person.organization %}
+                        <p class="text-[10px] text-[#64748B]">{{ person.get_role_display }}{% if person.organization %}
                             · {{ person.organization.name }}{% endif %}</p>
                     </div>
                     <span class="text-lg flex-shrink-0">🎂</span>
                 </div>
                 {% empty %}
-                <div class="flex flex-col items-center justify-center text-[#9DB2BF] py-6">
+                <div class="flex flex-col items-center justify-center text-[#94A3B8] py-6">
                     <i class="ph ph-cake text-2xl mb-1.5"></i>
                     <p class="text-xs font-medium">Bugun tug'ilgan kun yo'q</p>
                 </div>
@@ -194,7 +194,7 @@
         <!-- Tasdiqlanmagan Cheklar -->
         <div class="glass-section p-5">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-bold text-[#27374D] flex items-center gap-2"><i
+                <h3 class="text-sm font-bold text-[#0F172A] flex items-center gap-2"><i
                         class="ph-fill ph-receipt text-amber-500"></i> Tasdiqlanmagan Cheklar</h3>
                 {% if pending_receipts > 0 %}
                 <span class="px-2 py-0.5 bg-amber-50 text-amber-600 rounded-full text-[10px] font-bold">{{
@@ -205,24 +205,24 @@
                 {% for receipt in pending_receipts_list %}
                 <div class="flex items-center gap-3 p-2.5 rounded-xl liquid-glass border-l-3 border-l-amber-400">
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-semibold text-[#27374D] text-sm truncate">{% if receipt.student %}{{
+                        <h4 class="font-semibold text-[#0F172A] text-sm truncate">{% if receipt.student %}{{
                             receipt.student.first_name }} {{ receipt.student.last_name }}{% else %}{{
                             receipt.description|truncatechars:25 }}{% endif %}</h4>
-                        <p class="text-[10px] text-[#526D82]">{{ receipt.created_at|timesince }} oldin</p>
+                        <p class="text-[10px] text-[#64748B]">{{ receipt.created_at|timesince }} oldin</p>
                     </div>
                     <span class="text-sm font-bold text-amber-600 flex-shrink-0">{{
                         receipt.amount|floatformat:0|intcomma }}</span>
                 </div>
                 {% empty %}
-                <div class="flex flex-col items-center justify-center text-[#9DB2BF] py-6">
+                <div class="flex flex-col items-center justify-center text-[#94A3B8] py-6">
                     <i class="ph-fill ph-check-circle text-2xl text-emerald-500 mb-1.5"></i>
                     <p class="text-xs font-medium text-emerald-600">Barchasi tasdiqlangan</p>
                 </div>
                 {% endfor %}
             </div>
             {% if pending_receipts_sum > 0 %}
-            <div class="mt-3 pt-3 border-t border-[#9DB2BF]/20 flex items-center justify-between">
-                <span class="text-[10px] text-[#9DB2BF] uppercase font-semibold">Jami kutilmoqda</span>
+            <div class="mt-3 pt-3 border-t border-[#94A3B8]/20 flex items-center justify-between">
+                <span class="text-[10px] text-[#94A3B8] uppercase font-semibold">Jami kutilmoqda</span>
                 <span class="text-sm font-bold text-amber-600">{{ pending_receipts_sum|floatformat:0|intcomma }}
                     so'm</span>
             </div>
@@ -232,7 +232,7 @@
         <!-- Kam Qolgan Mahsulotlar -->
         <div class="glass-section p-5">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-bold text-[#27374D] flex items-center gap-2"><i
+                <h3 class="text-sm font-bold text-[#0F172A] flex items-center gap-2"><i
                         class="ph-fill ph-package text-purple-500"></i> Kam Qolgan (Sklad)</h3>
                 {% if low_stock_count > 0 %}
                 <span class="px-2 py-0.5 bg-rose-50 text-rose-600 rounded-full text-[10px] font-bold">{{ low_stock_count
@@ -248,8 +248,8 @@
                             <i class="ph-fill ph-cube text-sm"></i>
                         </div>
                         <div class="min-w-0">
-                            <h4 class="font-semibold text-[#27374D] text-xs truncate">{{ item.name }}</h4>
-                            <p class="text-[10px] text-[#526D82]">Min: {{ item.min_quantity }}</p>
+                            <h4 class="font-semibold text-[#0F172A] text-xs truncate">{{ item.name }}</h4>
+                            <p class="text-[10px] text-[#64748B]">Min: {{ item.min_quantity }}</p>
                         </div>
                     </div>
                     <span
@@ -257,7 +257,7 @@
                         item.quantity }} {{ item.unit|default:"dona" }}</span>
                 </div>
                 {% empty %}
-                <div class="flex flex-col items-center justify-center text-[#9DB2BF] py-6">
+                <div class="flex flex-col items-center justify-center text-[#94A3B8] py-6">
                     <i class="ph-fill ph-check-circle text-2xl text-emerald-500 mb-1.5"></i>
                     <p class="text-xs font-medium text-emerald-600">Sklad to'liq</p>
                 </div>
@@ -270,33 +270,33 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 relative z-10">
         <div class="glass-section p-5">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-bold text-[#27374D] flex items-center gap-2"><i
-                        class="ph-fill ph-users text-[#27374D]"></i> So'nggi Foydalanuvchilar</h3>
+                <h3 class="text-sm font-bold text-[#0F172A] flex items-center gap-2"><i
+                        class="ph-fill ph-users text-[#0F172A]"></i> So'nggi Foydalanuvchilar</h3>
                 <a href="{% url 'users:user_list' %}"
-                    class="text-[10px] text-[#526D82] hover:text-[#27374D] font-medium">Barchasi →</a>
+                    class="text-[10px] text-[#64748B] hover:text-[#0F172A] font-medium">Barchasi →</a>
             </div>
             <div class="space-y-2 max-h-52 overflow-y-auto" style="scrollbar-width: none;">
                 {% for user in recent_users|slice:":5" %}
                 <div class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/60 transition">
                     <div
-                        class="w-9 h-9 bg-gradient-to-br from-[#27374D] to-[#526D82] rounded-lg text-white flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0">
+                        class="w-9 h-9 bg-gradient-to-br from-[#4F46E5] to-[#818CF8] rounded-lg text-white flex items-center justify-center font-bold text-sm shadow-sm flex-shrink-0">
                         {{ user.first_name|first }}</div>
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-semibold text-[#27374D] text-sm truncate">{{ user.first_name }} {{
+                        <h4 class="font-semibold text-[#0F172A] text-sm truncate">{{ user.first_name }} {{
                             user.last_name }}</h4>
-                        <p class="text-[10px] text-[#526D82]">{{ user.get_role_display }} · {{
+                        <p class="text-[10px] text-[#64748B]">{{ user.get_role_display }} · {{
                             user.date_joined|timesince }} oldin</p>
                     </div>
                 </div>
                 {% empty %}
-                <p class="text-[#9DB2BF] text-sm text-center py-4">Ma'lumot yo'q</p>
+                <p class="text-[#94A3B8] text-sm text-center py-4">Ma'lumot yo'q</p>
                 {% endfor %}
             </div>
         </div>
 
         <div class="glass-section p-5">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-bold text-[#27374D] flex items-center gap-2"><i
+                <h3 class="text-sm font-bold text-[#0F172A] flex items-center gap-2"><i
                         class="ph-fill ph-receipt text-emerald-600"></i> So'nggi Tranzaksiyalar</h3>
                 {% if pending_payments > 0 %}
                 <span
@@ -313,9 +313,9 @@
                             class="ph-fill {% if tx.transaction_type == 'income' %}ph-arrow-down-left{% else %}ph-arrow-up-right{% endif %}"></i>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <h4 class="font-semibold text-[#27374D] text-sm truncate">{{ tx.description|truncatechars:30 }}
+                        <h4 class="font-semibold text-[#0F172A] text-sm truncate">{{ tx.description|truncatechars:30 }}
                         </h4>
-                        <p class="text-[10px] text-[#526D82]">{{ tx.created_at|timesince }} oldin</p>
+                        <p class="text-[10px] text-[#64748B]">{{ tx.created_at|timesince }} oldin</p>
                     </div>
                     <span
                         class="text-sm font-bold {% if tx.transaction_type == 'income' %}text-emerald-600{% else %}text-rose-600{% endif %}">
@@ -324,7 +324,7 @@
                     </span>
                 </div>
                 {% empty %}
-                <p class="text-[#9DB2BF] text-sm text-center py-4">Ma'lumot yo'q</p>
+                <p class="text-[#94A3B8] text-sm text-center py-4">Ma'lumot yo'q</p>
                 {% endfor %}
             </div>
         </div>

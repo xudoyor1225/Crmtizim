@@ -41,8 +41,8 @@
         </div>
         <div class="glass-panel p-5 rounded-2xl">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-[#526D82]/10 flex items-center justify-center">
-                    <i class="ph ph-wallet text-2xl text-[#526D82]"></i>
+                <div class="w-12 h-12 rounded-xl bg-[#4F46E5]/10 flex items-center justify-center">
+                    <i class="ph ph-wallet text-2xl text-[#64748B]"></i>
                 </div>
                 <div>
                     <p class="text-2xl font-bold text-slate-800">{{ stats.total_net|floatformat:0|default:0 }}</p>
@@ -96,7 +96,7 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div
-                                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#9DB2BF] to-purple-500 flex items-center justify-center text-white font-bold">
+                                    class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#818CF8] to-purple-500 flex items-center justify-center text-white font-bold">
                                     {{ payroll.staff.first_name|first }}
                                 </div>
                                 <div>
@@ -115,7 +115,7 @@
                             <span
                                 class="px-2.5 py-1 text-xs font-bold rounded-lg
                                 {% if payroll.status == 'paid' %}bg-green-100 text-green-700
-                                {% elif payroll.status == 'approved' %}bg-[#526D82]/10 text-[#27374D]
+                                {% elif payroll.status == 'approved' %}bg-[#4F46E5]/10 text-[#0F172A]
                                 {% else %}bg-yellow-100 text-yellow-700{% endif %}">
                                 {{ payroll.get_status_display }}
                             </span>
@@ -138,7 +138,7 @@
                                 </form>
                                 {% elif payroll.status == 'approved' %}
                                 <a href="{% url 'finance:pay_salary' payroll.id %}"
-                                    class="p-2 rounded-lg hover:bg-[#526D82]/10 text-[#526D82] transition"
+                                    class="p-2 rounded-lg hover:bg-[#4338CA]/10 text-[#64748B] transition"
                                     title="To'lash">
                                     <i class="ph ph-money"></i>
                                 </a>
@@ -163,7 +163,7 @@
     {% if staff_without_payroll %}
     <div class="glass-panel p-6 rounded-2xl">
         <h3 class="text-lg font-semibold text-slate-800 mb-4">
-            <i class="ph ph-plus-circle text-[#526D82]"></i> Yangi Hisob-kitob
+            <i class="ph ph-plus-circle text-[#64748B]"></i> Yangi Hisob-kitob
         </h3>
         <div class="flex flex-wrap gap-3">
             {% for staff in staff_without_payroll %}

@@ -23,7 +23,7 @@
             {% has_permission 'users' 'create' as can_create %}
             {% if can_create %}
             <a href="{% url 'users:student_create' %}"
-                class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#526D82] to-[#27374D] text-white rounded-xl font-medium shadow-lg shadow-[#526D82]/25 hover:shadow-[#526D82]/40 transition-all hover:-translate-y-0.5">
+                class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#4F46E5] to-[#4338CA] text-white rounded-xl font-medium shadow-lg shadow-[#4F46E5]/25 hover:shadow-[#4F46E5]/40 transition-all hover:-translate-y-0.5">
                 <i class="ph ph-student"></i>
                 O'quvchi
             </a>
@@ -86,14 +86,14 @@
                 <div class="relative">
                     <input type="text" name="q" value="{{ current_search|default:'' }}"
                         placeholder="   Ism, telefon bo'yicha qidirish..."
-                        class="w-full pl-10 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#526D82]/30 focus:outline-none">
+                        class="w-full pl-10 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#4F46E5]/30 focus:outline-none">
                     <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 </div>
             </div>
 
             <!-- Rol filteri -->
             <select name="role"
-                class="min-w-[150px] px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#526D82]/30 focus:outline-none">
+                class="min-w-[150px] px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#4F46E5]/30 focus:outline-none">
                 <option value="">Barcha rollar</option>
                 {% for value, label in role_choices %}
                 <option value="{{ value }}" {% if current_role == value %}selected{% endif %}>{{ label }}</option>
@@ -101,7 +101,7 @@
             </select>
 
             <button type="submit"
-                class="px-4 py-2.5 bg-[#526D82] text-white rounded-xl font-medium hover:bg-[#27374D] transition">
+                class="px-4 py-2.5 bg-[#4F46E5] text-white rounded-xl font-medium hover:bg-[#4338CA] transition">
                 <i class="ph ph-funnel"></i> Filtrlash
             </button>
             <a href="{% url 'users:user_list' %}"
@@ -148,7 +148,7 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div
-                                    class="w-10 h-10 rounded-full bg-gradient-to-br from-[#526D82] to-[#9DB2BF] flex items-center justify-center text-white font-bold overflow-hidden">
+                                    class="w-10 h-10 rounded-full bg-gradient-to-br from-[#4F46E5] to-[#818CF8] flex items-center justify-center text-white font-bold overflow-hidden">
                                     {% if user.avatar %}
                                     <img src="{{ user.avatar.url }}" class="w-full h-full object-cover">
                                     {% else %}
@@ -167,7 +167,7 @@
                             <span class="px-2.5 py-1 text-xs rounded-full font-medium 
                                 {% if user.role == 'super_admin' %}bg-purple-100 text-purple-700
                                 {% elif user.role == 'student' %}bg-green-100 text-green-700
-                                {% elif user.role == 'teacher' %}bg-[#526D82]/10 text-[#27374D]
+                                {% elif user.role == 'teacher' %}bg-[#4F46E5]/10 text-[#0F172A]
                                 {% elif user.role == 'parent' %}bg-pink-100 text-pink-700
                                 {% else %}bg-slate-100 text-slate-700{% endif %}">
                                 {{ user.get_role_display }}
@@ -199,7 +199,7 @@
                                 {% has_permission 'users' 'edit' as can_edit %}
                                 {% if can_edit %}
                                 <a href="{% url 'users:user_update' user.id %}"
-                                    class="p-2 text-slate-500 hover:text-[#526D82] bg-slate-100 rounded-lg hover:bg-[#526D82]/5 transition"
+                                    class="p-2 text-slate-500 hover:text-[#64748B] bg-slate-100 rounded-lg hover:bg-[#4338CA]/5 transition"
                                     title="Tahrirlash">
                                     <i class="ph ph-pencil-simple"></i>
                                 </a>
@@ -246,7 +246,7 @@
                                 </div>
                                 <p class="text-slate-500">Hech kim topilmadi</p>
                                 <a href="{% url 'users:student_create' %}"
-                                    class="text-[#526D82] hover:underline mt-2">Yangi
+                                    class="text-[#64748B] hover:underline mt-2">Yangi
                                     qo'shish →</a>
                             </div>
                         </td>
@@ -270,7 +270,7 @@
                 </a>
                 {% endif %}
 
-                <span class="px-3 py-1.5 bg-[#526D82]/10 text-[#27374D] rounded-lg text-sm font-medium">
+                <span class="px-3 py-1.5 bg-[#4F46E5]/10 text-[#0F172A] rounded-lg text-sm font-medium">
                     {{ users.number }}
                 </span>
 

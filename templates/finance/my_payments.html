@@ -64,7 +64,7 @@
                     <td class="p-4">
                         {% if payment.receipt_image %}
                         <a href="{{ payment.receipt_image.url }}" target="_blank"
-                           class="text-[#526D82] hover:text-[#9DB2BF] flex items-center gap-1">
+                           class="text-[#64748B] hover:text-[#94A3B8] flex items-center gap-1">
                             <i class="ph ph-image"></i> Ko'rish
                         </a>
                         {% else %}
@@ -77,7 +77,7 @@
                     <td colspan="6" class="p-12 text-center">
                         <i class="ph ph-receipt text-5xl text-slate-600 mb-4"></i>
                         <p class="text-slate-500">Hali to'lovlar yo'q</p>
-                        <a href="{% url 'finance:student_payment_page' %}" class="text-[#526D82] hover:underline mt-2 inline-block">
+                        <a href="{% url 'finance:student_payment_page' %}" class="text-[#64748B] hover:underline mt-2 inline-block">
                             Birinchi to'lovni yuboring →
                         </a>
                     </td>

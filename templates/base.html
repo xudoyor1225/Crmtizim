@@ -31,9 +31,9 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        primary: { 50: '#F0F4F8', 100: '#E8EDF2', 200: '#DDE6ED', 300: '#B0C4D0', 400: '#9DB2BF', 500: '#526D82', 600: '#3D5466', 700: '#344D5E', 800: '#2D4054', 900: '#27374D' },
-                        teal: { 50: '#EDF2F7', 100: '#DDE6ED', 200: '#DDE6ED', 300: '#B0C4D0', 400: '#9DB2BF', 500: '#526D82', 600: '#3D5466', 700: '#344D5E' },
-                        slate: { 50: '#F0F4F8', 100: '#E8EDF2', 200: '#DDE6ED', 300: '#B0C4D0', 400: '#8AA0B0', 500: '#526D82', 600: '#3D5466', 700: '#344D5E', 800: '#2D4054', 900: '#27374D' }
+                        primary: { 50: '#EEF2FF', 100: '#E0E7FF', 200: '#C7D2FE', 300: '#A5B4FC', 400: '#818CF8', 500: '#4F46E5', 600: '#4338CA', 700: '#3730A3', 800: '#312E81', 900: '#1E1B4B' },
+                        indigo: { 50: '#EEF2FF', 100: '#E0E7FF', 200: '#C7D2FE', 300: '#A5B4FC', 400: '#818CF8', 500: '#6366F1', 600: '#4F46E5', 700: '#4338CA' },
+                        slate: { 50: '#F8FAFC', 100: '#F1F5F9', 200: '#E2E8F0', 300: '#CBD5E1', 400: '#94A3B8', 500: '#64748B', 600: '#475569', 700: '#334155', 800: '#1E293B', 900: '#0F172A' }
                     }
                 }
             }
@@ -46,18 +46,18 @@
     </style>
 </head>
 
-<body class="font-sans antialiased overflow-hidden bg-slate-50 text-slate-800">
+<body class="font-sans antialiased overflow-hidden bg-[#F8FAFC] text-[#0F172A]">
 
     <div class="flex h-screen w-full">
 
         <!-- SIDEBAR -->
         <aside
-            class="flex-shrink-0 w-64 flex flex-col transition-all duration-300 transform lg:transform-none z-50 absolute lg:relative h-full bg-white border-r border-slate-200 shadow-sm"
+            class="flex-shrink-0 w-64 flex flex-col transition-all duration-300 transform lg:transform-none z-50 absolute lg:relative h-full bg-[#1E293B] shadow-xl"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
             <!-- Logo -->
             <div
-                class="h-16 flex items-center justify-center border-b border-slate-200 bg-gradient-to-r from-[#526D82] to-[#27374D]">
+                class="h-16 flex items-center justify-center border-b border-white/10 bg-gradient-to-r from-[#4F46E5] to-[#4338CA]">
                 <span class="text-xl font-bold flex items-center gap-2 text-white">
                     <i class="ph-fill ph-graduation-cap text-2xl"></i>
                     Smart Edu
@@ -65,7 +65,7 @@
             </div>
 
             <!-- Navigation -->
-            <div id="sidebar-nav" class="flex-1 overflow-y-auto py-4 px-3 space-y-1 bg-white">
+            <div id="sidebar-nav" class="flex-1 overflow-y-auto py-4 px-3 space-y-1 bg-[#1E293B]">
                 {% include 'components/sidebar.html' %}
             </div>
 
@@ -96,18 +96,18 @@
             </script>
 
             <!-- User Profile -->
-            <div class="p-4 border-t border-slate-200 bg-slate-50">
+            <div class="p-4 border-t border-white/10 bg-[#0F172A]">
                 <div class="flex items-center gap-3">
                     <div
-                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#526D82] to-[#27374D] text-white flex items-center justify-center font-bold shadow-md">
+                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#4F46E5] to-[#818CF8] text-white flex items-center justify-center font-bold shadow-md">
                         {{ request.user.first_name|first }}
                     </div>
                     <div class="flex-1 min-w-0">
-                        <p class="text-sm font-semibold truncate text-slate-800">{{ request.user.first_name }}</p>
-                        <p class="text-xs truncate text-slate-500">{{ request.user.get_role_display }}</p>
+                        <p class="text-sm font-semibold truncate text-white">{{ request.user.first_name }}</p>
+                        <p class="text-xs truncate text-slate-400">{{ request.user.get_role_display }}</p>
                     </div>
                     <a href="{% url 'logout' %}"
-                        class="transition p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50">
+                        class="transition p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10">
                         <i class="ph-fill ph-sign-out text-xl"></i>
                     </a>
                 </div>
@@ -115,18 +115,18 @@
         </aside>
 
         <!-- MAIN CONTENT -->
-        <div class="flex-1 flex flex-col h-screen min-w-0 overflow-hidden bg-slate-50">
+        <div class="flex-1 flex flex-col h-screen min-w-0 overflow-hidden bg-[#F8FAFC]">
 
             <!-- Header -->
             <header
-                class="h-16 flex items-center justify-between px-6 z-40 bg-white border-b border-slate-200 shadow-sm">
+                class="h-16 flex items-center justify-between px-6 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 shadow-sm">
                 <button @click="sidebarOpen = !sidebarOpen"
-                    class="focus:outline-none transition p-2 rounded-lg lg:hidden text-slate-500 hover:text-[#526D82] hover:bg-primary-50">
+                    class="focus:outline-none transition p-2 rounded-lg lg:hidden text-slate-500 hover:text-[#4F46E5] hover:bg-primary-50">
                     <i class="ph ph-list text-2xl"></i>
                 </button>
 
                 <h1
-                    class="text-lg font-bold hidden sm:block bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
+                    class="text-lg font-bold hidden sm:block bg-gradient-to-r from-[#4F46E5] to-[#4338CA] bg-clip-text text-transparent">
                     {{ organization.name|default:"Smart Edu Center" }}
                 </h1>
 
@@ -135,7 +135,7 @@
                     <!-- Notification Dropdown -->
                     <div class="relative">
                         <button @click="notifOpen = !notifOpen"
-                            class="relative p-2.5 rounded-xl transition text-slate-500 hover:text-amber-500 hover:bg-amber-50">
+                            class="relative p-2.5 rounded-xl transition text-slate-500 hover:text-[#4F46E5] hover:bg-primary-50">
                             <i class="ph ph-bell text-xl"></i>
                             {% if unread_notifications_count > 0 %}
                             <span class="absolute top-1 right-1 min-w-[18px] h-[18px] bg-rose-500 rounded-full text-white text-[10px] flex items-center justify-center font-bold animate-pulse">
@@ -151,7 +151,7 @@
                             <div
                                 class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50 rounded-t-xl">
                                 <h3 class="font-bold text-slate-800 flex items-center gap-2">
-                                    <i class="ph-fill ph-bell text-amber-500"></i> Bildirishnomalar
+                                    <i class="ph-fill ph-bell text-[#4F46E5]"></i> Bildirishnomalar
                                 </h3>
                                 {% if unread_notifications_count > 0 %}
                                 <span class="text-xs bg-rose-100 text-rose-600 px-2 py-0.5 rounded-full font-medium">
@@ -166,7 +166,7 @@
                                     <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
                                         {% if notification.message_type == 'sms' %}bg-green-100 text-green-600
                                         {% elif notification.message_type == 'telegram' %}bg-blue-100 text-blue-600
-                                        {% else %}bg-[#526D82]/10 text-[#526D82]{% endif %}">
+                                        {% else %}bg-[#EEF2FF] text-[#4F46E5]{% endif %}">
                                         {% if notification.message_type == 'sms' %}
                                         <i class="ph-fill ph-chat-circle-text"></i>
                                         {% elif notification.message_type == 'telegram' %}
@@ -196,7 +196,7 @@
                             </div>
                             {% if notifications %}
                             <a href="{% url 'core:notifications' %}"
-                                class="block p-3 text-center text-sm text-[#526D82] hover:bg-primary-50 transition border-t border-slate-100 rounded-b-xl font-medium">
+                                class="block p-3 text-center text-sm text-[#4F46E5] hover:bg-primary-50 transition border-t border-slate-100 rounded-b-xl font-medium">
                                 Barchasini ko'rish →
                             </a>
                             {% endif %}
@@ -205,7 +205,7 @@
 
                     <!-- Settings -->
                     <a href="{% url 'core:settings' %}"
-                        class="p-2.5 text-slate-500 hover:text-[#526D82] hover:bg-primary-50 rounded-xl transition">
+                        class="p-2.5 text-slate-500 hover:text-[#4F46E5] hover:bg-primary-50 rounded-xl transition">
                         <i class="ph ph-gear text-xl"></i>
                     </a>
 
@@ -248,7 +248,7 @@
             </header>
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto p-6 bg-slate-50">
+            <main class="flex-1 overflow-y-auto p-6 bg-[#F8FAFC]">
                 {% if messages %}
                 <div class="mb-6 space-y-3">
                     {% for message in messages %}

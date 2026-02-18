@@ -21,11 +21,11 @@
             </a>
             {% if week_offset != 0 %}
             <a href="?week=0"
-                class="px-4 py-2 bg-[#9DB2BF]/10 text-[#526D82] rounded-xl font-medium hover:bg-[#526D82]/10 transition">
+                class="px-4 py-2 bg-[#94A3B8]/10 text-[#64748B] rounded-xl font-medium hover:bg-[#4338CA]/10 transition">
                 Bu hafta
             </a>
             {% else %}
-            <span class="px-4 py-2 bg-[#9DB2BF]/10 text-[#526D82] rounded-xl font-medium">
+            <span class="px-4 py-2 bg-[#94A3B8]/10 text-[#64748B] rounded-xl font-medium">
                 Bu hafta
             </span>
             {% endif %}
@@ -43,9 +43,9 @@
             class="grid grid-cols-7 bg-slate-50 text-center text-sm font-semibold text-slate-600">
             {% for day in week_days %}
             <div
-                class="py-3 border-r border-slate-200 last:border-r-0 {% if day.is_today %}bg-[#9DB2BF]/10 text-[#526D82]{% endif %}">
+                class="py-3 border-r border-slate-200 last:border-r-0 {% if day.is_today %}bg-[#94A3B8]/10 text-[#64748B]{% endif %}">
                 <div class="font-bold">{{ day.day_name }}</div>
-                <div class="text-xs {% if day.is_today %}text-[#526D82]{% else %}text-slate-400{% endif %}">
+                <div class="text-xs {% if day.is_today %}text-[#64748B]{% else %}text-slate-400{% endif %}">
                     {{ day.date|date:"d M" }}
                 </div>
             </div>
@@ -56,14 +56,14 @@
         <div class="grid grid-cols-7 min-h-[400px]">
             {% for day in week_days %}
             <div class="border-r border-b border-slate-200 p-2 space-y-2 last:border-r-0 overflow-y-auto max-h-[600px]
-                {% if day.is_today %}bg-[#526D82]/10{% endif %}">
+                {% if day.is_today %}bg-[#4F46E5]/10{% endif %}">
 
                 {% for item in day.groups %}
                 <div
                     class="p-3 rounded-lg bg-white border-l-4 shadow-sm hover:shadow-md transition cursor-pointer
-                    {% cycle 'border-[#9DB2BF]/20' 'border-purple-500' 'border-[#9DB2BF]/20' 'border-green-500' 'border-orange-500' %}">
+                    {% cycle 'border-[#94A3B8]/20' 'border-purple-500' 'border-[#94A3B8]/20' 'border-green-500' 'border-orange-500' %}">
                     <p class="font-bold text-sm mb-1
-                    {% cycle 'text-[#27374D]' 'text-purple-700' 'text-[#27374D]' 'text-green-700' 'text-orange-700' %}">
+                    {% cycle 'text-[#0F172A]' 'text-purple-700' 'text-[#0F172A]' 'text-green-700' 'text-orange-700' %}">
                         {{ item.name }}
                     </p>
                     <div class="mt-1 flex items-center gap-1 text-xs text-slate-600">
@@ -102,7 +102,7 @@
     <!-- Link to today's lessons -->
     <div class="flex justify-center">
         <a href="{% url 'operations:lesson_list' %}"
-            class="px-6 py-3 bg-gradient-to-r from-[#9DB2BF] to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition flex items-center gap-2">
+            class="px-6 py-3 bg-gradient-to-r from-[#818CF8] to-purple-600 text-white rounded-xl font-medium hover:shadow-lg transition flex items-center gap-2">
             <i class="ph ph-calendar-check"></i>
             Bugungi darslarni ko'rish
         </a>
