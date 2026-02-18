@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}Boshqaruv Paneli{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <!-- Sarlavha -->
+    <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-[#061E29]">Xush kelibsiz, {{ request.user.first_name }}! 👋</h1>
+        <div class="text-sm text-[#5F9598]">Bugun: {% now "d F Y" %}</div>
+    </div>
+
+    <!-- STATISTIKA VIDJETLARI (Cards) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- O'quvchilar -->
+        <div
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-lg hover:shadow-[#1D546D]/8 hover:-translate-y-1 transition-all duration-300">
+            <div>
+                <p class="text-sm font-medium text-[#5F9598]">Jami O'quvchilar</p>
+                <p class="text-2xl font-bold mt-1 text-[#061E29]">{{ total_students|default:"0" }}</p>
+                <span class="text-xs px-2 py-1 rounded-full font-medium text-emerald-600 bg-emerald-50">+12%
+                    o'sish</span>
+            </div>
+            <div class="p-3 rounded-xl bg-[#1D546D]/10 text-[#1D546D]">
+                <i class="ph-fill ph-student text-2xl"></i>
+            </div>
+        </div>
+
+        <!-- Lidlar -->
+        <div
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-lg hover:shadow-amber-500/8 hover:-translate-y-1 transition-all duration-300">
+            <div>
+                <p class="text-sm font-medium text-[#5F9598]">Yangi Lidlar</p>
+                <p class="text-2xl font-bold mt-1 text-[#061E29]">{{ total_leads|default:"0" }}</p>
+                <span class="text-xs px-2 py-1 rounded-full font-medium text-amber-600 bg-amber-50">Bu oy</span>
+            </div>
+            <div class="p-3 rounded-xl bg-amber-100/60 text-amber-600">
+                <i class="ph-fill ph-funnel text-2xl"></i>
+            </div>
+        </div>
+
+        <!-- Tushum -->
+        <div
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-lg hover:shadow-emerald-500/8 hover:-translate-y-1 transition-all duration-300">
+            <div>
+                <p class="text-sm font-medium text-[#5F9598]">Oylik Tushum</p>
+                <p class="text-2xl font-bold mt-1 text-[#061E29]">{{ monthly_income|default:"0" }}</p>
+                <span class="text-xs text-[#5F9598]">UZS</span>
+            </div>
+            <div class="p-3 rounded-xl bg-emerald-100/60 text-emerald-600">
+                <i class="ph-fill ph-wallet text-2xl"></i>
+            </div>
+        </div>
+
+        <!-- Qarzdorlik -->
+        <div
+            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-lg hover:shadow-rose-500/8 hover:-translate-y-1 transition-all duration-300">
+            <div>
+                <p class="text-sm font-medium text-[#5F9598]">Qarzdorlik</p>
+                <p class="text-2xl font-bold mt-1 text-rose-600">{{ total_debt|default:"0" }}</p>
+                <span class="text-xs px-2 py-1 rounded-full font-medium text-rose-600 bg-rose-50">Talab qilinadi</span>
+            </div>
+            <div class="p-3 rounded-xl bg-rose-100/60 text-rose-600">
+                <i class="ph-fill ph-warning-circle text-2xl"></i>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PASTDAGI QISM: JADVAL VA LIDLAR -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Chap tomon: Dars Jadvali -->
+        <div class="lg:col-span-2 rounded-2xl p-6 bg-white border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-[#061E29] flex items-center gap-2">
+                    <i class="ph ph-calendar-check text-[#1D546D]"></i> Bugungi Darslar
+                </h3>
+                <a href="{% url 'operations:schedule' %}" class="text-sm hover:underline text-[#1D546D]">To'liq
+                    ko'rish</a>
+            </div>
+
+            <div class="space-y-3">
+                {% for lesson in today_lessons %}
+                <!-- Dars item -->
+                <div
+                    class="flex items-center p-4 rounded-xl border bg-slate-50 border-slate-100 hover:bg-white hover:shadow-md hover:shadow-[#5F9598]/5 transition-all duration-300">
+                    <div class="w-16 text-center">
+                        <span class="block text-sm font-bold text-[#061E29]">{{ lesson.start_time|time:"H:i" }}</span>
+                        <span class="block text-xs text-[#5F9598]">{{ lesson.end_time|time:"H:i" }}</span>
+                    </div>
+                    <div
+                        class="w-1 h-10 rounded-full mx-4 {% if lesson.status == 'started' %}bg-[#1D546D]{% elif lesson.status == 'finished' %}bg-emerald-500{% else %}bg-slate-300{% endif %}">
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-[#061E29]">{{ lesson.group.name }}</h4>
+                        <p class="text-sm text-[#5F9598]">
+                            Xona: {{ lesson.room.name }} • O'qituvchi: {{ lesson.teacher.get_full_name }}
+                        </p>
+                    </div>
+                    <div class="ml-auto">
+                        {% if lesson.status == 'started' %}
+                        <span
+                            class="px-3 py-1 text-xs font-bold rounded-full text-[#1D546D] bg-[#1D546D]/10">Darsda</span>
+                        {% elif lesson.status == 'finished' %}
+                        <span
+                            class="px-3 py-1 text-xs font-bold rounded-full text-emerald-600 bg-emerald-50">Tugadi</span>
+                        {% else %}
+                        <span
+                            class="px-3 py-1 text-xs font-bold rounded-full text-slate-500 bg-slate-100">Kutilmoqda</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-8">
+                    <i class="ph ph-calendar-blank text-4xl mb-2 text-slate-300"></i>
+                    <p class="text-[#5F9598]">Bugun darslar yo'q</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- O'ng tomon: Yangi Lidlar -->
+        <div class="rounded-2xl p-6 bg-white border border-slate-200 shadow-sm">
+            <h3 class="font-bold mb-4 text-[#061E29] flex items-center gap-2">
+                <i class="ph ph-sparkle text-amber-500"></i> So'nggi Lidlar
+            </h3>
+            <div class="space-y-3">
+                {% for lead in recent_leads %}
+                <div class="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition">
+                    <div
+                        class="w-10 h-10 rounded-full flex items-center justify-center font-bold bg-gradient-to-br from-[#1D546D] to-[#5F9598] text-white shadow-sm">
+                        {{ lead.full_name|slice:":1" }}
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="text-sm font-bold text-[#061E29]">{{ lead.full_name }}</h4>
+                        <p class="text-xs text-[#5F9598]">{{ lead.phone }}</p>
+                    </div>
+                    <div class="text-xs text-slate-500">{{ lead.created_at|timesince }} oldin</div>
+                </div>
+                {% empty %}
+                <div class="text-center py-4">
+                    <p class="text-[#5F9598]">Yangi lidlar yo'q</p>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="{% url 'crm:pipeline' %}"
+                class="block w-full mt-6 py-2.5 text-sm text-center rounded-xl font-medium transition text-[#1D546D] border border-[#5F9598]/30 hover:bg-[#1D546D]/5 hover:shadow-sm">
+                Barchasini ko'rish
+            </a>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
