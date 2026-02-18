@@ -203,6 +203,16 @@ def super_admin_dashboard(request):
         quantity__lte=F('min_quantity')
     ).count()
     
+    # Quick Payment uchun o'quvchilar ro'yxati
+    students_for_payment = list(
+        User.objects.filter(
+            role='student', is_active=True, is_deleted=False
+        ).values('id', 'first_name', 'last_name', 'phone').order_by('first_name', 'last_name')
+    )
+    
+    # Kassalar ro'yxati (Quick Payment uchun)
+    accounts = Account.objects.filter(is_deleted=False)
+    
     context = {
         # Tashkilotlar
         'total_orgs': total_orgs,
@@ -258,6 +268,10 @@ def super_admin_dashboard(request):
         'low_stock_items': low_stock_items,
         'low_stock_count': low_stock_count,
         'today': today,
+        
+        # Quick Payment
+        'students_for_payment': students_for_payment,
+        'accounts': accounts,
     }
     
     return render(request, 'dashboards/super_admin.html', context)
