@@ -17,7 +17,7 @@
 
         {% if unread_notifications_count > 0 %}
         <a href="{% url 'core:notifications_mark_all_read' %}"
-           class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#4F46E5] text-white rounded-xl font-medium hover:bg-[#4F46E5] transition">
+           class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#4F46E5] text-white rounded-xl font-medium hover:bg-[#4338CA] transition">
             <i class="ph ph-checks"></i>
             Barchasini o'qildi deb belgilash
         </a>
@@ -54,7 +54,7 @@
 
                     {% if notification.status == 'sent' %}
                     <a href="{% url 'core:notification_read' notification.pk %}"
-                       class="flex-shrink-0 px-3 py-1 bg-[#4F46E5]/10 text-[#64748B] text-xs rounded-full hover:bg-[#4F46E5]/20 transition">
+                       class="flex-shrink-0 px-3 py-1 bg-[#4F46E5]/10 text-[#64748B] text-xs rounded-full hover:bg-[#4338CA]/20 transition">
                         O'qildim
                     </a>
                     {% else %}

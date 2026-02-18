@@ -154,7 +154,7 @@
                 <div class="px-3 pb-3">
                     <button @click="showRating = !showRating"
                         class="w-full py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-1
-                        {% if data.current_rating %}bg-[#94A3B8]/20 text-[#0F172A] hover:bg-[#94A3B8]/40{% else %}bg-[#4F46E5] text-white hover:bg-[#4F46E5]/90{% endif %}">
+                        {% if data.current_rating %}bg-[#94A3B8]/20 text-[#0F172A] hover:bg-[#94A3B8]/40{% else %}bg-[#4F46E5] text-white hover:bg-[#4338CA]/90{% endif %}">
                         <i class="ph ph-star"></i>
                         <span
                             x-text="showRating ? 'Yopish' : '{% if data.current_rating %}Tahrirlash{% else %}Baholash{% endif %}'"></span>

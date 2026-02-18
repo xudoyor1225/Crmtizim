@@ -101,7 +101,7 @@
             </select>
 
             <button type="submit"
-                class="px-4 py-2.5 bg-[#4F46E5] text-white rounded-xl font-medium hover:bg-[#4F46E5] transition">
+                class="px-4 py-2.5 bg-[#4F46E5] text-white rounded-xl font-medium hover:bg-[#4338CA] transition">
                 <i class="ph ph-funnel"></i> Filtrlash
             </button>
             <a href="{% url 'users:user_list' %}"
@@ -199,7 +199,7 @@
                                 {% has_permission 'users' 'edit' as can_edit %}
                                 {% if can_edit %}
                                 <a href="{% url 'users:user_update' user.id %}"
-                                    class="p-2 text-slate-500 hover:text-[#64748B] bg-slate-100 rounded-lg hover:bg-[#4F46E5]/5 transition"
+                                    class="p-2 text-slate-500 hover:text-[#64748B] bg-slate-100 rounded-lg hover:bg-[#4338CA]/5 transition"
                                     title="Tahrirlash">
                                     <i class="ph ph-pencil-simple"></i>
                                 </a>

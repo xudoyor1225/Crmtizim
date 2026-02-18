@@ -60,7 +60,7 @@
                 <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-200">
                     <span class="text-sm text-slate-500">Stock: {{ item.available_stock }}</span>
                     <div class="flex gap-1">
-                        <a href="{% url 'operations:shop_item_edit' item.pk %}" class="p-2 rounded-lg bg-[#4F46E5]/15 text-[#64748B] hover:bg-[#4F46E5]/25">
+                        <a href="{% url 'operations:shop_item_edit' item.pk %}" class="p-2 rounded-lg bg-[#4F46E5]/15 text-[#64748B] hover:bg-[#4338CA]/25">
                             <i class="ph ph-pencil"></i>
                         </a>
                         <a href="{% url 'operations:shop_item_delete' item.pk %}" onclick="return confirm('O\'chirish?')" class="p-2 rounded-lg bg-rose-500/20 text-rose-600 hover:bg-rose-500/30">
