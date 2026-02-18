@@ -18,7 +18,7 @@
                 <i class="ph ph-gear"></i> Bosqichlar
             </a>
             <a href="{% url 'crm:lead_create' %}"
-                class="bg-[#3F72AF] hover:bg-[#112D4E] text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm">
+                class="bg-[#526D82] hover:bg-[#27374D] text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm">
                 <i class="ph ph-plus"></i> Yangi Lid
             </a>
         </div>
@@ -51,7 +51,7 @@
 
                 {% for lead in stage.leads.all %}
                 <!-- LEAD CARD - Ixcham va chiroyli dizayn -->
-                <div class="bg-white rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-[#3F72AF]/20 transition-all duration-200 cursor-grab active:cursor-grabbing group"
+                <div class="bg-white rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-[#526D82]/20 transition-all duration-200 cursor-grab active:cursor-grabbing group"
                     data-lead-id="{{ lead.id }}">
 
                     <!-- Card Header -->
@@ -65,7 +65,7 @@
                                 </p>
                             </div>
                             <a href="{% url 'crm:lead_detail' lead.id %}"
-                               class="w-7 h-7 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#3F72AF] hover:text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
+                               class="w-7 h-7 rounded-lg bg-slate-50 text-slate-400 hover:bg-[#526D82] hover:text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
                                 <i class="ph ph-arrow-right text-xs"></i>
                             </a>
                         </div>
@@ -74,7 +74,7 @@
                     <!-- Card Body -->
                     {% if lead.interested_course %}
                     <div class="px-3 pb-2">
-                        <span class="inline-flex items-center gap-1 text-xs font-medium text-[#3F72AF] bg-[#3F72AF]/5 px-2 py-1 rounded-md">
+                        <span class="inline-flex items-center gap-1 text-xs font-medium text-[#526D82] bg-[#526D82]/5 px-2 py-1 rounded-md">
                             <i class="ph ph-book-open text-[10px]"></i>
                             {{ lead.interested_course.name|truncatewords:3 }}
                         </span>
@@ -124,7 +124,7 @@
         new Sortable(list, {
             group: 'shared', // Hamma ustunlar bir guruhda (biridan ikkinchisiga o'tadi)
             animation: 150,
-            ghostClass: 'bg-[#3F72AF]/5', // Sudrayotganda orqada qolgan joy rangi
+            ghostClass: 'bg-[#526D82]/5', // Sudrayotganda orqada qolgan joy rangi
 
             // DROP BO'LGANDA ISHLAYDI
             onEnd: function (evt) {

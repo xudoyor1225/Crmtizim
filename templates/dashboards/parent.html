@@ -12,8 +12,8 @@
 
     <!-- Header -->
     <div class="flex items-center justify-between relative z-10">
-        <h1 class="text-xl font-bold text-[#112D4E] flex items-center gap-2">
-            <i class="ph-fill ph-house text-[#112D4E]"></i>
+        <h1 class="text-xl font-bold text-[#27374D] flex items-center gap-2">
+            <i class="ph-fill ph-house text-[#27374D]"></i>
             Salom, {{ request.user.first_name }}! 👨‍👩‍👧‍👦
         </h1>
         {% if has_any_debt %}
@@ -29,32 +29,32 @@
     {% for data in children_data %}
     <div class="glass-section p-5 relative z-10">
         <!-- Farzand Header -->
-        <div class="flex items-center gap-4 mb-4 pb-3 border-b border-[#9DB2D6]/10">
+        <div class="flex items-center gap-4 mb-4 pb-3 border-b border-[#9DB2BF]/10">
             <div
-                class="w-12 h-12 bg-gradient-to-br from-[#112D4E] to-[#3F72AF] rounded-xl text-white flex items-center justify-center font-bold text-lg shadow-lg">
+                class="w-12 h-12 bg-gradient-to-br from-[#27374D] to-[#526D82] rounded-xl text-white flex items-center justify-center font-bold text-lg shadow-lg">
                 {{ data.child.first_name|first }}
             </div>
             <div class="flex-1">
-                <h3 class="text-base font-bold text-[#112D4E]">{{ data.child.first_name }} {{ data.child.last_name }}
+                <h3 class="text-base font-bold text-[#27374D]">{{ data.child.first_name }} {{ data.child.last_name }}
                 </h3>
-                <p class="text-xs text-[#3F72AF]">{{ data.relation_type }}</p>
+                <p class="text-xs text-[#526D82]">{{ data.relation_type }}</p>
             </div>
             <div class="flex gap-3">
                 <div class="text-center">
-                    <p class="text-[10px] text-[#9DB2D6] uppercase font-semibold">Davomat</p>
-                    <p class="text-lg font-bold text-[#112D4E]">{{ data.attendance_rate }}%</p>
+                    <p class="text-[10px] text-[#9DB2BF] uppercase font-semibold">Davomat</p>
+                    <p class="text-lg font-bold text-[#27374D]">{{ data.attendance_rate }}%</p>
                 </div>
                 <div class="text-center">
-                    <p class="text-[10px] text-[#9DB2D6] uppercase font-semibold">O'rt. baho</p>
+                    <p class="text-[10px] text-[#9DB2BF] uppercase font-semibold">O'rt. baho</p>
                     <span class="text-[10px] font-bold text-amber-600 bg-amber-50/80 px-2 py-0.5 rounded-full">#{{
                         student_rank }}</span>
                 </div>
                 <div class="text-center">
-                    <p class="text-[10px] text-[#9DB2D6] uppercase font-semibold">XP</p>
+                    <p class="text-[10px] text-[#9DB2BF] uppercase font-semibold">XP</p>
                     <p class="text-lg font-bold text-purple-600">{{ data.xp }}</p>
                 </div>
                 <div class="text-center">
-                    <p class="text-[10px] text-[#9DB2D6] uppercase font-semibold">Balans</p>
+                    <p class="text-[10px] text-[#9DB2BF] uppercase font-semibold">Balans</p>
                     <p
                         class="text-lg font-bold {% if data.has_debt %}text-rose-600{% else %}text-emerald-600{% endif %}">
                         {{ data.balance|floatformat:0|intcomma }}</p>
@@ -66,48 +66,48 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <!-- Guruhlar -->
             <div>
-                <h4 class="text-xs font-bold text-[#112D4E] mb-2 flex items-center gap-1.5">
-                    <i class="ph-fill ph-books text-[#3F72AF]"></i> Guruhlar
+                <h4 class="text-xs font-bold text-[#27374D] mb-2 flex items-center gap-1.5">
+                    <i class="ph-fill ph-books text-[#526D82]"></i> Guruhlar
                 </h4>
                 <div class="space-y-2">
                     {% for enrollment in data.enrollments %}
                     <div class="flex items-center gap-3 p-2.5 liquid-glass rounded-xl">
                         <div
-                            class="w-8 h-8 bg-gradient-to-br from-[#112D4E] to-[#3F72AF] rounded-lg text-white flex items-center justify-center font-bold text-xs shadow-sm flex-shrink-0">
+                            class="w-8 h-8 bg-gradient-to-br from-[#27374D] to-[#526D82] rounded-lg text-white flex items-center justify-center font-bold text-xs shadow-sm flex-shrink-0">
                             {{ enrollment.group.name|first }}
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h5 class="font-semibold text-[#112D4E] text-xs truncate">{{ enrollment.group.name }}</h5>
-                            <p class="text-[10px] text-[#3F72AF]">{{ enrollment.group.course.name }} · {{
+                            <h5 class="font-semibold text-[#27374D] text-xs truncate">{{ enrollment.group.name }}</h5>
+                            <p class="text-[10px] text-[#526D82]">{{ enrollment.group.course.name }} · {{
                                 enrollment.group.teacher.first_name|default:"-" }}</p>
                         </div>
                     </div>
                     {% empty %}
-                    <p class="text-[#9DB2D6] text-xs text-center py-3">Guruhlar yo'q</p>
+                    <p class="text-[#9DB2BF] text-xs text-center py-3">Guruhlar yo'q</p>
                     {% endfor %}
                 </div>
             </div>
 
             <!-- So'nggi Davomat -->
             <div>
-                <h4 class="text-xs font-bold text-[#112D4E] mb-2 flex items-center gap-1.5">
-                    <i class="ph-fill ph-clock-counter-clockwise text-[#3F72AF]"></i> So'nggi davomat
+                <h4 class="text-xs font-bold text-[#27374D] mb-2 flex items-center gap-1.5">
+                    <i class="ph-fill ph-clock-counter-clockwise text-[#526D82]"></i> So'nggi davomat
                 </h4>
                 <div class="space-y-1">
                     {% for att in data.recent_attendance %}
                     <div class="flex items-center justify-between p-2 rounded-lg hover:bg-white/60 transition text-xs">
-                        <span class="text-[#112D4E] font-medium">{{ att.lesson.date|date:"d.m" }}</span>
-                        <span class="text-[#3F72AF] truncate mx-2 flex-1">{{ att.lesson.group.name }}</span>
+                        <span class="text-[#27374D] font-medium">{{ att.lesson.date|date:"d.m" }}</span>
+                        <span class="text-[#526D82] truncate mx-2 flex-1">{{ att.lesson.group.name }}</span>
                         <span class="px-1.5 py-0.5 text-[10px] font-bold rounded
                             {% if att.status == 'present' %}bg-emerald-50/80 text-emerald-700
                             {% elif att.status == 'absent' %}bg-rose-50/80 text-rose-700
                             {% else %}bg-amber-50/80 text-amber-700{% endif %}">
                             {% if att.status == 'present' %}✓{% elif att.status == 'absent' %}✗{% else %}...{% endif %}
                         </span>
-                        <span class="font-bold text-[#112D4E] ml-2 w-6 text-center">{{ att.grade|default:"—" }}</span>
+                        <span class="font-bold text-[#27374D] ml-2 w-6 text-center">{{ att.grade|default:"—" }}</span>
                     </div>
                     {% empty %}
-                    <p class="text-[#9DB2D6] text-xs text-center py-3">Ma'lumot yo'q</p>
+                    <p class="text-[#9DB2BF] text-xs text-center py-3">Ma'lumot yo'q</p>
                     {% endfor %}
                 </div>
             </div>
@@ -115,8 +115,8 @@
     </div>
     {% empty %}
     <div class="glass-section p-8 text-center relative z-10">
-        <i class="ph-fill ph-user-circle text-4xl text-[#9DB2D6] mb-3"></i>
-        <p class="text-[#3F72AF] font-medium">Farzandlar topilmadi</p>
+        <i class="ph-fill ph-user-circle text-4xl text-[#9DB2BF] mb-3"></i>
+        <p class="text-[#526D82] font-medium">Farzandlar topilmadi</p>
     </div>
     {% endfor %}
 

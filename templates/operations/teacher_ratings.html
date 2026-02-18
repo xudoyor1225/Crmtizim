@@ -22,14 +22,14 @@
         {% for data in teachers_data %}
         <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden hover:border-primary-300 transition">
             <!-- Header -->
-            <div class="bg-gradient-to-r from-[#7A9CC5] to-purple-600 p-6 text-slate-800">
+            <div class="bg-gradient-to-r from-[#9DB2BF] to-purple-600 p-6 text-slate-800">
                 <div class="flex items-center gap-4">
                     <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl font-bold">
                         {{ data.teacher.first_name|first }}
                     </div>
                     <div>
                         <h3 class="text-xl font-bold">{{ data.teacher.first_name }} {{ data.teacher.last_name }}</h3>
-                        <p class="text-[#3F72AF]">{{ data.teacher.phone }}</p>
+                        <p class="text-[#526D82]">{{ data.teacher.phone }}</p>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
             <!-- Stats -->
             <div class="grid grid-cols-2 gap-4 p-4">
                 <div class="text-center p-3 bg-slate-50 rounded-xl">
-                    <p class="text-2xl font-bold text-[#3F72AF]">{{ data.group_count }}</p>
+                    <p class="text-2xl font-bold text-[#526D82]">{{ data.group_count }}</p>
                     <p class="text-xs text-slate-500">Guruh</p>
                 </div>
                 <div class="text-center p-3 bg-slate-50 rounded-xl">

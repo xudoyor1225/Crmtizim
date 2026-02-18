@@ -20,9 +20,9 @@
                 <span class="font-bold text-amber-700 ml-2">{{ pending_count }}</span>
             </div>
             <div
-                class="px-4 py-2 bg-[#3F72AF]/5 rounded-xl border border-[#7A9CC5]/25">
-                <span class="text-sm text-[#3F72AF]">Jami summa:</span>
-                <span class="font-bold text-[#112D4E] ml-2">{{ pending_sum|floatformat:0 }}
+                class="px-4 py-2 bg-[#526D82]/5 rounded-xl border border-[#9DB2BF]/25">
+                <span class="text-sm text-[#526D82]">Jami summa:</span>
+                <span class="font-bold text-[#27374D] ml-2">{{ pending_sum|floatformat:0 }}
                     so'm</span>
             </div>
         </div>
@@ -38,7 +38,7 @@
             <!-- O'quvchi ma'lumotlari -->
             <div class="flex items-center gap-4 mb-4">
                 <div
-                    class="w-12 h-12 bg-gradient-to-br from-[#3F72AF] to-[#7A9CC5] rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-[#3F72AF]/30">
+                    class="w-12 h-12 bg-gradient-to-br from-[#526D82] to-[#9DB2BF] rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-[#526D82]/30">
                     {{ tx.student.first_name|first|default:"?" }}
                 </div>
                 <div class="flex-1">
@@ -49,7 +49,7 @@
                 </div>
                 <span class="px-3 py-1 text-xs font-medium rounded-full 
                     {% if tx.payment_method == 'card' %}bg-purple-100 text-purple-700
-                    {% elif tx.payment_method == 'transfer' %}bg-[#3F72AF]/10 text-[#112D4E]
+                    {% elif tx.payment_method == 'transfer' %}bg-[#526D82]/10 text-[#27374D]
                     {% else %}bg-green-100 text-green-700{% endif %}">
                     {{ tx.get_payment_method_display }}
                 </span>

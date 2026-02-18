@@ -60,7 +60,7 @@
                 <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-200">
                     <span class="text-sm text-slate-500">Stock: {{ item.available_stock }}</span>
                     <div class="flex gap-1">
-                        <a href="{% url 'operations:shop_item_edit' item.pk %}" class="p-2 rounded-lg bg-[#3F72AF]/15 text-[#3F72AF] hover:bg-[#3F72AF]/25">
+                        <a href="{% url 'operations:shop_item_edit' item.pk %}" class="p-2 rounded-lg bg-[#526D82]/15 text-[#526D82] hover:bg-[#526D82]/25">
                             <i class="ph ph-pencil"></i>
                         </a>
                         <a href="{% url 'operations:shop_item_delete' item.pk %}" onclick="return confirm('O\'chirish?')" class="p-2 rounded-lg bg-rose-500/20 text-rose-600 hover:bg-rose-500/30">
@@ -74,7 +74,7 @@
         <div class="col-span-4 text-center py-12">
             <i class="ph ph-package text-5xl text-slate-600 mb-4"></i>
             <p class="text-slate-500">Mahsulotlar yo'q</p>
-            <a href="{% url 'operations:shop_item_create' %}" class="text-[#3F72AF] hover:underline mt-2 inline-block">
+            <a href="{% url 'operations:shop_item_create' %}" class="text-[#526D82] hover:underline mt-2 inline-block">
                 Birinchi mahsulotni qo'shing →
             </a>
         </div>

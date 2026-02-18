@@ -5,7 +5,7 @@
 
     <!-- Orqaga tugmasi -->
     <a href="{% url 'material_list' %}"
-        class="inline-flex items-center gap-2 text-slate-500 hover:text-[#3F72AF] transition">
+        class="inline-flex items-center gap-2 text-slate-500 hover:text-[#526D82] transition">
         <i class="ph ph-arrow-left"></i> Barcha materiallar
     </a>
 
@@ -19,7 +19,7 @@
                 <div>
                     <span class="inline-flex items-center gap-1 px-3 py-1 text-xs font-bold rounded-full mb-3
                         {% if material.material_type == 'video' %}bg-red-100 text-red-700
-                        {% elif material.material_type == 'pdf' %}bg-[#3F72AF]/10 text-[#112D4E]
+                        {% elif material.material_type == 'pdf' %}bg-[#526D82]/10 text-[#27374D]
                         {% elif material.material_type == 'audio' %}bg-purple-100 text-purple-700
                         {% else %}bg-slate-100 text-slate-700{% endif %}">
                         {% if material.material_type == 'video' %}🎬{% elif material.material_type == 'pdf' %}📄{% elif
@@ -28,7 +28,7 @@
                     </span>
                     <h1 class="text-2xl font-bold text-slate-800">{{ material.title }}</h1>
                     {% if material.category %}
-                    <p class="text-[#3F72AF] font-medium mt-1">{{ material.category.icon }} {{ material.category.name }}</p>
+                    <p class="text-[#526D82] font-medium mt-1">{{ material.category.icon }} {{ material.category.name }}</p>
                     {% endif %}
                 </div>
 
@@ -114,7 +114,7 @@
             {% endif %}
             {% if material.external_url %}
             <a href="{{ material.external_url }}" target="_blank"
-                class="flex-1 py-3 text-center text-white font-bold bg-gradient-to-r from-[#3F72AF] to-[#112D4E] rounded-xl hover:shadow-lg hover:shadow-[#3F72AF]/30 transition flex items-center justify-center gap-2">
+                class="flex-1 py-3 text-center text-white font-bold bg-gradient-to-r from-[#526D82] to-[#27374D] rounded-xl hover:shadow-lg hover:shadow-[#526D82]/30 transition flex items-center justify-center gap-2">
                 <i class="ph ph-arrow-square-out"></i> Tashqi havola
             </a>
             {% endif %}

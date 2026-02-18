@@ -10,7 +10,7 @@
         </div>
         {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
         <a href="{% url 'group_create' %}"
-            class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#7A9CC5] to-purple-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all">
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#9DB2BF] to-purple-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transition-all">
             <i class="ph ph-plus-circle"></i> Guruh yaratish
         </a>
         {% endif %}
@@ -32,7 +32,7 @@
                         {{ group.get_status_display }}
                     </span>
                 </div>
-                <p class="text-sm text-[#3F72AF] font-medium">{{ group.course.name }}</p>
+                <p class="text-sm text-[#526D82] font-medium">{{ group.course.name }}</p>
             </div>
 
             <!-- Guruh Info -->
@@ -50,8 +50,8 @@
                     <span>{{ group.start_time|time:"H:i" }} - {{ group.end_time|time:"H:i" }}</span>
                 </div>
                 <div class="flex items-center gap-3 text-sm">
-                    <i class="ph ph-users text-lg text-[#3F72AF]"></i>
-                    <span class="font-bold text-[#3F72AF]">{{ group.student_count }}
+                    <i class="ph ph-users text-lg text-[#526D82]"></i>
+                    <span class="font-bold text-[#526D82]">{{ group.student_count }}
                         o'quvchi</span>
                 </div>
             </div>
@@ -68,7 +68,7 @@
                     <i class="ph ph-user-plus"></i> O'quvchi
                 </button>
                 <a href="{% url 'group_edit' group.id %}"
-                    class="px-3 py-2 text-slate-500 hover:text-[#3F72AF] bg-white rounded-lg hover:bg-slate-100 transition">
+                    class="px-3 py-2 text-slate-500 hover:text-[#526D82] bg-white rounded-lg hover:bg-slate-100 transition">
                     <i class="ph ph-pencil-simple"></i>
                 </a>
                 {% endif %}
@@ -84,7 +84,7 @@
                 </div>
                 <p class="text-slate-500 mb-4">Guruhlar mavjud emas</p>
                 {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
-                <a href="{% url 'group_create' %}" class="text-[#3F72AF] hover:underline">Birinchi guruhni yarating
+                <a href="{% url 'group_create' %}" class="text-[#526D82] hover:underline">Birinchi guruhni yarating
                     →</a>
                 {% endif %}
             </div>
