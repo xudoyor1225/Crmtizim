@@ -43,7 +43,7 @@
         <div class="card overflow-hidden transition hover:shadow-lg duration-300 p-0">
 
             <!-- Farzand Header -->
-            <div class="bg-gradient-to-r from-[#1D546D] to-[#061E29] p-8 text-white relative overflow-hidden">
+            <div class="bg-gradient-to-r from-[#3F72AF] to-[#112D4E] p-8 text-white relative overflow-hidden">
                 <div class="absolute right-0 top-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
                 <div class="flex items-center gap-6 relative z-10">
                     <div
@@ -52,7 +52,7 @@
                     </div>
                     <div>
                         <h2 class="text-3xl font-bold mb-1">{{ data.child.first_name }} {{ data.child.last_name }}</h2>
-                        <div class="flex items-center gap-4 text-white/70 text-sm font-medium">
+                        <div class="flex items-center gap-4 text-[#3F72AF] text-sm font-medium">
                             <span class="bg-white/20 px-3 py-1 rounded-lg backdrop-blur-sm">{{ data.relation_type
                                 }}</span>
                             <span class="flex items-center gap-1"><i class="ph ph-phone"></i> {{ data.child.phone
@@ -74,7 +74,7 @@
                 </div>
                 <div class="text-center p-4 rounded-xl hover:bg-white transition duration-200">
                     <div
-                        class="inline-flex items-center justify-center w-10 h-10 mb-2 rounded-full bg-[#1D546D]/5 text-[#1D546D]">
+                        class="inline-flex items-center justify-center w-10 h-10 mb-2 rounded-full bg-[#3F72AF]/5 text-[#3F72AF]">
                         <i class="ph-fill ph-star text-xl"></i>
                     </div>
                     <p class="text-3xl font-bold text-slate-800">{{ data.avg_grade }}</p>
@@ -104,14 +104,14 @@
             <!-- Guruhlar -->
             <div class="p-8 bg-white">
                 <h3 class="font-bold text-slate-800 mb-6 flex items-center gap-2 text-lg">
-                    <i class="ph-fill ph-books text-[#1D546D]"></i> O'qiyotgan Guruhlari
+                    <i class="ph-fill ph-books text-[#3F72AF]"></i> O'qiyotgan Guruhlari
                 </h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {% for enrollment in data.enrollments %}
                     <div
                         class="flex items-center gap-4 p-5 bg-slate-50 border border-slate-100 rounded-xl hover:border-primary-200 hover:shadow-md transition duration-300">
                         <div
-                            class="w-14 h-14 bg-gradient-to-br from-[#1D546D] to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md shadow-[#1D546D]/20">
+                            class="w-14 h-14 bg-gradient-to-br from-[#3F72AF] to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md shadow-[#3F72AF]/20">
                             {{ enrollment.group.course.name|first }}
                         </div>
                         <div class="flex-1">
@@ -131,7 +131,7 @@
             <!-- So'nggi Davomatlar -->
             <div class="p-8 border-t border-slate-100 bg-slate-50">
                 <h3 class="font-bold text-slate-800 mb-6 flex items-center gap-2 text-lg">
-                    <i class="ph-fill ph-chart-line-up text-[#1D546D]"></i> So'nggi Davomatlar
+                    <i class="ph-fill ph-chart-line-up text-[#3F72AF]"></i> So'nggi Davomatlar
                 </h3>
                 <div class="flex flex-wrap gap-3">
                     {% for att in data.recent_attendance %}
@@ -180,14 +180,14 @@
     <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" onclick="closeChatModal()"></div>
     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-lg">
         <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden">
-            <div class="bg-gradient-to-r from-[#1D546D] to-[#061E29] p-4 text-white flex items-center justify-between">
+            <div class="bg-gradient-to-r from-[#3F72AF] to-[#112D4E] p-4 text-white flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
                         <i class="ph-fill ph-chat-circle-text text-xl"></i>
                     </div>
                     <div>
                         <h3 class="font-bold">Bog'lanish</h3>
-                        <p class="text-xs text-white/70">Admin/O'qituvchi bilan</p>
+                        <p class="text-xs text-[#3F72AF]">Admin/O'qituvchi bilan</p>
                     </div>
                 </div>
                 <button onclick="closeChatModal()" class="p-2 hover:bg-white/20 rounded-lg transition">
@@ -195,8 +195,8 @@
                 </button>
             </div>
             <div class="p-6">
-                <div class="bg-[#1D546D]/5 border border-[#5F9598]/20 rounded-xl p-4 text-center">
-                    <i class="ph-fill ph-info text-4xl text-[#1D546D] mb-3"></i>
+                <div class="bg-[#3F72AF]/5 border border-[#7A9CC5]/20 rounded-xl p-4 text-center">
+                    <i class="ph-fill ph-info text-4xl text-[#3F72AF] mb-3"></i>
                     <h4 class="font-bold text-slate-800 mb-2">Tez orada mavjud!</h4>
                     <p class="text-sm text-slate-500">
                         Chat funksiyasi ishlab chiqilmoqda. Hozircha telefon orqali bog'laning.
