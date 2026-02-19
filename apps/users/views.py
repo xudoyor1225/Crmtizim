@@ -233,6 +233,6 @@ def user_delete(request, pk):
     if request.method == 'POST':
         user.delete()
         messages.warning(request, "Foydalanuvchi o'chirildi.")
-        return redirect('user_list')
+        return redirect('users:user_list')
     return render(request, 'users/user_confirm_delete.html', {'user': user})
 
