@@ -385,7 +385,7 @@
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-sm font-semibold text-[#334155] mb-1.5">To'lov turi</label>
-                    <select id="qpPaymentMethod"
+                    <select id="qpPaymentMethod" onchange="toggleQpReceipt()"
                         class="w-full px-3 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/20 focus:border-[#4F46E5] transition bg-slate-50 text-[#334155]">
                         <option value="cash">💵 Naqd pul</option>
                         <option value="card">💳 Plastik karta</option>
@@ -404,6 +404,16 @@
                         {% endfor %}
                     </select>
                 </div>
+            </div>
+
+            <!-- Chek rasmi yuklash -->
+            <div id="qpReceiptSection" class="hidden">
+                <label class="block text-sm font-semibold text-[#334155] mb-1.5">
+                    <i class="ph ph-image text-emerald-600"></i> Chek rasmi
+                </label>
+                <input type="file" id="qpReceiptImage" accept="image/*"
+                    class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-slate-50 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#4F46E5]/10 file:text-[#334155] file:font-medium hover:file:bg-[#4F46E5]/20 transition">
+                <p class="text-xs text-[#94A3B8] mt-1"><i class="ph ph-info"></i> Plastik/Bank o'tkazmasi uchun chek yuklash tavsiya etiladi</p>
             </div>
 
             <!-- Error message -->
@@ -456,8 +466,21 @@
         document.getElementById('qpStudentSearch').value = '';
         document.getElementById('qpStudentId').value = '';
         document.getElementById('qpAmount').value = '';
+        document.getElementById('qpReceiptImage').value = '';
+        document.getElementById('qpPaymentMethod').value = 'cash';
+        toggleQpReceipt();
         clearStudentSelection();
         setTimeout(() => document.getElementById('qpStudentSearch').focus(), 100);
+    }
+
+    function toggleQpReceipt() {
+        const method = document.getElementById('qpPaymentMethod').value;
+        const section = document.getElementById('qpReceiptSection');
+        if (method === 'cash') {
+            section.classList.add('hidden');
+        } else {
+            section.classList.remove('hidden');
+        }
     }
 
     function closeQuickPayment() {
@@ -571,6 +594,11 @@
         formData.append('payment_method', paymentMethod);
         formData.append('account_id', accountId);
 
+        const receiptFile = document.getElementById('qpReceiptImage').files[0];
+        if (receiptFile) {
+            formData.append('receipt_image', receiptFile);
+        }
+
         try {
             const response = await fetch("{% url 'finance:quick_payment' %}", {
                 method: 'POST',
@@ -592,6 +620,9 @@
                 document.getElementById('qpFooter').classList.add('hidden');
                 document.getElementById('qpSuccessMessage').textContent = data.message;
                 document.getElementById('qpSuccess').classList.remove('hidden');
+                if (typeof showToast === 'function') {
+                    showToast("✅ " + data.message, "success");
+                }
             } else {
                 errorText.textContent = data.error || "Xatolik yuz berdi.";
                 errorDiv.classList.remove('hidden');
