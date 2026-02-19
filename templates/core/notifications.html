@@ -16,11 +16,14 @@
         </div>
 
         {% if unread_notifications_count > 0 %}
-        <a href="{% url 'core:notifications_mark_all_read' %}"
-           class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#4F46E5] text-white rounded-xl font-medium hover:bg-[#4338CA] transition">
-            <i class="ph ph-checks"></i>
-            Barchasini o'qildi deb belgilash
-        </a>
+        <form method="post" action="{% url 'core:notifications_mark_all_read' %}" class="inline">
+            {% csrf_token %}
+            <button type="submit"
+               class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#4F46E5] text-white rounded-xl font-medium hover:bg-[#4338CA] transition">
+                <i class="ph ph-checks"></i>
+                Barchasini o'qildi deb belgilash
+            </button>
+        </form>
         {% endif %}
     </div>
 

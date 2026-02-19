@@ -263,7 +263,7 @@
 <script>
     function openAddModal(supplyId, supplyName) {
         document.getElementById('addSupplyName').textContent = supplyName;
-        document.getElementById('addForm').action = `/finance/supplies/${supplyId}/add/`;
+        document.getElementById('addForm').action = `/finance/supplies/${supplyId}/stock-in/`;
         document.getElementById('addModal').classList.remove('hidden');
         document.getElementById('addModal').classList.add('flex');
     }
@@ -272,7 +272,7 @@
         document.getElementById('removeSupplyName').textContent = supplyName;
         document.getElementById('removeSupplyStock').textContent = `Hozirgi miqdor: ${currentStock}`;
         document.getElementById('removeQuantity').max = currentStock;
-        document.getElementById('removeForm').action = `/finance/supplies/${supplyId}/remove/`;
+        document.getElementById('removeForm').action = `/finance/supplies/${supplyId}/stock-out/`;
         document.getElementById('removeModal').classList.remove('hidden');
         document.getElementById('removeModal').classList.add('flex');
     }
