@@ -60,7 +60,7 @@ def history_list(request):
         )
     
     # === STATISTIKA ===
-    action_stats = logs.values('action').annotate(count=Count('id'))
+    action_stats = logs.order_by().values('action').annotate(count=Count('id'))
     stats = {item['action']: item['count'] for item in action_stats}
     total_count = sum(stats.values())
     
