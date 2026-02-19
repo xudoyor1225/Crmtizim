@@ -1585,3 +1585,27 @@ img.lazy.loaded {
 .qa-card.qa-expense:hover {
     box-shadow: 0 12px 28px rgba(225, 29, 72, 0.35);
 }
+
+/* ============================================
+   HTMX TOP PROGRESS BAR
+   ============================================ */
+.htmx-progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    opacity: 0;
+    background: linear-gradient(90deg, var(--primary-400, #818CF8), var(--primary, #4F46E5), var(--primary-400, #818CF8));
+    background-size: 200% 100%;
+    animation: htmx-bar-shimmer 1.5s ease-in-out infinite;
+    z-index: 9999;
+    pointer-events: none;
+    border-radius: 0 2px 2px 0;
+    box-shadow: 0 0 8px rgba(79, 70, 229, 0.4);
+}
+
+@keyframes htmx-bar-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
