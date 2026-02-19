@@ -337,7 +337,7 @@
         document.body.addEventListener('htmx:afterSettle', function(evt) {
             // Re-initialize Alpine.js components in swapped content
             if (window.Alpine) {
-                document.querySelectorAll('[x-data]').forEach(function(el) {
+                evt.detail.target.querySelectorAll('[x-data]').forEach(function(el) {
                     if (!el._x_dataStack) {
                         window.Alpine.initTree(el);
                     }
