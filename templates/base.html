@@ -46,7 +46,10 @@
     </style>
 </head>
 
-<body class="font-sans antialiased overflow-hidden bg-[#F8FAFC] text-[#0F172A]">
+<body class="font-sans antialiased overflow-hidden bg-[#F8FAFC] text-[#0F172A]" hx-boost="true">
+
+    <!-- HTMX Top Progress Bar -->
+    <div id="htmx-progress-bar" class="htmx-progress-bar"></div>
 
     <div class="flex h-screen w-full">
 
@@ -283,24 +286,87 @@
             evt.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
         });
 
-        // Loading indikator
-        document.body.addEventListener('htmx:beforeRequest', function(evt) {
-            const target = evt.detail.target;
-            if (target) {
-                target.classList.add('opacity-50');
-            }
-        });
+        // === TOP PROGRESS BAR ===
+        (function() {
+            var bar = document.getElementById('htmx-progress-bar');
+            var timer = null;
 
-        document.body.addEventListener('htmx:afterRequest', function(evt) {
-            const target = evt.detail.target;
-            if (target) {
-                target.classList.remove('opacity-50');
+            function startProgress() {
+                if (timer) clearInterval(timer);
+                bar.style.transition = 'none';
+                bar.style.width = '0%';
+                bar.style.opacity = '1';
+                // Force reflow
+                bar.offsetWidth;
+                bar.style.transition = 'width 0.4s ease';
+                bar.style.width = '30%';
+
+                var w = 30;
+                timer = setInterval(function() {
+                    if (w < 90) {
+                        w += (90 - w) * 0.1;
+                        bar.style.width = w + '%';
+                    }
+                }, 300);
+            }
+
+            function finishProgress() {
+                if (timer) { clearInterval(timer); timer = null; }
+                bar.style.transition = 'width 0.2s ease';
+                bar.style.width = '100%';
+                setTimeout(function() {
+                    bar.style.transition = 'opacity 0.3s ease';
+                    bar.style.opacity = '0';
+                }, 200);
+            }
+
+            document.body.addEventListener('htmx:beforeRequest', function() {
+                startProgress();
+            });
+
+            document.body.addEventListener('htmx:afterRequest', function() {
+                finishProgress();
+            });
+
+            document.body.addEventListener('htmx:responseError', function() {
+                finishProgress();
+            });
+        })();
+
+        // === RE-INITIALIZE SCRIPTS AFTER HTMX SWAP ===
+        document.body.addEventListener('htmx:afterSettle', function(evt) {
+            // Re-initialize Alpine.js components in swapped content
+            if (window.Alpine) {
+                document.querySelectorAll('[x-data]').forEach(function(el) {
+                    if (!el._x_dataStack) {
+                        window.Alpine.initTree(el);
+                    }
+                });
+            }
+
+            // Re-initialize Chart.js canvases (destroy old instances first)
+            if (window.Chart) {
+                var canvases = evt.detail.target.querySelectorAll('canvas');
+                canvases.forEach(function(canvas) {
+                    var existingChart = Chart.getChart(canvas);
+                    if (existingChart) existingChart.destroy();
+                });
+            }
+
+            // Re-observe lazy-loaded images
+            if ('IntersectionObserver' in window && imageObserver) {
+                document.querySelectorAll('img.lazy').forEach(function(img) {
+                    if (img.dataset.src && img.src !== img.dataset.src) {
+                        imageObserver.observe(img);
+                    }
+                });
             }
         });
 
         // Lazy loading rasmlar uchun
+        var imageObserver = null;
         if ('IntersectionObserver' in window) {
-            const imageObserver = new IntersectionObserver((entries, observer) => {
+            imageObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         const img = entry.target;
