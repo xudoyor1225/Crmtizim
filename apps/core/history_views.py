@@ -5,7 +5,7 @@ Tizimda sodir bo'lgan barcha amallarni kuzatish.
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import JsonResponse
 
 from apps.core.models import AuditLog
@@ -59,6 +59,11 @@ def history_list(request):
             Q(model_name__icontains=search)
         )
     
+    # === STATISTIKA ===
+    action_stats = logs.order_by().values('action').annotate(count=Count('id'))
+    stats = {item['action']: item['count'] for item in action_stats}
+    total_count = sum(stats.values())
+    
     # === PAGINATION ===
     paginator = Paginator(logs, 50)  # 50 ta har sahifada
     page = request.GET.get('page', 1)
@@ -77,6 +82,9 @@ def history_list(request):
         'users': users_with_logs,
         'model_names': set(model_names),
         'action_choices': AuditLog.ACTION_CHOICES,
+        # Statistika
+        'stats': stats,
+        'total_count': total_count,
         # Current filters
         'current_action': action,
         'current_user': user_id,
