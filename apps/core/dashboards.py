@@ -347,6 +347,33 @@ def admin_dashboard(request):
     # Kassalar ro'yxati (Quick Payment uchun)
     accounts = Account.objects.filter(organization=org, is_deleted=False)
     
+    # ====== KUTILAYOTGAN TO'LOVLAR (Tasdiqlanmagan) ======
+    pending_payments = Transaction.objects.filter(
+        organization=org,
+        status='pending',
+        transaction_type='income'
+    ).count()
+    
+    # ====== TASDIQLANMAGAN CHEKLAR ======
+    pending_receipts = Transaction.objects.filter(
+        organization=org,
+        status='pending',
+        receipt_verified=False,
+        payment_method__in=['card', 'transfer', 'online']
+    ).count()
+    pending_receipts_sum = Transaction.objects.filter(
+        organization=org,
+        status='pending',
+        receipt_verified=False,
+        payment_method__in=['card', 'transfer', 'online']
+    ).aggregate(total=Sum('amount'))['total'] or 0
+    pending_receipts_list = Transaction.objects.filter(
+        organization=org,
+        status='pending',
+        receipt_verified=False,
+        payment_method__in=['card', 'transfer', 'online']
+    ).select_related('student', 'created_by').order_by('-created_at')[:5]
+    
     context = {
         'total_students': total_students,
         'total_teachers': total_teachers,
@@ -360,6 +387,10 @@ def admin_dashboard(request):
         'stages': stages,
         'students_for_payment': students_for_payment,
         'accounts': accounts,
+        'pending_payments': pending_payments,
+        'pending_receipts': pending_receipts,
+        'pending_receipts_sum': pending_receipts_sum,
+        'pending_receipts_list': pending_receipts_list,
     }
     
     return render(request, 'dashboards/admin.html', context)

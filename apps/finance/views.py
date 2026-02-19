@@ -378,6 +378,7 @@ def quick_payment(request):
         amount = request.POST.get('amount')
         payment_method = request.POST.get('payment_method', 'cash')
         account_id = request.POST.get('account_id')
+        receipt_image = request.FILES.get('receipt_image')
 
         if not student_id or not amount or not account_id:
             return JsonResponse({'success': False, 'error': "Barcha maydonlarni to'ldiring."}, status=400)
@@ -421,6 +422,7 @@ def quick_payment(request):
             description=f"Tezkor to'lov: {student.get_full_name()}",
             status='pending',
             created_by=request.user,
+            receipt_image=receipt_image,
         )
 
         return JsonResponse({
