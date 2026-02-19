@@ -147,7 +147,7 @@
                         class="ph-fill ph-check-circle text-sm"></i></div>
             </div>
             <p class="text-3xl font-bold text-emerald-600">{{ attendance_rate|default:0|floatformat:0 }}%</p>
-            <p class="text-xs text-[#64748B] mt-2">{{ finished_lessons|default:"0" }}/{{ total_today_lessons|default:"0" }} dars</p>
+            <p class="text-xs text-[#64748B] mt-2">{{ attendance_taken_lessons|default:"0" }}/{{ total_today_lessons|default:"0" }} dars</p>
         </div>
         <div class="liquid-glass p-5 stagger-6">
             <div class="flex items-center justify-between mb-3">

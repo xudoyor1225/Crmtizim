@@ -155,6 +155,9 @@ def super_admin_dashboard(request):
     total_today_lessons = today_lessons.count()
     finished_lessons = today_lessons.filter(status='finished').count()
     
+    # Davomat olingan darslar soni
+    attendance_taken_lessons = today_lessons.filter(attendances__isnull=False).distinct().count()
+    
     # O'quvchilar davomati foizi
     today_attendance = Attendance.objects.filter(lesson__date=today)
     total_attendances = today_attendance.count()
@@ -249,6 +252,7 @@ def super_admin_dashboard(request):
         # Davomat
         'total_today_lessons': total_today_lessons,
         'finished_lessons': finished_lessons,
+        'attendance_taken_lessons': attendance_taken_lessons,
         'attendance_rate': round(attendance_rate, 1),
         
         # Guruhlar
