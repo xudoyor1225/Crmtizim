@@ -464,6 +464,7 @@ def take_attendance(request, pk):
     context = {
         'lesson': lesson,
         'students_data': students_data,
+        'attendance_notes': ATTENDANCE_NOTES,
     }
     
     return render(request, 'operations/take_attendance.html', context)
