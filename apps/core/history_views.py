@@ -39,11 +39,6 @@ def history_list(request):
     if user_id:
         logs = logs.filter(user_id=user_id)
     
-    # Amal turi bo'yicha
-    action = request.GET.get('action')
-    if action:
-        logs = logs.filter(action=action)
-    
     # Model (Bo'lim) bo'yicha
     model_name = request.GET.get('model')
     if model_name:
@@ -60,9 +55,16 @@ def history_list(request):
         )
     
     # === STATISTIKA ===
+    # Statistikani action filtersiz hisoblash kerak,
+    # shunda har doim to'g'ri umumiy sonlarni ko'rsatadi
     action_stats = logs.order_by().values('action').annotate(count=Count('id'))
     stats = {item['action']: item['count'] for item in action_stats}
     total_count = sum(stats.values())
+    
+    # Amal turi bo'yicha (statistikadan keyin qo'llanadi)
+    action = request.GET.get('action')
+    if action:
+        logs = logs.filter(action=action)
     
     # === PAGINATION ===
     paginator = Paginator(logs, 50)  # 50 ta har sahifada
