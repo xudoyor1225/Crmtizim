@@ -163,6 +163,10 @@
                             <span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg text-green-600 bg-green-50">
                                 <i class="ph-fill ph-check-circle"></i> {{ item.present_count }}/{{ item.attendance_count }}
                             </span>
+                            {% elif lesson.status == 'finished' or lesson.status == 'cancelled' %}
+                            <span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg text-red-600 bg-red-50">
+                                <i class="ph ph-x-circle"></i> Davomat olinmagan
+                            </span>
                             {% else %}
                             <span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-lg text-amber-600 bg-amber-50">
                                 <i class="ph ph-warning"></i> Kutilmoqda
