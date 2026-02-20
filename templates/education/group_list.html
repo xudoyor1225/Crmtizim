@@ -71,6 +71,12 @@
                     class="px-3 py-2 text-slate-500 hover:text-[#64748B] bg-white rounded-lg hover:bg-slate-100 transition">
                     <i class="ph ph-pencil-simple"></i>
                 </a>
+                <form method="POST" action="{% url 'group_delete' group.id %}" class="inline" onsubmit="return confirm('Bu guruhni o\'chirishni tasdiqlaysizmi?')">
+                    {% csrf_token %}
+                    <button type="submit" class="px-3 py-2 text-red-400 hover:text-red-600 bg-white rounded-lg hover:bg-red-50 transition">
+                        <i class="ph ph-trash"></i>
+                    </button>
+                </form>
                 {% endif %}
             </div>
         </div>

@@ -9,16 +9,20 @@ urlpatterns = [
     path('courses/', views.course_list, name='course_list'),
     path('courses/add/', views.course_create, name='course_create'),
     path('courses/<int:pk>/edit/', views.course_edit, name='course_edit'),
+    path('courses/<int:pk>/delete/', views.course_delete, name='course_delete'),
 
     # Xonalar
     path('rooms/', views.room_list, name='room_list'),
     path('rooms/add/', views.room_create, name='room_create'),
+    path('rooms/<int:pk>/edit/', views.room_edit, name='room_edit'),
+    path('rooms/<int:pk>/delete/', views.room_delete, name='room_delete'),
 
     # Guruhlar
     path('groups/', views.group_list, name='group_list'),
     path('groups/add/', views.group_create, name='group_create'),
     path('groups/<int:pk>/', views.group_detail, name='group_detail'),
     path('groups/<int:pk>/edit/', views.group_edit, name='group_edit'),
+    path('groups/<int:pk>/delete/', views.group_delete, name='group_delete'),
     path('groups/<int:pk>/add-student/', views.add_student_to_group, name='add_student_to_group'),
     path('groups/<int:pk>/remove-student/<int:student_id>/', views.remove_student_from_group, name='remove_student_from_group'),
     
