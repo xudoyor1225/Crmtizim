@@ -206,6 +206,18 @@
                                 <i class="ph ph-eye"></i> Ko'rish
                             </a>
                             {% endif %}
+                            {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
+                            <a href="{% url 'operations:lesson_edit' lesson.pk %}"
+                                class="px-2 py-1.5 text-slate-400 hover:text-[#64748B] rounded-lg hover:bg-slate-100 transition text-sm">
+                                <i class="ph ph-pencil-simple"></i>
+                            </a>
+                            <form method="POST" action="{% url 'operations:lesson_delete' lesson.pk %}" class="inline" onsubmit="return confirm('Bu darsni o\'chirishni tasdiqlaysizmi?')">
+                                {% csrf_token %}
+                                <button type="submit" class="px-2 py-1.5 text-red-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition text-sm">
+                                    <i class="ph ph-trash"></i>
+                                </button>
+                            </form>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

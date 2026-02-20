@@ -382,6 +382,93 @@ def finish_lesson(request, pk):
     return redirect('operations:lesson_list')
 
 
+@login_required
+def lesson_edit(request, pk):
+    """Darsni tahrirlash"""
+    org = request.user.organization
+    user = request.user
+
+    if user.role not in ['super_admin', 'owner', 'admin', 'teacher']:
+        messages.error(request, "Sizda tahrirlash huquqi yo'q!")
+        return redirect('operations:lesson_list')
+
+    if user.role == 'super_admin' or not org:
+        lesson = get_object_or_404(Lesson, pk=pk, is_deleted=False)
+    else:
+        lesson = get_object_or_404(Lesson, pk=pk, organization=org, is_deleted=False)
+
+    # Guruhlar va xonalar
+    if user.role == 'teacher':
+        groups = Group.objects.filter(teacher=user, is_deleted=False, status='active')
+    elif user.role == 'super_admin' or not org:
+        groups = Group.objects.filter(is_deleted=False, status='active')
+    else:
+        groups = Group.objects.filter(organization=org, is_deleted=False, status='active')
+
+    from apps.education.models import Room
+    if user.role == 'super_admin' or not org:
+        rooms = Room.objects.filter(is_deleted=False)
+    else:
+        rooms = Room.objects.filter(organization=org, is_deleted=False)
+
+    if request.method == 'POST':
+        group_id = request.POST.get('group')
+        date = request.POST.get('date')
+        start_time = request.POST.get('start_time')
+        end_time = request.POST.get('end_time')
+        room_id = request.POST.get('room') or None
+        topic = request.POST.get('topic', '')
+
+        if group_id and date and start_time and end_time:
+            lesson.group_id = group_id
+            lesson.date = date
+            lesson.start_time = start_time
+            lesson.end_time = end_time
+            lesson.room_id = room_id
+            lesson.topic = topic
+            lesson.save()
+
+            log_user_action(user, 'UPDATE', 'Lesson', lesson.id, str(lesson), request=request)
+            messages.success(request, "Dars muvaffaqiyatli yangilandi!")
+            return redirect('operations:lesson_list')
+        else:
+            messages.error(request, "Barcha maydonlarni to'ldiring!")
+
+    context = {
+        'groups': groups,
+        'rooms': rooms,
+        'today': timezone.now().date(),
+        'lesson': lesson,
+        'is_edit': True,
+    }
+
+    return render(request, 'operations/lesson_form.html', context)
+
+
+@login_required
+def lesson_delete(request, pk):
+    """Darsni o'chirish (soft delete)"""
+    org = request.user.organization
+    user = request.user
+
+    if user.role not in ['super_admin', 'owner', 'admin']:
+        messages.error(request, "Sizda o'chirish huquqi yo'q!")
+        return redirect('operations:lesson_list')
+
+    if user.role == 'super_admin' or not org:
+        lesson = get_object_or_404(Lesson, pk=pk, is_deleted=False)
+    else:
+        lesson = get_object_or_404(Lesson, pk=pk, organization=org, is_deleted=False)
+
+    if request.method == 'POST':
+        lesson.is_deleted = True
+        lesson.save()
+        log_user_action(user, 'DELETE', 'Lesson', lesson.id, str(lesson), request=request)
+        messages.success(request, "Dars o'chirildi!")
+
+    return redirect('operations:lesson_list')
+
+
 # ===========================================
 # ATTENDANCE (DAVOMAT)
 # ===========================================

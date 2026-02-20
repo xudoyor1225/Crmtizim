@@ -35,7 +35,13 @@
             <div class="flex items-center justify-between text-sm text-slate-400 border-t border-slate-200 pt-4">
                 <span><i class="ph ph-users-three"></i> Guruhlar: {{ room.groups.count }}</span>
                 {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' %}
-                <a href="#" class="text-[#64748B] hover:underline">Tahrirlash</a>
+                <div class="flex items-center gap-2">
+                    <a href="{% url 'room_edit' room.id %}" class="text-[#64748B] hover:underline">Tahrirlash</a>
+                    <form method="POST" action="{% url 'room_delete' room.id %}" class="inline" onsubmit="return confirm('Bu xonani o\'chirishni tasdiqlaysizmi?')">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-400 hover:text-red-600 hover:underline">O'chirish</button>
+                    </form>
+                </div>
                 {% endif %}
             </div>
         </div>

@@ -206,6 +206,82 @@ def group_edit(request, pk):
     return render(request, 'education/group_form.html', {'form': form, 'title': 'Guruhni tahrirlash', 'group': group})
 
 
+@login_required
+def group_delete(request, pk):
+    """Guruhni o'chirish (soft delete)"""
+    org = request.organization
+    group = get_object_or_404(Group, pk=pk, organization=org, is_deleted=False)
+    
+    if request.user.role not in ['super_admin', 'owner', 'admin']:
+        messages.error(request, "Sizda o'chirish huquqi yo'q!")
+        return redirect('group_list')
+    
+    if request.method == 'POST':
+        group.is_deleted = True
+        group.save()
+        log_user_action(request.user, 'DELETE', 'Group', group.id, str(group), request=request)
+        messages.success(request, "Guruh o'chirildi!")
+    
+    return redirect('group_list')
+
+
+@login_required
+def course_delete(request, pk):
+    """Kursni o'chirish (soft delete)"""
+    org = request.organization
+    course = get_object_or_404(Course, pk=pk, organization=org, is_deleted=False)
+    
+    if request.user.role not in ['super_admin', 'owner', 'admin']:
+        messages.error(request, "Sizda o'chirish huquqi yo'q!")
+        return redirect('course_list')
+    
+    if request.method == 'POST':
+        course.is_deleted = True
+        course.save()
+        log_user_action(request.user, 'DELETE', 'Course', course.id, str(course), request=request)
+        messages.success(request, "Kurs o'chirildi!")
+    
+    return redirect('course_list')
+
+
+@login_required
+def room_edit(request, pk):
+    """Xonani tahrirlash"""
+    org = request.organization
+    room = get_object_or_404(Room, pk=pk, organization=org, is_deleted=False)
+    
+    if request.method == 'POST':
+        form = RoomForm(request.POST, instance=room)
+        if form.is_valid():
+            form.save()
+            log_user_action(request.user, 'UPDATE', 'Room', room.id, str(room), request=request)
+            messages.success(request, "Xona yangilandi!")
+            return redirect('room_list')
+    else:
+        form = RoomForm(instance=room)
+    
+    return render(request, 'education/form.html', {'form': form, 'title': 'Xonani tahrirlash'})
+
+
+@login_required
+def room_delete(request, pk):
+    """Xonani o'chirish (soft delete)"""
+    org = request.organization
+    room = get_object_or_404(Room, pk=pk, organization=org, is_deleted=False)
+    
+    if request.user.role not in ['super_admin', 'owner', 'admin']:
+        messages.error(request, "Sizda o'chirish huquqi yo'q!")
+        return redirect('room_list')
+    
+    if request.method == 'POST':
+        room.is_deleted = True
+        room.save()
+        log_user_action(request.user, 'DELETE', 'Room', room.id, str(room), request=request)
+        messages.success(request, "Xona o'chirildi!")
+    
+    return redirect('room_list')
+
+
 # --- O'quvchi qidirish API ---
 @login_required
 def search_students_api(request):
