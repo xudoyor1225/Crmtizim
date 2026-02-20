@@ -60,28 +60,28 @@ class StudentForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': "Masalan: Bunyodkor ko'chasi, 15-uy"})
     )
     
-    # OTA-ONA MA'LUMOTLARI (Majburiy)
+    # OTA-ONA MA'LUMOTLARI (Dinamik - template da boshqariladi)
     parent_first_name = forms.CharField(
         max_length=50, 
-        required=True,
+        required=False,
         label="Ota-ona ismi",
         widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': "Ismi"})
     )
     parent_last_name = forms.CharField(
         max_length=50, 
-        required=True,
+        required=False,
         label="Ota-ona familiyasi",
         widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': "Familiyasi"})
     )
     parent_phone = forms.CharField(
         max_length=20, 
-        required=True,
+        required=False,
         label="Ota-ona telefoni",
         widget=forms.TextInput(attrs={'class': 'form-input', 'placeholder': "998901234567"})
     )
     relation_type = forms.ChoiceField(
         choices=ParentStudent.RELATION_TYPES,
-        required=True,
+        required=False,
         label="Qarindoshligi",
         widget=forms.Select(attrs={'class': 'form-select'})
     )

@@ -9,6 +9,7 @@ urlpatterns = [
     path('add/', views.user_create, name='user_create'),
     path('students/', views.user_list, {'role': 'student'}, name='student_list'),
     path('students/add/', views.student_create, name='student_create'),
+    path('parents/search/', views.parent_search, name='parent_search'),
     path('teachers/', views.user_list, {'role': 'teacher'}, name='teacher_list'),
     path('teachers/add/', views.teacher_create, name='teacher_create'),
     path('staff/', views.user_list, {'role': 'staff'}, name='staff_list'),

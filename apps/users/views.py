@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, Sum
 from django.db import transaction
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from .models import User, ParentStudent
 from .forms import UserForm, StudentForm, TeacherForm, StaffForm
 from apps.core.permissions import permission_required, check_permission
@@ -85,62 +85,132 @@ def user_create(request):
 
 
 # ============================================
+# OTA-ONA QIDIRISH (AJAX)
+# ============================================
+@login_required
+def parent_search(request):
+    """AJAX orqali ota-onalarni qidirish"""
+    q = request.GET.get('q', '').strip()
+    if len(q) < 2:
+        return JsonResponse({'results': []})
+
+    parents = User.objects.filter(
+        role='parent',
+        is_deleted=False,
+    ).filter(
+        Q(first_name__icontains=q) |
+        Q(last_name__icontains=q) |
+        Q(phone__icontains=q)
+    )
+
+    if request.user.organization:
+        parents = parents.filter(organization=request.user.organization)
+
+    results = [
+        {
+            'id': p.id,
+            'first_name': p.first_name,
+            'last_name': p.last_name,
+            'phone': p.phone,
+            'full_name': f"{p.first_name} {p.last_name} ({p.phone})",
+        }
+        for p in parents[:10]
+    ]
+    return JsonResponse({'results': results})
+
+
+# ============================================
 # O'QUVCHI QO'SHISH (Majburiy Ota-Ona bilan)
 # ============================================
 @login_required
 @permission_required('users', 'create')
 @transaction.atomic
 def student_create(request):
-    """O'quvchi qo'shish - ota-ona ma'lumotlari majburiy"""
+    """O'quvchi qo'shish - bir yoki bir nechta ota-ona ma'lumotlari"""
     if request.method == 'POST':
         form = StudentForm(request.POST, request.FILES)
         if form.is_valid():
-            # 1. O'quvchini saqlash
+            # 1. Ota-ona ma'lumotlarini POST dan yig'ish
+            parents_data = []
+            idx = 0
+            while True:
+                phone = request.POST.get(f'parent_phone_{idx}', '').strip()
+                if not phone:
+                    break
+                existing_id = request.POST.get(f'existing_parent_id_{idx}', '').strip()
+                parents_data.append({
+                    'existing_id': existing_id if existing_id else None,
+                    'first_name': request.POST.get(f'parent_first_name_{idx}', '').strip(),
+                    'last_name': request.POST.get(f'parent_last_name_{idx}', '').strip(),
+                    'phone': phone,
+                    'relation_type': request.POST.get(f'relation_type_{idx}', 'mother'),
+                })
+                idx += 1
+
+            # Kamida bitta ota-ona bo'lishi kerak
+            if not parents_data:
+                form.add_error(None, "Kamida bitta ota-ona ma'lumotlari kiritilishi kerak!")
+                return render(request, 'users/student_form.html', {
+                    'form': form,
+                    'title': "Yangi O'quvchi Qo'shish",
+                    'relation_types': ParentStudent.RELATION_TYPES,
+                })
+
+            # 2. O'quvchini saqlash
             student = form.save(commit=False, organization=request.user.organization)
             student.save()
-            
-            # 2. Ota-onani yaratish yoki topish
-            parent_phone = form.cleaned_data['parent_phone']
-            parent_first_name = form.cleaned_data['parent_first_name']
-            parent_last_name = form.cleaned_data['parent_last_name']
-            relation_type = form.cleaned_data['relation_type']
-            
-            # Telefon bilan ota-onani qidirish
-            parent, created = User.objects.get_or_create(
-                phone=parent_phone,
-                defaults={
-                    'first_name': parent_first_name,
-                    'last_name': parent_last_name,
-                    'role': 'parent',
-                    'organization': request.user.organization,
-                    'is_active': True,
-                }
-            )
-            
-            # Agar yangi yaratilgan bo'lsa, parol berish
-            if created:
-                parent.set_password(parent_phone[-4:])  # Telefon oxirgi 4 raqami parol
-                parent.save()
-            
-            # 3. Bog'liqlik yaratish
-            ParentStudent.objects.get_or_create(
-                parent=parent,
-                student=student,
-                defaults={
-                    'relation_type': relation_type,
-                    'is_main_contact': True,
-                    'organization': request.user.organization,
-                }
-            )
-            
-            messages.success(request, f"✅ {student.full_name} muvaffaqiyatli qo'shildi! Ota-ona: {parent.full_name}")
+
+            # 3. Har bir ota-onani yaratish yoki topish va bog'lash
+            parent_names = []
+            for i, pd in enumerate(parents_data):
+                if pd['existing_id']:
+                    # Mavjud ota-onani tanlash
+                    try:
+                        parent = User.objects.get(
+                            id=pd['existing_id'],
+                            role='parent',
+                            is_deleted=False,
+                        )
+                    except User.DoesNotExist:
+                        continue
+                else:
+                    # Yangi ota-ona yaratish yoki telefon bo'yicha topish
+                    parent, created = User.objects.get_or_create(
+                        phone=pd['phone'],
+                        defaults={
+                            'first_name': pd['first_name'],
+                            'last_name': pd['last_name'],
+                            'role': 'parent',
+                            'organization': request.user.organization,
+                            'is_active': True,
+                        }
+                    )
+                    if created:
+                        parent.set_password(pd['phone'][-4:])
+                        parent.save()
+
+                # Bog'liqlik yaratish
+                ParentStudent.objects.get_or_create(
+                    parent=parent,
+                    student=student,
+                    defaults={
+                        'relation_type': pd['relation_type'],
+                        'is_main_contact': (i == 0),
+                        'organization': request.user.organization,
+                    }
+                )
+                parent_names.append(parent.full_name)
+
+            names_str = ", ".join(parent_names)
+            messages.success(request, f"✅ {student.full_name} muvaffaqiyatli qo'shildi! Ota-ona: {names_str}")
             return redirect('users:user_list')
     else:
         form = StudentForm()
-    
+
     return render(request, 'users/student_form.html', {
-        'form': form, 
-        'title': "Yangi O'quvchi Qo'shish"
+        'form': form,
+        'title': "Yangi O'quvchi Qo'shish",
+        'relation_types': ParentStudent.RELATION_TYPES,
     })
 
 
