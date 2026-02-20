@@ -115,45 +115,151 @@
                 </div>
             </div>
 
-            <!-- 3. OTA-ONA MA'LUMOTLARI -->
-            <div class="space-y-4">
-                <h3
-                    class="text-lg font-semibold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
-                    <i class="ph ph-users text-purple-500"></i> Ota-ona ma'lumotlari
-                    <span
-                        class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">Majburiy</span>
-                </h3>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Ota-ona ismi
-                            *</label>
-                        {{ form.parent_first_name }}
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Ota-ona
-                            familiyasi *</label>
-                        {{ form.parent_last_name }}
-                    </div>
+            <!-- 3. OTA-ONA MA'LUMOTLARI (Dinamik) -->
+            <div class="space-y-4" x-data="parentManager()">
+                <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+                    <h3 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                        <i class="ph ph-users text-purple-500"></i> Ota-ona ma'lumotlari
+                        <span class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">Majburiy</span>
+                    </h3>
+                    <button type="button" @click="addParent()"
+                        class="flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition text-sm font-medium">
+                        <i class="ph ph-plus-circle text-lg"></i> Ota-ona qo'shish
+                    </button>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Ota-ona
-                            telefoni *</label>
-                        {{ form.parent_phone }}
+                <!-- Ota-ona bloklari -->
+                <template x-for="(parent, index) in parents" :key="index">
+                    <div class="border border-slate-200 rounded-xl p-5 space-y-4 bg-white relative">
+                        <!-- Sarlavha va o'chirish tugmasi -->
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-medium text-slate-700 flex items-center gap-2">
+                                <i class="ph ph-user-circle text-purple-400"></i>
+                                <span x-text="(index + 1) + '-masul shaxs'"></span>
+                            </h4>
+                            <button type="button" x-show="parents.length > 1" @click="removeParent(index)"
+                                class="text-red-400 hover:text-red-600 transition p-1 rounded-lg hover:bg-red-50">
+                                <i class="ph ph-trash text-lg"></i>
+                            </button>
+                        </div>
+
+                        <!-- Tanlash rejimi: Mavjud / Yangi -->
+                        <div class="flex gap-2">
+                            <button type="button" @click="parent.mode = 'search'"
+                                :class="parent.mode === 'search' ? 'bg-purple-100 text-purple-700 border-purple-300' : 'bg-slate-50 text-slate-500 border-slate-200'"
+                                class="flex-1 px-3 py-2 rounded-lg border text-sm font-medium transition flex items-center justify-center gap-1.5">
+                                <i class="ph ph-magnifying-glass"></i> Mavjud ota-onani tanlash
+                            </button>
+                            <button type="button" @click="parent.mode = 'new'; parent.existing_id = ''"
+                                :class="parent.mode === 'new' ? 'bg-purple-100 text-purple-700 border-purple-300' : 'bg-slate-50 text-slate-500 border-slate-200'"
+                                class="flex-1 px-3 py-2 rounded-lg border text-sm font-medium transition flex items-center justify-center gap-1.5">
+                                <i class="ph ph-user-plus"></i> Yangi ota-ona kiritish
+                            </button>
+                        </div>
+
+                        <!-- Mavjud ota-onani qidirish -->
+                        <div x-show="parent.mode === 'search'" class="space-y-3">
+                            <div class="relative">
+                                <label class="block text-sm font-medium text-slate-600 mb-1.5">Ota-onani qidirish (ism yoki telefon)</label>
+                                <input type="text" class="form-input pr-10"
+                                    placeholder="Ism yoki telefon raqam kiriting..."
+                                    x-model="parent.search_query"
+                                    @input.debounce.300ms="searchParent(index)">
+                                <div class="absolute right-3 top-9 text-slate-400">
+                                    <i class="ph ph-magnifying-glass"></i>
+                                </div>
+                            </div>
+
+                            <!-- Qidiruv natijalari -->
+                            <div x-show="parent.search_results.length > 0"
+                                class="border border-slate-200 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
+                                <template x-for="result in parent.search_results" :key="result.id">
+                                    <button type="button" @click="selectParent(index, result)"
+                                        class="w-full text-left px-4 py-3 hover:bg-purple-50 transition flex items-center gap-3 border-b border-slate-100 last:border-0">
+                                        <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-sm font-bold">
+                                            <span x-text="result.first_name.charAt(0)"></span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-slate-700" x-text="result.first_name + ' ' + result.last_name"></p>
+                                            <p class="text-xs text-slate-400" x-text="result.phone"></p>
+                                        </div>
+                                    </button>
+                                </template>
+                            </div>
+
+                            <!-- Tanlangan ota-ona -->
+                            <div x-show="parent.existing_id"
+                                class="bg-purple-50 border border-purple-200 rounded-lg p-3 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-purple-200 text-purple-700 flex items-center justify-center font-bold">
+                                        <i class="ph ph-check-circle text-lg"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-purple-800" x-text="parent.first_name + ' ' + parent.last_name"></p>
+                                        <p class="text-xs text-purple-500" x-text="parent.phone"></p>
+                                    </div>
+                                </div>
+                                <button type="button" @click="clearSelectedParent(index)"
+                                    class="text-purple-400 hover:text-purple-600 transition">
+                                    <i class="ph ph-x-circle text-lg"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Yangi ota-ona kiritish -->
+                        <div x-show="parent.mode === 'new'" class="space-y-3">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-600 mb-1.5">Ota-ona ismi *</label>
+                                    <input type="text" class="form-input"
+                                        :name="'parent_first_name_' + index"
+                                        x-model="parent.first_name"
+                                        placeholder="Ismi">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-600 mb-1.5">Ota-ona familiyasi *</label>
+                                    <input type="text" class="form-input"
+                                        :name="'parent_last_name_' + index"
+                                        x-model="parent.last_name"
+                                        placeholder="Familiyasi">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-600 mb-1.5">Ota-ona telefoni *</label>
+                                <input type="text" class="form-input"
+                                    :name="'parent_phone_' + index"
+                                    x-model="parent.phone"
+                                    placeholder="998901234567">
+                            </div>
+                        </div>
+
+                        <!-- Tanlangan ota-ona uchun yashirin maydonlar -->
+                        <template x-if="parent.mode === 'search' && parent.existing_id">
+                            <div>
+                                <input type="hidden" :name="'existing_parent_id_' + index" :value="parent.existing_id">
+                                <input type="hidden" :name="'parent_first_name_' + index" :value="parent.first_name">
+                                <input type="hidden" :name="'parent_last_name_' + index" :value="parent.last_name">
+                                <input type="hidden" :name="'parent_phone_' + index" :value="parent.phone">
+                            </div>
+                        </template>
+
+                        <!-- Qarindoshlik turi (har doim ko'rsatiladi) -->
+                        <div>
+                            <label class="block text-sm font-medium text-slate-600 mb-1.5">Qarindoshligi *</label>
+                            <select class="form-select" :name="'relation_type_' + index" x-model="parent.relation_type">
+                                {% for value, label in relation_types %}
+                                <option value="{{ value }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Qarindoshligi
-                            *</label>
-                        {{ form.relation_type }}
-                    </div>
-                </div>
+                </template>
 
                 <div
                     class="bg-[#4F46E5]/5 border border-[#94A3B8]/25 rounded-xl p-4 text-sm text-[#0F172A]">
                     <i class="ph ph-info mr-1"></i>
                     Ota-ona avtomatik tizimga qo'shiladi. Parol: telefon raqamining oxirgi 4 ta raqami.
+                    Agar ota-ona allaqachon tizimda bo'lsa, "Mavjud ota-onani tanlash" orqali tanlang.
                 </div>
             </div>
 
@@ -203,4 +309,80 @@
         background-color: #111827;
     }
 </style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function parentManager() {
+    return {
+        parents: [
+            {
+                mode: 'new',
+                existing_id: '',
+                first_name: '',
+                last_name: '',
+                phone: '',
+                relation_type: 'mother',
+                search_query: '',
+                search_results: [],
+            }
+        ],
+
+        addParent() {
+            this.parents.push({
+                mode: 'new',
+                existing_id: '',
+                first_name: '',
+                last_name: '',
+                phone: '',
+                relation_type: 'father',
+                search_query: '',
+                search_results: [],
+            });
+        },
+
+        removeParent(index) {
+            if (this.parents.length > 1) {
+                this.parents.splice(index, 1);
+            }
+        },
+
+        async searchParent(index) {
+            const query = this.parents[index].search_query;
+            if (query.length < 2) {
+                this.parents[index].search_results = [];
+                return;
+            }
+
+            try {
+                const response = await fetch(`{% url 'users:parent_search' %}?q=${encodeURIComponent(query)}`);
+                if (!response.ok) {
+                    this.parents[index].search_results = [];
+                    return;
+                }
+                const data = await response.json();
+                this.parents[index].search_results = data.results;
+            } catch (error) {
+                this.parents[index].search_results = [];
+            }
+        },
+
+        selectParent(index, result) {
+            this.parents[index].existing_id = result.id;
+            this.parents[index].first_name = result.first_name;
+            this.parents[index].last_name = result.last_name;
+            this.parents[index].phone = result.phone;
+            this.parents[index].search_results = [];
+            this.parents[index].search_query = '';
+        },
+
+        clearSelectedParent(index) {
+            this.parents[index].existing_id = '';
+            this.parents[index].first_name = '';
+            this.parents[index].last_name = '';
+            this.parents[index].phone = '';
+        },
+    };
+}
+</script>
 {% endblock %}
