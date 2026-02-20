@@ -134,7 +134,7 @@
                 </div>
                 {% if request.user.role == 'super_admin' or request.user.role == 'owner' or request.user.role == 'admin' or request.user.role == 'teacher' %}
                 <div class="mt-2 pt-2 border-t border-[#94A3B8]/20 flex gap-2">
-                    <a href="{% url 'material_edit' m.pk %}" class="flex-1 py-1 text-center text-xs font-medium text-[#64748B] bg-[#94A3B8]/10 rounded-lg hover:bg-[#94A3B8]/20 transition" onclick="event.preventDefault(); window.location.href='{% url 'material_edit' m.pk %}';">
+                    <a href="{% url 'material_edit' m.pk %}" class="flex-1 py-1 text-center text-xs font-medium text-[#64748B] bg-[#94A3B8]/10 rounded-lg hover:bg-[#94A3B8]/20 transition" onclick="event.stopPropagation();">
                         <i class="ph ph-pencil-simple"></i> Tahrirlash
                     </a>
                     <form method="POST" action="{% url 'material_delete' m.pk %}" class="flex-1" onsubmit="event.stopPropagation(); return confirm('Bu materialni o\'chirishni tasdiqlaysizmi?')">
