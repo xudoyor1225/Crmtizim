@@ -94,17 +94,18 @@ def parent_search(request):
     if len(q) < 2:
         return JsonResponse({'results': []})
 
+    if not request.user.organization:
+        return JsonResponse({'results': []})
+
     parents = User.objects.filter(
         role='parent',
         is_deleted=False,
+        organization=request.user.organization,
     ).filter(
         Q(first_name__icontains=q) |
         Q(last_name__icontains=q) |
         Q(phone__icontains=q)
     )
-
-    if request.user.organization:
-        parents = parents.filter(organization=request.user.organization)
 
     results = [
         {

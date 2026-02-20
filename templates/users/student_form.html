@@ -356,10 +356,13 @@ function parentManager() {
 
             try {
                 const response = await fetch(`{% url 'users:parent_search' %}?q=${encodeURIComponent(query)}`);
+                if (!response.ok) {
+                    this.parents[index].search_results = [];
+                    return;
+                }
                 const data = await response.json();
                 this.parents[index].search_results = data.results;
             } catch (error) {
-                console.error('Qidiruv xatoligi:', error);
                 this.parents[index].search_results = [];
             }
         },
