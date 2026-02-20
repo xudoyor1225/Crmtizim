@@ -189,7 +189,7 @@
         document.getElementById('searchSpinner').classList.remove('hidden');
 
         searchTimeout = setTimeout(() => {
-            fetch(`/edu/api/search-students/?q=${encodeURIComponent(query)}&group_id=${currentGroupId}`)
+            fetch(`/api/search-students/?q=${encodeURIComponent(query)}&group_id=${currentGroupId}`)
                 .then(res => res.json())
                 .then(data => {
                     document.getElementById('searchSpinner').classList.add('hidden');

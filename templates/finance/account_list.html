@@ -46,6 +46,20 @@
             <p class="text-2xl font-bold {% if account.balance < 0 %}text-rose-600{% else %}text-slate-800{% endif %}">
                 {{ account.balance|floatformat:0 }} <span class="text-sm font-normal text-slate-500">UZS</span>
             </p>
+            <div class="mt-4 pt-4 border-t border-slate-100 flex gap-2">
+                <a href="{% url 'finance:account_edit' account.pk %}"
+                    class="flex-1 py-2 text-center text-sm font-medium text-slate-600 bg-slate-50 rounded-lg hover:bg-slate-100 transition flex items-center justify-center gap-1">
+                    <i class="ph ph-pencil-simple"></i> Tahrirlash
+                </a>
+                <form method="POST" action="{% url 'finance:account_delete' account.pk %}" class="flex-1"
+                    onsubmit="return confirm('Bu kassani o\'chirishni tasdiqlaysizmi?')">
+                    {% csrf_token %}
+                    <button type="submit"
+                        class="w-full py-2 text-center text-sm font-medium text-red-500 bg-red-50 rounded-lg hover:bg-red-100 transition flex items-center justify-center gap-1">
+                        <i class="ph ph-trash"></i> O'chirish
+                    </button>
+                </form>
+            </div>
         </div>
         {% empty %}
         <div class="col-span-3 rounded-2xl border border-slate-200 bg-white p-12 text-center">

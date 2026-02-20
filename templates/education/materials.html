@@ -102,8 +102,9 @@
     {% if materials %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {% for m in materials %}
-        <a href="{% url 'material_view' m.pk %}"
-            class="bg-white rounded-xl border border-[#94A3B8]/30 overflow-hidden hover:shadow-lg hover:border-[#4F46E5]/50 transition-all block group">
+        <div
+            class="bg-white rounded-xl border border-[#94A3B8]/30 overflow-hidden hover:shadow-lg hover:border-[#4F46E5]/50 transition-all block group cursor-pointer"
+            onclick="window.location.href='{% url 'material_view' m.pk %}'">
             {% if m.thumbnail %}
             <img src="{{ m.thumbnail.url }}" alt="{{ m.title }}"
                 class="w-full h-28 object-cover group-hover:scale-105 transition-transform duration-300">
@@ -146,7 +147,7 @@
                 </div>
                 {% endif %}
             </div>
-        </a>
+        </div>
         {% endfor %}
     </div>
     {% else %}
