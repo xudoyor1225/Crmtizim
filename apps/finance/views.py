@@ -120,6 +120,16 @@ def account_edit(request, pk):
         form = AccountForm(instance=account)
     return render(request, 'finance/account_form.html', {'form': form, 'title': 'Kassani tahrirlash'})
 
+@login_required
+@require_POST
+def account_delete(request, pk):
+    org = request.organization
+    account = get_object_or_404(Account, pk=pk, organization=org)
+    account.is_deleted = True
+    account.save()
+    messages.success(request, "Kassa o'chirildi")
+    return redirect('finance:account_list')
+
 # ===========================================
 # KATEGORIYALAR (Transaction Categories)
 # ===========================================
