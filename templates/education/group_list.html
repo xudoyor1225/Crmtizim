@@ -224,6 +224,7 @@
 
     function selectStudent(studentId, studentName) {
         if (confirm(`"${studentName}" ni guruhga qo'shishni tasdiqlaysizmi?`)) {
+            closeAddStudentModal();
             document.getElementById('selectedStudentId').value = studentId;
             document.getElementById('addStudentForm').action = `/edu/groups/${currentGroupId}/add-student/`;
             document.getElementById('addStudentForm').submit();
