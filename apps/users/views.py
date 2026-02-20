@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, Sum
 from django.db import transaction
+from django.http import Http404
 from .models import User, ParentStudent
 from .forms import UserForm, StudentForm, TeacherForm, StaffForm
 from apps.core.permissions import permission_required, check_permission
@@ -209,6 +210,39 @@ def staff_create(request):
         'modules': AVAILABLE_MODULES,
         'actions': AVAILABLE_ACTIONS,
     })
+
+
+@login_required
+@permission_required('users', 'view')
+def user_detail(request, pk):
+    """Foydalanuvchi to'liq ma'lumotlari"""
+    user = get_object_or_404(User, pk=pk, is_deleted=False)
+
+    # Tashkilot tekshiruvi
+    if request.user.role != 'super_admin' and request.user.organization:
+        if user.organization != request.user.organization:
+            raise Http404
+
+    # Ota-ona ma'lumotlari (o'quvchi uchun)
+    parent_relations = []
+    if user.role == 'student':
+        parent_relations = ParentStudent.objects.filter(
+            student=user
+        ).select_related('parent')
+
+    # Farzandlar (ota-ona uchun)
+    children_relations = []
+    if user.role == 'parent':
+        children_relations = ParentStudent.objects.filter(
+            parent=user
+        ).select_related('student')
+
+    context = {
+        'detail_user': user,
+        'parent_relations': parent_relations,
+        'children_relations': children_relations,
+    }
+    return render(request, 'users/user_detail.html', context)
 
 
 @login_required
