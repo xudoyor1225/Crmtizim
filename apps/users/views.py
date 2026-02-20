@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q, Sum
 from django.db import transaction
+from django.http import Http404
 from .models import User, ParentStudent
 from .forms import UserForm, StudentForm, TeacherForm, StaffForm
 from apps.core.permissions import permission_required, check_permission
@@ -220,7 +221,6 @@ def user_detail(request, pk):
     # Tashkilot tekshiruvi
     if request.user.role != 'super_admin' and request.user.organization:
         if user.organization != request.user.organization:
-            from django.http import Http404
             raise Http404
 
     # Ota-ona ma'lumotlari (o'quvchi uchun)
