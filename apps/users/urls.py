@@ -13,6 +13,7 @@ urlpatterns = [
     path('teachers/add/', views.teacher_create, name='teacher_create'),
     path('staff/', views.user_list, {'role': 'staff'}, name='staff_list'),
     path('staff/add/', views.staff_create, name='staff_create'),
+    path('<int:pk>/', views.user_detail, name='user_detail'),
     path('<int:pk>/edit/', views.user_update, name='user_update'),
     path('<int:pk>/delete/', views.user_delete, name='user_delete'),
 
