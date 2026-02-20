@@ -104,7 +104,9 @@
         {% for m in materials %}
         <div
             class="bg-white rounded-xl border border-[#94A3B8]/30 overflow-hidden hover:shadow-lg hover:border-[#4F46E5]/50 transition-all block group cursor-pointer"
-            onclick="window.location.href='{% url 'material_view' m.pk %}'">
+            tabindex="0" role="link"
+            onclick="window.location.href='{% url 'material_view' m.pk %}'"
+            onkeydown="if(event.key==='Enter')window.location.href='{% url 'material_view' m.pk %}'">
             {% if m.thumbnail %}
             <img src="{{ m.thumbnail.url }}" alt="{{ m.title }}"
                 class="w-full h-28 object-cover group-hover:scale-105 transition-transform duration-300">
