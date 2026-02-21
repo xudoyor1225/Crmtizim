@@ -91,7 +91,7 @@ def check_permission(user, module: str, action: str = 'view') -> bool:
 
     # Admin uchun admin_finance default ruxsat (o'z kassasi)
     if user.role == 'admin' and module == 'admin_finance':
-        if action in ['view', 'create']:
+        if action in ['view', 'create', 'edit']:
             return True
 
     return False

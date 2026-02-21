@@ -34,6 +34,10 @@ def transaction_list(request):
     if org:
         transactions = transactions.filter(organization=org)
 
+    # Admin faqat o'z kirim-chiqimlarini ko'radi (umumiy emas)
+    if request.user.role == 'admin':
+        transactions = transactions.filter(created_by=request.user)
+
     if date_from:
         transactions = transactions.filter(created_at__date__gte=date_from)
     if date_to:
