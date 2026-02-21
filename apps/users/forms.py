@@ -1,5 +1,6 @@
 from django import forms
 from apps.users.models import User, ParentStudent
+from apps.core.permissions import check_permission
 
 
 class UserForm(forms.ModelForm):
@@ -333,14 +334,12 @@ class StaffForm(forms.ModelForm):
         """Creator berilgan modul va amalga ruxsati borligini tekshirish."""
         if self._creator_has_full_access():
             return True
-        from apps.core.permissions import check_permission
         return check_permission(self.creator, module_code, action_code)
 
     def get_filtered_modules(self):
         """Creator ruxsatlariga qarab filtrlangan modullar ro'yxati."""
         if self._creator_has_full_access():
             return list(AVAILABLE_MODULES)
-        from apps.core.permissions import check_permission
         return [
             (code, name, icon) for code, name, icon in AVAILABLE_MODULES
             if check_permission(self.creator, code, 'view')
@@ -360,7 +359,6 @@ class StaffForm(forms.ModelForm):
             if self._creator_has_full_access():
                 filtered_extras = list(extras)
             else:
-                from apps.core.permissions import check_permission
                 filtered_extras = [
                     (ac, an) for ac, an in extras
                     if check_permission(self.creator, module_code, ac)
