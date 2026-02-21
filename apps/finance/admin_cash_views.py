@@ -489,7 +489,7 @@ def admin_add_course_payment(request):
             amount_decimal = Decimal(amount.replace(',', '').replace(' ', ''))
             if amount_decimal <= 0:
                 raise ValueError()
-        except (Exception,):
+        except (ValueError, ArithmeticError):
             messages.error(request, "Noto'g'ri summa formati!")
             return render(request, 'finance/admin_cash/course_payment_form.html', {
                 'students': students, 'categories': categories,
