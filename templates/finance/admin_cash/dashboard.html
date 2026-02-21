@@ -12,6 +12,13 @@
             <p class="text-slate-400">Shaxsiy kassa kirim-chiqim</p>
         </div>
         <div class="flex items-center gap-2">
+            <a href="{% url 'finance:admin_student_payments' %}"
+                class="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl hover:shadow-lg hover:shadow-amber-500/25 transition flex items-center gap-2 relative">
+                <i class="ph ph-student"></i> O'quvchi to'lovlari
+                {% if pending_count %}
+                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">{{ pending_count }}</span>
+                {% endif %}
+            </a>
             <a href="{% url 'finance:admin_add_income' %}"
                 class="px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl hover:shadow-lg hover:shadow-emerald-500/25 transition flex items-center gap-2">
                 <i class="ph ph-arrow-down"></i> Kirim
@@ -69,6 +76,91 @@
         </div>
     </div>
 
+    <!-- Kutilayotgan o'quvchi to'lovlari -->
+    {% if pending_student_payments %}
+    <div class="rounded-2xl overflow-hidden bg-white border border-amber-200">
+        <div class="p-4 border-b border-amber-100 bg-amber-50 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i class="ph-fill ph-warning text-amber-500 text-xl"></i>
+                <h2 class="font-semibold text-amber-800">Kutilayotgan o'quvchi to'lovlari</h2>
+                <span class="px-2 py-0.5 text-xs rounded-full bg-amber-500 text-white font-bold">{{ pending_count }}</span>
+            </div>
+            <a href="{% url 'finance:admin_student_payments' %}" class="text-sm text-amber-700 hover:underline font-medium">
+                Barchasini ko'rish →
+            </a>
+        </div>
+        <table class="w-full">
+            <thead class="bg-slate-50 text-slate-400">
+                <tr class="uppercase text-xs font-semibold">
+                    <th class="p-4 text-left">O'quvchi</th>
+                    <th class="p-4 text-left">Sana</th>
+                    <th class="p-4 text-left">Kategoriya</th>
+                    <th class="p-4 text-left">To'lov usuli</th>
+                    <th class="p-4 text-right">Summa</th>
+                    <th class="p-4 text-center">Chek</th>
+                    <th class="p-4 text-right">Amallar</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                {% for payment in pending_student_payments %}
+                <tr class="transition hover:bg-amber-50/50">
+                    <td class="p-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm">
+                                {{ payment.student.first_name|first }}
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-slate-700">{{ payment.student.get_full_name }}</p>
+                                <p class="text-xs text-slate-400">{{ payment.student.phone }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-4 text-sm text-slate-400">{{ payment.created_at|date:"d.m.Y H:i" }}</td>
+                    <td class="p-4 text-sm text-slate-600">{{ payment.category.name|default:"-" }}</td>
+                    <td class="p-4">
+                        <span class="px-2.5 py-1 text-xs rounded-full font-medium bg-slate-100 text-slate-600">
+                            {{ payment.get_payment_method_display }}
+                        </span>
+                    </td>
+                    <td class="p-4 text-right font-bold text-emerald-600">{{ payment.amount|floatformat:0 }} UZS</td>
+                    <td class="p-4 text-center">
+                        {% if payment.receipt_image %}
+                        <a href="{{ payment.receipt_image.url }}" target="_blank"
+                            class="text-indigo-600 hover:text-indigo-800" title="Chekni ko'rish">
+                            <i class="ph ph-image text-lg"></i>
+                        </a>
+                        {% elif payment.receipt_file %}
+                        <a href="{{ payment.receipt_file.url }}" target="_blank"
+                            class="text-indigo-600 hover:text-indigo-800" title="Faylni ko'rish">
+                            <i class="ph ph-file-pdf text-lg"></i>
+                        </a>
+                        {% else %}
+                        <span class="text-slate-300">-</span>
+                        {% endif %}
+                    </td>
+                    <td class="p-4 text-right">
+                        <div class="flex items-center justify-end gap-2">
+                            <form method="POST" action="{% url 'finance:admin_confirm_student_payment' payment.pk %}" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="p-2 rounded-lg transition text-emerald-600 hover:bg-emerald-500/20" title="Tasdiqlash">
+                                    <i class="ph ph-check-circle text-lg"></i>
+                                </button>
+                            </form>
+                            <form method="POST" action="{% url 'finance:admin_reject_student_payment' payment.pk %}" class="inline">
+                                {% csrf_token %}
+                                <button type="submit" class="p-2 rounded-lg transition text-rose-600 hover:bg-rose-500/20" title="Rad etish">
+                                    <i class="ph ph-x-circle text-lg"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
     <!-- Oxirgi tranzaksiyalar -->
     <div class="rounded-2xl overflow-hidden bg-white border border-slate-200">
         <div class="p-4 border-b border-slate-100 flex items-center justify-between">
@@ -83,6 +175,7 @@
                     <th class="p-4 text-left">Sana</th>
                     <th class="p-4 text-left">Turi</th>
                     <th class="p-4 text-left">Kategoriya</th>
+                    <th class="p-4 text-left">O'quvchi</th>
                     <th class="p-4 text-left">Izoh</th>
                     <th class="p-4 text-right">Summa</th>
                     <th class="p-4 text-center">Holat</th>
@@ -100,6 +193,11 @@
                         {% endif %}
                     </td>
                     <td class="p-4 text-sm text-slate-600">{{ trans.category.name|default:"-" }}</td>
+                    <td class="p-4 text-sm text-slate-600">
+                        {% if trans.student %}
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-indigo-100 text-indigo-600">{{ trans.student.get_full_name }}</span>
+                        {% else %}-{% endif %}
+                    </td>
                     <td class="p-4 text-sm text-slate-500">{{ trans.description|default:"-"|truncatewords:10 }}</td>
                     <td class="p-4 text-right font-bold {% if trans.transaction_type == 'income' %}text-emerald-600{% else %}text-rose-600{% endif %}">
                         {% if trans.transaction_type == 'income' %}+{% else %}-{% endif %}{{ trans.amount|floatformat:0 }}
@@ -115,7 +213,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="6" class="p-12 text-center">
+                    <td colspan="7" class="p-12 text-center">
                         <i class="ph ph-receipt text-5xl mb-4 text-slate-600"></i>
                         <p class="text-slate-500">Hali operatsiyalar yo'q</p>
                     </td>

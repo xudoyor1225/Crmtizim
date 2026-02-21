@@ -42,12 +42,11 @@ def admin_cash_dashboard(request):
     user = request.user
     admin_account = _get_or_create_admin_account(user, org)
 
-    # Admin tranzaksiyalari
+    # Admin kassasidagi tranzaksiyalar (admin yaratgan + admin kassasiga tushgan)
     transactions = Transaction.objects.filter(
         account=admin_account,
         is_deleted=False,
-        created_by=user,
-    ).select_related('category', 'created_by', 'confirmed_by').order_by('-created_at')[:50]
+    ).select_related('category', 'student', 'created_by', 'confirmed_by').order_by('-created_at')[:50]
 
     # Statistika
     confirmed_txs = Transaction.objects.filter(
@@ -57,6 +56,19 @@ def admin_cash_dashboard(request):
     )
     total_income = confirmed_txs.filter(transaction_type='income').aggregate(t=Sum('amount'))['t'] or 0
     total_expense = confirmed_txs.filter(transaction_type='expense').aggregate(t=Sum('amount'))['t'] or 0
+
+    # Kutilayotgan o'quvchi to'lovlari (barcha pending student payments)
+    pending_qs = Transaction.objects.filter(
+        is_deleted=False,
+        status='pending',
+        transaction_type='income',
+        student__isnull=False,
+    )
+    if org:
+        pending_qs = pending_qs.filter(organization=org)
+    pending_student_payments = pending_qs.select_related(
+        'student', 'account', 'category', 'created_by'
+    ).order_by('-created_at')[:20]
 
     # Oxirgi topshirishlar
     submissions = CashSubmission.objects.filter(
@@ -71,6 +83,8 @@ def admin_cash_dashboard(request):
         'total_expense': total_expense,
         'balance': admin_account.balance,
         'submissions': submissions,
+        'pending_student_payments': pending_student_payments,
+        'pending_count': pending_student_payments.count(),
     }
     return render(request, 'finance/admin_cash/dashboard.html', context)
 
@@ -304,3 +318,116 @@ def reject_cash_submission(request, pk):
                     f"Rad etildi: {submission}", request=request)
     messages.warning(request, "Kassa topshirish rad etildi.")
     return redirect('finance:cash_submission_list')
+
+
+# ============================================
+# ADMIN - O'quvchi to'lovlarini boshqarish
+# ============================================
+
+@login_required
+@permission_required('admin_finance', 'view')
+def admin_student_payments(request):
+    """Admin uchun o'quvchi to'lovlari ro'yxati - tasdiqlash/rad etish."""
+    org = request.organization
+    status_filter = request.GET.get('status', 'pending')
+    search = request.GET.get('search', '')
+
+    payments = Transaction.objects.filter(
+        is_deleted=False,
+        transaction_type='income',
+        student__isnull=False,
+    )
+    if org:
+        payments = payments.filter(organization=org)
+    payments = payments.select_related('student', 'account', 'category', 'created_by', 'confirmed_by')
+
+    if status_filter:
+        payments = payments.filter(status=status_filter)
+    if search:
+        payments = payments.filter(
+            Q(student__first_name__icontains=search) |
+            Q(student__last_name__icontains=search) |
+            Q(student__phone__icontains=search)
+        )
+
+    payments = payments.order_by('-created_at')[:100]
+
+    # Statistika
+    pending_qs = Transaction.objects.filter(
+        is_deleted=False, status='pending',
+        transaction_type='income', student__isnull=False,
+    )
+    if org:
+        pending_qs = pending_qs.filter(organization=org)
+    pending_count = pending_qs.count()
+
+    context = {
+        'payments': payments,
+        'status_filter': status_filter,
+        'search': search,
+        'pending_count': pending_count,
+    }
+    return render(request, 'finance/admin_cash/student_payments.html', context)
+
+
+@login_required
+@permission_required('admin_finance', 'edit')
+@require_POST
+def admin_confirm_student_payment(request, pk):
+    """O'quvchi to'lovini tasdiqlash va admin kassasiga o'tkazish."""
+    from .services import confirm_transaction as confirm_service
+    org = request.organization
+    user = request.user
+
+    qs = Transaction.objects.filter(pk=pk)
+    if org:
+        qs = qs.filter(organization=org)
+    tx = get_object_or_404(qs)
+
+    if tx.status != 'pending':
+        messages.error(request, "Bu to'lov allaqachon ko'rib chiqilgan.")
+        return redirect('finance:admin_student_payments')
+
+    # To'lovni admin kassasiga bog'lash
+    admin_account = _get_or_create_admin_account(user, org)
+    tx.account = admin_account
+    tx.save(update_fields=['account'])
+
+    try:
+        confirm_service(tx.id, user)
+        messages.success(request,
+            f"✅ {tx.student.get_full_name()} to'lovi tasdiqlandi: {tx.amount:,.0f} UZS. "
+            f"Admin kassasiga tushdi.")
+    except Exception as e:
+        messages.error(request, str(e))
+
+    return redirect('finance:admin_student_payments')
+
+
+@login_required
+@permission_required('admin_finance', 'edit')
+@require_POST
+def admin_reject_student_payment(request, pk):
+    """O'quvchi to'lovini rad etish."""
+    org = request.organization
+
+    qs = Transaction.objects.filter(pk=pk)
+    if org:
+        qs = qs.filter(organization=org)
+    tx = get_object_or_404(qs)
+
+    if tx.status != 'pending':
+        messages.error(request, "Bu to'lov allaqachon ko'rib chiqilgan.")
+        return redirect('finance:admin_student_payments')
+
+    reason = request.POST.get('reason', '')
+    tx.status = 'rejected'
+    tx.receipt_notes = reason or "Admin tomonidan rad etildi"
+    tx.confirmed_by = request.user
+    tx.confirmed_at = timezone.now()
+    tx.save()
+
+    log_user_action(request.user, 'UPDATE', 'Transaction', tx.id,
+                    f"O'quvchi to'lovi rad etildi: {tx}", request=request)
+    messages.warning(request, f"{tx.student.get_full_name()} to'lovi rad etildi.")
+    return redirect('finance:admin_student_payments')

@@ -89,6 +89,11 @@ urlpatterns = [
     path('admin-cash/history/', admin_cash_views.admin_cash_history, name='admin_cash_history'),
     path('admin-cash/submit/', admin_cash_views.admin_submit_cash, name='admin_submit_cash'),
 
+    # Admin - O'quvchi to'lovlarini boshqarish
+    path('admin-cash/student-payments/', admin_cash_views.admin_student_payments, name='admin_student_payments'),
+    path('admin-cash/student-payments/<int:pk>/confirm/', admin_cash_views.admin_confirm_student_payment, name='admin_confirm_student_payment'),
+    path('admin-cash/student-payments/<int:pk>/reject/', admin_cash_views.admin_reject_student_payment, name='admin_reject_student_payment'),
+
     # Kassa Topshirishlar (Super Admin / Owner)
     path('cash-submissions/', admin_cash_views.cash_submission_list, name='cash_submission_list'),
     path('cash-submissions/<int:pk>/approve/', admin_cash_views.approve_cash_submission, name='approve_cash_submission'),
