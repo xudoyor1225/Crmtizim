@@ -109,7 +109,7 @@
                         <p class="text-sm font-semibold truncate text-white">{{ request.user.first_name }}</p>
                         <p class="text-xs truncate text-slate-400">{{ request.user.get_role_display }}</p>
                     </div>
-                    <a href="{% url 'logout' %}"
+                    <a href="{% url 'logout' %}" hx-boost="false"
                         class="transition p-2 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10">
                         <i class="ph-fill ph-sign-out text-xl"></i>
                     </a>
@@ -238,7 +238,7 @@
                                             class="flex-1 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition">
                                             Bekor qilish
                                         </button>
-                                        <a href="{% url 'logout' %}"
+                                        <a href="{% url 'logout' %}" hx-boost="false"
                                             class="flex-1 px-4 py-2.5 bg-gradient-to-r from-rose-500 to-red-600 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-rose-500/30 transition text-center">
                                             Ha, chiqish
                                         </a>
@@ -322,6 +322,16 @@
 
             document.body.addEventListener('htmx:beforeRequest', function() {
                 startProgress();
+
+                // Modal/overlay yopish - HTMX so'rov boshlanganda ochiq modallarni yopish
+                var modalIds = ['quickPaymentOverlay', 'addStudentModal', 'rejectModal', 'addModal', 'removeModal'];
+                modalIds.forEach(function(id) {
+                    var modal = document.getElementById(id);
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.style.display = '';
+                    }
+                });
             });
 
             document.body.addEventListener('htmx:afterRequest', function() {
