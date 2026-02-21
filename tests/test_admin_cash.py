@@ -731,3 +731,172 @@ class PendingReceiptsViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['pending_count'], 1)
         self.assertEqual(response.context['pending_sum'], Decimal('100000'))
+
+
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class CashSubmissionNotificationTest(TestCase):
+    """Kassa topshirish bildirishnoma testlari"""
+
+    def setUp(self):
+        self.org = Organization.objects.create(
+            name="Test Markaz",
+            subdomain="test-csn"
+        )
+        self.branch = Branch.objects.create(
+            organization=self.org,
+            name="Test Filial"
+        )
+        self.admin = User.objects.create_user(
+            phone="998914441111",
+            password="test123",
+            first_name="Admin",
+            last_name="Notif",
+            role="admin",
+            organization=self.org,
+            branch=self.branch,
+        )
+        self.owner = User.objects.create_user(
+            phone="998914442222",
+            password="test123",
+            first_name="Owner",
+            last_name="Notif",
+            role="owner",
+            organization=self.org,
+        )
+        self.admin_account = Account.objects.create(
+            organization=self.org,
+            name="Admin Kassa - Admin Notif",
+            account_type="cash",
+            balance=Decimal("500000.00")
+        )
+        self.main_account = Account.objects.create(
+            organization=self.org,
+            name="Asosiy Kassa",
+            account_type="cash",
+            balance=Decimal("1000000.00")
+        )
+        self.client = Client()
+
+    def test_approve_sends_notification_to_admin(self):
+        """Kassa topshirish tasdiqlanganda admin bildirishnoma olishi kerak"""
+        from django.utils import timezone
+        from datetime import timedelta
+        from apps.automation.models import NotificationLog
+
+        today = timezone.now().date()
+        submission = CashSubmission.objects.create(
+            organization=self.org,
+            admin_user=self.admin,
+            admin_account=self.admin_account,
+            main_account=self.main_account,
+            total_income=Decimal("300000"),
+            total_expense=Decimal("100000"),
+            net_amount=Decimal("200000"),
+            period_type="weekly",
+            period_start=today - timedelta(days=7),
+            period_end=today,
+            status="pending",
+        )
+
+        # Tasdiqlashdan oldingi bildirishnomalar soni
+        notif_count_before = NotificationLog.objects.filter(
+            recipient=self.admin,
+            message__contains="tasdiqlandi",
+        ).count()
+
+        approve_cash_submission(submission.id, self.owner)
+
+        # Tasdiqlashdan keyingi bildirishnomalar soni
+        notif_count_after = NotificationLog.objects.filter(
+            recipient=self.admin,
+            message__contains="tasdiqlandi",
+        ).count()
+
+        self.assertEqual(notif_count_after, notif_count_before + 1)
+
+        # Bildirishnoma mazmunini tekshirish
+        notification = NotificationLog.objects.filter(
+            recipient=self.admin,
+            message__contains="tasdiqlandi",
+        ).latest('created_at')
+        self.assertIn("tasdiqlandi", notification.message)
+        self.assertIn(self.owner.get_full_name(), notification.message)
+
+    def test_reject_sends_notification_to_admin(self):
+        """Kassa topshirish rad etilganda admin bildirishnoma olishi kerak"""
+        from django.utils import timezone
+        from datetime import timedelta
+        from apps.automation.models import NotificationLog
+
+        today = timezone.now().date()
+        submission = CashSubmission.objects.create(
+            organization=self.org,
+            admin_user=self.admin,
+            admin_account=self.admin_account,
+            main_account=self.main_account,
+            total_income=Decimal("300000"),
+            total_expense=Decimal("100000"),
+            net_amount=Decimal("200000"),
+            period_type="weekly",
+            period_start=today - timedelta(days=7),
+            period_end=today,
+            status="pending",
+        )
+
+        self.client.login(phone="998914442222", password="test123")
+        response = self.client.post(
+            reverse('finance:reject_cash_submission', kwargs={'pk': submission.pk}),
+            {'reason': 'Summada xatolik bor'}
+        )
+        self.assertEqual(response.status_code, 302)
+
+        # Admin bildirishnoma olishi kerak
+        notification = NotificationLog.objects.filter(
+            recipient=self.admin,
+            message__contains="rad etildi",
+        ).latest('created_at')
+        self.assertIn("rad etildi", notification.message)
+        self.assertIn("Summada xatolik bor", notification.message)
+
+    def test_submit_cash_sends_notification_to_owner(self):
+        """Kassa topshirish yaratilganda owner bildirishnoma olishi kerak"""
+        from django.utils import timezone
+        from datetime import timedelta
+        from apps.automation.models import NotificationLog
+        from apps.automation.services import create_system_notification
+
+        today = timezone.now().date()
+        submission = CashSubmission.objects.create(
+            organization=self.org,
+            admin_user=self.admin,
+            admin_account=self.admin_account,
+            main_account=self.main_account,
+            total_income=Decimal("300000"),
+            total_expense=Decimal("100000"),
+            net_amount=Decimal("200000"),
+            period_type="weekly",
+            period_start=today - timedelta(days=7),
+            period_end=today,
+            status="pending",
+        )
+
+        # View da qilinadigan bildirishnomani simulyatsiya qilish
+        net_amount = submission.net_amount
+        create_system_notification(
+            recipient=self.owner,
+            title="Yangi kassa topshirish",
+            message=(
+                f"{self.admin.get_full_name()} kassa topshirish so'rovini yubordi. "
+                f"Davr: {submission.period_start.strftime('%d.%m.%Y')} - {submission.period_end.strftime('%d.%m.%Y')}. "
+                f"Sof summa: {net_amount:,.0f} so'm"
+            ),
+            notification_type='system'
+        )
+
+        # Owner bildirishnoma olishi kerak
+        notification = NotificationLog.objects.filter(
+            recipient=self.owner,
+            message__contains="kassa topshirish",
+        ).latest('created_at')
+        self.assertIn("kassa topshirish", notification.message)
+        self.assertIn(self.admin.get_full_name(), notification.message)

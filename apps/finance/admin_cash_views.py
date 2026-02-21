@@ -245,6 +245,29 @@ def admin_submit_cash(request):
         )
 
         log_user_action(user, 'CREATE', 'CashSubmission', submission.id, str(submission), request=request)
+
+        # Super admin / owner larga bildirishnoma yuborish
+        from apps.automation.services import create_system_notification
+        admins = User.objects.filter(
+            role__in=['super_admin', 'owner'],
+            is_active=True,
+        )
+        if org:
+            admins = admins.filter(organization=org)
+        admins = admins.exclude(pk=user.pk)
+
+        for admin in admins[:10]:
+            create_system_notification(
+                recipient=admin,
+                title="Yangi kassa topshirish",
+                message=(
+                    f"{user.get_full_name()} kassa topshirish so'rovini yubordi. "
+                    f"Davr: {submission.period_start.strftime('%d.%m.%Y')} - {submission.period_end.strftime('%d.%m.%Y')}. "
+                    f"Sof summa: {net_amount:,.0f} so'm"
+                ),
+                notification_type='system'
+            )
+
         messages.success(request, f"Kassa topshirish so'rovi yuborildi. Sof summa: {net_amount:,.0f} UZS")
         return redirect('finance:admin_cash_dashboard')
 
@@ -330,6 +353,23 @@ def reject_cash_submission(request, pk):
 
     log_user_action(request.user, 'UPDATE', 'CashSubmission', submission.id,
                     f"Rad etildi: {submission}", request=request)
+
+    # Admin ga bildirishnoma yuborish
+    from apps.automation.services import create_system_notification
+    reason_text = rejection_reason or "Ko\u2018rsatilmagan"
+    create_system_notification(
+        recipient=submission.admin_user,
+        title="Kassa topshirish rad etildi ❌",
+        message=(
+            f"Sizning {submission.period_start.strftime('%d.%m.%Y')} - "
+            f"{submission.period_end.strftime('%d.%m.%Y')} oralig'idagi "
+            f"kassa topshirishingiz rad etildi. "
+            f"Sabab: {reason_text}. "
+            f"Rad etgan: {request.user.get_full_name()}"
+        ),
+        notification_type='system'
+    )
+
     messages.warning(request, "Kassa topshirish rad etildi.")
     return redirect('finance:cash_submission_list')
 

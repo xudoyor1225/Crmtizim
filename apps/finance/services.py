@@ -94,4 +94,23 @@ def approve_cash_submission(submission_id, user):
     submission.approved_at = timezone.now()
     submission.save()
 
+    # Admin ga bildirishnoma yuborish
+    try:
+        from apps.automation.services import create_system_notification
+        create_system_notification(
+            recipient=submission.admin_user,
+            title="Kassa topshirish tasdiqlandi ✅",
+            message=(
+                f"Sizning {submission.period_start.strftime('%d.%m.%Y')} - "
+                f"{submission.period_end.strftime('%d.%m.%Y')} oralig'idagi "
+                f"kassa topshirishingiz tasdiqlandi. "
+                f"Sof summa: {net_amount:,.0f} so'm. "
+                f"Tasdiqlagan: {user.get_full_name()}"
+            ),
+            notification_type='system'
+        )
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).error(f"Error sending approval notification: {e}")
+
     return submission
