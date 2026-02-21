@@ -13,6 +13,7 @@ from .forms import LeadForm, StageForm, LeadSourceForm, LeadConvertForm
 from .services import move_lead_to_stage
 from apps.users.models import User, ParentStudent
 from apps.core.audit import log_user_action
+from apps.core.permissions import permission_required
 
 
 # Async helper functions
@@ -54,6 +55,7 @@ def get_pipeline_data(org):
 # ===========================================
 
 @login_required
+@permission_required('crm', 'view')
 def pipeline_view(request):
     """
     CRM Dashboard - Voronka, Bosqichlar va Manbalar.
@@ -101,6 +103,7 @@ def pipeline_view(request):
 # ===========================================
 
 @login_required
+@permission_required('crm', 'create')
 def lead_create(request):
     """Yangi Lid qo'shish"""
     org = request.organization
@@ -136,6 +139,7 @@ def lead_create(request):
 
 
 @login_required
+@permission_required('crm', 'view')
 def lead_detail(request, pk):
     """Lid tafsilotlari"""
     org = request.organization
@@ -155,6 +159,7 @@ def lead_detail(request, pk):
 
 
 @login_required
+@permission_required('crm', 'edit')
 def lead_edit(request, pk):
     """Lidni tahrirlash"""
     org = request.organization
@@ -174,6 +179,7 @@ def lead_edit(request, pk):
 
 
 @login_required
+@permission_required('crm', 'delete')
 def lead_delete(request, pk):
     """Lidni o'chirish (soft delete)"""
     org = request.organization
@@ -189,6 +195,7 @@ def lead_delete(request, pk):
 
 
 @login_required
+@permission_required('crm', 'edit')
 def lead_convert(request, pk):
     """Lidni o'quvchiga aylantirish"""
     org = request.organization
@@ -272,6 +279,7 @@ def lead_convert(request, pk):
 
 @require_POST
 @login_required
+@permission_required('crm', 'edit')
 def update_lead_stage(request, lead_id):
     """API: JS orqali chaqiriladi (Drag & Drop bo'lganda)."""
     try:
@@ -291,6 +299,7 @@ def update_lead_stage(request, lead_id):
 
 
 @login_required
+@permission_required('crm', 'edit')
 def add_lead_activity(request, pk):
     """Lidga yangi activity qo'shish"""
     org = request.organization
@@ -317,6 +326,7 @@ def add_lead_activity(request, pk):
 # ===========================================
 
 @login_required
+@permission_required('crm', 'view')
 def stage_list(request):
     """Bosqichlar ro'yxati"""
     org = request.organization
@@ -328,6 +338,7 @@ def stage_list(request):
 
 
 @login_required
+@permission_required('crm', 'create')
 def stage_create(request):
     """Yangi bosqich yaratish"""
     org = request.organization
@@ -350,6 +361,7 @@ def stage_create(request):
 
 
 @login_required
+@permission_required('crm', 'edit')
 def stage_edit(request, pk):
     """Bosqichni tahrirlash"""
     org = request.user.organization
@@ -369,6 +381,7 @@ def stage_edit(request, pk):
 
 
 @login_required
+@permission_required('crm', 'delete')
 def stage_delete(request, pk):
     """Bosqichni o'chirish"""
     org = request.user.organization
@@ -393,6 +406,7 @@ def stage_delete(request, pk):
 # ===========================================
 
 @login_required
+@permission_required('crm', 'view')
 def source_list(request):
     """Lid manbalari ro'yxati"""
     org = request.user.organization
@@ -404,6 +418,7 @@ def source_list(request):
 
 
 @login_required
+@permission_required('crm', 'create')
 def source_create(request):
     """Yangi manba yaratish"""
     org = request.user.organization
@@ -424,6 +439,7 @@ def source_create(request):
 
 
 @login_required
+@permission_required('crm', 'edit')
 def source_edit(request, pk):
     """Manbani tahrirlash"""
     org = request.user.organization
@@ -443,6 +459,7 @@ def source_edit(request, pk):
 
 
 @login_required
+@permission_required('crm', 'delete')
 def source_delete(request, pk):
     """Manbani o'chirish"""
     org = request.user.organization

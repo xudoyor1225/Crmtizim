@@ -13,6 +13,7 @@ from .models import Lesson, Attendance
 from apps.education.models import Group, GroupStudent
 from apps.users.models import User
 from apps.core.audit import log_user_action
+from apps.core.permissions import permission_required, check_permission
 
 
 # Shablon izohlar - davomat olishda tez tanlash uchun
@@ -84,6 +85,7 @@ def get_groups_for_filter(user, org):
 # ===========================================
 
 @login_required
+@permission_required('operations', 'view')
 def lesson_list(request):
     """Darslar va Jadval - birlashtirilgan dashboard"""
     org = request.user.organization
@@ -220,6 +222,7 @@ def lesson_list(request):
 
 
 @login_required
+@permission_required('operations', 'create')
 def lesson_add(request):
     """Yangi dars qo'shish"""
     org = request.user.organization
@@ -283,6 +286,7 @@ def lesson_add(request):
 
 
 @login_required
+@permission_required('operations', 'view')
 def lesson_detail(request, pk):
     """Dars tafsilotlari"""
     org = request.user.organization
@@ -337,6 +341,7 @@ def lesson_detail(request, pk):
 
 
 @login_required
+@permission_required('operations', 'edit')
 def start_lesson(request, pk):
     """Darsni boshlash"""
     org = request.user.organization
@@ -360,6 +365,7 @@ def start_lesson(request, pk):
 
 
 @login_required
+@permission_required('operations', 'edit')
 def finish_lesson(request, pk):
     """Darsni yakunlash"""
     org = request.user.organization
@@ -383,6 +389,7 @@ def finish_lesson(request, pk):
 
 
 @login_required
+@permission_required('operations', 'edit')
 def lesson_edit(request, pk):
     """Darsni tahrirlash"""
     org = request.user.organization
@@ -446,6 +453,7 @@ def lesson_edit(request, pk):
 
 
 @login_required
+@permission_required('operations', 'delete')
 def lesson_delete(request, pk):
     """Darsni o'chirish (soft delete)"""
     org = request.user.organization
@@ -474,6 +482,7 @@ def lesson_delete(request, pk):
 # ===========================================
 
 @login_required
+@permission_required('operations', 'edit')
 def take_attendance(request, pk):
     """Davomat olish sahifasi"""
     org = request.user.organization
@@ -562,6 +571,7 @@ def take_attendance(request, pk):
 # ===========================================
 
 @login_required
+@permission_required('operations', 'view')
 def schedule_view(request):
     """Haftalik jadval - lesson_list ga redirect"""
     return redirect('operations:lesson_list')
@@ -572,6 +582,7 @@ def schedule_view(request):
 # ===========================================
 
 @login_required
+@permission_required('operations', 'view')
 def teacher_ratings(request):
     """O'qituvchilar reytingi va haftalik baho qo'yish"""
     org = request.user.organization
