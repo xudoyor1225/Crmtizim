@@ -261,15 +261,28 @@ def admin_submit_cash(request):
 # ============================================
 
 @login_required
-@permission_required('finance', 'view')
 def cash_submission_list(request):
-    """Kassa topshirishlar ro'yxati (super admin / owner)."""
+    """Kassa topshirishlar ro'yxati (super admin / owner / admin)."""
+    user = request.user
+    # finance yoki admin_finance ruxsati bo'lishi kerak
+    if not (check_permission(user, 'finance', 'view') or check_permission(user, 'admin_finance', 'view')):
+        messages.error(request, "⛔ Sizda bu amalni bajarish huquqi yo'q!")
+        referer = request.META.get('HTTP_REFERER')
+        if referer:
+            return redirect(referer)
+        return redirect('dashboard')
+
     org = request.organization
     status_filter = request.GET.get('status', '')
 
     submissions = CashSubmission.objects.filter(is_deleted=False)
     if org:
         submissions = submissions.filter(organization=org)
+
+    # Admin faqat o'z topshirishlarini ko'radi
+    if user.role == 'admin' and not check_permission(user, 'finance', 'view'):
+        submissions = submissions.filter(admin_user=user)
+
     if status_filter:
         submissions = submissions.filter(status=status_filter)
 
@@ -431,3 +444,93 @@ def admin_reject_student_payment(request, pk):
                     f"O'quvchi to'lovi rad etildi: {tx}", request=request)
     messages.warning(request, f"{tx.student.get_full_name()} to'lovi rad etildi.")
     return redirect('finance:admin_student_payments')
+
+
+# ============================================
+# ADMIN - O'quvchi kurs to'lovini qo'shish
+# ============================================
+
+@login_required
+@permission_required('admin_finance', 'create')
+def admin_add_course_payment(request):
+    """Admin o'quvchi uchun kurs to'lovini qo'shish (admin kassasiga tushadi)."""
+    org = request.organization
+    user = request.user
+    admin_account = _get_or_create_admin_account(user, org)
+
+    # O'quvchilar ro'yxati
+    students = User.objects.filter(role='student', is_active=True)
+    if org:
+        students = students.filter(organization=org)
+
+    # Kategoriyalar
+    categories = TransactionCategory.objects.filter(
+        transaction_type='income', is_deleted=False
+    )
+    if org:
+        categories = categories.filter(organization=org)
+
+    if request.method == 'POST':
+        student_id = request.POST.get('student')
+        amount = request.POST.get('amount')
+        category_id = request.POST.get('category')
+        payment_method = request.POST.get('payment_method', 'cash')
+        description = request.POST.get('description', '')
+
+        # Validatsiya
+        if not student_id or not amount:
+            messages.error(request, "O'quvchi va summa maydonlarini to'ldiring!")
+            return render(request, 'finance/admin_cash/course_payment_form.html', {
+                'students': students, 'categories': categories,
+                'admin_account': admin_account,
+            })
+
+        try:
+            amount_decimal = Decimal(amount.replace(',', '').replace(' ', ''))
+            if amount_decimal <= 0:
+                raise ValueError()
+        except (ValueError, ArithmeticError):
+            messages.error(request, "Noto'g'ri summa formati!")
+            return render(request, 'finance/admin_cash/course_payment_form.html', {
+                'students': students, 'categories': categories,
+                'admin_account': admin_account,
+            })
+
+        student = get_object_or_404(User, pk=student_id, role='student')
+        category = None
+        if category_id:
+            category = TransactionCategory.objects.filter(pk=category_id).first()
+
+        # Tranzaksiya yaratish - admin kassasiga tushadi
+        tx = Transaction.objects.create(
+            organization=org,
+            account=admin_account,
+            category=category,
+            student=student,
+            amount=amount_decimal,
+            transaction_type='income',
+            payment_method=payment_method,
+            description=description or f"Kurs to'lovi: {student.get_full_name()}",
+            status='pending',
+            created_by=user,
+        )
+
+        # Admin o'zi yaratgani uchun avtomatik tasdiqlash
+        try:
+            confirm_service(tx.id, user)
+            messages.success(request,
+                f"✅ {student.get_full_name()} uchun {amount_decimal:,.0f} UZS kurs to'lovi qabul qilindi. "
+                f"Admin kassasiga tushdi.")
+        except Exception as e:
+            messages.error(request, str(e))
+
+        log_user_action(user, 'CREATE', 'Transaction', tx.id,
+                        f"Kurs to'lovi: {student.get_full_name()} - {amount_decimal:,.0f}", request=request)
+        return redirect('finance:admin_cash_dashboard')
+
+    context = {
+        'students': students,
+        'categories': categories,
+        'admin_account': admin_account,
+    }
+    return render(request, 'finance/admin_cash/course_payment_form.html', context)

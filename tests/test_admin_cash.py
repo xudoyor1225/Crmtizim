@@ -543,3 +543,191 @@ class ConfirmTransactionServiceTest(TestCase):
 
         with self.assertRaises(ValidationError):
             confirm_transaction(tx.id, self.admin)
+
+
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class AdminCoursePaymentTest(TestCase):
+    """Admin kurs to'lovi qo'shish testlari"""
+
+    def setUp(self):
+        self.org = Organization.objects.create(
+            name="Test Markaz",
+            subdomain="test-acp"
+        )
+        self.branch = Branch.objects.create(
+            organization=self.org,
+            name="Test Filial"
+        )
+        self.admin = User.objects.create_user(
+            phone="998911111111",
+            password="test123",
+            first_name="Admin",
+            last_name="ACP",
+            role="admin",
+            organization=self.org,
+            branch=self.branch,
+        )
+        self.student = User.objects.create_user(
+            phone="998911112222",
+            password="test123",
+            first_name="Student",
+            last_name="ACP",
+            role="student",
+            organization=self.org,
+            branch=self.branch,
+        )
+        self.category = TransactionCategory.objects.create(
+            organization=self.org,
+            name="Kurs to'lovi",
+            transaction_type="income"
+        )
+        self.client = Client()
+
+    def test_admin_can_view_course_payment_form(self):
+        """Admin kurs to'lovi formasini ko'ra olishi"""
+        self.client.login(phone="998911111111", password="test123")
+        response = self.client.get(reverse('finance:admin_add_course_payment'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_admin_can_add_course_payment(self):
+        """Admin kurs to'lovini qo'sha olishi va admin kassasiga tushishi"""
+        self.client.login(phone="998911111111", password="test123")
+        initial_student_balance = self.student.balance
+
+        response = self.client.post(reverse('finance:admin_add_course_payment'), {
+            'student': self.student.pk,
+            'amount': '300000',
+            'category': self.category.pk,
+            'payment_method': 'cash',
+            'description': 'Fevral oyi kurs to\'lovi',
+        })
+        self.assertEqual(response.status_code, 302)
+
+        # Tranzaksiya yaratilgan va tasdiqlangan bo'lishi kerak
+        tx = Transaction.objects.filter(
+            student=self.student,
+            created_by=self.admin,
+            amount=Decimal('300000'),
+        ).first()
+        self.assertIsNotNone(tx)
+        self.assertEqual(tx.status, 'confirmed')
+        self.assertIn("Admin Kassa", tx.account.name)
+
+        # O'quvchi balansi yangilangan
+        self.student.refresh_from_db()
+        self.assertEqual(
+            self.student.balance,
+            initial_student_balance + Decimal('300000')
+        )
+
+    def test_student_cannot_access_course_payment(self):
+        """O'quvchi kurs to'lovi formasiga kira olmasligi"""
+        self.client.login(phone="998911112222", password="test123")
+        response = self.client.get(reverse('finance:admin_add_course_payment'))
+        self.assertIn(response.status_code, [302, 403])
+
+
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class CashSubmissionPermissionTest(TestCase):
+    """Kassa topshirishlar sahifasi ruxsat testlari"""
+
+    def setUp(self):
+        self.org = Organization.objects.create(
+            name="Test Markaz",
+            subdomain="test-csp"
+        )
+        self.branch = Branch.objects.create(
+            organization=self.org,
+            name="Test Filial"
+        )
+        self.admin_with_perms = User.objects.create_user(
+            phone="998912221111",
+            password="test123",
+            first_name="Admin",
+            last_name="WP",
+            role="admin",
+            organization=self.org,
+            branch=self.branch,
+            permissions={
+                "admin_finance": {"view": True, "create": True, "edit": True},
+            },
+        )
+        self.owner = User.objects.create_user(
+            phone="998912222222",
+            password="test123",
+            first_name="Owner",
+            last_name="CSP",
+            role="owner",
+            organization=self.org,
+        )
+        self.client = Client()
+
+    def test_admin_with_admin_finance_can_view_submissions(self):
+        """admin_finance ruxsati bilan admin topshirishlarni ko'ra olishi"""
+        self.client.login(phone="998912221111", password="test123")
+        response = self.client.get(reverse('finance:cash_submission_list'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_owner_can_view_submissions(self):
+        """Owner topshirishlarni ko'ra olishi"""
+        self.client.login(phone="998912222222", password="test123")
+        response = self.client.get(reverse('finance:cash_submission_list'))
+        self.assertEqual(response.status_code, 200)
+
+
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class PendingReceiptsViewTest(TestCase):
+    """Pending receipts (chek tekshirish) view testlari"""
+
+    def setUp(self):
+        self.org = Organization.objects.create(
+            name="Test Markaz",
+            subdomain="test-prv"
+        )
+        self.branch = Branch.objects.create(
+            organization=self.org,
+            name="Test Filial"
+        )
+        self.owner = User.objects.create_user(
+            phone="998913331111",
+            password="test123",
+            first_name="Owner",
+            last_name="PRV",
+            role="owner",
+            organization=self.org,
+        )
+        self.student = User.objects.create_user(
+            phone="998913332222",
+            password="test123",
+            first_name="Student",
+            last_name="PRV",
+            role="student",
+            organization=self.org,
+            branch=self.branch,
+        )
+        self.account = Account.objects.create(
+            organization=self.org,
+            name="Test Kassa",
+            account_type="cash",
+            balance=Decimal("0.00")
+        )
+        self.client = Client()
+
+    def test_pending_receipts_has_count_and_sum(self):
+        """pending_receipts kontekstda pending_count va pending_sum bo'lishi"""
+        # Pending tranzaksiya yaratish
+        Transaction.objects.create(
+            organization=self.org,
+            account=self.account,
+            student=self.student,
+            amount=Decimal("100000"),
+            transaction_type="income",
+            status="pending",
+            receipt_verified=False,
+            created_by=self.student,
+        )
+        self.client.login(phone="998913331111", password="test123")
+        response = self.client.get(reverse('finance:pending_receipts'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['pending_count'], 1)
+        self.assertEqual(response.context['pending_sum'], Decimal('100000'))

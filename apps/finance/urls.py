@@ -93,6 +93,7 @@ urlpatterns = [
     path('admin-cash/student-payments/', admin_cash_views.admin_student_payments, name='admin_student_payments'),
     path('admin-cash/student-payments/<int:pk>/confirm/', admin_cash_views.admin_confirm_student_payment, name='admin_confirm_student_payment'),
     path('admin-cash/student-payments/<int:pk>/reject/', admin_cash_views.admin_reject_student_payment, name='admin_reject_student_payment'),
+    path('admin-cash/course-payment/', admin_cash_views.admin_add_course_payment, name='admin_add_course_payment'),
 
     # Kassa Topshirishlar (Super Admin / Owner)
     path('cash-submissions/', admin_cash_views.cash_submission_list, name='cash_submission_list'),
