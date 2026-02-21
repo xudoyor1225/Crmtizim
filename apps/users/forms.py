@@ -216,6 +216,7 @@ AVAILABLE_MODULES = [
     ('users', 'Foydalanuvchilar', 'ph-users'),
     ('education', 'Ta\'lim (Guruhlar, Kurslar)', 'ph-graduation-cap'),
     ('finance', 'Moliya (To\'lovlar, Xarajatlar)', 'ph-money'),
+    ('admin_finance', 'Kassa Kirim-Chiqim', 'ph-cash-register'),
     ('crm', 'CRM (Lidlar, Voronka)', 'ph-funnel'),
     ('operations', 'Operatsiyalar (Darslar, Davomat)', 'ph-calendar'),
     ('reports', 'Hisobotlar', 'ph-chart-bar'),
@@ -238,6 +239,9 @@ MODULE_EXTRA_ACTIONS = {
     'finance': [
         ('view_salary', "Oylik ko'rish"),
         ('export_excel', 'Excel eksport'),
+    ],
+    'admin_finance': [
+        ('submit_cash', 'Kassa topshirish'),
     ],
     'crm': [
         ('export_excel', 'Excel eksport'),

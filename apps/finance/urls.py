@@ -4,6 +4,7 @@ from . import payroll_views
 from . import inventory_views
 from . import export_views
 from . import student_payment_views
+from . import admin_cash_views
 
 app_name = 'finance'
 
@@ -80,4 +81,16 @@ urlpatterns = [
     path('receipts/pending/', views.pending_receipts, name='pending_receipts'),
     path('receipts/<int:pk>/verify/', views.verify_receipt, name='verify_receipt'),
     path('receipts/<int:pk>/reject/', views.reject_receipt, name='reject_receipt'),
+
+    # Admin Kassa (Administrator kirim-chiqim)
+    path('admin-cash/', admin_cash_views.admin_cash_dashboard, name='admin_cash_dashboard'),
+    path('admin-cash/income/', admin_cash_views.admin_add_income, name='admin_add_income'),
+    path('admin-cash/expense/', admin_cash_views.admin_add_expense, name='admin_add_expense'),
+    path('admin-cash/history/', admin_cash_views.admin_cash_history, name='admin_cash_history'),
+    path('admin-cash/submit/', admin_cash_views.admin_submit_cash, name='admin_submit_cash'),
+
+    # Kassa Topshirishlar (Super Admin / Owner)
+    path('cash-submissions/', admin_cash_views.cash_submission_list, name='cash_submission_list'),
+    path('cash-submissions/<int:pk>/approve/', admin_cash_views.approve_cash_submission, name='approve_cash_submission'),
+    path('cash-submissions/<int:pk>/reject/', admin_cash_views.reject_cash_submission, name='reject_cash_submission'),
 ]
