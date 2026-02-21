@@ -111,6 +111,7 @@ def submit_payment(request):
     student_id = request.POST.get('student_id')
     amount = request.POST.get('amount')
     payment_method = request.POST.get('payment_method', 'transfer')
+    payment_month = request.POST.get('payment_month', '')
     description = request.POST.get('description', '')
     receipt_image = request.FILES.get('receipt_image')
 
@@ -166,6 +167,18 @@ def submit_payment(request):
     if not account:
         messages.error(request, "Kassa topilmadi! Admin bilan bog'laning.")
         return redirect('finance:student_payment_page')
+
+    # Oylik nomi
+    month_names = {
+        '1': 'Yanvar', '2': 'Fevral', '3': 'Mart', '4': 'Aprel',
+        '5': 'May', '6': 'Iyun', '7': 'Iyul', '8': 'Avgust',
+        '9': 'Sentabr', '10': 'Oktabr', '11': 'Noyabr', '12': 'Dekabr',
+    }
+    month_name = month_names.get(payment_month, '')
+    if month_name and not description:
+        description = f"{month_name} oyi uchun kurs to'lovi"
+    elif month_name:
+        description = f"{month_name} oyi: {description}"
 
     # Tranzaksiya yaratish
     transaction = Transaction.objects.create(

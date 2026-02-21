@@ -195,12 +195,25 @@
             <div class="p-3 {% if detail_user.balance < 0 %}bg-red-100{% else %}bg-green-100{% endif %} rounded-lg">
                 <i class="ph ph-money text-xl {% if detail_user.balance < 0 %}text-red-600{% else %}text-green-600{% endif %}"></i>
             </div>
-            <div>
+            <div class="flex-1">
                 <p class="text-sm {% if detail_user.balance < 0 %}text-red-500{% else %}text-green-500{% endif %}">Hisob balansi</p>
                 <p class="text-2xl font-bold {% if detail_user.balance < 0 %}text-red-600{% else %}text-green-600{% endif %}">
                     {{ detail_user.balance|floatformat:0 }} so'm
                 </p>
             </div>
+            {% has_permission 'finance' 'create' as can_pay %}
+            {% if can_pay %}
+            <div class="flex gap-2">
+                <a href="{% url 'finance:student_payment' detail_user.id %}"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition">
+                    <i class="ph ph-money"></i> To'lov qabul qilish
+                </a>
+                <a href="{% url 'finance:student_payments' detail_user.id %}"
+                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition">
+                    <i class="ph ph-receipt"></i> To'lovlar tarixi
+                </a>
+            </div>
+            {% endif %}
         </div>
     </div>
     {% endif %}

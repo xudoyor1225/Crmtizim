@@ -98,16 +98,42 @@ def attendance_notification(sender, instance, created, **kwargs):
 def payment_notification(sender, instance, created, **kwargs):
     """
     To'lov tasdiqlanganda o'quvchi va ota-onaga xabar yuborish.
+    Kirim/chiqim qo'shilganda administratorlarga xabar yuborish.
     """
-    # Faqat tasdiqlangan kirim
-    if instance.transaction_type != 'income' or instance.status != 'confirmed':
-        return
-
-    if not instance.student:
-        return
-
     try:
         from apps.automation.services import send_template_notification, create_system_notification
+        from apps.users.models import User
+
+        # Yangi tranzaksiya yaratilganda administratorlarga bildirishnoma
+        if created and instance.transaction_type in ('income', 'expense'):
+            org = instance.organization
+            admins = User.objects.filter(
+                role__in=['super_admin', 'admin', 'owner'],
+                is_active=True,
+            )
+            if org:
+                admins = admins.filter(organization=org)
+            # Yaratgan odamning o'ziga xabar yubormaslik
+            admins = admins.exclude(pk=instance.created_by_id)
+
+            type_display = 'Kirim' if instance.transaction_type == 'income' else 'Chiqim'
+            amount_formatted = f"{instance.amount:,.0f}"
+            creator_name = instance.created_by.get_full_name() if instance.created_by else 'Noma\'lum'
+
+            for admin in admins[:10]:
+                create_system_notification(
+                    recipient=admin,
+                    title=f"Yangi {type_display}",
+                    message=f"{creator_name} tomonidan {amount_formatted} so'm {type_display.lower()} qo'shildi.",
+                    notification_type='system'
+                )
+
+        # Faqat tasdiqlangan kirim
+        if instance.transaction_type != 'income' or instance.status != 'confirmed':
+            return
+
+        if not instance.student:
+            return
 
         student = instance.student
         amount_formatted = f"{instance.amount:,.0f}"

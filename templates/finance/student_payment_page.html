@@ -80,6 +80,25 @@
                 <input type="hidden" name="student_id" value="{{ student.id }}">
 
                 <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-2">To'lov oyi *</label>
+                    <select name="payment_month" required
+                        class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/30">
+                        <option value="1">Yanvar</option>
+                        <option value="2">Fevral</option>
+                        <option value="3">Mart</option>
+                        <option value="4">Aprel</option>
+                        <option value="5">May</option>
+                        <option value="6">Iyun</option>
+                        <option value="7">Iyul</option>
+                        <option value="8">Avgust</option>
+                        <option value="9">Sentabr</option>
+                        <option value="10">Oktabr</option>
+                        <option value="11">Noyabr</option>
+                        <option value="12">Dekabr</option>
+                    </select>
+                </div>
+
+                <div>
                     <label class="block text-sm font-medium text-slate-600 mb-2">To'lov summasi *</label>
                     <div class="relative">
                         <input type="text" name="amount" required
@@ -177,4 +196,11 @@
         </div>
     </div>
 </div>
+<script>
+    // Joriy oyni default tanlash
+    (function() {
+        var sel = document.querySelector('select[name="payment_month"]');
+        if (sel) { sel.value = new Date().getMonth() + 1; }
+    })();
+</script>
 {% endblock %}
