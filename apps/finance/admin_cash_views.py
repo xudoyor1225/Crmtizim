@@ -356,6 +356,7 @@ def reject_cash_submission(request, pk):
 
     # Admin ga bildirishnoma yuborish
     from apps.automation.services import create_system_notification
+    reason_text = rejection_reason or "Ko\u2018rsatilmagan"
     create_system_notification(
         recipient=submission.admin_user,
         title="Kassa topshirish rad etildi ❌",
@@ -363,7 +364,7 @@ def reject_cash_submission(request, pk):
             f"Sizning {submission.period_start.strftime('%d.%m.%Y')} - "
             f"{submission.period_end.strftime('%d.%m.%Y')} oralig'idagi "
             f"kassa topshirishingiz rad etildi. "
-            f"Sabab: {rejection_reason or 'Korsatilmagan'}. "
+            f"Sabab: {reason_text}. "
             f"Rad etgan: {request.user.get_full_name()}"
         ),
         notification_type='system'

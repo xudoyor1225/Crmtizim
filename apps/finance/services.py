@@ -109,7 +109,8 @@ def approve_cash_submission(submission_id, user):
             ),
             notification_type='system'
         )
-    except Exception:
-        pass  # Bildirishnoma xatosi asosiy jarayonni to'xtatmasligi kerak
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).error(f"Error sending approval notification: {e}")
 
     return submission
