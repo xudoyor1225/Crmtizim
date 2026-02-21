@@ -2,12 +2,12 @@
 Admin Kassa (Kirim-Chiqim) va Kassa Topshirish testlari.
 CashSubmission modeli, permission va view testlari.
 """
-from django.test import TestCase, Client
+from django.test import TestCase, Client, override_settings
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from decimal import Decimal
 from apps.finance.models import Account, Transaction, TransactionCategory, CashSubmission
-from apps.finance.services import approve_cash_submission
+from apps.finance.services import approve_cash_submission, confirm_transaction
 from apps.users.models import User
 from apps.organizations.models import Organization, Branch
 from apps.core.permissions import check_permission
@@ -305,3 +305,241 @@ class AdminCashViewTest(TestCase):
         })
         # Should redirect (permission denied redirects to dashboard)
         self.assertIn(response.status_code, [302, 403])
+
+
+@override_settings(STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage')
+class AdminStudentPaymentTest(TestCase):
+    """Admin o'quvchi to'lovlarini tasdiqlash/rad etish testlari"""
+
+    def setUp(self):
+        self.org = Organization.objects.create(
+            name="Test Markaz",
+            subdomain="test-asp"
+        )
+        self.branch = Branch.objects.create(
+            organization=self.org,
+            name="Test Filial"
+        )
+        self.admin = User.objects.create_user(
+            phone="998908881111",
+            password="test123",
+            first_name="Admin",
+            last_name="SP",
+            role="admin",
+            organization=self.org,
+            branch=self.branch,
+        )
+        self.student = User.objects.create_user(
+            phone="998908882222",
+            password="test123",
+            first_name="Student",
+            last_name="SP",
+            role="student",
+            organization=self.org,
+            branch=self.branch,
+        )
+        self.account = Account.objects.create(
+            organization=self.org,
+            name="Online Kassa",
+            account_type="wallet",
+            balance=Decimal("0.00")
+        )
+        self.category = TransactionCategory.objects.create(
+            organization=self.org,
+            name="Kurs to'lovi",
+            transaction_type="income"
+        )
+        self.client = Client()
+
+    def test_admin_can_view_student_payments(self):
+        """Admin o'quvchi to'lovlari sahifasini ko'ra olishi"""
+        self.client.login(phone="998908881111", password="test123")
+        response = self.client.get(reverse('finance:admin_student_payments'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_pending_student_payments_on_dashboard(self):
+        """Dashboard'da pending o'quvchi to'lovlari ko'rinishi"""
+        # O'quvchi to'lovini yaratish
+        Transaction.objects.create(
+            organization=self.org,
+            account=self.account,
+            category=self.category,
+            student=self.student,
+            amount=Decimal("500000"),
+            transaction_type="income",
+            status="pending",
+            created_by=self.student,
+        )
+        self.client.login(phone="998908881111", password="test123")
+        response = self.client.get(reverse('finance:admin_cash_dashboard'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['pending_count'], 1)
+        self.assertEqual(len(response.context['pending_student_payments']), 1)
+
+    def test_admin_confirm_student_payment(self):
+        """Admin o'quvchi to'lovini tasdiqlashi va admin kassasiga tushishi"""
+        tx = Transaction.objects.create(
+            organization=self.org,
+            account=self.account,
+            category=self.category,
+            student=self.student,
+            amount=Decimal("500000"),
+            transaction_type="income",
+            status="pending",
+            created_by=self.student,
+        )
+        self.client.login(phone="998908881111", password="test123")
+
+        initial_student_balance = self.student.balance
+
+        response = self.client.post(
+            reverse('finance:admin_confirm_student_payment', kwargs={'pk': tx.pk})
+        )
+        self.assertEqual(response.status_code, 302)
+
+        # Tranzaksiya tasdiqlangan bo'lishi kerak
+        tx.refresh_from_db()
+        self.assertEqual(tx.status, 'confirmed')
+        self.assertEqual(tx.confirmed_by, self.admin)
+        self.assertTrue(tx.receipt_verified)
+
+        # Admin kassasiga bog'langan bo'lishi kerak
+        self.assertIn("Admin Kassa", tx.account.name)
+
+        # O'quvchi balansi yangilangan bo'lishi kerak
+        self.student.refresh_from_db()
+        self.assertEqual(
+            self.student.balance,
+            initial_student_balance + Decimal("500000")
+        )
+
+        # Admin kassa balansi yangilangan bo'lishi kerak
+        tx.account.refresh_from_db()
+        self.assertEqual(tx.account.balance, Decimal("500000"))
+
+    def test_admin_reject_student_payment(self):
+        """Admin o'quvchi to'lovini rad etishi"""
+        tx = Transaction.objects.create(
+            organization=self.org,
+            account=self.account,
+            category=self.category,
+            student=self.student,
+            amount=Decimal("500000"),
+            transaction_type="income",
+            status="pending",
+            created_by=self.student,
+        )
+        self.client.login(phone="998908881111", password="test123")
+        response = self.client.post(
+            reverse('finance:admin_reject_student_payment', kwargs={'pk': tx.pk}),
+            {'reason': 'Chek noto\'g\'ri'}
+        )
+        self.assertEqual(response.status_code, 302)
+
+        tx.refresh_from_db()
+        self.assertEqual(tx.status, 'rejected')
+        self.assertIn("noto'g'ri", tx.receipt_notes)
+
+    def test_confirm_already_confirmed_payment(self):
+        """Allaqachon tasdiqlangan to'lovni qayta tasdiqlash xato berishi"""
+        tx = Transaction.objects.create(
+            organization=self.org,
+            account=self.account,
+            category=self.category,
+            student=self.student,
+            amount=Decimal("500000"),
+            transaction_type="income",
+            status="confirmed",
+            created_by=self.student,
+            confirmed_by=self.admin,
+        )
+        self.client.login(phone="998908881111", password="test123")
+        response = self.client.post(
+            reverse('finance:admin_confirm_student_payment', kwargs={'pk': tx.pk})
+        )
+        self.assertEqual(response.status_code, 302)
+
+
+class ConfirmTransactionServiceTest(TestCase):
+    """confirm_transaction service - signal bilan to'g'ri ishlashi testlari"""
+
+    def setUp(self):
+        self.org = Organization.objects.create(
+            name="Test Markaz",
+            subdomain="test-cts"
+        )
+        self.branch = Branch.objects.create(
+            organization=self.org,
+            name="Test Filial"
+        )
+        self.admin = User.objects.create_user(
+            phone="998909991111",
+            password="test123",
+            first_name="Admin",
+            last_name="CTS",
+            role="admin",
+            organization=self.org,
+            branch=self.branch,
+        )
+        self.student = User.objects.create_user(
+            phone="998909992222",
+            password="test123",
+            first_name="Student",
+            last_name="CTS",
+            role="student",
+            organization=self.org,
+            branch=self.branch,
+        )
+        self.account = Account.objects.create(
+            organization=self.org,
+            name="Test Kassa",
+            account_type="cash",
+            balance=Decimal("1000000.00")
+        )
+
+    def test_confirm_income_updates_balance_once(self):
+        """Kirim tasdiqlanganda balans faqat BIR marta yangilanishi (signal orqali)"""
+        tx = Transaction.objects.create(
+            organization=self.org,
+            account=self.account,
+            student=self.student,
+            amount=Decimal("200000"),
+            transaction_type="income",
+            status="pending",
+            created_by=self.admin,
+        )
+
+        initial_balance = self.account.balance
+        initial_student_balance = self.student.balance
+
+        result = confirm_transaction(tx.id, self.admin)
+
+        self.account.refresh_from_db()
+        self.student.refresh_from_db()
+
+        # Balans faqat 1 marta oshgan bo'lishi kerak (200000)
+        self.assertEqual(
+            self.account.balance,
+            initial_balance + Decimal("200000")
+        )
+        self.assertEqual(
+            self.student.balance,
+            initial_student_balance + Decimal("200000")
+        )
+
+    def test_confirm_expense_checks_balance(self):
+        """Chiqim uchun yetarli mablag' tekshirishi"""
+        self.account.balance = Decimal("100")
+        self.account.save()
+
+        tx = Transaction.objects.create(
+            organization=self.org,
+            account=self.account,
+            amount=Decimal("500000"),
+            transaction_type="expense",
+            status="pending",
+            created_by=self.admin,
+        )
+
+        with self.assertRaises(ValidationError):
+            confirm_transaction(tx.id, self.admin)
