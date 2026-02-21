@@ -79,3 +79,30 @@ class StudentPaymentForm(forms.ModelForm):
         self.fields['receipt_image'].required = False
         self.fields['receipt_file'].required = False
         self.fields['description'].required = False
+
+
+class AdminCashTransactionForm(forms.ModelForm):
+    """Admin kassa kirim-chiqim formasi (faqat kategoriya, summa, izoh)."""
+    class Meta:
+        model = Transaction
+        fields = ['category', 'amount', 'description']
+        widgets = {
+            'category': forms.Select(attrs={'class': INPUT_CLASSES}),
+            'amount': forms.NumberInput(attrs={'class': INPUT_CLASSES, 'placeholder': 'Summa', 'min': '0'}),
+            'description': forms.Textarea(attrs={'class': INPUT_CLASSES, 'rows': 3, 'placeholder': 'Izoh...'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        organization = kwargs.pop('organization', None)
+        transaction_type = kwargs.pop('transaction_type', None)
+        super().__init__(*args, **kwargs)
+
+        if organization and transaction_type:
+            self.fields['category'].queryset = TransactionCategory.objects.filter(
+                organization=organization,
+                transaction_type=transaction_type,
+                is_deleted=False
+            )
+
+        if not self.fields['category'].queryset.exists():
+            self.fields['category'].help_text = "Diqqat: Hozircha kategoriya yo'q. Avval kategoriya qo'shing."

@@ -139,3 +139,73 @@ class Transaction(TenantAwareModel):
         ordering = ['-created_at']
         verbose_name = "Tranzaksiya"
         verbose_name_plural = "Tranzaksiyalar"
+
+
+class CashSubmission(TenantAwareModel):
+    """
+    Administrator kassasini asosiy kassaga topshirish.
+    Admin haftalik yoki oylik hisobotni topshiradi,
+    super admin tasdiqlaydi va pul asosiy kassaga o'tadi.
+    """
+    PERIOD_CHOICES = (
+        ('weekly', 'Haftalik'),
+        ('monthly', 'Oylik'),
+    )
+
+    STATUS_CHOICES = (
+        ('pending', 'Kutilmoqda'),
+        ('approved', 'Tasdiqlandi'),
+        ('rejected', 'Rad etildi'),
+    )
+
+    # Qaysi admin topshirmoqda
+    admin_user = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name='cash_submissions',
+        verbose_name="Administrator"
+    )
+
+    # Admin kassasi (pul qayerdan)
+    admin_account = models.ForeignKey(
+        Account, on_delete=models.PROTECT,
+        related_name='outgoing_submissions',
+        verbose_name="Admin kassasi"
+    )
+
+    # Asosiy kassa (pul qayerga)
+    main_account = models.ForeignKey(
+        Account, on_delete=models.PROTECT,
+        related_name='incoming_submissions',
+        verbose_name="Asosiy kassa"
+    )
+
+    # Summalar
+    total_income = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Jami kirim")
+    total_expense = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Jami chiqim")
+    net_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Sof summa")
+
+    # Davr
+    period_type = models.CharField(max_length=20, choices=PERIOD_CHOICES, verbose_name="Davr turi")
+    period_start = models.DateField(verbose_name="Davr boshlanishi")
+    period_end = models.DateField(verbose_name="Davr tugashi")
+
+    # Status va tasdiqlash
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name="Holati")
+    notes = models.TextField(blank=True, verbose_name="Izoh")
+
+    approved_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='approved_submissions',
+        verbose_name="Tasdiqladi"
+    )
+    approved_at = models.DateTimeField(null=True, blank=True, verbose_name="Tasdiqlash vaqti")
+    rejection_reason = models.TextField(blank=True, verbose_name="Rad etish sababi")
+
+    def __str__(self):
+        return f"{self.admin_user} - {self.get_period_type_display()} ({self.period_start} - {self.period_end})"
+
+    class Meta:
+        db_table = 'finance_cash_submissions'
+        ordering = ['-created_at']
+        verbose_name = "Kassa topshirish"
+        verbose_name_plural = "Kassa topshirishlar"

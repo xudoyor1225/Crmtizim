@@ -32,7 +32,7 @@ def user_permissions_context(request):
 
     # Agar permissions bo'sh bo'lsa va admin bo'lsa - hamma narsaga ruxsat
     if user.role == 'admin' and not user.permissions:
-        allowed_modules = ['dashboard', 'users', 'education', 'finance', 'crm', 'operations', 'reports', 'settings', 'automation']
+        allowed_modules = ['dashboard', 'users', 'education', 'finance', 'crm', 'operations', 'reports', 'settings', 'automation', 'admin_finance']
         return {
             'user_modules': allowed_modules,
             'full_access': True,
@@ -51,6 +51,10 @@ def user_permissions_context(request):
         for module, perms in user.permissions.items():
             if isinstance(perms, dict) and perms.get('view', False):
                 allowed_modules.append(module)
+
+    # Admin uchun admin_finance har doim qo'shiladi
+    if user.role == 'admin' and 'admin_finance' not in allowed_modules:
+        allowed_modules.append('admin_finance')
 
     return {
         'user_modules': allowed_modules,

@@ -109,6 +109,41 @@
 </a>
 {% endif %}
 
+<!-- ADMIN KASSA (Administrator kirim-chiqim) -->
+{% if 'admin_finance' in user_modules %}
+<p class="sidebar-section">Kassa Kirim-Chiqim</p>
+
+<a href="{% url 'finance:admin_cash_dashboard' %}"
+    class="sidebar-link {% if '/finance/admin-cash' in request.path and 'history' not in request.path and 'submit' not in request.path and 'income' not in request.path and 'expense' not in request.path %}active{% endif %}">
+    <i class="ph-fill ph-cash-register"></i>
+    <span>Kassam</span>
+</a>
+
+<a href="{% url 'finance:admin_add_income' %}"
+    class="sidebar-link {% if 'admin-cash/income' in request.path %}active{% endif %}">
+    <i class="ph-fill ph-arrow-circle-down"></i>
+    <span>Kirim</span>
+</a>
+
+<a href="{% url 'finance:admin_add_expense' %}"
+    class="sidebar-link {% if 'admin-cash/expense' in request.path %}active{% endif %}">
+    <i class="ph-fill ph-arrow-circle-up"></i>
+    <span>Chiqim</span>
+</a>
+
+<a href="{% url 'finance:admin_cash_history' %}"
+    class="sidebar-link {% if 'admin-cash/history' in request.path %}active{% endif %}">
+    <i class="ph-fill ph-clock-counter-clockwise"></i>
+    <span>Tarix</span>
+</a>
+
+<a href="{% url 'finance:admin_submit_cash' %}"
+    class="sidebar-link {% if 'admin-cash/submit' in request.path %}active{% endif %}">
+    <i class="ph-fill ph-paper-plane-tilt"></i>
+    <span>Kassa Topshirish</span>
+</a>
+{% endif %}
+
 <!-- FINANCE -->
 {% if full_access or 'finance' in user_modules %}
 <p class="sidebar-section">Moliya</p>
@@ -159,6 +194,12 @@
     class="sidebar-link {% if 'receipts' in request.path %}active{% endif %}">
     <i class="ph-fill ph-receipt"></i>
     <span>Chek Tekshirish</span>
+</a>
+
+<a href="{% url 'finance:cash_submission_list' %}"
+    class="sidebar-link {% if 'cash-submissions' in request.path %}active{% endif %}">
+    <i class="ph-fill ph-hand-coins"></i>
+    <span>Kassa Topshirishlar</span>
 </a>
 {% endif %}
 

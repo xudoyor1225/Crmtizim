@@ -89,6 +89,11 @@ def check_permission(user, module: str, action: str = 'view') -> bool:
         if isinstance(module_perms, dict):
             return module_perms.get(action, False)
 
+    # Admin uchun admin_finance default ruxsat (o'z kassasi)
+    if user.role == 'admin' and module == 'admin_finance':
+        if action in ['view', 'create']:
+            return True
+
     return False
 
 
