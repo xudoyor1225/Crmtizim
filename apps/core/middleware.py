@@ -102,6 +102,17 @@ class HTMXMiddleware:
             # Sidebar active holatini yangilash uchun
             response['HX-Trigger-After-Swap'] = 'updateSidebar'
 
+            # Login sahifasiga redirect bo'lsa, to'liq sahifa yuklash
+            if response.status_code in (301, 302):
+                redirect_url = response.get('Location', '')
+                try:
+                    from django.urls import reverse
+                    login_path = reverse(settings.LOGIN_URL)
+                except Exception:
+                    login_path = settings.LOGIN_URL
+                if login_path and login_path in redirect_url:
+                    response['HX-Redirect'] = redirect_url
+
         return response
 
 
