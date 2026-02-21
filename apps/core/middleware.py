@@ -105,11 +105,13 @@ class HTMXMiddleware:
             # Login sahifasiga redirect bo'lsa, to'liq sahifa yuklash
             if response.status_code in (301, 302):
                 redirect_url = response.get('Location', '')
+                login_url = getattr(settings, 'LOGIN_URL', '/login/')
+                # LOGIN_URL URL nomi bo'lishi mumkin - resolve qilish
                 try:
                     from django.urls import reverse
-                    login_path = reverse(settings.LOGIN_URL)
+                    login_path = reverse(login_url)
                 except Exception:
-                    login_path = settings.LOGIN_URL
+                    login_path = login_url
                 if login_path and login_path in redirect_url:
                     response['HX-Redirect'] = redirect_url
 

@@ -324,11 +324,12 @@
                 startProgress();
 
                 // Modal/overlay yopish - HTMX so'rov boshlanganda ochiq modallarni yopish
-                document.querySelectorAll('.fixed.inset-0').forEach(function(el) {
-                    // pointer-events-none bo'lmagan elementlarni yopish (faqat overlay/modallar)
-                    if (!el.classList.contains('pointer-events-none') && !el.classList.contains('lg:hidden') && el.id !== 'htmx-progress-bar') {
-                        el.classList.add('hidden');
-                        el.style.display = 'none';
+                var modalIds = ['quickPaymentOverlay', 'addStudentModal', 'rejectModal', 'addModal', 'removeModal'];
+                modalIds.forEach(function(id) {
+                    var modal = document.getElementById(id);
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.style.display = '';
                     }
                 });
             });
