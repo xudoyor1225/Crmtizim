@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load humanize %}
+{% load role_tags %}
 
 {% block title %}Boshqaruv Paneli{% endblock %}
 
@@ -18,26 +19,41 @@
             <p class="text-base text-[#64748B] font-semibold">{{ request.user.organization.name }}</p>
         </div>
         <div class="flex gap-2 flex-wrap">
+            {% has_permission 'finance' 'create' as can_create_payment %}
+            {% if can_create_payment %}
             <button onclick="openQuickPayment()"
                 class="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg text-sm font-medium transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/25">
                 <i class="ph-fill ph-credit-card"></i> To'lov Qabul Qilish
             </button>
+            {% endif %}
+            {% has_permission 'users' 'create' as can_create_user %}
+            {% if can_create_user %}
             <a href="{% url 'users:student_create' %}"
                 class="inline-flex items-center gap-1.5 px-3 py-2 glass-button text-white rounded-lg text-sm font-medium transition-all hover:-translate-y-0.5">
                 <i class="ph ph-plus"></i> O'quvchi
             </a>
+            {% endif %}
+            {% has_permission 'crm' 'create' as can_create_lead %}
+            {% if can_create_lead %}
             <a href="{% url 'crm:lead_create' %}"
                 class="inline-flex items-center gap-1.5 px-3 py-2 liquid-glass text-[#64748B] rounded-lg text-sm font-medium hover:bg-white/80 transition">
                 <i class="ph ph-plus"></i> Lid
             </a>
+            {% endif %}
+            {% has_permission 'operations' 'create' as can_create_lesson %}
+            {% if can_create_lesson %}
             <a href="{% url 'operations:lesson_add' %}"
                 class="inline-flex items-center gap-1.5 px-3 py-2 liquid-glass text-[#64748B] rounded-lg text-sm font-medium hover:bg-white/80 transition">
                 <i class="ph ph-plus"></i> Dars
             </a>
+            {% endif %}
+            {% has_permission 'operations' 'view' as can_view_operations %}
+            {% if can_view_operations %}
             <a href="{% url 'operations:schedule' %}"
                 class="inline-flex items-center gap-1.5 px-3 py-2 liquid-glass text-[#64748B] rounded-lg text-sm font-medium hover:bg-white/80 transition">
                 <i class="ph ph-calendar"></i> Jadval
             </a>
+            {% endif %}
         </div>
     </div>
 

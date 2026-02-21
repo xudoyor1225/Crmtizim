@@ -225,10 +225,6 @@ def group_delete(request, pk):
     org = request.organization
     group = get_object_or_404(Group, pk=pk, organization=org, is_deleted=False)
     
-    if request.user.role not in ['super_admin', 'owner', 'admin']:
-        messages.error(request, "Sizda o'chirish huquqi yo'q!")
-        return redirect('group_list')
-    
     if request.method == 'POST':
         group.is_deleted = True
         group.save()
@@ -244,10 +240,6 @@ def course_delete(request, pk):
     """Kursni o'chirish (soft delete)"""
     org = request.organization
     course = get_object_or_404(Course, pk=pk, organization=org, is_deleted=False)
-    
-    if request.user.role not in ['super_admin', 'owner', 'admin']:
-        messages.error(request, "Sizda o'chirish huquqi yo'q!")
-        return redirect('course_list')
     
     if request.method == 'POST':
         course.is_deleted = True
@@ -284,10 +276,6 @@ def room_delete(request, pk):
     """Xonani o'chirish (soft delete)"""
     org = request.organization
     room = get_object_or_404(Room, pk=pk, organization=org, is_deleted=False)
-    
-    if request.user.role not in ['super_admin', 'owner', 'admin']:
-        messages.error(request, "Sizda o'chirish huquqi yo'q!")
-        return redirect('room_list')
     
     if request.method == 'POST':
         room.is_deleted = True

@@ -250,9 +250,12 @@
                                     <i class="ph ph-users text-3xl text-slate-400"></i>
                                 </div>
                                 <p class="text-slate-500">Hech kim topilmadi</p>
+                                {% has_permission 'users' 'create' as can_create_empty %}
+                                {% if can_create_empty %}
                                 <a href="{% url 'users:student_create' %}"
                                     class="text-[#64748B] hover:underline mt-2">Yangi
                                     qo'shish →</a>
+                                {% endif %}
                             </div>
                         </td>
                     </tr>

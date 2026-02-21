@@ -84,23 +84,8 @@ def has_permission(context, module, action='view'):
     if not request or not request.user.is_authenticated:
         return False
 
-    user = request.user
-
-    # Super admin va owner - hamma narsaga ruxsat
-    if user.role in ['super_admin', 'owner']:
-        return True
-
-    # Admin - agar permissions bo'sh bo'lsa, ruxsat bor
-    if user.role == 'admin' and not user.permissions:
-        return True
-
-    # Permissions tekshirish
-    if user.permissions:
-        module_perms = user.permissions.get(module, {})
-        if isinstance(module_perms, dict):
-            return module_perms.get(action, False)
-
-    return False
+    from apps.core.permissions import check_permission
+    return check_permission(request.user, module, action)
 
 
 @register.inclusion_tag('components/permission_button.html', takes_context=True)
@@ -115,15 +100,8 @@ def permission_button(context, module, action, url, text, icon='', css_class='')
     has_perm = False
 
     if request and request.user.is_authenticated:
-        user = request.user
-        if user.role in ['super_admin', 'owner']:
-            has_perm = True
-        elif user.role == 'admin' and not user.permissions:
-            has_perm = True
-        elif user.permissions:
-            module_perms = user.permissions.get(module, {})
-            if isinstance(module_perms, dict):
-                has_perm = module_perms.get(action, False)
+        from apps.core.permissions import check_permission
+        has_perm = check_permission(request.user, module, action)
 
     return {
         'has_permission': has_perm,

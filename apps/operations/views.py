@@ -228,11 +228,6 @@ def lesson_add(request):
     org = request.user.organization
     user = request.user
     
-    # Faqat admin va o'qituvchilar dars qo'sha oladi
-    if user.role not in ['super_admin', 'owner', 'admin', 'teacher']:
-        messages.error(request, "Sizda dars qo'shish huquqi yo'q!")
-        return redirect('operations:lesson_list')
-    
     # Guruhlar va xonalar
     if user.role == 'teacher':
         groups = Group.objects.filter(teacher=user, is_deleted=False, status='active')
@@ -395,10 +390,6 @@ def lesson_edit(request, pk):
     org = request.user.organization
     user = request.user
 
-    if user.role not in ['super_admin', 'owner', 'admin', 'teacher']:
-        messages.error(request, "Sizda tahrirlash huquqi yo'q!")
-        return redirect('operations:lesson_list')
-
     if user.role == 'super_admin' or not org:
         lesson = get_object_or_404(Lesson, pk=pk, is_deleted=False)
     else:
@@ -458,10 +449,6 @@ def lesson_delete(request, pk):
     """Darsni o'chirish (soft delete)"""
     org = request.user.organization
     user = request.user
-
-    if user.role not in ['super_admin', 'owner', 'admin']:
-        messages.error(request, "Sizda o'chirish huquqi yo'q!")
-        return redirect('operations:lesson_list')
 
     if user.role == 'super_admin' or not org:
         lesson = get_object_or_404(Lesson, pk=pk, is_deleted=False)
