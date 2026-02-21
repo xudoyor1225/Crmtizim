@@ -106,16 +106,16 @@ class CashSubmissionModelTest(TestCase):
         self.assertEqual(result.status, "approved")
         self.assertEqual(result.approved_by, self.owner)
 
-        # Balanslar tekshirish
+        # Balanslar tekshirish - admin kassasi 0 ga tushishi kerak
         self.admin_account.refresh_from_db()
         self.main_account.refresh_from_db()
         self.assertEqual(
             self.admin_account.balance,
-            initial_admin_balance - Decimal("200000")
+            Decimal("0.00")
         )
         self.assertEqual(
             self.main_account.balance,
-            initial_main_balance + Decimal("200000")
+            initial_main_balance + initial_admin_balance
         )
 
         # Transfer tranzaksiya yaratilganini tekshirish
@@ -124,7 +124,7 @@ class CashSubmissionModelTest(TestCase):
             description__contains="Kassa topshirish"
         ).first()
         self.assertIsNotNone(transfer_tx)
-        self.assertEqual(transfer_tx.amount, Decimal("200000"))
+        self.assertEqual(transfer_tx.amount, initial_admin_balance)
         self.assertEqual(transfer_tx.status, "confirmed")
 
     def test_approve_already_approved_submission(self):

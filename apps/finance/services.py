@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import transaction
 from django.utils import timezone
 from django.core.exceptions import ValidationError
@@ -63,21 +64,23 @@ def approve_cash_submission(submission_id, user):
     net_amount = submission.net_amount
 
     # Admin kassasidan pul ayirish
+    # Admin kassasining to'liq balansini asosiy kassaga o'tkazamiz
+    # va admin kassasini 0 ga tushiramiz (balans tekshiruvi kerak emas,
+    # chunki mavjud balansning o'zi o'tkaziladi)
     admin_account = submission.admin_account
-    if net_amount > 0 and admin_account.balance < net_amount:
-        raise ValidationError(
-            f"Admin kassasida mablag' yetarli emas! Mavjud: {admin_account.balance}, Kerak: {net_amount}"
-        )
+    admin_account.refresh_from_db()
+    transfer_amount = admin_account.balance
 
-    if net_amount > 0:
-        admin_account.balance -= net_amount
-        admin_account.save()
+    if transfer_amount > 0:
+        # Admin kassasini 0 ga tushirish
+        admin_account.balance = Decimal('0.00')
+        admin_account.save(update_fields=['balance'])
 
         # Asosiy kassaga transfer tranzaksiya yaratish (signal orqali balans yangilanadi)
         Transaction.objects.create(
             organization=submission.organization,
             account=submission.main_account,
-            amount=net_amount,
+            amount=transfer_amount,
             transaction_type='income',
             description=f"Kassa topshirish: {submission.admin_user.get_full_name()} "
                         f"({submission.get_period_type_display()}: {submission.period_start} - {submission.period_end})",

@@ -83,16 +83,16 @@ def check_permission(user, module: str, action: str = 'view') -> bool:
         if module in teacher_defaults and action in teacher_defaults[module]:
             return True
 
+    # Admin uchun admin_finance default ruxsat (o'z kassasi)
+    if user.role == 'admin' and module == 'admin_finance':
+        if action in ['view', 'create', 'edit']:
+            return True
+
     # Permissions tekshirish
     if user.permissions:
         module_perms = user.permissions.get(module, {})
         if isinstance(module_perms, dict):
             return module_perms.get(action, False)
-
-    # Admin uchun admin_finance default ruxsat (o'z kassasi)
-    if user.role == 'admin' and module == 'admin_finance':
-        if action in ['view', 'create', 'edit']:
-            return True
 
     return False
 
