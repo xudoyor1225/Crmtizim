@@ -38,6 +38,14 @@ def user_permissions_context(request):
             'full_access': True,
         }
 
+    # O'qituvchi - default modullar
+    if user.role == 'teacher' and not user.permissions:
+        allowed_modules = ['dashboard', 'operations', 'education']
+        return {
+            'user_modules': allowed_modules,
+            'full_access': False,
+        }
+
     # Permissions dan tekshirish
     if user.permissions:
         for module, perms in user.permissions.items():

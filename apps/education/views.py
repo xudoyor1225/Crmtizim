@@ -7,10 +7,12 @@ from .models import Course, Room, Group, GroupStudent
 from .forms import CourseForm, RoomForm, GroupForm
 from apps.users.models import User
 from apps.core.audit import log_user_action
+from apps.core.permissions import permission_required
 
 
 # --- KURSLAR ---
 @login_required
+@permission_required('education', 'view')
 def course_list(request):
     """Kurslar ro'yxati"""
     org = request.organization
@@ -22,6 +24,7 @@ def course_list(request):
 
 
 @login_required
+@permission_required('education', 'create')
 def course_create(request):
     org = request.organization
     if request.method == 'POST':
@@ -39,6 +42,7 @@ def course_create(request):
 
 
 @login_required
+@permission_required('education', 'edit')
 def course_edit(request, pk):
     org = request.organization
     course = get_object_or_404(Course, pk=pk, organization=org)
@@ -56,6 +60,7 @@ def course_edit(request, pk):
 
 # --- XONALAR ---
 @login_required
+@permission_required('education', 'view')
 def room_list(request):
     org = request.organization
     rooms = Room.objects.filter(organization=org, is_deleted=False)
@@ -63,6 +68,7 @@ def room_list(request):
 
 
 @login_required
+@permission_required('education', 'create')
 def room_create(request):
     org = request.organization
     if request.method == 'POST':
@@ -81,6 +87,7 @@ def room_create(request):
 
 # --- GURUHLAR ---
 @login_required
+@permission_required('education', 'view')
 def group_list(request):
     org = request.organization
     groups = Group.objects.filter(organization=org, is_deleted=False).select_related('course', 'teacher', 'room')
@@ -96,6 +103,7 @@ def group_list(request):
 
 
 @login_required
+@permission_required('education', 'create')
 def group_create(request):
     org = request.organization
     if request.method == 'POST':
@@ -116,6 +124,7 @@ def group_create(request):
 
 
 @login_required
+@permission_required('education', 'view')
 def group_detail(request, pk):
     """Guruh tafsilotlari va o'quvchilar"""
     org = request.organization
@@ -142,6 +151,7 @@ def group_detail(request, pk):
 
 
 @login_required
+@permission_required('education', 'edit')
 def add_student_to_group(request, pk):
     """O'quvchini guruhga qo'shish"""
     org = request.organization
@@ -170,6 +180,7 @@ def add_student_to_group(request, pk):
 
 
 @login_required
+@permission_required('education', 'edit')
 def remove_student_from_group(request, pk, student_id):
     """O'quvchini guruhdan chiqarish"""
     org = request.organization
@@ -188,6 +199,7 @@ def remove_student_from_group(request, pk, student_id):
 
 
 @login_required
+@permission_required('education', 'edit')
 def group_edit(request, pk):
     """Guruhni tahrirlash"""
     org = request.organization
@@ -207,14 +219,11 @@ def group_edit(request, pk):
 
 
 @login_required
+@permission_required('education', 'delete')
 def group_delete(request, pk):
     """Guruhni o'chirish (soft delete)"""
     org = request.organization
     group = get_object_or_404(Group, pk=pk, organization=org, is_deleted=False)
-    
-    if request.user.role not in ['super_admin', 'owner', 'admin']:
-        messages.error(request, "Sizda o'chirish huquqi yo'q!")
-        return redirect('group_list')
     
     if request.method == 'POST':
         group.is_deleted = True
@@ -226,14 +235,11 @@ def group_delete(request, pk):
 
 
 @login_required
+@permission_required('education', 'delete')
 def course_delete(request, pk):
     """Kursni o'chirish (soft delete)"""
     org = request.organization
     course = get_object_or_404(Course, pk=pk, organization=org, is_deleted=False)
-    
-    if request.user.role not in ['super_admin', 'owner', 'admin']:
-        messages.error(request, "Sizda o'chirish huquqi yo'q!")
-        return redirect('course_list')
     
     if request.method == 'POST':
         course.is_deleted = True
@@ -245,6 +251,7 @@ def course_delete(request, pk):
 
 
 @login_required
+@permission_required('education', 'edit')
 def room_edit(request, pk):
     """Xonani tahrirlash"""
     org = request.organization
@@ -264,14 +271,11 @@ def room_edit(request, pk):
 
 
 @login_required
+@permission_required('education', 'delete')
 def room_delete(request, pk):
     """Xonani o'chirish (soft delete)"""
     org = request.organization
     room = get_object_or_404(Room, pk=pk, organization=org, is_deleted=False)
-    
-    if request.user.role not in ['super_admin', 'owner', 'admin']:
-        messages.error(request, "Sizda o'chirish huquqi yo'q!")
-        return redirect('room_list')
     
     if request.method == 'POST':
         room.is_deleted = True

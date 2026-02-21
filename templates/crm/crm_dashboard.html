@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load role_tags %}
 
 {% block title %}CRM - Sotuv & Lidlar{% endblock %}
 
@@ -19,10 +20,13 @@
             <p class="text-slate-500 mt-1">Lidlar, voronka va manbalarni boshqaring</p>
         </div>
         <div class="flex flex-wrap gap-2">
+            {% has_permission 'crm' 'create' as can_create_lead %}
+            {% if can_create_lead %}
             <a href="{% url 'crm:lead_create' %}"
                 class="bg-[#4F46E5] hover:bg-[#4338CA] text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition shadow-sm">
                 <i class="ph ph-plus"></i> Yangi Lid
             </a>
+            {% endif %}
         </div>
     </div>
 

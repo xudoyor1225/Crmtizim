@@ -90,6 +90,7 @@ def account_list(request):
     return render(request, 'finance/account_list.html', {'accounts': accounts, 'total_balance': total_balance})
 
 @login_required
+@permission_required('finance', 'create')
 def account_create(request):
     from .forms import AccountForm
     org = request.organization
@@ -106,6 +107,7 @@ def account_create(request):
     return render(request, 'finance/account_form.html', {'form': form, 'title': 'Yangi Kassa'})
 
 @login_required
+@permission_required('finance', 'edit')
 def account_edit(request, pk):
     from .forms import AccountForm
     org = request.organization
@@ -121,6 +123,7 @@ def account_edit(request, pk):
     return render(request, 'finance/account_form.html', {'form': form, 'title': 'Kassani tahrirlash'})
 
 @login_required
+@permission_required('finance', 'delete')
 @require_POST
 def account_delete(request, pk):
     org = request.organization
@@ -135,6 +138,7 @@ def account_delete(request, pk):
 # ===========================================
 
 @login_required
+@permission_required('finance', 'view')
 def category_list(request):
     """Kirim va chiqim kategoriyalari ro'yxati"""
     org = request.organization
@@ -151,6 +155,7 @@ def category_list(request):
     })
 
 @login_required
+@permission_required('finance', 'create')
 def category_create(request):
     """Yangi kategoriya yaratish"""
     from .forms import CategoryForm
@@ -168,6 +173,7 @@ def category_create(request):
     return render(request, 'finance/category_form.html', {'form': form, 'title': 'Yangi Kategoriya'})
 
 @login_required
+@permission_required('finance', 'edit')
 def category_edit(request, pk):
     """Kategoriyani tahrirlash"""
     from .forms import CategoryForm
@@ -184,6 +190,7 @@ def category_edit(request, pk):
     return render(request, 'finance/category_form.html', {'form': form, 'title': 'Kategoriyani tahrirlash'})
 
 @login_required
+@permission_required('finance', 'create')
 def add_income(request):
     from .forms import TransactionForm
     org = request.organization
@@ -203,6 +210,7 @@ def add_income(request):
     return render(request, 'finance/transaction_form.html', {'form': form, 'title': 'Kirim', 'type': 'income'})
 
 @login_required
+@permission_required('finance', 'create')
 def add_expense(request):
     from .forms import TransactionForm
     org = request.organization
@@ -222,6 +230,7 @@ def add_expense(request):
     return render(request, 'finance/transaction_form.html', {'form': form, 'title': 'Chiqim', 'type': 'expense'})
 
 @login_required
+@permission_required('finance', 'edit')
 def confirm_transaction(request, pk):
     # Bu view endi services.py orqali ishlaydi (avvalgi fixda to'g'irlangan)
     from .services import confirm_transaction as confirm_service
@@ -233,6 +242,7 @@ def confirm_transaction(request, pk):
     return redirect('finance:transaction_list')
 
 @login_required
+@permission_required('finance', 'edit')
 def reject_transaction(request, pk):
     t = get_object_or_404(Transaction, pk=pk)
     if t.status == 'pending':
@@ -243,6 +253,7 @@ def reject_transaction(request, pk):
 
 # Student payments view (Placeholder - needs existing imports)
 @login_required
+@permission_required('finance', 'view')
 def student_payments(request, student_id):
     student = get_object_or_404(User, pk=student_id)
     payments = Transaction.objects.filter(student=student).order_by('-created_at')
@@ -250,6 +261,7 @@ def student_payments(request, student_id):
     return render(request, 'finance/student_payments.html', {'student': student, 'payments': payments, 'total_paid': total})
 
 @login_required
+@permission_required('finance', 'create')
 def add_student_payment(request, student_id):
     from .forms import StudentPaymentForm
     student = get_object_or_404(User, pk=student_id)
@@ -270,7 +282,7 @@ def add_student_payment(request, student_id):
     return render(request, 'finance/student_payment_form.html', {'form': form, 'student': student})
 
 @login_required
-@login_required
+@permission_required('finance', 'view')
 def finance_report(request):
     """Moliyaviy hisobot - kirim, chiqim, foyda statistikasi"""
     from datetime import timedelta
@@ -364,20 +376,24 @@ def finance_report(request):
 
 
 @login_required
+@permission_required('finance', 'view')
 def pending_receipts(request):
     txs = Transaction.objects.filter(receipt_verified=False, status='pending')
     return render(request, 'finance/pending_receipts.html', {'pending_receipts': txs})
 
 @login_required
+@permission_required('finance', 'edit')
 def verify_receipt(request, pk):
     return confirm_transaction(request, pk)
 
 @login_required
+@permission_required('finance', 'edit')
 def reject_receipt(request, pk):
     return reject_transaction(request, pk)
 
 
 @login_required
+@permission_required('finance', 'create')
 @require_POST
 def quick_payment(request):
     """Quick Payment modal dan kelgan AJAX so'rovni qayta ishlash."""

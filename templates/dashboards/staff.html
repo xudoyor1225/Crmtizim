@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load humanize %}
+{% load role_tags %}
 
 {% block title %}Xodim Paneli{% endblock %}
 
@@ -96,30 +97,42 @@
                 <i class="ph-fill ph-squares-four text-[#64748B]"></i> Tez Havolalar
             </h3>
             <div class="grid grid-cols-2 gap-3">
+                {% has_permission 'operations' 'view' as can_view_schedule %}
+                {% if can_view_schedule %}
                 <a href="{% url 'operations:schedule' %}"
                     class="p-4 liquid-glass rounded-xl text-center hover:-translate-y-0.5 transition-all group">
                     <i
                         class="ph-fill ph-calendar-dots text-2xl text-[#0F172A] mb-2 block group-hover:scale-110 transition"></i>
                     <span class="text-xs font-medium text-[#0F172A]">Jadval</span>
                 </a>
+                {% endif %}
+                {% has_permission 'operations' 'view' as can_view_lessons %}
+                {% if can_view_lessons %}
                 <a href="{% url 'operations:lesson_list' %}"
                     class="p-4 liquid-glass rounded-xl text-center hover:-translate-y-0.5 transition-all group">
                     <i
                         class="ph-fill ph-chalkboard text-2xl text-purple-600 mb-2 block group-hover:scale-110 transition"></i>
                     <span class="text-xs font-medium text-[#0F172A]">Darslar</span>
                 </a>
+                {% endif %}
+                {% has_permission 'users' 'view' as can_view_users %}
+                {% if can_view_users %}
                 <a href="{% url 'users:user_list' %}"
                     class="p-4 liquid-glass rounded-xl text-center hover:-translate-y-0.5 transition-all group">
                     <i
                         class="ph-fill ph-users text-2xl text-emerald-600 mb-2 block group-hover:scale-110 transition"></i>
                     <span class="text-xs font-medium text-[#0F172A]">Foydalanuvchilar</span>
                 </a>
+                {% endif %}
+                {% has_permission 'education' 'view' as can_view_groups %}
+                {% if can_view_groups %}
                 <a href="{% url 'group_list' %}"
                     class="p-4 liquid-glass rounded-xl text-center hover:-translate-y-0.5 transition-all group">
                     <i
                         class="ph-fill ph-users-three text-2xl text-amber-600 mb-2 block group-hover:scale-110 transition"></i>
                     <span class="text-xs font-medium text-[#0F172A]">Guruhlar</span>
                 </a>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -74,6 +74,15 @@ def check_permission(user, module: str, action: str = 'view') -> bool:
     if user.role == 'admin' and not user.permissions:
         return True
 
+    # O'qituvchi - operations va education modullariga default ruxsat
+    if user.role == 'teacher' and not user.permissions:
+        teacher_defaults = {
+            'operations': ['view', 'create', 'edit'],
+            'education': ['view'],
+        }
+        if module in teacher_defaults and action in teacher_defaults[module]:
+            return True
+
     # Permissions tekshirish
     if user.permissions:
         module_perms = user.permissions.get(module, {})
