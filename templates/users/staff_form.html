@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load role_tags %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -107,7 +108,7 @@
                 </div>
             </div>
 
-            <!-- 3. RUXSATLAR -->
+            <!-- 3. RUXSATLAR (Asosiy CRUD) -->
             <div class="space-y-4">
                 <h3 class="text-lg font-semibold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
                     <i class="ph ph-shield-check text-green-500"></i> Ruxsatlar
@@ -116,6 +117,10 @@
 
                 <p class="text-sm text-slate-500 mb-4">
                     Xodim qaysi bo'limlarga kirishi va qanday amallarni bajarishi mumkinligini belgilang.
+                    <br>
+                    <span class="text-xs text-amber-600">
+                        <i class="ph ph-info"></i> Faqat sizda mavjud bo'lgan ruxsatlar ko'rsatilmoqda.
+                    </span>
                 </p>
 
                 <div class="overflow-x-auto">
@@ -140,11 +145,16 @@
                                 </td>
                                 {% for action_code, action_name in actions %}
                                 <td class="text-center px-4 py-3">
+                                    {% has_permission module_code action_code as creator_can %}
+                                    {% if creator_can %}
                                     <input type="checkbox"
                                            name="perm_{{ module_code }}_{{ action_code }}"
                                            id="perm_{{ module_code }}_{{ action_code }}"
                                            class="w-5 h-5 rounded border-slate-300 text-[#64748B] focus:ring-[#4F46E5]/30 perm-checkbox"
                                            data-module="{{ module_code }}">
+                                    {% else %}
+                                    <span class="text-slate-300" title="Sizda bu ruxsat yo'q">—</span>
+                                    {% endif %}
                                 </td>
                                 {% endfor %}
                                 <td class="text-center px-4 py-3">
@@ -178,6 +188,43 @@
                     </table>
                 </div>
             </div>
+
+            <!-- 3.1 QO'SHIMCHA RUXSATLAR (Granular) -->
+            {% if extra_actions %}
+            <div class="space-y-4">
+                <h3 class="text-lg font-semibold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
+                    <i class="ph ph-sliders-horizontal text-blue-500"></i> Qo'shimcha ruxsatlar
+                    <span class="text-xs font-normal text-slate-500 ml-2">(Sahifa tugmalari uchun)</span>
+                </h3>
+
+                <p class="text-sm text-slate-500 mb-4">
+                    Har bir bo'limga tegishli maxsus amallar (eksport, oylik ko'rish va h.k.).
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {% for extra in extra_actions %}
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i class="ph {{ extra.icon }} text-blue-500"></i>
+                            <span class="text-sm font-semibold text-slate-700">{{ extra.module_name }}</span>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            {% for action_code, action_name in extra.actions %}
+                            <label class="inline-flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox"
+                                       name="perm_{{ extra.module_code }}_{{ action_code }}"
+                                       id="perm_{{ extra.module_code }}_{{ action_code }}"
+                                       class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500/30 perm-checkbox"
+                                       data-module="{{ extra.module_code }}">
+                                <span class="text-sm text-slate-600">{{ action_name }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
 
             <!-- 4. HR MA'LUMOTLARI -->
             <div class="space-y-4">

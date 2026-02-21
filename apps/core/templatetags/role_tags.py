@@ -114,3 +114,16 @@ def permission_button(context, module, action, url, text, icon='', css_class='')
     }
 
 
+@register.filter(name='get_item')
+def get_item(dictionary, key):
+    """
+    Dictionary dan kalit bo'yicha qiymat olish.
+
+    Foydalanish:
+        {{ my_dict|get_item:"key_name" }}
+    """
+    if isinstance(dictionary, dict):
+        return dictionary.get(key)
+    return None
+
+

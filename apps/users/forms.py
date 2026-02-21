@@ -228,6 +228,28 @@ AVAILABLE_ACTIONS = [
     ('delete', 'O\'chirish'),
 ]
 
+# Modul-spetsifik qo'shimcha ruxsatlar (CRUD dan tashqari)
+MODULE_EXTRA_ACTIONS = {
+    'users': [
+        ('export_excel', 'Excel eksport'),
+        ('export_pdf', 'PDF eksport'),
+    ],
+    'finance': [
+        ('view_salary', "Oylik ko'rish"),
+        ('export_excel', 'Excel eksport'),
+    ],
+    'crm': [
+        ('export_excel', 'Excel eksport'),
+    ],
+    'reports': [
+        ('export_excel', 'Excel eksport'),
+        ('export_pdf', 'PDF eksport'),
+    ],
+    'education': [],
+    'operations': [],
+    'settings': [],
+}
+
 # Xodim rollari
 STAFF_ROLE_CHOICES = [
     ('admin', 'Administrator'),
@@ -292,6 +314,65 @@ class StaffForm(forms.ModelForm):
             'avatar': 'Rasm',
             'nfc_card_id': 'NFC Karta ID',
         }
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.creator = user
+
+    def _creator_has_full_access(self):
+        """Creator to'liq huquqqa ega ekanligini tekshirish."""
+        if not self.creator:
+            return True
+        if self.creator.role in ['super_admin', 'owner']:
+            return True
+        if self.creator.role == 'admin' and not self.creator.permissions:
+            return True
+        return False
+
+    def creator_has_permission(self, module_code, action_code):
+        """Creator berilgan modul va amalga ruxsati borligini tekshirish."""
+        if self._creator_has_full_access():
+            return True
+        from apps.core.permissions import check_permission
+        return check_permission(self.creator, module_code, action_code)
+
+    def get_filtered_modules(self):
+        """Creator ruxsatlariga qarab filtrlangan modullar ro'yxati."""
+        if self._creator_has_full_access():
+            return list(AVAILABLE_MODULES)
+        from apps.core.permissions import check_permission
+        return [
+            (code, name, icon) for code, name, icon in AVAILABLE_MODULES
+            if check_permission(self.creator, code, 'view')
+        ]
+
+    def get_filtered_extra_actions(self):
+        """
+        Creator ruxsatlariga qarab filtrlangan qo'shimcha amallar.
+        Returns: list of dicts with module info and filtered actions.
+        """
+        filtered_modules = self.get_filtered_modules()
+        result = []
+        for module_code, module_name, icon in filtered_modules:
+            extras = MODULE_EXTRA_ACTIONS.get(module_code, [])
+            if not extras:
+                continue
+            if self._creator_has_full_access():
+                filtered_extras = list(extras)
+            else:
+                from apps.core.permissions import check_permission
+                filtered_extras = [
+                    (ac, an) for ac, an in extras
+                    if check_permission(self.creator, module_code, ac)
+                ]
+            if filtered_extras:
+                result.append({
+                    'module_code': module_code,
+                    'module_name': module_name,
+                    'icon': icon,
+                    'actions': filtered_extras,
+                })
+        return result
 
     def save(self, commit=True, organization=None, permissions=None):
         user = super().save(commit=False)
