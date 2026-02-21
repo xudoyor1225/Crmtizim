@@ -116,6 +116,19 @@ class User(AbstractUser, TenantAwareModel):
         db_table = 'users'
         verbose_name = "Foydalanuvchi"
         verbose_name_plural = "Foydalanuvchilar"
+        permissions = [
+            # Users module - granular actions
+            ('can_export_users_excel', "Foydalanuvchilar ro'yxatini Excel eksport qilish"),
+            ('can_export_users_pdf', "Foydalanuvchilar ro'yxatini PDF eksport qilish"),
+            # Finance module - granular actions
+            ('can_view_salary', "Xodim oyligini ko'rish"),
+            ('can_export_finance_excel', "Moliya hisobotini Excel eksport qilish"),
+            # CRM module - granular actions
+            ('can_export_crm_excel', "CRM ma'lumotlarini Excel eksport qilish"),
+            # Reports module - granular actions
+            ('can_export_reports_excel', "Hisobotlarni Excel eksport qilish"),
+            ('can_export_reports_pdf', "Hisobotlarni PDF eksport qilish"),
+        ]
         indexes = [
             models.Index(fields=['organization', 'role']),
             models.Index(fields=['organization', 'branch']),

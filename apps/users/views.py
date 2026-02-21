@@ -247,20 +247,29 @@ def teacher_create(request):
 def staff_create(request):
     """Xodim qo'shish - ruxsatlar bilan"""
 
-
-    # Bo'limlar va amallar
-    from apps.users.forms import AVAILABLE_MODULES, AVAILABLE_ACTIONS
+    from apps.users.forms import AVAILABLE_ACTIONS, MODULE_EXTRA_ACTIONS
 
     if request.method == 'POST':
-        form = StaffForm(request.POST, request.FILES)
+        form = StaffForm(request.POST, request.FILES, user=request.user)
         if form.is_valid():
-            # Ruxsatlarni yig'ish
+            # Ruxsatlarni yig'ish (faqat creator ega bo'lgan ruxsatlar)
             permissions = {}
-            for module_code, module_name, icon in AVAILABLE_MODULES:
+            filtered_modules = form.get_filtered_modules()
+
+            for module_code, module_name, icon in filtered_modules:
                 module_perms = {}
+                # Standard CRUD amallar
                 for action_code, action_name in AVAILABLE_ACTIONS:
-                    field_name = f"perm_{module_code}_{action_code}"
-                    module_perms[action_code] = field_name in request.POST
+                    if form.creator_has_permission(module_code, action_code):
+                        field_name = f"perm_{module_code}_{action_code}"
+                        module_perms[action_code] = field_name in request.POST
+
+                # Qo'shimcha granular amallar
+                for action_code, action_name in MODULE_EXTRA_ACTIONS.get(module_code, []):
+                    if form.creator_has_permission(module_code, action_code):
+                        field_name = f"perm_{module_code}_{action_code}"
+                        module_perms[action_code] = field_name in request.POST
+
                 permissions[module_code] = module_perms
 
             staff = form.save(
@@ -273,13 +282,14 @@ def staff_create(request):
             messages.success(request, f"✅ Xodim {staff.full_name} muvaffaqiyatli qo'shildi!")
             return redirect('users:user_list')
     else:
-        form = StaffForm()
+        form = StaffForm(user=request.user)
     
     return render(request, 'users/staff_form.html', {
         'form': form, 
         'title': "Yangi Xodim Qo'shish",
-        'modules': AVAILABLE_MODULES,
+        'modules': form.get_filtered_modules(),
         'actions': AVAILABLE_ACTIONS,
+        'extra_actions': form.get_filtered_extra_actions(),
     })
 
 
