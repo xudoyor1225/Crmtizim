@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 from unfold.admin import ModelAdmin
-from .models import Account, TransactionCategory, Transaction
+from .models import Account, TransactionCategory, Transaction, CashSubmission
 from .services import confirm_transaction
 from django.contrib import messages
 
@@ -74,3 +74,29 @@ class TransactionAdmin(ModelAdmin):
         if not obj.pk:
             obj.created_by = request.user
         super().save_model(request, obj, form, change)
+
+
+@admin.register(CashSubmission)
+class CashSubmissionAdmin(ModelAdmin):
+    list_display = ('admin_user', 'period_type', 'period_start', 'period_end', 'net_amount_colored', 'status_colored', 'created_at')
+    list_filter = ('status', 'period_type')
+    search_fields = ('admin_user__phone', 'admin_user__first_name', 'admin_user__last_name')
+    readonly_fields = ('approved_by', 'approved_at')
+    list_filter_submit = True
+
+    @admin.display(description="Sof summa")
+    def net_amount_colored(self, obj):
+        formatted = "{:,.0f}".format(obj.net_amount)
+        color = "#10b981" if obj.net_amount >= 0 else "#ef4444"
+        return mark_safe(
+            f'<span style="color: {color}; font-weight: bold;">{formatted} so\'m</span>'
+        )
+
+    @admin.display(description="Holat")
+    def status_colored(self, obj):
+        colors = {'pending': '#f59e0b', 'approved': '#10b981', 'rejected': '#ef4444'}
+        bg_color = colors.get(obj.status, '#6b7280')
+        status_text = obj.get_status_display()
+        return mark_safe(
+            f'<span style="background-color: {bg_color}; color: white; padding: 4px 10px; border-radius: 6px; font-size: 12px;">{status_text}</span>'
+        )
