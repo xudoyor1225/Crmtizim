@@ -16,12 +16,18 @@
                 <p class="text-slate-400">O'quvchilar to'lovlarini tekshirish va tasdiqlash</p>
             </div>
         </div>
-        {% if pending_count %}
-        <div class="px-4 py-2 bg-amber-100 text-amber-800 rounded-xl flex items-center gap-2">
-            <i class="ph-fill ph-warning text-lg"></i>
-            <span class="font-medium">{{ pending_count }} ta to'lov kutilmoqda</span>
+        <div class="flex items-center gap-2">
+            <a href="{% url 'finance:admin_add_course_payment' %}"
+                class="px-4 py-2 bg-gradient-to-r from-purple-500 to-violet-600 text-white rounded-xl hover:shadow-lg hover:shadow-purple-500/25 transition flex items-center gap-2">
+                <i class="ph ph-plus"></i> Kurs To'lovi Qo'shish
+            </a>
+            {% if pending_count %}
+            <div class="px-4 py-2 bg-amber-100 text-amber-800 rounded-xl flex items-center gap-2">
+                <i class="ph-fill ph-warning text-lg"></i>
+                <span class="font-medium">{{ pending_count }} ta to'lov kutilmoqda</span>
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
     </div>
 
     <!-- Filters -->

@@ -382,8 +382,20 @@ def finance_report(request):
 @login_required
 @permission_required('finance', 'view')
 def pending_receipts(request):
-    txs = Transaction.objects.filter(receipt_verified=False, status='pending')
-    return render(request, 'finance/pending_receipts.html', {'pending_receipts': txs})
+    org = request.organization
+    txs = Transaction.objects.filter(receipt_verified=False, status='pending', is_deleted=False)
+    if org:
+        txs = txs.filter(organization=org)
+    txs = txs.select_related('student', 'created_by', 'category', 'account')
+
+    pending_count = txs.count()
+    pending_sum = txs.aggregate(t=Sum('amount'))['t'] or 0
+
+    return render(request, 'finance/pending_receipts.html', {
+        'pending_receipts': txs,
+        'pending_count': pending_count,
+        'pending_sum': pending_sum,
+    })
 
 @login_required
 @permission_required('finance', 'edit')

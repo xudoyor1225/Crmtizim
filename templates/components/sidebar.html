@@ -114,7 +114,7 @@
 <p class="sidebar-section">Kassa Kirim-Chiqim</p>
 
 <a href="{% url 'finance:admin_cash_dashboard' %}"
-    class="sidebar-link {% if '/finance/admin-cash' in request.path and 'history' not in request.path and 'submit' not in request.path and 'income' not in request.path and 'expense' not in request.path %}active{% endif %}">
+    class="sidebar-link {% if '/finance/admin-cash' in request.path and 'history' not in request.path and 'submit' not in request.path and 'income' not in request.path and 'expense' not in request.path and 'course-payment' not in request.path and 'student-payments' not in request.path %}active{% endif %}">
     <i class="ph-fill ph-cash-register"></i>
     <span>Kassam</span>
 </a>
@@ -131,6 +131,18 @@
     <span>Chiqim</span>
 </a>
 
+<a href="{% url 'finance:admin_add_course_payment' %}"
+    class="sidebar-link {% if 'course-payment' in request.path %}active{% endif %}">
+    <i class="ph-fill ph-student"></i>
+    <span>Kurs To'lovi</span>
+</a>
+
+<a href="{% url 'finance:admin_student_payments' %}"
+    class="sidebar-link {% if 'student-payments' in request.path %}active{% endif %}">
+    <i class="ph-fill ph-receipt"></i>
+    <span>Chek Tekshirish</span>
+</a>
+
 <a href="{% url 'finance:admin_cash_history' %}"
     class="sidebar-link {% if 'admin-cash/history' in request.path %}active{% endif %}">
     <i class="ph-fill ph-clock-counter-clockwise"></i>
@@ -141,6 +153,12 @@
     class="sidebar-link {% if 'admin-cash/submit' in request.path %}active{% endif %}">
     <i class="ph-fill ph-paper-plane-tilt"></i>
     <span>Kassa Topshirish</span>
+</a>
+
+<a href="{% url 'finance:cash_submission_list' %}"
+    class="sidebar-link {% if 'cash-submissions' in request.path %}active{% endif %}">
+    <i class="ph-fill ph-hand-coins"></i>
+    <span>Topshirishlar</span>
 </a>
 {% endif %}
 
