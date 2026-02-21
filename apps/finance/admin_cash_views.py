@@ -12,6 +12,7 @@ from decimal import Decimal
 from datetime import timedelta
 
 from .models import Account, Transaction, TransactionCategory, CashSubmission
+from .services import confirm_transaction as confirm_service
 from apps.users.models import User
 from apps.core.permissions import permission_required, check_permission
 from apps.core.audit import log_user_action
@@ -375,7 +376,6 @@ def admin_student_payments(request):
 @require_POST
 def admin_confirm_student_payment(request, pk):
     """O'quvchi to'lovini tasdiqlash va admin kassasiga o'tkazish."""
-    from .services import confirm_transaction as confirm_service
     org = request.organization
     user = request.user
 
