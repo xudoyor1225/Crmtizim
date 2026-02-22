@@ -188,18 +188,16 @@ class CashSubmissionModelTest(TestCase):
         self.admin_account.balance = Decimal('0.00')
         self.admin_account.save(update_fields=['balance'])
 
-        # Rad etish
-        submission.status = 'rejected'
-        submission.rejection_reason = 'Test sababi'
-        submission.approved_by = self.owner
-        submission.approved_at = timezone.now()
-        submission.save()
-
-        # Admin kassasi balansini qaytarish
-        if submission.net_amount > 0:
-            self.admin_account.refresh_from_db()
-            self.admin_account.balance += submission.net_amount
-            self.admin_account.save(update_fields=['balance'])
+        # Haqiqiy reject view orqali rad etish
+        from django.test import Client
+        from django.urls import reverse
+        client = Client()
+        client.login(phone="998905552222", password="test123")
+        response = client.post(
+            reverse('finance:reject_cash_submission', kwargs={'pk': submission.pk}),
+            {'reason': 'Test sababi'}
+        )
+        self.assertEqual(response.status_code, 302)
 
         # Admin kassasi balansi qaytganini tekshirish
         self.admin_account.refresh_from_db()

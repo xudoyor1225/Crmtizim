@@ -253,7 +253,7 @@
             <!-- Main Content -->
             <main class="flex-1 overflow-y-auto p-6 bg-[#F8FAFC]">
                 {% if messages %}
-                <div class="mb-6 space-y-3" id="django-messages">
+                <div class="mb-6 space-y-3" id="django-messages" role="alert" aria-live="polite">
                     {% for message in messages %}
                     <div class="p-4 rounded-xl flex items-center gap-3 animate-fadeIn django-message
                         {% if message.tags == 'error' %}

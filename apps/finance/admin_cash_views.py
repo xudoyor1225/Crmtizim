@@ -354,18 +354,20 @@ def reject_cash_submission(request, pk):
         return redirect('finance:cash_submission_list')
 
     rejection_reason = request.POST.get('reason', '')
-    submission.status = 'rejected'
-    submission.rejection_reason = rejection_reason
-    submission.approved_by = request.user
-    submission.approved_at = timezone.now()
-    submission.save()
 
-    # Admin kassasi balansini qaytarish (topshirish vaqtida 0 ga tushirilgan edi)
-    if submission.net_amount > 0:
-        admin_account = submission.admin_account
-        admin_account.refresh_from_db()
-        admin_account.balance += submission.net_amount
-        admin_account.save(update_fields=['balance'])
+    with transaction.atomic():
+        submission.status = 'rejected'
+        submission.rejection_reason = rejection_reason
+        submission.approved_by = request.user
+        submission.approved_at = timezone.now()
+        submission.save()
+
+        # Admin kassasi balansini qaytarish (topshirish vaqtida 0 ga tushirilgan edi)
+        if submission.net_amount > 0:
+            admin_account = submission.admin_account
+            admin_account.refresh_from_db()
+            admin_account.balance += submission.net_amount
+            admin_account.save(update_fields=['balance'])
 
     log_user_action(request.user, 'UPDATE', 'CashSubmission', submission.id,
                     f"Rad etildi: {submission}", request=request)
