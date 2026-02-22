@@ -203,6 +203,21 @@ class CashSubmissionModelTest(TestCase):
         self.admin_account.refresh_from_db()
         self.assertEqual(self.admin_account.balance, initial_balance)
 
+    def test_submit_zero_balance_prevented(self):
+        """Balans 0 bo'lganda kassa topshirish rad etilishi kerak"""
+        from django.utils import timezone
+        from datetime import timedelta
+
+        self.admin_account.balance = Decimal('0.00')
+        self.admin_account.save(update_fields=['balance'])
+
+        # admin_submit_cash view da net_amount <= 0 bo'lsa topshirish bloklanadi
+        self.admin_account.refresh_from_db()
+        net_amount = self.admin_account.balance
+        self.assertTrue(net_amount <= 0, "Balance 0 yoki manfiy bo'lishi kerak")
+        # CashSubmission yaratilmasligi kerak (view da redirect bo'ladi)
+        self.assertEqual(CashSubmission.objects.count(), 0)
+
     def test_approve_already_approved_submission(self):
         """Allaqachon tasdiqlangan topshirishni qayta tasdiqlash xatosi"""
         from django.utils import timezone

@@ -233,6 +233,10 @@ def admin_submit_cash(request):
         admin_account.refresh_from_db()
         net_amount = admin_account.balance
 
+        if net_amount <= 0:
+            messages.warning(request, "⚠️ Kassada topshirish uchun mablag' yo'q!")
+            return redirect('finance:admin_cash_dashboard')
+
         with transaction.atomic():
             submission = CashSubmission.objects.create(
                 organization=org,
@@ -348,7 +352,11 @@ def approve_cash_submission(request, pk):
 @require_POST
 def reject_cash_submission(request, pk):
     """Kassa topshirishni rad etish."""
-    submission = get_object_or_404(CashSubmission, pk=pk)
+    org = request.organization
+    qs = CashSubmission.objects.filter(is_deleted=False)
+    if org:
+        qs = qs.filter(organization=org)
+    submission = get_object_or_404(qs, pk=pk)
     if submission.status != 'pending':
         messages.error(request, "Bu topshirish allaqachon ko'rib chiqilgan.")
         return redirect('finance:cash_submission_list')
@@ -363,7 +371,7 @@ def reject_cash_submission(request, pk):
         submission.save()
 
         # Admin kassasi balansini qaytarish (topshirish vaqtida 0 ga tushirilgan edi)
-        if submission.net_amount > 0:
+        if submission.net_amount != 0:
             admin_account = submission.admin_account
             admin_account.refresh_from_db()
             admin_account.balance += submission.net_amount
