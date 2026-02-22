@@ -205,9 +205,6 @@ class CashSubmissionModelTest(TestCase):
 
     def test_submit_zero_balance_prevented(self):
         """Balans 0 bo'lganda kassa topshirish rad etilishi kerak"""
-        from django.utils import timezone
-        from datetime import timedelta
-
         self.admin_account.balance = Decimal('0.00')
         self.admin_account.save(update_fields=['balance'])
 
