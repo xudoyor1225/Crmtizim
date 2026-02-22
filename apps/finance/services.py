@@ -63,19 +63,12 @@ def approve_cash_submission(submission_id, user):
 
     net_amount = submission.net_amount
 
-    # Admin kassasidan pul ayirish
-    # Admin kassasining to'liq balansini asosiy kassaga o'tkazamiz
-    # va admin kassasini 0 ga tushiramiz (balans tekshiruvi kerak emas,
-    # chunki mavjud balansning o'zi o'tkaziladi)
-    admin_account = submission.admin_account
-    admin_account.refresh_from_db()
-    transfer_amount = admin_account.balance
+    # Admin kassasidan pul asosiy kassaga o'tkazish
+    # Balans topshirish vaqtida allaqachon 0 ga tushirilgan,
+    # shuning uchun submission.net_amount ishlatiladi
+    transfer_amount = net_amount
 
     if transfer_amount > 0:
-        # Admin kassasini 0 ga tushirish
-        admin_account.balance = Decimal('0.00')
-        admin_account.save(update_fields=['balance'])
-
         # Asosiy kassaga transfer tranzaksiya yaratish (signal orqali balans yangilanadi)
         Transaction.objects.create(
             organization=submission.organization,

@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.db.models import Sum, Q
+from django.db import transaction
 from django.utils import timezone
 from decimal import Decimal
 from datetime import timedelta
@@ -227,22 +228,30 @@ def admin_submit_cash(request):
 
         total_income = period_txs.filter(transaction_type='income').aggregate(t=Sum('amount'))['t'] or Decimal('0')
         total_expense = period_txs.filter(transaction_type='expense').aggregate(t=Sum('amount'))['t'] or Decimal('0')
-        net_amount = total_income - total_expense
 
-        submission = CashSubmission.objects.create(
-            organization=org,
-            admin_user=user,
-            admin_account=admin_account,
-            main_account=main_account,
-            total_income=total_income,
-            total_expense=total_expense,
-            net_amount=net_amount,
-            period_type=period_type,
-            period_start=period_start,
-            period_end=period_end,
-            notes=notes,
-            status='pending',
-        )
+        # Haqiqiy admin kassasi balansini topshirish summasi sifatida ishlatamiz
+        admin_account.refresh_from_db()
+        net_amount = admin_account.balance
+
+        with transaction.atomic():
+            submission = CashSubmission.objects.create(
+                organization=org,
+                admin_user=user,
+                admin_account=admin_account,
+                main_account=main_account,
+                total_income=total_income,
+                total_expense=total_expense,
+                net_amount=net_amount,
+                period_type=period_type,
+                period_start=period_start,
+                period_end=period_end,
+                notes=notes,
+                status='pending',
+            )
+
+            # Admin kassasi balansini 0 ga tushirish
+            admin_account.balance = Decimal('0.00')
+            admin_account.save(update_fields=['balance'])
 
         log_user_action(user, 'CREATE', 'CashSubmission', submission.id, str(submission), request=request)
 
@@ -268,7 +277,7 @@ def admin_submit_cash(request):
                 notification_type='system'
             )
 
-        messages.success(request, f"Kassa topshirish so'rovi yuborildi. Sof summa: {net_amount:,.0f} UZS")
+        messages.success(request, f"✅ Kassa topshirildi! Sof summa: {net_amount:,.0f} UZS. Balans 0 ga tushirildi.")
         return redirect('finance:admin_cash_dashboard')
 
     context = {
@@ -345,11 +354,20 @@ def reject_cash_submission(request, pk):
         return redirect('finance:cash_submission_list')
 
     rejection_reason = request.POST.get('reason', '')
-    submission.status = 'rejected'
-    submission.rejection_reason = rejection_reason
-    submission.approved_by = request.user
-    submission.approved_at = timezone.now()
-    submission.save()
+
+    with transaction.atomic():
+        submission.status = 'rejected'
+        submission.rejection_reason = rejection_reason
+        submission.approved_by = request.user
+        submission.approved_at = timezone.now()
+        submission.save()
+
+        # Admin kassasi balansini qaytarish (topshirish vaqtida 0 ga tushirilgan edi)
+        if submission.net_amount > 0:
+            admin_account = submission.admin_account
+            admin_account.refresh_from_db()
+            admin_account.balance += submission.net_amount
+            admin_account.save(update_fields=['balance'])
 
     log_user_action(request.user, 'UPDATE', 'CashSubmission', submission.id,
                     f"Rad etildi: {submission}", request=request)

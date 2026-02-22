@@ -82,6 +82,11 @@ class CashSubmissionModelTest(TestCase):
         from django.utils import timezone
         from datetime import timedelta
         today = timezone.now().date()
+
+        initial_admin_balance = self.admin_account.balance
+        initial_main_balance = self.main_account.balance
+
+        # Topshirish yaratish va admin balansini 0 ga tushirish (view kabi)
         submission = CashSubmission.objects.create(
             organization=self.org,
             admin_user=self.admin,
@@ -89,15 +94,15 @@ class CashSubmissionModelTest(TestCase):
             main_account=self.main_account,
             total_income=Decimal("300000"),
             total_expense=Decimal("100000"),
-            net_amount=Decimal("200000"),
+            net_amount=initial_admin_balance,
             period_type="weekly",
             period_start=today - timedelta(days=7),
             period_end=today,
             status="pending",
         )
-
-        initial_admin_balance = self.admin_account.balance
-        initial_main_balance = self.main_account.balance
+        # Admin kassasi balansini 0 ga tushirish (view da bajariladi)
+        self.admin_account.balance = Decimal('0.00')
+        self.admin_account.save(update_fields=['balance'])
 
         # Tasdiqlash
         result = approve_cash_submission(submission.id, self.owner)
@@ -106,7 +111,7 @@ class CashSubmissionModelTest(TestCase):
         self.assertEqual(result.status, "approved")
         self.assertEqual(result.approved_by, self.owner)
 
-        # Balanslar tekshirish - admin kassasi 0 ga tushishi kerak
+        # Balanslar tekshirish - admin kassasi 0 da qolishi kerak
         self.admin_account.refresh_from_db()
         self.main_account.refresh_from_db()
         self.assertEqual(
@@ -126,6 +131,77 @@ class CashSubmissionModelTest(TestCase):
         self.assertIsNotNone(transfer_tx)
         self.assertEqual(transfer_tx.amount, initial_admin_balance)
         self.assertEqual(transfer_tx.status, "confirmed")
+
+    def test_submit_cash_resets_admin_balance(self):
+        """Kassa topshirilganda admin kassasi balansi 0 ga tushishi kerak"""
+        from django.utils import timezone
+        from datetime import timedelta
+
+        today = timezone.now().date()
+        initial_balance = self.admin_account.balance
+        self.assertGreater(initial_balance, Decimal('0'))
+
+        # Topshirish yaratish va balansni 0 ga tushirish (view logikasi)
+        submission = CashSubmission.objects.create(
+            organization=self.org,
+            admin_user=self.admin,
+            admin_account=self.admin_account,
+            main_account=self.main_account,
+            total_income=Decimal("300000"),
+            total_expense=Decimal("100000"),
+            net_amount=initial_balance,
+            period_type="weekly",
+            period_start=today - timedelta(days=7),
+            period_end=today,
+            status="pending",
+        )
+        self.admin_account.balance = Decimal('0.00')
+        self.admin_account.save(update_fields=['balance'])
+
+        # Admin kassasi 0 ga tushganini tekshirish
+        self.admin_account.refresh_from_db()
+        self.assertEqual(self.admin_account.balance, Decimal('0.00'))
+        self.assertEqual(submission.net_amount, initial_balance)
+
+    def test_reject_restores_admin_balance(self):
+        """Kassa topshirish rad etilganda admin kassasi balansi qaytarilishi kerak"""
+        from django.utils import timezone
+        from datetime import timedelta
+
+        today = timezone.now().date()
+        initial_balance = self.admin_account.balance
+
+        # Topshirish yaratish va balansni 0 ga tushirish
+        submission = CashSubmission.objects.create(
+            organization=self.org,
+            admin_user=self.admin,
+            admin_account=self.admin_account,
+            main_account=self.main_account,
+            total_income=Decimal("300000"),
+            total_expense=Decimal("100000"),
+            net_amount=initial_balance,
+            period_type="weekly",
+            period_start=today - timedelta(days=7),
+            period_end=today,
+            status="pending",
+        )
+        self.admin_account.balance = Decimal('0.00')
+        self.admin_account.save(update_fields=['balance'])
+
+        # Haqiqiy reject view orqali rad etish
+        from django.test import Client
+        from django.urls import reverse
+        client = Client()
+        client.login(phone="998905552222", password="test123")
+        response = client.post(
+            reverse('finance:reject_cash_submission', kwargs={'pk': submission.pk}),
+            {'reason': 'Test sababi'}
+        )
+        self.assertEqual(response.status_code, 302)
+
+        # Admin kassasi balansi qaytganini tekshirish
+        self.admin_account.refresh_from_db()
+        self.assertEqual(self.admin_account.balance, initial_balance)
 
     def test_approve_already_approved_submission(self):
         """Allaqachon tasdiqlangan topshirishni qayta tasdiqlash xatosi"""

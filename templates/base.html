@@ -253,20 +253,30 @@
             <!-- Main Content -->
             <main class="flex-1 overflow-y-auto p-6 bg-[#F8FAFC]">
                 {% if messages %}
-                <div class="mb-6 space-y-3">
+                <div class="mb-6 space-y-3" id="django-messages" role="alert" aria-live="polite">
                     {% for message in messages %}
-                    <div class="p-4 rounded-xl flex items-center gap-3 animate-fadeIn
+                    <div class="p-4 rounded-xl flex items-center gap-3 animate-fadeIn django-message
                         {% if message.tags == 'error' %}
                         bg-rose-50 text-rose-600 border border-rose-200
                         {% else %}
                         bg-emerald-50 text-emerald-600 border border-emerald-200
-                        {% endif %}">
+                        {% endif %}"
+                        style="transition: opacity 0.5s ease;">
                         <i
                             class="ph {% if message.tags == 'error' %}ph-warning-circle{% else %}ph-check-circle{% endif %} text-xl"></i>
                         {{ message }}
                     </div>
                     {% endfor %}
                 </div>
+                <script>
+                    setTimeout(function() {
+                        var msgs = document.querySelectorAll('.django-message');
+                        msgs.forEach(function(msg) {
+                            msg.style.opacity = '0';
+                            setTimeout(function() { msg.remove(); }, 500);
+                        });
+                    }, 5000);
+                </script>
                 {% endif %}
 
                 {% block content %}{% endblock %}
