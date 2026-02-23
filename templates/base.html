@@ -333,6 +333,12 @@
             document.body.addEventListener('htmx:beforeRequest', function() {
                 startProgress();
 
+                // Save sidebar scroll position before swap
+                var sidebar = document.getElementById('sidebar-nav');
+                if (sidebar) {
+                    localStorage.setItem('sidebarScrollPos', sidebar.scrollTop);
+                }
+
                 // Modal/overlay yopish - HTMX so'rov boshlanganda ochiq modallarni yopish
                 var modalIds = ['quickPaymentOverlay', 'addStudentModal', 'rejectModal', 'addModal', 'removeModal'];
                 modalIds.forEach(function(id) {
@@ -355,6 +361,13 @@
 
         // === RE-INITIALIZE SCRIPTS AFTER HTMX SWAP ===
         document.body.addEventListener('htmx:afterSettle', function(evt) {
+            // Restore sidebar scroll position after swap
+            var sidebar = document.getElementById('sidebar-nav');
+            var savedPos = localStorage.getItem('sidebarScrollPos');
+            if (savedPos && sidebar) {
+                sidebar.scrollTop = parseInt(savedPos, 10);
+            }
+
             // Re-initialize Alpine.js components in swapped content
             if (window.Alpine) {
                 evt.detail.target.querySelectorAll('[x-data]').forEach(function(el) {
