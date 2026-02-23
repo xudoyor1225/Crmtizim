@@ -69,37 +69,35 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
 def _build_child_data(child):
     """Bitta farzand uchun dashboard ma'lumotlarini yig'adi."""
+    from django.db.models import Avg, Count, Q
+
     enrollments = GroupStudent.objects.filter(
         student=child, status='active',
     ).select_related('group', 'group__course', 'group__teacher', 'group__room')
 
-    total_att = Attendance.objects.filter(student=child).count()
-    present = Attendance.objects.filter(student=child, status='present').count()
-    att_rate = (present / total_att * 100) if total_att > 0 else 0
-
-    grades = list(
-        Attendance.objects.filter(
-            student=child, grade__isnull=False,
-        ).values_list('grade', flat=True)
+    stats = Attendance.objects.filter(student=child).aggregate(
+        total_att=Count('id'),
+        present=Count('id', filter=Q(status='present')),
+        avg_grade=Avg('grade'),
+        total_xp=Sum('xp_points'),
     )
-    avg_grade = sum(grades) / len(grades) if grades else 0
+    total_att = stats['total_att'] or 0
+    present = stats['present'] or 0
+    att_rate = (present / total_att * 100) if total_att > 0 else 0
+    avg_grade = stats['avg_grade'] or 0
 
     recent_attendance = Attendance.objects.filter(
         student=child,
     ).select_related('lesson', 'lesson__group').order_by('-lesson__date')[:5]
 
-    xp = Attendance.objects.filter(student=child).aggregate(
-        total=Sum('xp_points'),
-    )['total'] or 0
-
     return {
         'child': child,
         'enrollments': enrollments,
         'attendance_rate': round(att_rate, 1),
-        'avg_grade': round(avg_grade, 1),
+        'avg_grade': round(float(avg_grade), 1),
         'balance': child.balance,
         'has_debt': child.balance < 0,
-        'xp': xp,
+        'xp': stats['total_xp'] or 0,
         'recent_attendance': recent_attendance,
     }
 
@@ -229,22 +227,19 @@ class ParentChildPaymentsView(generics.ListAPIView):
 
 def _build_student_stats(student):
     """O'quvchi statistikasini hisoblaydi."""
-    total_lessons = Attendance.objects.filter(student=student).count()
-    present_count = Attendance.objects.filter(
-        student=student, status='present',
-    ).count()
-    attendance_rate = (present_count / total_lessons * 100) if total_lessons > 0 else 0
+    from django.db.models import Avg, Count, Q
 
-    grades = list(
-        Attendance.objects.filter(
-            student=student, grade__isnull=False,
-        ).values_list('grade', flat=True)
+    stats = Attendance.objects.filter(student=student).aggregate(
+        total_lessons=Count('id'),
+        present_count=Count('id', filter=Q(status='present')),
+        avg_grade=Avg('grade'),
+        total_xp=Sum('xp_points'),
     )
-    avg_grade = sum(grades) / len(grades) if grades else 0
-
-    total_xp = Attendance.objects.filter(student=student).aggregate(
-        total=Sum('xp_points'),
-    )['total'] or 0
+    total_lessons = stats['total_lessons'] or 0
+    present_count = stats['present_count'] or 0
+    attendance_rate = (present_count / total_lessons * 100) if total_lessons > 0 else 0
+    avg_grade = stats['avg_grade'] or 0
+    total_xp = stats['total_xp'] or 0
 
     coin_balance = total_xp
     if hasattr(student, 'profile_data') and student.profile_data:
@@ -252,7 +247,7 @@ def _build_student_stats(student):
 
     return {
         'attendance_rate': round(attendance_rate, 1),
-        'avg_grade': round(avg_grade, 1),
+        'avg_grade': round(float(avg_grade), 1),
         'total_xp': total_xp,
         'coin_balance': coin_balance,
         'balance': student.balance,
@@ -262,17 +257,19 @@ def _build_student_stats(student):
 def _build_leaderboard(student):
     """Tashkilot bo'yicha XP reytingi."""
     org = student.organization
-    leaderboard = User.objects.filter(
+    all_ranked = User.objects.filter(
         role='student',
         organization=org,
         is_active=True,
         is_deleted=False,
     ).annotate(
         xp_total=Sum('lesson_attendances__xp_points'),
-    ).exclude(xp_total__isnull=True).order_by('-xp_total')[:10]
+    ).exclude(xp_total__isnull=True).order_by('-xp_total')
+
+    leaderboard = all_ranked[:10]
 
     student_rank = 0
-    for i, s in enumerate(leaderboard, 1):
+    for i, s in enumerate(all_ranked, 1):
         if s.id == student.id:
             student_rank = i
             break
@@ -324,11 +321,13 @@ class StudentDashboardView(APIView):
             student=student,
         ).order_by('-created_at')[:10]
 
-        # Chart Data
-        grade_history = Attendance.objects.filter(
-            student=student, grade__isnull=False,
-        ).select_related('lesson').order_by('lesson__date')
-        grade_history = list(grade_history)[-10:]
+        # Chart Data (So'nggi 10 ta baho - DB darajasida)
+        grade_history = list(
+            Attendance.objects.filter(
+                student=student, grade__isnull=False,
+            ).select_related('lesson').order_by('-lesson__date')[:10]
+        )
+        grade_history.reverse()
         chart_labels = [att.lesson.date.strftime('%d.%m') for att in grade_history]
         chart_data = [att.grade for att in grade_history]
 
