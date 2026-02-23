@@ -1598,3 +1598,61 @@ img.lazy.loaded {
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
 }
+
+/* ============================================
+   PAGE LOADING OVERLAY
+   ============================================ */
+.page-loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(248, 250, 252, 0.65);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+    pointer-events: none;
+}
+
+.page-loading-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.page-loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    animation: loadingFadeIn 0.2s ease-out;
+}
+
+.page-loading-spinner .spinner-ring {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 3px solid var(--primary-100, #E0E7FF);
+    border-top-color: var(--primary, #4F46E5);
+    animation: spinnerRotate 0.7s linear infinite;
+}
+
+.page-loading-spinner .spinner-text {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--slate-500, #64748B);
+    letter-spacing: 0.025em;
+}
+
+@keyframes spinnerRotate {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes loadingFadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
