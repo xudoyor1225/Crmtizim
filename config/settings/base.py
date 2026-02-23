@@ -24,6 +24,7 @@ INSTALLED_APPS = [
 
     'rest_framework.authtoken',
     'rest_framework',
+    'drf_spectacular',
     'corsheaders',
     'apps.api',
     'django.contrib.admin',
@@ -156,6 +157,31 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# DRF-SPECTACULAR (Swagger/OpenAPI)
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Smart EDU CRM API',
+    'DESCRIPTION': "O'quv Markazlari uchun CRM & LMS Tizimi API hujjatlari",
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'TAGS': [
+        {'name': 'Autentifikatsiya', 'description': 'Token olish va autentifikatsiya'},
+        {'name': 'Foydalanuvchilar', 'description': 'Foydalanuvchilarni boshqarish'},
+        {'name': 'Tranzaksiyalar', 'description': "To'lovlar va tranzaksiyalar"},
+        {'name': 'Ota-ona', 'description': "Ota-ona paneli - farzandlar, davomat, to'lovlar"},
+        {'name': "O'quvchi", 'description': "O'quvchi paneli - darslar, davomat, reyting"},
+    ],
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        'persistAuthorization': True,
+        'displayOperationId': False,
+        'filter': True,
+        'docExpansion': 'list',
+    },
+    'COMPONENT_SPLIT_REQUEST': True,
+    'PREPROCESSING_HOOKS': ['apps.api.spectacular_hooks.custom_preprocessing_hook'],
 }
 
 # ============================================

@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from rest_framework.authtoken.views import obtain_auth_token
 from .views import (
+    CustomObtainAuthToken,
     UserViewSet,
     TransactionViewSet,
     # Parent
@@ -29,7 +29,7 @@ urlpatterns = [
     path('', include(router.urls)),
 
     # ====== AUTENTIFIKATSIYA ======
-    path('auth/token/', obtain_auth_token, name='api-token-auth'),
+    path('auth/token/', CustomObtainAuthToken.as_view(), name='api-token-auth'),
 
     # ====== OTA-ONA (PARENT) ======
     path('parent/dashboard/', ParentDashboardView.as_view(), name='parent-dashboard'),

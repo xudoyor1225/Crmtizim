@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 from apps.core.views import dashboard_view, logout_view
 from apps.core.export_views import export_transactions, api_chart_data, global_search
 from django.contrib.auth.views import LoginView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -16,6 +17,11 @@ urlpatterns = [
     # Dashboard (Bosh sahifa)
     path('', dashboard_view, name='dashboard'),
     
+    # API Hujjatlari (Swagger/OpenAPI)
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+
     # API & Export
     path('api/', include('apps.api.urls')),
     path('api/chart-data/', api_chart_data, name='api_chart_data'),
