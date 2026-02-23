@@ -314,6 +314,17 @@
                 if (el.style.pointerEvents === 'none' || getComputedStyle(el).pointerEvents === 'none') return;
                 el.classList.add('hidden');
                 el.classList.remove('flex');
+                el.style.display = '';
+            });
+
+            // Body scroll-ni tiklash (modal-open klass yoki inline overflow yechish)
+            document.body.classList.remove('modal-open', 'overflow-hidden');
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+
+            // Dinamik yaratilgan .modal-backdrop elementlarni olib tashlash
+            document.querySelectorAll('.modal-backdrop').forEach(function(el) {
+                el.remove();
             });
         }
 
@@ -422,6 +433,18 @@
 
             window.addEventListener('unhandledrejection', function(event) {
                 console.error('Promise xatolik:', event.reason);
+                closeAllModals();
+            });
+
+            // === GLOBAL ESCAPE TUGMASI — barcha modallarni yopish ===
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeAllModals();
+                }
+            });
+
+            // === HTMX SWAP OLDIDAN MODALLARNI TOZALASH ===
+            document.body.addEventListener('htmx:beforeSwap', function() {
                 closeAllModals();
             });
 

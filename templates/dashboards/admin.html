@@ -471,8 +471,9 @@
     </div>
 </div>
 
+{{ students_for_payment|json_script:"students-data-admin" }}
 <script>
-    const studentsData = {{ students_for_payment|safe }};
+    const studentsData = JSON.parse(document.getElementById('students-data-admin').textContent);
     const csrfToken = '{{ csrf_token }}';
 
     function openQuickPayment() {

@@ -144,7 +144,7 @@
 </div>
 
 <!-- RAD ETISH MODALI -->
-<div id="rejectModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50 flex items-center justify-center" onclick="if(event.target===this)closeRejectModal()">
+<div id="rejectModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50" onclick="if(event.target===this)closeRejectModal()">
     <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl m-4">
         <h3 class="text-lg font-bold text-slate-800 mb-4">
             <i class="ph ph-warning text-red-500 mr-2"></i>Chekni rad etish
@@ -173,11 +173,13 @@
 <script>
     function openRejectModal(pk) {
         document.getElementById('rejectModal').classList.remove('hidden');
+        document.getElementById('rejectModal').classList.add('flex');
         document.getElementById('rejectForm').action = '{% url "finance:reject_receipt" pk=0 %}'.replace('0', pk);
     }
 
     function closeRejectModal() {
         document.getElementById('rejectModal').classList.add('hidden');
+        document.getElementById('rejectModal').classList.remove('flex');
     }
 
     // ESC tugmasi bilan yopish
