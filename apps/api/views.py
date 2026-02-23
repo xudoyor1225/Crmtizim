@@ -42,7 +42,7 @@ from .serializers import (
 class CustomObtainAuthToken(ObtainAuthToken):
     """Token olish uchun autentifikatsiya endpoint."""
 
-    @extend_schema(tags=['Autentifikatsiya'], summary='Token olish', description='Foydalanuvchi nomi va parol orqali autentifikatsiya tokeni olish.')
+    @extend_schema(tags=["Autentifikatsiya"], summary="Token olish", description="Foydalanuvchi nomi va parol orqali autentifikatsiya tokeni olish.")
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
@@ -52,8 +52,8 @@ class CustomObtainAuthToken(ObtainAuthToken):
 # ============================================
 
 @extend_schema_view(
-    list=extend_schema(tags=['Foydalanuvchilar'], summary='Foydalanuvchilar ro\'yxati', description='Barcha foydalanuvchilarni ko\'rish. Super admin barcha foydalanuvchilarni, boshqalar faqat o\'z tashkilotidagilarni ko\'radi.'),
-    retrieve=extend_schema(tags=['Foydalanuvchilar'], summary='Foydalanuvchi tafsilotlari', description='Bitta foydalanuvchi haqida batafsil ma\'lumot.'),
+    list=extend_schema(tags=["Foydalanuvchilar"], summary="Foydalanuvchilar ro'yxati", description="Barcha foydalanuvchilarni ko'rish. Super admin barcha foydalanuvchilarni, boshqalar faqat o'z tashkilotidagilarni ko'radi."),
+    retrieve=extend_schema(tags=["Foydalanuvchilar"], summary="Foydalanuvchi tafsilotlari", description="Bitta foydalanuvchi haqida batafsil ma'lumot."),
 )
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
@@ -68,12 +68,12 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 @extend_schema_view(
-    list=extend_schema(tags=['Tranzaksiyalar'], summary='Tranzaksiyalar ro\'yxati', description='Barcha tranzaksiyalarni ko\'rish.'),
-    retrieve=extend_schema(tags=['Tranzaksiyalar'], summary='Tranzaksiya tafsilotlari', description='Bitta tranzaksiya haqida batafsil ma\'lumot.'),
-    create=extend_schema(tags=['Tranzaksiyalar'], summary='Yangi tranzaksiya yaratish', description='Yangi to\'lov yoki tranzaksiya qo\'shish.'),
-    update=extend_schema(tags=['Tranzaksiyalar'], summary='Tranzaksiyani yangilash', description='Mavjud tranzaksiyani to\'liq yangilash.'),
-    partial_update=extend_schema(tags=['Tranzaksiyalar'], summary='Tranzaksiyani qisman yangilash', description='Mavjud tranzaksiyani qisman yangilash.'),
-    destroy=extend_schema(tags=['Tranzaksiyalar'], summary='Tranzaksiyani o\'chirish', description='Tranzaksiyani o\'chirish.'),
+    list=extend_schema(tags=["Tranzaksiyalar"], summary="Tranzaksiyalar ro'yxati", description="Barcha tranzaksiyalarni ko'rish."),
+    retrieve=extend_schema(tags=["Tranzaksiyalar"], summary="Tranzaksiya tafsilotlari", description="Bitta tranzaksiya haqida batafsil ma'lumot."),
+    create=extend_schema(tags=["Tranzaksiyalar"], summary="Yangi tranzaksiya yaratish", description="Yangi to'lov yoki tranzaksiya qo'shish."),
+    update=extend_schema(tags=["Tranzaksiyalar"], summary="Tranzaksiyani yangilash", description="Mavjud tranzaksiyani to'liq yangilash."),
+    partial_update=extend_schema(tags=["Tranzaksiyalar"], summary="Tranzaksiyani qisman yangilash", description="Mavjud tranzaksiyani qisman yangilash."),
+    destroy=extend_schema(tags=["Tranzaksiyalar"], summary="Tranzaksiyani o'chirish", description="Tranzaksiyani o'chirish."),
 )
 class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
@@ -135,7 +135,7 @@ class ParentDashboardView(APIView):
     """
     permission_classes = [permissions.IsAuthenticated, IsParent]
 
-    @extend_schema(tags=['Ota-ona'], summary='Ota-ona dashboardi', description='Barcha farzandlar haqida umumiy ma\'lumot: davomat, baholar, balans va qarzlar.', responses=ParentDashboardSerializer)
+    @extend_schema(tags=["Ota-ona"], summary="Ota-ona dashboardi", description="Barcha farzandlar haqida umumiy ma'lumot: davomat, baholar, balans va qarzlar.", responses=ParentDashboardSerializer)
     def get(self, request):
         parent = request.user
         relations = ParentStudent.objects.filter(
@@ -161,7 +161,7 @@ class ParentDashboardView(APIView):
         return Response(serializer.data)
 
 
-@extend_schema(tags=['Ota-ona'], summary='Farzandlar ro\'yxati', description='Ota-onaning barcha farzandlari ro\'yxati va ularning ma\'lumotlari.', responses=ChildDetailSerializer(many=True))
+@extend_schema(tags=["Ota-ona"], summary="Farzandlar ro'yxati", description="Ota-onaning barcha farzandlari ro'yxati va ularning ma'lumotlari.", responses=ChildDetailSerializer(many=True))
 class ParentChildrenListView(APIView):
     """
     GET /api/parent/children/
@@ -184,7 +184,7 @@ class ParentChildrenListView(APIView):
         return Response(serializer.data)
 
 
-@extend_schema(tags=['Ota-ona'], summary='Farzand tafsilotlari', description='Bitta farzand haqida batafsil ma\'lumot: guruhlar, davomat, baholar.', responses=ChildDetailSerializer)
+@extend_schema(tags=["Ota-ona"], summary="Farzand tafsilotlari", description="Bitta farzand haqida batafsil ma'lumot: guruhlar, davomat, baholar.", responses=ChildDetailSerializer)
 class ParentChildDetailView(APIView):
     """
     GET /api/parent/children/<child_id>/
@@ -210,7 +210,7 @@ class ParentChildDetailView(APIView):
         return Response(serializer.data)
 
 
-@extend_schema(tags=['Ota-ona'], summary='Farzand davomati', description='Farzandning davomati (sahifalangan ro\'yxat).')
+@extend_schema(tags=["Ota-ona"], summary="Farzand davomati", description="Farzandning davomati (sahifalangan ro'yxat).")
 class ParentChildAttendanceView(generics.ListAPIView):
     """
     GET /api/parent/children/<child_id>/attendance/
@@ -231,7 +231,7 @@ class ParentChildAttendanceView(generics.ListAPIView):
         ).select_related('lesson', 'lesson__group').order_by('-lesson__date')
 
 
-@extend_schema(tags=['Ota-ona'], summary='Farzand to\'lovlari', description='Farzandning to\'lov tarixi (sahifalangan ro\'yxat).')
+@extend_schema(tags=["Ota-ona"], summary="Farzand to'lovlari", description="Farzandning to'lov tarixi (sahifalangan ro'yxat).")
 class ParentChildPaymentsView(generics.ListAPIView):
     """
     GET /api/parent/children/<child_id>/payments/
