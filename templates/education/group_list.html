@@ -227,7 +227,8 @@
 
                     document.getElementById('searchResults').innerHTML = html;
                 })
-                .catch(function() {
+                .catch(function(error) {
+                    console.error('Qidiruv xatolik:', error);
                     document.getElementById('searchSpinner').classList.add('hidden');
                     document.getElementById('searchResults').innerHTML = `
                         <div class="p-5 text-center text-rose-400 text-sm">

@@ -382,11 +382,13 @@
         }
 
         // === JS XATOLIK SODIR BO'LGANDA MODALLARNI TOZALASH ===
-        window.addEventListener('error', function() {
+        window.addEventListener('error', function(event) {
+            console.error('Xatolik:', event.error);
             closeAllModals();
         });
 
-        window.addEventListener('unhandledrejection', function() {
+        window.addEventListener('unhandledrejection', function(event) {
+            console.error('Promise xatolik:', event.reason);
             closeAllModals();
         });
 
