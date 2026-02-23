@@ -224,13 +224,19 @@ class StaffAttendance(TenantAwareModel):
 
             expected = self.expected_time
             if isinstance(expected, str):
-                parts = expected.split(':')
-                expected = time(int(parts[0]), int(parts[1]))
+                try:
+                    parts = expected.split(':')
+                    expected = time(int(parts[0]), int(parts[1]))
+                except (ValueError, IndexError):
+                    return self.late_minutes
 
             check_in = self.check_in
             if isinstance(check_in, str):
-                parts = check_in.split(':')
-                check_in = time(int(parts[0]), int(parts[1]))
+                try:
+                    parts = check_in.split(':')
+                    check_in = time(int(parts[0]), int(parts[1]))
+                except (ValueError, IndexError):
+                    return self.late_minutes
 
             check_in_dt = datetime.combine(self.date, check_in)
             expected_dt = datetime.combine(self.date, expected)
