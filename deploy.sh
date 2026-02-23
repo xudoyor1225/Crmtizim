@@ -13,8 +13,9 @@ source venv/bin/activate
 echo "📦 Installing dependencies..."
 pip install -r requirements/base.txt
 
-# Run migrations
+# Run migrations (uses settings from .env via python-decouple)
 echo "🗄️ Running migrations..."
+python manage.py showmigrations --list 2>/dev/null | grep '\[ \]' && echo "⚠️ Pending migrations found!"
 python manage.py migrate
 
 # Collect static files
