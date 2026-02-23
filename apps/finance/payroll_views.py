@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.db.models import Sum, Count, Avg
 from datetime import date, timedelta
 import calendar
@@ -351,6 +352,7 @@ def staff_check_in(request):
     org = request.user.organization
     if request.method == 'POST':
         staff_id = request.POST.get('staff_id') or request.user.id
+        next_url = request.POST.get('next', '')
 
         staff_query = User.objects.filter(pk=staff_id)
         if org:
@@ -380,6 +382,8 @@ def staff_check_in(request):
             att.save()
             messages.success(request, f"{staff.full_name} keldi ({now.strftime('%H:%M')})")
         
+        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+            return redirect(next_url)
         return redirect('finance:staff_attendance_list')
 
     return redirect('finance:staff_attendance_list')
@@ -391,6 +395,7 @@ def staff_check_out(request):
     org = request.user.organization
     if request.method == 'POST':
         staff_id = request.POST.get('staff_id') or request.user.id
+        next_url = request.POST.get('next', '')
 
         staff_query = User.objects.filter(pk=staff_id)
         if org:
@@ -415,6 +420,8 @@ def staff_check_out(request):
         except StaffAttendance.DoesNotExist:
             messages.error(request, f"{staff.full_name} bugun kelmagan")
         
+        if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+            return redirect(next_url)
         return redirect('finance:staff_attendance_list')
 
     return redirect('finance:staff_attendance_list')

@@ -86,11 +86,13 @@
     <span>Reytinglar</span>
 </a>
 
+{% if request.user.role == 'super_admin' %}
 <a href="{% url 'operations:shop' %}"
     class="sidebar-link {% if 'shop' in request.path %}active{% endif %}">
     <i class="ph-fill ph-storefront"></i>
     <span>Do'kon</span>
 </a>
+{% endif %}
 
 <!-- TO'LOV (O'quvchi va Ota-ona uchun) -->
 {% if request.user.role == 'student' or request.user.role == 'parent' %}

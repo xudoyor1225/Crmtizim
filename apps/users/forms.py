@@ -133,10 +133,10 @@ class StudentForm(forms.ModelForm):
 
 
 # ============================================
-# O'QITUVCHI FORMASI (NFC Card bilan)
+# O'QITUVCHI FORMASI
 # ============================================
 class TeacherForm(forms.ModelForm):
-    """O'qituvchi qo'shish formasi - NFC card va to'liq ma'lumotlar"""
+    """O'qituvchi qo'shish formasi - to'liq ma'lumotlar"""
     
     # Parol
     password = forms.CharField(
@@ -165,7 +165,7 @@ class TeacherForm(forms.ModelForm):
         model = User
         fields = [
             'first_name', 'last_name', 'middle_name', 'phone', 
-            'birth_date', 'branch', 'avatar', 'nfc_card_id'
+            'birth_date', 'branch', 'avatar'
         ]
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Ismi', 'required': True}),
@@ -175,7 +175,6 @@ class TeacherForm(forms.ModelForm):
             'birth_date': forms.DateInput(attrs={'class': 'form-input', 'type': 'date'}),
             'branch': forms.Select(attrs={'class': 'form-select'}),
             'avatar': forms.FileInput(attrs={'class': 'form-input', 'accept': 'image/*'}),
-            'nfc_card_id': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'NFC karta ID raqami'}),
         }
         labels = {
             'first_name': 'Ismi',
@@ -185,7 +184,6 @@ class TeacherForm(forms.ModelForm):
             'birth_date': "Tug'ilgan sana",
             'branch': 'Filial',
             'avatar': 'Rasm',
-            'nfc_card_id': 'NFC Karta ID (Turniket uchun)',
         }
 
     def save(self, commit=True, organization=None):
@@ -297,7 +295,7 @@ class StaffForm(forms.ModelForm):
         model = User
         fields = [
             'first_name', 'last_name', 'middle_name', 'phone', 
-            'birth_date', 'branch', 'avatar', 'nfc_card_id'
+            'birth_date', 'branch', 'avatar'
         ]
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Ismi', 'required': True}),
@@ -307,7 +305,6 @@ class StaffForm(forms.ModelForm):
             'birth_date': forms.DateInput(attrs={'class': 'form-input', 'type': 'date'}),
             'branch': forms.Select(attrs={'class': 'form-select'}),
             'avatar': forms.FileInput(attrs={'class': 'form-input', 'accept': 'image/*'}),
-            'nfc_card_id': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'NFC karta ID raqami'}),
         }
         labels = {
             'first_name': 'Ismi',
@@ -317,7 +314,6 @@ class StaffForm(forms.ModelForm):
             'birth_date': "Tug'ilgan sana",
             'branch': 'Filial',
             'avatar': 'Rasm',
-            'nfc_card_id': 'NFC Karta ID',
         }
 
     def __init__(self, *args, user=None, **kwargs):

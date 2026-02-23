@@ -14,7 +14,7 @@
             </div>
             <div>
                 <h2 class="text-2xl font-bold text-slate-800">{{ title }}</h2>
-                <p class="text-slate-500">O'qituvchi ma'lumotlari va NFC karta ID</p>
+                <p class="text-slate-500">O'qituvchi ma'lumotlari</p>
             </div>
         </div>
 
@@ -93,27 +93,19 @@
             <div class="space-y-4">
                 <h3
                     class="text-lg font-semibold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
-                    <i class="ph ph-identification-card text-[#64748B]"></i> HR va Turniket
+                    <i class="ph ph-identification-card text-[#64748B]"></i> Qo'shimcha ma'lumotlar
                 </h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">
-                            <i class="ph ph-credit-card text-[#64748B]"></i> NFC Karta ID (Turniket uchun)
-                        </label>
-                        {{ form.nfc_card_id }}
-                        <p class="text-xs text-slate-500 mt-1">Turniket orqali kirishni nazorat qilish uchun</p>
-                    </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-600 mb-1.5">Pasport
                             seriyasi</label>
                         {{ form.passport_series }}
                     </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-slate-600 mb-1.5">Manzil</label>
-                    {{ form.address }}
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Manzil</label>
+                        {{ form.address }}
+                    </div>
                 </div>
             </div>
 
