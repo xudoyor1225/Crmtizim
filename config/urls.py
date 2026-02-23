@@ -17,6 +17,7 @@ urlpatterns = [
     path('', dashboard_view, name='dashboard'),
     
     # API & Export
+    path('api/', include('apps.api.urls')),
     path('api/chart-data/', api_chart_data, name='api_chart_data'),
     path('api/search/', global_search, name='global_search'),
     path('export/transactions/', export_transactions, name='export_transactions'),
