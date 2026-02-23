@@ -209,7 +209,7 @@
 </div>
 
 <!-- QO'SHISH MODALI -->
-<div id="addModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+<div id="addModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50" onclick="if(event.target===this)closeModal('addModal')">
     <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl">
         <h3 class="text-lg font-bold text-slate-800 mb-4">📦 Material Kirim</h3>
         <form id="addForm" method="POST">
@@ -234,7 +234,7 @@
 </div>
 
 <!-- YECHISH MODALI -->
-<div id="removeModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+<div id="removeModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50" onclick="if(event.target===this)closeModal('removeModal')">
     <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl">
         <h3 class="text-lg font-bold text-slate-800 mb-4">📤 Material Chiqim</h3>
         <form id="removeForm" method="POST">

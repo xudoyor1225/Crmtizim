@@ -340,14 +340,7 @@
                 }
 
                 // Modal/overlay yopish - HTMX so'rov boshlanganda ochiq modallarni yopish
-                var modalIds = ['quickPaymentOverlay', 'addStudentModal', 'rejectModal', 'addModal', 'removeModal'];
-                modalIds.forEach(function(id) {
-                    var modal = document.getElementById(id);
-                    if (modal) {
-                        modal.classList.add('hidden');
-                        modal.style.display = '';
-                    }
-                });
+                closeAllModals();
             });
 
             document.body.addEventListener('htmx:afterRequest', function() {
@@ -357,7 +350,45 @@
             document.body.addEventListener('htmx:responseError', function() {
                 finishProgress();
             });
+
+            document.body.addEventListener('htmx:sendError', function() {
+                finishProgress();
+                closeAllModals();
+            });
         })();
+
+        // === BARCHA MODAL/OVERLAY LARNI YOPISH (Global) ===
+        function closeAllModals() {
+            // Ma'lum IDli modallarni yopish
+            var modalIds = ['quickPaymentOverlay', 'addStudentModal', 'rejectModal', 'addModal', 'removeModal'];
+            modalIds.forEach(function(id) {
+                var modal = document.getElementById(id);
+                if (modal) {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                    modal.style.display = '';
+                }
+            });
+
+            // Qotib qolgan backdrop/overlay elementlarni tozalash
+            document.querySelectorAll('.fixed.inset-0[class*="bg-black"]').forEach(function(el) {
+                // Alpine.js bilan boshqariladigan elementlarni o'tkazib yuboramiz
+                if (el.hasAttribute('x-show') || el.hasAttribute('x-data')) return;
+                // Faqat modal backdrop bo'lsa yopamiz
+                if (el.closest('[x-data]')) return;
+                el.classList.add('hidden');
+                el.classList.remove('flex');
+            });
+        }
+
+        // === JS XATOLIK SODIR BO'LGANDA MODALLARNI TOZALASH ===
+        window.addEventListener('error', function() {
+            closeAllModals();
+        });
+
+        window.addEventListener('unhandledrejection', function() {
+            closeAllModals();
+        });
 
         // === RE-INITIALIZE SCRIPTS AFTER HTMX SWAP ===
         document.body.addEventListener('htmx:afterSettle', function(evt) {

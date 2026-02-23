@@ -226,6 +226,15 @@
                     });
 
                     document.getElementById('searchResults').innerHTML = html;
+                })
+                .catch(function() {
+                    document.getElementById('searchSpinner').classList.add('hidden');
+                    document.getElementById('searchResults').innerHTML = `
+                        <div class="p-5 text-center text-rose-400 text-sm">
+                            <i class="ph ph-warning-circle text-2xl mb-2"></i>
+                            <p>Xatolik yuz berdi. Qaytadan urinib ko'ring.</p>
+                        </div>
+                    `;
                 });
         }, 300);
     });
