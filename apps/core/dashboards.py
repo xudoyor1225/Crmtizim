@@ -71,6 +71,7 @@ def super_admin_dashboard(request):
     """
     from django.db.models import F
     from apps.finance.inventory import Supply
+    from apps.finance.payroll import StaffAttendance
     
     today = timezone.now().date()
     
@@ -216,6 +217,16 @@ def super_admin_dashboard(request):
     # Kassalar ro'yxati (Quick Payment uchun)
     accounts = Account.objects.filter(is_deleted=False)
     
+    # ====== O'Z DAVOMATI (Super Admin) ======
+    my_attendance = None
+    try:
+        my_attendance = StaffAttendance.objects.get(
+            staff=request.user,
+            date=today
+        )
+    except StaffAttendance.DoesNotExist:
+        pass
+    
     context = {
         # Tashkilotlar
         'total_orgs': total_orgs,
@@ -276,6 +287,9 @@ def super_admin_dashboard(request):
         # Quick Payment
         'students_for_payment': students_for_payment,
         'accounts': accounts,
+        
+        # O'z davomati
+        'my_attendance': my_attendance,
     }
     
     return render(request, 'dashboards/super_admin.html', context)
@@ -407,6 +421,7 @@ def teacher_dashboard(request):
     KPI statistikasi va reyting bilan.
     """
     from django.db.models import Avg
+    from apps.finance.payroll import StaffAttendance
     
     teacher = request.user
     today = timezone.now().date()
@@ -476,6 +491,16 @@ def teacher_dashboard(request):
         total=Sum('xp_points')
     )['total'] or 0
     
+    # ====== O'Z DAVOMATI (Teacher) ======
+    my_attendance = None
+    try:
+        my_attendance = StaffAttendance.objects.get(
+            staff=teacher,
+            date=today
+        )
+    except StaffAttendance.DoesNotExist:
+        pass
+    
     context = {
         'my_groups': my_groups,
         'today_lessons': today_lessons,
@@ -490,6 +515,8 @@ def teacher_dashboard(request):
         'student_attendance_rate': round(student_attendance_rate, 1),
         'avg_grade_given': round(avg_grade_given, 1),
         'total_xp_given': total_xp_given,
+        # O'z davomati
+        'my_attendance': my_attendance,
     }
     
     return render(request, 'dashboards/teacher.html', context)
