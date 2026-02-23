@@ -220,9 +220,26 @@ class StaffAttendance(TenantAwareModel):
     def calculate_late_minutes(self):
         """Kechikish daqiqalarini hisoblash"""
         if self.check_in and self.expected_time:
-            from datetime import datetime, timedelta
-            check_in_dt = datetime.combine(self.date, self.check_in)
-            expected_dt = datetime.combine(self.date, self.expected_time)
+            from datetime import datetime, time, timedelta
+
+            expected = self.expected_time
+            if isinstance(expected, str):
+                try:
+                    parts = expected.split(':')
+                    expected = time(int(parts[0]), int(parts[1]))
+                except (ValueError, IndexError):
+                    return self.late_minutes
+
+            check_in = self.check_in
+            if isinstance(check_in, str):
+                try:
+                    parts = check_in.split(':')
+                    check_in = time(int(parts[0]), int(parts[1]))
+                except (ValueError, IndexError):
+                    return self.late_minutes
+
+            check_in_dt = datetime.combine(self.date, check_in)
+            expected_dt = datetime.combine(self.date, expected)
             
             if check_in_dt > expected_dt:
                 diff = check_in_dt - expected_dt
