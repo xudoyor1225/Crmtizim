@@ -145,6 +145,10 @@
 
     <!-- Auto redirect script -->
     <script>
+        // Oldingi sessiya holatini tozalash (overlay/modal qotib qolishini oldini olish uchun)
+        window._htmxListenersInit = false;
+        localStorage.removeItem('sidebarScrollPos');
+
         let countdown = 5;
         const countdownEl = document.getElementById('countdown');
 

@@ -290,73 +290,6 @@
 
     <!-- FRONTEND OPTIMIZATSIYA SCRIPTI -->
     <script>
-        // HTMX konfiguratsiya
-        document.body.addEventListener('htmx:configRequest', function(evt) {
-            // CSRF token avtomatik qo'shish
-            evt.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
-        });
-
-        // === TOP PROGRESS BAR ===
-        (function() {
-            var bar = document.getElementById('htmx-progress-bar');
-            var timer = null;
-
-            function startProgress() {
-                if (timer) clearInterval(timer);
-                bar.style.transition = 'none';
-                bar.style.width = '0%';
-                bar.style.opacity = '1';
-                // Force reflow
-                bar.offsetWidth;
-                bar.style.transition = 'width 0.4s ease';
-                bar.style.width = '30%';
-
-                var w = 30;
-                timer = setInterval(function() {
-                    if (w < 90) {
-                        w += (90 - w) * 0.1;
-                        bar.style.width = w + '%';
-                    }
-                }, 300);
-            }
-
-            function finishProgress() {
-                if (timer) { clearInterval(timer); timer = null; }
-                bar.style.transition = 'width 0.2s ease';
-                bar.style.width = '100%';
-                setTimeout(function() {
-                    bar.style.transition = 'opacity 0.3s ease';
-                    bar.style.opacity = '0';
-                }, 200);
-            }
-
-            document.body.addEventListener('htmx:beforeRequest', function() {
-                startProgress();
-
-                // Save sidebar scroll position before swap
-                var sidebar = document.getElementById('sidebar-nav');
-                if (sidebar) {
-                    localStorage.setItem('sidebarScrollPos', sidebar.scrollTop);
-                }
-
-                // Modal/overlay yopish - HTMX so'rov boshlanganda ochiq modallarni yopish
-                closeAllModals();
-            });
-
-            document.body.addEventListener('htmx:afterRequest', function() {
-                finishProgress();
-            });
-
-            document.body.addEventListener('htmx:responseError', function() {
-                finishProgress();
-            });
-
-            document.body.addEventListener('htmx:sendError', function() {
-                finishProgress();
-                closeAllModals();
-            });
-        })();
-
         // === BARCHA MODAL/OVERLAY LARNI YOPISH (Global) ===
         function closeAllModals() {
             // Ma'lum IDli modallarni yopish
@@ -371,80 +304,16 @@
             });
 
             // Qotib qolgan backdrop/overlay elementlarni tozalash
-            document.querySelectorAll('.fixed.inset-0[class*="bg-black"]').forEach(function(el) {
+            document.querySelectorAll('.fixed.inset-0').forEach(function(el) {
+                // HTMX progress bar ni o'tkazib yuboramiz
+                if (el.id === 'htmx-progress-bar') return;
                 // Alpine.js bilan boshqariladigan elementlarni o'tkazib yuboramiz
                 if (el.hasAttribute('x-show') || el.hasAttribute('x-data')) return;
-                // Faqat modal backdrop bo'lsa yopamiz
                 if (el.closest('[x-data]')) return;
+                // pointer-events: none bo'lgan elementlarni o'tkazib yuboramiz
+                if (el.style.pointerEvents === 'none' || getComputedStyle(el).pointerEvents === 'none') return;
                 el.classList.add('hidden');
                 el.classList.remove('flex');
-            });
-        }
-
-        // === JS XATOLIK SODIR BO'LGANDA MODALLARNI TOZALASH ===
-        window.addEventListener('error', function(event) {
-            console.error('Xatolik:', event.error);
-            closeAllModals();
-        });
-
-        window.addEventListener('unhandledrejection', function(event) {
-            console.error('Promise xatolik:', event.reason);
-            closeAllModals();
-        });
-
-        // === RE-INITIALIZE SCRIPTS AFTER HTMX SWAP ===
-        document.body.addEventListener('htmx:afterSettle', function(evt) {
-            // Restore sidebar scroll position after swap
-            var sidebar = document.getElementById('sidebar-nav');
-            var savedPos = localStorage.getItem('sidebarScrollPos');
-            if (savedPos && sidebar) {
-                sidebar.scrollTop = parseInt(savedPos, 10);
-            }
-
-            // Re-initialize Alpine.js components in swapped content
-            if (window.Alpine) {
-                evt.detail.target.querySelectorAll('[x-data]').forEach(function(el) {
-                    if (!el._x_dataStack) {
-                        window.Alpine.initTree(el);
-                    }
-                });
-            }
-
-            // Re-initialize Chart.js canvases (destroy old instances first)
-            if (window.Chart) {
-                var canvases = evt.detail.target.querySelectorAll('canvas');
-                canvases.forEach(function(canvas) {
-                    var existingChart = Chart.getChart(canvas);
-                    if (existingChart) existingChart.destroy();
-                });
-            }
-
-            // Re-observe lazy-loaded images
-            if ('IntersectionObserver' in window && imageObserver) {
-                document.querySelectorAll('img.lazy').forEach(function(img) {
-                    if (img.dataset.src && img.src !== img.dataset.src) {
-                        imageObserver.observe(img);
-                    }
-                });
-            }
-        });
-
-        // Lazy loading rasmlar uchun
-        var imageObserver = null;
-        if ('IntersectionObserver' in window) {
-            imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        img.src = img.dataset.src;
-                        img.classList.remove('lazy');
-                        observer.unobserve(img);
-                    }
-                });
-            });
-
-            document.querySelectorAll('img.lazy').forEach(img => {
-                imageObserver.observe(img);
             });
         }
 
@@ -461,14 +330,167 @@
             };
         }
 
-        // Network status tekshirish
-        window.addEventListener('online', () => {
-            console.log('Internet qayta ulandi');
-        });
+        // === HTMX EVENT LISTENER LARNI FAQAT BIR MARTA RO'YXATGA OLISH ===
+        // hx-boost body swap qilganda scriptlar qayta ishga tushadi,
+        // shuning uchun duplikat listener larni oldini olamiz
+        if (!window._htmxListenersInit) {
+            window._htmxListenersInit = true;
 
-        window.addEventListener('offline', () => {
-            console.log('Internet uzildi');
-        });
+            // HTMX konfiguratsiya
+            document.body.addEventListener('htmx:configRequest', function(evt) {
+                // CSRF token avtomatik qo'shish
+                evt.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+            });
+
+            // === TOP PROGRESS BAR ===
+            (function() {
+                var timer = null;
+
+                function getBar() {
+                    return document.getElementById('htmx-progress-bar');
+                }
+
+                function startProgress() {
+                    var bar = getBar();
+                    if (!bar) return;
+                    if (timer) clearInterval(timer);
+                    bar.style.transition = 'none';
+                    bar.style.width = '0%';
+                    bar.style.opacity = '1';
+                    // Force reflow
+                    bar.offsetWidth;
+                    bar.style.transition = 'width 0.4s ease';
+                    bar.style.width = '30%';
+
+                    var w = 30;
+                    timer = setInterval(function() {
+                        if (w < 90) {
+                            w += (90 - w) * 0.1;
+                            var b = getBar();
+                            if (b) b.style.width = w + '%';
+                        }
+                    }, 300);
+                }
+
+                function finishProgress() {
+                    var bar = getBar();
+                    if (!bar) return;
+                    if (timer) { clearInterval(timer); timer = null; }
+                    bar.style.transition = 'width 0.2s ease';
+                    bar.style.width = '100%';
+                    setTimeout(function() {
+                        var b = getBar();
+                        if (b) {
+                            b.style.transition = 'opacity 0.3s ease';
+                            b.style.opacity = '0';
+                        }
+                    }, 200);
+                }
+
+                document.body.addEventListener('htmx:beforeRequest', function() {
+                    startProgress();
+
+                    // Save sidebar scroll position before swap
+                    var sidebar = document.getElementById('sidebar-nav');
+                    if (sidebar) {
+                        localStorage.setItem('sidebarScrollPos', sidebar.scrollTop);
+                    }
+
+                    // Modal/overlay yopish - HTMX so'rov boshlanganda ochiq modallarni yopish
+                    closeAllModals();
+                });
+
+                document.body.addEventListener('htmx:afterRequest', function() {
+                    finishProgress();
+                });
+
+                document.body.addEventListener('htmx:responseError', function() {
+                    finishProgress();
+                });
+
+                document.body.addEventListener('htmx:sendError', function() {
+                    finishProgress();
+                    closeAllModals();
+                });
+            })();
+
+            // === JS XATOLIK SODIR BO'LGANDA MODALLARNI TOZALASH ===
+            window.addEventListener('error', function(event) {
+                console.error('Xatolik:', event.error);
+                closeAllModals();
+            });
+
+            window.addEventListener('unhandledrejection', function(event) {
+                console.error('Promise xatolik:', event.reason);
+                closeAllModals();
+            });
+
+            // === RE-INITIALIZE SCRIPTS AFTER HTMX SWAP ===
+            document.body.addEventListener('htmx:afterSettle', function(evt) {
+                // Restore sidebar scroll position after swap
+                var sidebar = document.getElementById('sidebar-nav');
+                var savedPos = localStorage.getItem('sidebarScrollPos');
+                if (savedPos && sidebar) {
+                    sidebar.scrollTop = parseInt(savedPos, 10);
+                }
+
+                // Re-initialize Alpine.js - butun body ichidagi barcha Alpine elementlarni
+                // qayta ishga tushirish (x-data, x-show, :class, @click va h.k.)
+                // Bu sidebar, overlay va boshqa elementlarni ham to'g'ri ulaydi
+                if (window.Alpine) {
+                    window.Alpine.initTree(document.body);
+                }
+
+                // Qotib qolgan modal/overlay larni tozalash
+                closeAllModals();
+
+                // Re-initialize Chart.js canvases (destroy old instances first)
+                if (window.Chart) {
+                    var canvases = evt.detail.target.querySelectorAll('canvas');
+                    canvases.forEach(function(canvas) {
+                        var existingChart = Chart.getChart(canvas);
+                        if (existingChart) existingChart.destroy();
+                    });
+                }
+
+                // Re-observe lazy-loaded images
+                if ('IntersectionObserver' in window && window._imageObserver) {
+                    document.querySelectorAll('img.lazy').forEach(function(img) {
+                        if (img.dataset.src && img.src !== img.dataset.src) {
+                            window._imageObserver.observe(img);
+                        }
+                    });
+                }
+            });
+
+            // Lazy loading rasmlar uchun
+            window._imageObserver = null;
+            if ('IntersectionObserver' in window) {
+                window._imageObserver = new IntersectionObserver(function(entries, observer) {
+                    entries.forEach(function(entry) {
+                        if (entry.isIntersecting) {
+                            var img = entry.target;
+                            img.src = img.dataset.src;
+                            img.classList.remove('lazy');
+                            observer.unobserve(img);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('img.lazy').forEach(function(img) {
+                    window._imageObserver.observe(img);
+                });
+            }
+
+            // Network status tekshirish
+            window.addEventListener('online', function() {
+                console.log('Internet qayta ulandi');
+            });
+
+            window.addEventListener('offline', function() {
+                console.log('Internet uzildi');
+            });
+        }
     </script>
 
     {% include 'components/toast.html' %}
