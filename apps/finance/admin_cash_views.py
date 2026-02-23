@@ -2,6 +2,8 @@
 Administrator kassa kirim-chiqim va kassa topshirish viewlari.
 Admin o'z kassasida kirim-chiqim qiladi, keyin super adminga topshiradi.
 """
+import logging
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -17,6 +19,8 @@ from .services import confirm_transaction as confirm_service
 from apps.users.models import User
 from apps.core.permissions import permission_required, check_permission
 from apps.core.audit import log_user_action
+
+logger = logging.getLogger(__name__)
 
 
 def _get_or_create_admin_account(user, org):
@@ -73,10 +77,14 @@ def admin_cash_dashboard(request):
     ).order_by('-created_at')[:20]
 
     # Oxirgi topshirishlar
-    submissions = CashSubmission.objects.filter(
-        admin_user=user,
-        is_deleted=False,
-    ).order_by('-created_at')[:10]
+    try:
+        submissions = list(CashSubmission.objects.filter(
+            admin_user=user,
+            is_deleted=False,
+        ).order_by('-created_at')[:10])
+    except Exception as e:
+        logger.error(f"CashSubmission so'rovida xatolik (dashboard): {e}")
+        submissions = []
 
     context = {
         'admin_account': admin_account,
@@ -207,6 +215,10 @@ def admin_submit_cash(request):
         main_account_id = request.POST.get('main_account')
         notes = request.POST.get('notes', '')
 
+        if not main_account_id:
+            messages.error(request, "❌ Asosiy kassani tanlang!")
+            return redirect('finance:admin_cash_dashboard')
+
         main_account = get_object_or_404(Account, pk=main_account_id, organization=org)
 
         # Davr hisoblash
@@ -237,49 +249,61 @@ def admin_submit_cash(request):
             messages.warning(request, "⚠️ Kassada topshirish uchun mablag' yo'q!")
             return redirect('finance:admin_cash_dashboard')
 
-        with transaction.atomic():
-            submission = CashSubmission.objects.create(
-                organization=org,
-                admin_user=user,
-                admin_account=admin_account,
-                main_account=main_account,
-                total_income=total_income,
-                total_expense=total_expense,
-                net_amount=net_amount,
-                period_type=period_type,
-                period_start=period_start,
-                period_end=period_end,
-                notes=notes,
-                status='pending',
-            )
+        try:
+            with transaction.atomic():
+                submission = CashSubmission.objects.create(
+                    organization=org,
+                    admin_user=user,
+                    admin_account=admin_account,
+                    main_account=main_account,
+                    total_income=total_income,
+                    total_expense=total_expense,
+                    net_amount=net_amount,
+                    period_type=period_type,
+                    period_start=period_start,
+                    period_end=period_end,
+                    notes=notes,
+                    status='pending',
+                )
 
-            # Admin kassasi balansini 0 ga tushirish
-            admin_account.balance = Decimal('0.00')
-            admin_account.save(update_fields=['balance'])
+                # Admin kassasi balansini 0 ga tushirish
+                admin_account.balance = Decimal('0.00')
+                admin_account.save(update_fields=['balance'])
+        except Exception as e:
+            logger.error(f"Kassa topshirishda xatolik: {e}")
+            messages.error(
+                request,
+                "❌ Kassa topshirishda xatolik yuz berdi. "
+                "Ma'lumotlar bazasi migratsiyalarini tekshiring (python manage.py migrate)."
+            )
+            return redirect('finance:admin_cash_dashboard')
 
         log_user_action(user, 'CREATE', 'CashSubmission', submission.id, str(submission), request=request)
 
         # Super admin / owner larga bildirishnoma yuborish
-        from apps.automation.services import create_system_notification
-        admins = User.objects.filter(
-            role__in=['super_admin', 'owner'],
-            is_active=True,
-        )
-        if org:
-            admins = admins.filter(organization=org)
-        admins = admins.exclude(pk=user.pk)
-
-        for admin in admins[:10]:
-            create_system_notification(
-                recipient=admin,
-                title="Yangi kassa topshirish",
-                message=(
-                    f"{user.get_full_name()} kassa topshirish so'rovini yubordi. "
-                    f"Davr: {submission.period_start.strftime('%d.%m.%Y')} - {submission.period_end.strftime('%d.%m.%Y')}. "
-                    f"Sof summa: {net_amount:,.0f} so'm"
-                ),
-                notification_type='system'
+        try:
+            from apps.automation.services import create_system_notification
+            admins = User.objects.filter(
+                role__in=['super_admin', 'owner'],
+                is_active=True,
             )
+            if org:
+                admins = admins.filter(organization=org)
+            admins = admins.exclude(pk=user.pk)
+
+            for admin in admins[:10]:
+                create_system_notification(
+                    recipient=admin,
+                    title="Yangi kassa topshirish",
+                    message=(
+                        f"{user.get_full_name()} kassa topshirish so'rovini yubordi. "
+                        f"Davr: {submission.period_start.strftime('%d.%m.%Y')} - {submission.period_end.strftime('%d.%m.%Y')}. "
+                        f"Sof summa: {net_amount:,.0f} so'm"
+                    ),
+                    notification_type='system'
+                )
+        except Exception as e:
+            logger.error(f"Kassa topshirish bildirishnomalarini yuborishda xatolik: {e}")
 
         messages.success(request, f"✅ Kassa topshirildi! Sof summa: {net_amount:,.0f} UZS. Balans 0 ga tushirildi.")
         return redirect('finance:admin_cash_dashboard')
@@ -311,20 +335,24 @@ def cash_submission_list(request):
     org = request.organization
     status_filter = request.GET.get('status', '')
 
-    submissions = CashSubmission.objects.filter(is_deleted=False)
-    if org:
-        submissions = submissions.filter(organization=org)
+    try:
+        submissions = CashSubmission.objects.filter(is_deleted=False)
+        if org:
+            submissions = submissions.filter(organization=org)
 
-    # Admin faqat o'z topshirishlarini ko'radi
-    if user.role == 'admin' and not check_permission(user, 'finance', 'view'):
-        submissions = submissions.filter(admin_user=user)
+        # Admin faqat o'z topshirishlarini ko'radi
+        if user.role == 'admin' and not check_permission(user, 'finance', 'view'):
+            submissions = submissions.filter(admin_user=user)
 
-    if status_filter:
-        submissions = submissions.filter(status=status_filter)
+        if status_filter:
+            submissions = submissions.filter(status=status_filter)
 
-    submissions = submissions.select_related(
-        'admin_user', 'admin_account', 'main_account', 'approved_by'
-    ).order_by('-created_at')[:50]
+        submissions = list(submissions.select_related(
+            'admin_user', 'admin_account', 'main_account', 'approved_by'
+        ).order_by('-created_at')[:50])
+    except Exception as e:
+        logger.error(f"CashSubmission so'rovida xatolik (list): {e}")
+        submissions = []
 
     context = {
         'submissions': submissions,
@@ -381,20 +409,23 @@ def reject_cash_submission(request, pk):
                     f"Rad etildi: {submission}", request=request)
 
     # Admin ga bildirishnoma yuborish
-    from apps.automation.services import create_system_notification
-    reason_text = rejection_reason or "Ko\u2018rsatilmagan"
-    create_system_notification(
-        recipient=submission.admin_user,
-        title="Kassa topshirish rad etildi ❌",
-        message=(
-            f"Sizning {submission.period_start.strftime('%d.%m.%Y')} - "
-            f"{submission.period_end.strftime('%d.%m.%Y')} oralig'idagi "
-            f"kassa topshirishingiz rad etildi. "
-            f"Sabab: {reason_text}. "
-            f"Rad etgan: {request.user.get_full_name()}"
-        ),
-        notification_type='system'
-    )
+    try:
+        from apps.automation.services import create_system_notification
+        reason_text = rejection_reason or "Ko\u2018rsatilmagan"
+        create_system_notification(
+            recipient=submission.admin_user,
+            title="Kassa topshirish rad etildi ❌",
+            message=(
+                f"Sizning {submission.period_start.strftime('%d.%m.%Y')} - "
+                f"{submission.period_end.strftime('%d.%m.%Y')} oralig'idagi "
+                f"kassa topshirishingiz rad etildi. "
+                f"Sabab: {reason_text}. "
+                f"Rad etgan: {request.user.get_full_name()}"
+            ),
+            notification_type='system'
+        )
+    except Exception as e:
+        logger.error(f"Kassa rad etish bildirishnomalarini yuborishda xatolik: {e}")
 
     messages.warning(request, "Kassa topshirish rad etildi.")
     return redirect('finance:cash_submission_list')
