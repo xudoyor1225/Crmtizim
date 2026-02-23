@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.db.models import Sum, Q
-from django.db import transaction
+from django.db import transaction, DatabaseError
 from django.utils import timezone
 from decimal import Decimal
 from datetime import timedelta
@@ -82,7 +82,7 @@ def admin_cash_dashboard(request):
             admin_user=user,
             is_deleted=False,
         ).order_by('-created_at')[:10])
-    except Exception as e:
+    except DatabaseError as e:
         logger.error(f"CashSubmission so'rovida xatolik (dashboard): {e}")
         submissions = []
 
@@ -269,7 +269,7 @@ def admin_submit_cash(request):
                 # Admin kassasi balansini 0 ga tushirish
                 admin_account.balance = Decimal('0.00')
                 admin_account.save(update_fields=['balance'])
-        except Exception as e:
+        except DatabaseError as e:
             logger.error(f"Kassa topshirishda xatolik: {e}")
             messages.error(
                 request,
@@ -350,7 +350,7 @@ def cash_submission_list(request):
         submissions = list(submissions.select_related(
             'admin_user', 'admin_account', 'main_account', 'approved_by'
         ).order_by('-created_at')[:50])
-    except Exception as e:
+    except DatabaseError as e:
         logger.error(f"CashSubmission so'rovida xatolik (list): {e}")
         submissions = []
 
