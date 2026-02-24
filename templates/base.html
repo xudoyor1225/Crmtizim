@@ -466,6 +466,25 @@
                     hidePageLoading();
                     closeAllModals();
                 });
+
+                // Tarixiy navigatsiya (brauzer Back/Forward) paytida tozalash
+                document.body.addEventListener('htmx:historyRestore', function(evt) {
+                    finishProgress();
+                    hidePageLoading();
+                    closeAllModals();
+
+                    // Sidebar scroll pozitsiyasini tiklash
+                    var sidebar = document.getElementById('sidebar-nav');
+                    var savedPos = localStorage.getItem('sidebarScrollPos');
+                    if (savedPos && sidebar) {
+                        sidebar.scrollTop = parseInt(savedPos, 10);
+                    }
+
+                    // Alpine komponentlarini qayta ishga tushirish
+                    if (window.Alpine) {
+                        window.Alpine.initTree(document.body);
+                    }
+                });
             })();
 
             // === JS XATOLIK SODIR BO'LGANDA MODALLARNI TOZALASH ===
@@ -580,6 +599,12 @@
             // Sahifa tark etilganda tozalash
             window.addEventListener('pagehide', function() {
                 hidePageLoading();
+            });
+
+            // Brauzer orqaga/oldinga (Back/Forward) navigatsiyada loading/modallarni yopish
+            window.addEventListener('popstate', function() {
+                hidePageLoading();
+                closeAllModals();
             });
         }
     </script>
