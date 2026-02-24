@@ -431,9 +431,16 @@
                     }, 200);
                 }
 
-                document.body.addEventListener('htmx:beforeRequest', function() {
+                document.body.addEventListener('htmx:beforeRequest', function(evt) {
                     startProgress();
-                    showPageLoading();
+                    
+                    // Sidebar navigatsiyasi uchun loading animatsiyasini (overlay) ko'rsatmaslik.
+                    // Foydalanuvchi talabiga ko'ra u faqat boshqa role ga o'tayotganda (masalan, formalar yoki maxsus amallar orqali) ko'rinishi kerak.
+                    const isSidebarNav = evt.detail.elt && (evt.detail.elt.closest('#sidebar-nav') || evt.detail.elt.classList.contains('sidebar-link'));
+                    
+                    if (!isSidebarNav) {
+                        showPageLoading();
+                    }
 
                     // Save sidebar scroll position before swap
                     var sidebar = document.getElementById('sidebar-nav');
