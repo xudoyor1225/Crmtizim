@@ -39,8 +39,11 @@ def notifications_list(request):
     page = request.GET.get('page', 1)
     notifications = paginator.get_page(page)
 
+    base_template = 'base_htmx.html' if request.headers.get('HX-Request') else 'base.html'
+
     return render(request, 'core/notifications.html', {
         'notifications': notifications,
+        'base_template': base_template,
     })
 
 

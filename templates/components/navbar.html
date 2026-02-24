@@ -53,6 +53,8 @@
                 <div class="max-h-80 overflow-y-auto">
                     {% for notification in notifications %}
                     <a href="{% url 'core:notification_read' notification.pk %}"
+                       hx-boost="true" hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML"
+                       @click="open = false"
                        class="flex items-start gap-3 p-4 hover:bg-slate-50 transition border-b border-slate-100 {% if notification.status == 'sent' %}bg-blue-50/50{% endif %}">
                         <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
                             {% if notification.message_type == 'sms' %}bg-green-100 text-green-600
@@ -87,7 +89,10 @@
                 <!-- Footer -->
                 {% if notifications %}
                 <div class="px-4 py-3 bg-slate-50 border-t border-slate-200">
-                    <a href="{% url 'core:notifications' %}" class="text-sm text-[#64748B] hover:underline font-medium flex items-center justify-center gap-1">
+                    <a href="{% url 'core:notifications' %}"
+                       hx-boost="true" hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML"
+                       @click="open = false"
+                       class="text-sm text-[#64748B] hover:underline font-medium flex items-center justify-center gap-1">
                         Barchasini ko'rish <i class="ph ph-arrow-right"></i>
                     </a>
                 </div>

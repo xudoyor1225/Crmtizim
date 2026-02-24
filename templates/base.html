@@ -173,7 +173,9 @@
                             <div class="max-h-72 overflow-y-auto">
                                 {% for notification in notifications %}
                                 <a href="{% url 'core:notification_read' notification.pk %}"
-                                    class="flex items-start gap-3 p-4 hover:bg-slate-50 transition border-b border-slate-100 {% if notification.status == 'sent' %}bg-blue-50/30{% endif %}">
+                                   hx-boost="true" hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML"
+                                   @click="notifOpen = false"
+                                   class="flex items-start gap-3 p-4 hover:bg-slate-50 transition border-b border-slate-100 {% if notification.status == 'sent' %}bg-blue-50/30{% endif %}">
                                     <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
                                         {% if notification.message_type == 'sms' %}bg-green-100 text-green-600
                                         {% elif notification.message_type == 'telegram' %}bg-blue-100 text-blue-600
@@ -207,6 +209,8 @@
                             </div>
                             {% if notifications %}
                             <a href="{% url 'core:notifications' %}"
+                               hx-boost="true" hx-push-url="true" hx-target="#main-content" hx-swap="innerHTML"
+                               @click="notifOpen = false"
                                 class="block p-3 text-center text-sm text-[#4F46E5] hover:bg-primary-50 transition border-t border-slate-100 rounded-b-xl font-medium">
                                 Barchasini ko'rish →
                             </a>
@@ -259,7 +263,7 @@
             </header>
 
             <!-- Main Content -->
-            <main class="flex-1 overflow-y-auto p-6 bg-[#F8FAFC]">
+            <main id="main-content" class="flex-1 overflow-y-auto p-6 bg-[#F8FAFC]">
                 {% if messages %}
                 <div class="mb-6 space-y-3" id="django-messages" role="alert" aria-live="polite">
                     {% for message in messages %}
