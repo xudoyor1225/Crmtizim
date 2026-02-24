@@ -51,6 +51,14 @@
     <!-- HTMX Top Progress Bar -->
     <div id="htmx-progress-bar" class="htmx-progress-bar"></div>
 
+    <!-- Page Loading Overlay -->
+    <div id="page-loading-overlay" class="page-loading-overlay">
+        <div class="page-loading-spinner">
+            <div class="spinner-ring"></div>
+            <span class="spinner-text">Yuklanmoqda…</span>
+        </div>
+    </div>
+
     <div class="flex h-screen w-full">
 
         <!-- SIDEBAR -->
@@ -303,10 +311,24 @@
                 }
             });
 
+            // Alpine.js bilan boshqariladigan modal holatlarini yopish
+            var modalKeys = ['logoutOpen', 'notifOpen', 'modalOpen', 'showModal', 'isOpen', 'dialogOpen', 'overlayOpen'];
+            document.querySelectorAll('[x-data]').forEach(function(el) {
+                if (el._x_dataStack) {
+                    el._x_dataStack.forEach(function(data) {
+                        modalKeys.forEach(function(key) {
+                            if (key in data && typeof data[key] === 'boolean') {
+                                data[key] = false;
+                            }
+                        });
+                    });
+                }
+            });
+
             // Qotib qolgan backdrop/overlay elementlarni tozalash
             document.querySelectorAll('.fixed.inset-0').forEach(function(el) {
-                // HTMX progress bar ni o'tkazib yuboramiz
-                if (el.id === 'htmx-progress-bar') return;
+                // HTMX progress bar va loading overlay ni o'tkazib yuboramiz
+                if (el.id === 'htmx-progress-bar' || el.id === 'page-loading-overlay') return;
                 // Alpine.js bilan boshqariladigan elementlarni o'tkazib yuboramiz
                 if (el.hasAttribute('x-show') || el.hasAttribute('x-data')) return;
                 if (el.closest('[x-data]')) return;
@@ -326,6 +348,17 @@
             document.querySelectorAll('.modal-backdrop').forEach(function(el) {
                 el.remove();
             });
+        }
+
+        // === PAGE LOADING OVERLAY ===
+        function showPageLoading() {
+            var overlay = document.getElementById('page-loading-overlay');
+            if (overlay) overlay.classList.add('active');
+        }
+
+        function hidePageLoading() {
+            var overlay = document.getElementById('page-loading-overlay');
+            if (overlay) overlay.classList.remove('active');
         }
 
         // Debounce funksiyasi - qidiruv uchun
@@ -400,6 +433,7 @@
 
                 document.body.addEventListener('htmx:beforeRequest', function() {
                     startProgress();
+                    showPageLoading();
 
                     // Save sidebar scroll position before swap
                     var sidebar = document.getElementById('sidebar-nav');
@@ -417,10 +451,12 @@
 
                 document.body.addEventListener('htmx:responseError', function() {
                     finishProgress();
+                    hidePageLoading();
                 });
 
                 document.body.addEventListener('htmx:sendError', function() {
                     finishProgress();
+                    hidePageLoading();
                     closeAllModals();
                 });
             })();
@@ -450,6 +486,8 @@
 
             // === RE-INITIALIZE SCRIPTS AFTER HTMX SWAP ===
             document.body.addEventListener('htmx:afterSettle', function(evt) {
+                // Loading overlay ni yopish
+                hidePageLoading();
                 // Restore sidebar scroll position after swap
                 var sidebar = document.getElementById('sidebar-nav');
                 var savedPos = localStorage.getItem('sidebarScrollPos');
@@ -512,6 +550,29 @@
 
             window.addEventListener('offline', function() {
                 console.log('Internet uzildi');
+            });
+
+            // === SAHIFA TO'LIQ YUKLANGANDA (non-HTMX) LOADING OVERLAY ===
+            document.addEventListener('click', function(e) {
+                var link = e.target.closest('a[href]');
+                if (!link) return;
+                var href = link.getAttribute('href');
+                // Ichki havolalar, javascript:, # va boshqa maxsus havolalarni o'tkazib yuborish
+                if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+                // hx-boost=false yoki hx-get/hx-post mavjud bo'lsa ham HTMX tomonidan boshqariladi
+                if (link.hasAttribute('hx-get') || link.hasAttribute('hx-post') || link.hasAttribute('hx-delete')) return;
+                // target="_blank" ochilsa yuklash kerak emas
+                if (link.getAttribute('target') === '_blank') return;
+                // hx-boost="false" to'liq sahifa yuklaydi — loading ko'rsatamiz
+                if (link.getAttribute('hx-boost') === 'false') {
+                    showPageLoading();
+                    closeAllModals();
+                }
+            });
+
+            // Sahifa tark etilganda tozalash
+            window.addEventListener('pagehide', function() {
+                hidePageLoading();
             });
         }
     </script>
