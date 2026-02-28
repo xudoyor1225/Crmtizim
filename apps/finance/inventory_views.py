@@ -62,6 +62,10 @@ def supply_list(request):
 @login_required
 def supply_add_stock(request, supply_id):
     """Sklad: Material qo'shish (kirim)"""
+    if request.user.role not in ['super_admin', 'owner', 'admin']:
+        messages.error(request, "Ruxsat yo'q!")
+        return redirect('finance:supply_list')
+    
     org = request.user.organization
     supply = get_object_or_404(Supply, pk=supply_id, organization=org)
     
@@ -88,6 +92,10 @@ def supply_add_stock(request, supply_id):
 @login_required  
 def supply_remove_stock(request, supply_id):
     """Sklad: Material yechish (chiqim)"""
+    if request.user.role not in ['super_admin', 'owner', 'admin']:
+        messages.error(request, "Ruxsat yo'q!")
+        return redirect('finance:supply_list')
+    
     org = request.user.organization
     supply = get_object_or_404(Supply, pk=supply_id, organization=org)
     

@@ -4,23 +4,23 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto">
-    <div class="glass-panel rounded-2xl border border-slate-100 p-8">
+    <div class="glass-panel rounded-2xl border border-slate-100 p-4 sm:p-6 md:p-8">
 
         <!-- Sarlavha -->
-        <div class="flex items-center gap-4 mb-8">
+        <div class="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
             <div
-                class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#4F46E5] to-[#4338CA] flex items-center justify-center text-white shadow-lg shadow-[#4F46E5]/30">
-                <i class="ph ph-student text-2xl"></i>
+                class="w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#4F46E5] to-[#4338CA] flex items-center justify-center text-white shadow-lg shadow-[#4F46E5]/30">
+                <i class="ph ph-student text-xl sm:text-2xl"></i>
             </div>
             <div>
-                <h2 class="text-2xl font-bold text-slate-800">{{ title }}</h2>
-                <p class="text-slate-500">O'quvchi, ota-ona va manzil ma'lumotlarini kiriting</p>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-800">{{ title }}</h2>
+                <p class="text-slate-500 text-sm hidden sm:block">O'quvchi, ota-ona va manzil ma'lumotlarini kiriting</p>
             </div>
         </div>
 
         {% if form.errors %}
         <div
-            class="bg-red-50 text-red-600 p-4 rounded-xl mb-6 text-sm border border-red-200">
+            class="bg-red-50 text-red-600 p-3 sm:p-4 rounded-xl mb-4 sm:mb-6 text-xs sm:text-sm border border-red-200">
             <div class="flex items-center gap-2 font-semibold mb-2">
                 <i class="ph ph-warning-circle"></i> Xatoliklar
             </div>
@@ -33,82 +33,82 @@
         </div>
         {% endif %}
 
-        <form method="post" enctype="multipart/form-data" class="space-y-8">
+        <form method="post" enctype="multipart/form-data" class="space-y-6 sm:space-y-8">
             {% csrf_token %}
 
             <!-- 1. O'QUVCHI MA'LUMOTLARI -->
-            <div class="space-y-4">
+            <div class="space-y-3 sm:space-y-4">
                 <h3
-                    class="text-lg font-semibold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
+                    class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
                     <i class="ph ph-user text-[#64748B]"></i> O'quvchi ma'lumotlari
                 </h3>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Ismi *</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-1.5">Ismi *</label>
                         {{ form.first_name }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Familiyasi
+                        <label class="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-1.5">Familiyasi
                             *</label>
                         {{ form.last_name }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Otasining
+                        <label class="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-1.5">Otasining
                             ismi</label>
                         {{ form.middle_name }}
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Telefon raqami
+                        <label class="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-1.5">Telefon raqami
                             *</label>
                         {{ form.phone }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Tug'ilgan
+                        <label class="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-1.5">Tug'ilgan
                             sana</label>
                         {{ form.birth_date }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Filial</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-1.5">Filial</label>
                         {{ form.branch }}
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Parol *</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-1.5">Parol *</label>
                         {{ form.password }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Rasm</label>
+                        <label class="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-1.5">Rasm</label>
                         {{ form.avatar }}
                     </div>
                 </div>
             </div>
 
             <!-- 2. MANZIL MA'LUMOTLARI -->
-            <div class="space-y-4">
+            <div class="space-y-3 sm:space-y-4">
                 <h3
-                    class="text-lg font-semibold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
+                    class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2 pb-2 border-b border-slate-200">
                     <i class="ph ph-map-pin text-green-500"></i> Manzil ma'lumotlari
                 </h3>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Viloyat
+                        <label class="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-1.5">Viloyat
                             *</label>
                         {{ form.region }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Tuman/Shahar
+                        <label class="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-1.5">Tuman/Shahar
                             *</label>
                         {{ form.district }}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1.5">Ko'cha, uy
+                        <label class="block text-xs sm:text-sm font-medium text-slate-600 mb-1 sm:mb-1.5">Ko'cha, uy
                             *</label>
                         {{ form.address }}
                     </div>
@@ -116,14 +116,14 @@
             </div>
 
             <!-- 3. OTA-ONA MA'LUMOTLARI (Dinamik) -->
-            <div class="space-y-4" x-data="parentManager()">
-                <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-                    <h3 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+            <div class="space-y-3 sm:space-y-4" x-data="parentManager()">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0 pb-2 border-b border-slate-200">
+                    <h3 class="text-base sm:text-lg font-semibold text-slate-800 flex items-center gap-2">
                         <i class="ph ph-users text-purple-500"></i> Ota-ona ma'lumotlari
-                        <span class="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">Majburiy</span>
+                        <span class="text-[10px] sm:text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">Majburiy</span>
                     </h3>
                     <button type="button" @click="addParent()"
-                        class="flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition text-sm font-medium">
+                        class="flex items-center justify-center gap-1.5 px-3 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition text-xs sm:text-sm font-medium min-h-[40px]">
                         <i class="ph ph-plus-circle text-lg"></i> Ota-ona qo'shish
                     </button>
                 </div>
