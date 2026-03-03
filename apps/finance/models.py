@@ -183,6 +183,12 @@ class CashSubmission(TenantAwareModel):
     total_income = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Jami kirim")
     total_expense = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Jami chiqim")
     net_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Sof summa")
+    
+    # To'lov usuli bo'yicha tafsilotlar
+    amount_cash = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Naqd pul")
+    amount_card = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Plastik karta")
+    amount_terminal = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Terminal")
+    amount_other = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Boshqa")
 
     # Davr
     period_type = models.CharField(max_length=20, choices=PERIOD_CHOICES, verbose_name="Davr turi")

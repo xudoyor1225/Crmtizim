@@ -97,6 +97,7 @@ urlpatterns = [
 
     # Kassa Topshirishlar (Super Admin / Owner)
     path('cash-submissions/', admin_cash_views.cash_submission_list, name='cash_submission_list'),
+    path('cash-submissions/<int:pk>/', admin_cash_views.cash_submission_detail, name='cash_submission_detail'),
     path('cash-submissions/<int:pk>/approve/', admin_cash_views.approve_cash_submission, name='approve_cash_submission'),
     path('cash-submissions/<int:pk>/reject/', admin_cash_views.reject_cash_submission, name='reject_cash_submission'),
 ]
