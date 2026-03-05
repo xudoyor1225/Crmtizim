@@ -45,9 +45,18 @@ def supply_list(request):
     
     categories = SupplyCategory.objects.filter(organization=org, is_deleted=False)
     
+    # O'quvchilar ro'yxati (chiqim modalida tanlash uchun)
+    from apps.users.models import User as UserModel
+    students = UserModel.objects.filter(
+        role='student', is_active=True
+    ).order_by('first_name', 'last_name')
+    if org:
+        students = students.filter(organization=org)
+
     context = {
         'supplies': supplies,
         'categories': categories,
+        'students': students,
         'total_items': total_items,
         'low_stock_count': low_stock_count,
         'total_value': total_value,
@@ -62,8 +71,8 @@ def supply_list(request):
 @login_required
 def supply_add_stock(request, supply_id):
     """Sklad: Material qo'shish (kirim)"""
-    if request.user.role not in ['super_admin', 'owner', 'admin']:
-        messages.error(request, "Ruxsat yo'q!")
+    if request.user.role not in ['super_admin', 'owner']:
+        messages.error(request, "Ruxsat yo'q! Faqat material chiqimi mumkin.")
         return redirect('finance:supply_list')
     
     org = request.user.organization
@@ -91,7 +100,7 @@ def supply_add_stock(request, supply_id):
 
 @login_required  
 def supply_remove_stock(request, supply_id):
-    """Sklad: Material yechish (chiqim)"""
+    """Sklad: Material yechish (chiqim) - o'quvchiga biriktirish yoki oddiy chiqim."""
     if request.user.role not in ['super_admin', 'owner', 'admin']:
         messages.error(request, "Ruxsat yo'q!")
         return redirect('finance:supply_list')
@@ -100,23 +109,113 @@ def supply_remove_stock(request, supply_id):
     supply = get_object_or_404(Supply, pk=supply_id, organization=org)
     
     if request.method == 'POST':
-        quantity = int(request.POST.get('quantity', 0))
-        notes = request.POST.get('notes', '')
-        
-        if quantity > 0 and quantity <= supply.quantity:
-            SupplyTransaction.objects.create(
-                supply=supply,
-                transaction_type='out',
-                quantity=quantity,
-                performed_by=request.user,
-                notes=notes,
-                organization=org,
-            )
-            log_user_action(request.user, 'CREATE', 'SupplyTransaction', 
-                           None, f"{supply.name}: -{quantity}", request=request)
-            messages.success(request, f"{quantity} {supply.unit} yechildi!")
-        else:
-            messages.error(request, "Yetarli miqdor yo'q!")
+        from decimal import Decimal
+        from .models import Transaction, TransactionCategory, Account
+        from .admin_cash_views import _get_or_create_admin_account
+        from .services import confirm_transaction as confirm_service
+        import traceback
+
+        print(f"[OMBORXONA DEBUG] POST received for supply={supply.name} (id={supply_id})")
+        print(f"[OMBORXONA DEBUG] POST data: {dict(request.POST)}")
+        print(f"[OMBORXONA DEBUG] Supply quantity BEFORE: {supply.quantity}")
+
+        try:
+            quantity = int(request.POST.get('quantity', 0))
+            notes = request.POST.get('notes', '')
+            action_type = request.POST.get('action_type', 'simple')  # 'simple' yoki 'student'
+            student_id = request.POST.get('student_id')
+            payment_method = request.POST.get('payment_method', 'cash')
+            
+            print(f"[OMBORXONA DEBUG] quantity={quantity}, action_type={action_type}, supply.quantity={supply.quantity}")
+            
+            if quantity > 0 and quantity <= supply.quantity:
+                student = None
+                financial_tx = None
+
+                if action_type == 'student':
+                    if not student_id:
+                        messages.error(request, "Iltimos, o'quvchini tanlang!")
+                        return redirect('finance:supply_list')
+                        
+                    # O'quvchiga biriktirish - moliyaviy tranzaksiya yaratish
+                    from apps.users.models import User as UserModel
+                    try:
+                        student = UserModel.objects.get(pk=student_id, role='student')
+                    except UserModel.DoesNotExist:
+                        messages.error(request, "O'quvchi topilmadi!")
+                        return redirect('finance:supply_list')
+
+                    # Mahsulot narxini hisoblash
+                    total_price = supply.unit_price * Decimal(str(quantity))
+
+                    if total_price > 0:
+                        # Admin kassasini olish
+                        admin_account = _get_or_create_admin_account(request.user, org)
+
+                        # Kirim tranzaksiyasi yaratish (mahsulot sotish)
+                        cat, _ = TransactionCategory.objects.get_or_create(
+                            organization=org,
+                            name='Mahsulot sotish',
+                            transaction_type='income',
+                            defaults={'organization': org}
+                        )
+
+                        financial_tx = Transaction.objects.create(
+                            organization=org,
+                            account=admin_account,
+                            category=cat,
+                            student=student,
+                            amount=total_price,
+                            transaction_type='income',
+                            payment_method=payment_method,
+                            description=f"Mahsulot sotish: {supply.name} x{quantity} → {student.get_full_name()}",
+                            status='pending',
+                            created_by=request.user,
+                        )
+
+                        # Avtomatik tasdiqlash
+                        try:
+                            confirm_service(financial_tx.id, request.user)
+                        except Exception as e:
+                            messages.warning(request, f"Tranzaksiya yaratildi, lekin tasdiqlanmadi: {e}")
+
+                        notes = notes or f"{supply.name} x{quantity} → {student.get_full_name()} ({payment_method})"
+
+                # Ombordan chiqim
+                supply_tx = SupplyTransaction.objects.create(
+                    supply=supply,
+                    transaction_type='out',
+                    quantity=quantity,
+                    performed_by=request.user,
+                    notes=notes or f"{supply.name} dan {quantity} ta chiqim",
+                    organization=org,
+                    student=student,
+                    payment_method=payment_method if student else None,
+                    financial_transaction=financial_tx,
+                )
+                
+                # Exlicitly decrease the supply quantity and save
+                supply.quantity -= quantity
+                if supply.quantity < 0:
+                    supply.quantity = 0
+                supply.save()
+                
+                log_user_action(request.user, 'CREATE', 'SupplyTransaction', 
+                               None, f"{supply.name}: -{quantity}", request=request)
+
+                if student:
+                    messages.success(request, 
+                        f"✅ {quantity} {supply.unit} '{supply.name}' {student.get_full_name()} ga berildi. "
+                        f"Kassa balansiga {supply.unit_price * Decimal(str(quantity)):,.0f} UZS kirim bo'ldi.")
+                else:
+                    messages.success(request, f"✅ {quantity} {supply.unit} '{supply.name}' ombordan yechildi!")
+            elif quantity <= 0:
+                messages.error(request, "Miqdor noto'g'ri! Kamida 1 bo'lishi kerak.")
+            else:
+                messages.error(request, f"Yetarli miqdor yo'q! Omborda faqat {supply.quantity} {supply.unit} bor.")
+        except Exception as e:
+            traceback.print_exc()
+            messages.error(request, f"❌ Xatolik yuz berdi: {e}")
         
     return redirect('finance:supply_list')
 
@@ -163,10 +262,32 @@ def asset_list(request):
 # =============================================
 
 @login_required
+def supply_detail(request, pk):
+    """Bitta material tafsilotlari va uning barcha tranzaksiya tarixi"""
+    org = request.user.organization
+    supply = get_object_or_404(Supply, pk=pk, organization=org)
+    
+    # Materialga tegishli barch tranzaksiyalarni olish
+    transactions = SupplyTransaction.objects.filter(supply=supply).select_related(
+        'performed_by', 'student', 'financial_transaction'
+    ).order_by('-created_at')
+
+    # Umumiy sklad qiymati
+    total_worth = supply.quantity * supply.unit_price
+
+    context = {
+        'supply': supply,
+        'transactions': transactions,
+        'total_worth': total_worth,
+    }
+    return render(request, 'finance/supply_detail.html', context)
+
+
+@login_required
 def supply_create(request):
     """Yangi material qo'shish"""
-    if request.user.role not in ['super_admin', 'owner', 'admin']:
-        messages.error(request, "Ruxsat yo'q!")
+    if request.user.role not in ['super_admin', 'owner']:
+        messages.error(request, "Ruxsat yo'q! Faqat super admin/owner material qo'sha oladi.")
         return redirect('finance:supply_list')
 
     org = request.user.organization

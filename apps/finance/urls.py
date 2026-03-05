@@ -65,6 +65,7 @@ urlpatterns = [
     path('supplies/add/', inventory_views.supply_create, name='supply_create'),
     path('supplies/<int:pk>/edit/', inventory_views.supply_edit, name='supply_edit'),
     path('supplies/<int:pk>/delete/', inventory_views.supply_delete, name='supply_delete'),
+    path('supplies/<int:pk>/', inventory_views.supply_detail, name='supply_detail'),
     path('supplies/<int:supply_id>/stock-in/', inventory_views.supply_add_stock, name='supply_add_stock'),
     path('supplies/<int:supply_id>/stock-out/', inventory_views.supply_remove_stock, name='supply_remove_stock'),
 
@@ -94,6 +95,10 @@ urlpatterns = [
     path('admin-cash/student-payments/<int:pk>/confirm/', admin_cash_views.admin_confirm_student_payment, name='admin_confirm_student_payment'),
     path('admin-cash/student-payments/<int:pk>/reject/', admin_cash_views.admin_reject_student_payment, name='admin_reject_student_payment'),
     path('admin-cash/course-payment/', admin_cash_views.admin_add_course_payment, name='admin_add_course_payment'),
+
+    # Admin - Tranzaksiyalarni tahrirlash va o'chirish
+    path('admin-cash/transaction/<int:pk>/edit/', admin_cash_views.admin_edit_transaction, name='admin_edit_transaction'),
+    path('admin-cash/transaction/<int:pk>/delete/', admin_cash_views.admin_delete_transaction, name='admin_delete_transaction'),
 
     # Kassa Topshirishlar (Super Admin / Owner)
     path('cash-submissions/', admin_cash_views.cash_submission_list, name='cash_submission_list'),

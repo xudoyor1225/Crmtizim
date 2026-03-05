@@ -25,14 +25,14 @@
             </div>
             <div>
                 <p class="text-sm text-slate-500">To'lov tushadigan kassa</p>
-                <p class="font-semibold text-slate-700">{{ admin_account.name }} ({{ admin_account.balance|floatformat:0 }} UZS)</p>
+                <p class="font-semibold text-slate-700">{{ admin_account.name }} ({{ admin_account.balance|floatformat:0
+                    }} UZS)</p>
             </div>
         </div>
     </div>
 
     <!-- Form -->
-    <form method="POST"
-        class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 space-y-6">
+    <form method="POST" class="bg-white rounded-xl shadow-sm border border-slate-100 p-6 space-y-6">
         {% csrf_token %}
 
         <div>
@@ -70,8 +70,7 @@
                 class="w-full px-4 py-2 rounded-lg bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white">
                 <option value="cash">Naqd pul</option>
                 <option value="card">Plastik karta</option>
-                <option value="transfer">Bank o'tkazmasi</option>
-                <option value="online">Online to'lov</option>
+                <option value="terminal">Terminal</option>
             </select>
         </div>
 
@@ -125,16 +124,16 @@
     function toggleReceiptSection() {
         const paymentMethod = document.getElementById('paymentMethod').value;
         const receiptSection = document.getElementById('receiptSection');
-        
+
         if (paymentMethod === 'cash') {
             receiptSection.classList.add('hidden');
         } else {
             receiptSection.classList.remove('hidden');
         }
     }
-    
+
     // Initialize on page load
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         toggleReceiptSection();
     });
 </script>

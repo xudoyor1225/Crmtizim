@@ -11,16 +11,32 @@ from apps.finance.models import Transaction
 @receiver(pre_save, sender=Transaction)
 def prevent_edit_confirmed_transaction(sender, instance, **kwargs):
     """
-    Tasdiqlangan tranzaksiyani o'zgartirishni oldini olish.
+    Tasdiqlangan yoki topshirilgan tranzaksiyani o'zgartirishni oldini olish.
     Bu moliyaviy xatolarning oldini oladi.
     """
     if instance.pk:  # Mavjud obyekt (yangi emas)
         try:
             old_transaction = Transaction.objects.get(pk=instance.pk)
 
+            # Agar kassa topshirilgan bo'lsa, hech qanday muhim o'zgarish mumkin emas
+            if old_transaction.cash_submission_id is not None:
+                critical_fields = ['amount', 'transaction_type', 'account', 'student', 'staff', 'payment_method']
+                for field in critical_fields:
+                    old_value = getattr(old_transaction, field)
+                    new_value = getattr(instance, field)
+                    if old_value != new_value:
+                        raise ValidationError(
+                            f"Kassa topshirilgan tranzaksiyaning '{field}' maydonini o'zgartirib bo'lmaydi!"
+                        )
+
             # Agar status confirmed bo'lsa, muhim maydonlarni o'zgartirish mumkin emas
+            # (faqat admin_edit_transaction orqali balanslarni qayta hisoblash bilan)
             if old_transaction.status == 'confirmed':
-                critical_fields = ['amount', 'transaction_type', 'account', 'student', 'staff']
+                # update_fields ishlatilganda signal ni bypass qilish
+                if hasattr(instance, '_update_fields_set'):
+                    return  # update_fields orqali saqlanyapti, ruxsat
+                    
+                critical_fields = ['transaction_type', 'account', 'student', 'staff']
 
                 for field in critical_fields:
                     old_value = getattr(old_transaction, field)
@@ -47,9 +63,16 @@ def update_balances_on_transaction(sender, instance, created, **kwargs):
     4. Xodim oyligi (salary) -> staff.balance (agar kerak bo'lsa)
     5. Kassa balance ham o'zgaradi
     """
-    # Faqat tasdiqlangan tranzaksiyalar
-    if instance.status != 'confirmed':
+    # Faqat tasdiqlangan va o'chirilmagan tranzaksiyalar
+    if instance.status != 'confirmed' or instance.is_deleted:
         return
+
+    # Update qilinganda balansni qayta-qayta qo'shmaslik uchun tekshiruv
+    # (Faqatgina yangi creat qilinganda yoki status/amount o'zgarganda ishlasin)
+    if not created:
+        update_fields = kwargs.get('update_fields')
+        if update_fields and 'status' not in update_fields and 'amount' not in update_fields:
+            return
 
     # Kassa balansini yangilash
     account = instance.account
@@ -59,7 +82,9 @@ def update_balances_on_transaction(sender, instance, created, **kwargs):
         account.balance += instance.amount
 
         # O'quvchi to'lovi bo'lsa, uning balansiga ham qo'shiladi
-        if instance.student:
+        # (Mahsulot sotishdan tashqari, chunki tovar evaziga to'langan naqd pul)
+        is_supply_sale = getattr(instance.category, 'name', '') == 'Mahsulot sotish'
+        if instance.student and not is_supply_sale:
             instance.student.balance += instance.amount
             instance.student.save(update_fields=['balance'])
 

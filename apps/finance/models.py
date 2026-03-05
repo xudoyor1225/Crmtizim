@@ -89,15 +89,20 @@ class Transaction(TenantAwareModel):
     transaction_type = models.CharField(max_length=20, choices=TYPE_CHOICES, default='income', verbose_name="Turi")
     description = models.TextField(blank=True, verbose_name="Izoh")
     
-    # To'lov usuli
+    # To'lov usuli (faqat 3 ta tur)
     PAYMENT_METHOD_CHOICES = (
         ('cash', 'Naqd pul'),
         ('card', 'Plastik karta'),
-        ('transfer', 'Bank o\'tkazmasi'),
-        ('online', 'Online to\'lov'),
+        ('terminal', 'Terminal'),
     )
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, default='cash', 
                                       verbose_name="To'lov usuli")
+
+    # Kassa topshirish bilan bog'lash (topshirilganlik holati)
+    cash_submission = models.ForeignKey(
+        'CashSubmission', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='transactions', verbose_name="Kassa topshirish"
+    )
     
     # Chek/Kvitansiya (rasm yoki PDF)
     receipt_image = models.ImageField(
@@ -148,6 +153,7 @@ class CashSubmission(TenantAwareModel):
     super admin tasdiqlaydi va pul asosiy kassaga o'tadi.
     """
     PERIOD_CHOICES = (
+        ('daily', 'Kunlik'),
         ('weekly', 'Haftalik'),
         ('monthly', 'Oylik'),
     )
@@ -188,7 +194,6 @@ class CashSubmission(TenantAwareModel):
     amount_cash = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Naqd pul")
     amount_card = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Plastik karta")
     amount_terminal = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Terminal")
-    amount_other = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Boshqa")
 
     # Davr
     period_type = models.CharField(max_length=20, choices=PERIOD_CHOICES, verbose_name="Davr turi")

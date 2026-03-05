@@ -8,13 +8,14 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
-            <a href="{% url 'finance:cash_submission_list' %}" 
-               class="p-2 bg-slate-100 rounded-lg hover:bg-slate-200 transition">
+            <a href="{% url 'finance:cash_submission_list' %}"
+                class="p-2 bg-slate-100 rounded-lg hover:bg-slate-200 transition">
                 <i class="ph ph-arrow-left text-xl"></i>
             </a>
             <div>
                 <h1 class="text-2xl font-bold text-slate-800">Kassa Topshirish #{{ submission.id }}</h1>
-                <p class="text-slate-400">{{ submission.admin_user.get_full_name|default:"Foydalanuvchi" }} tomonidan {{ submission.created_at|date:"d.m.Y H:i" }} da yaratilgan</p>
+                <p class="text-slate-400">{{ submission.admin_user.get_full_name|default:"Foydalanuvchi" }} tomonidan {{
+                    submission.created_at|date:"d.m.Y H:i" }} da yaratilgan</p>
             </div>
         </div>
         <span class="px-3 py-1.5 rounded-full font-medium text-sm
@@ -32,7 +33,8 @@
             <!-- From/To Accounts -->
             <div>
                 <p class="text-sm text-slate-400">Kimdan</p>
-                <p class="font-medium text-slate-700">{{ submission.admin_user.get_full_name|default:"Foydalanuvchi" }}</p>
+                <p class="font-medium text-slate-700">{{ submission.admin_user.get_full_name|default:"Foydalanuvchi" }}
+                </p>
                 <p class="text-xs text-slate-500">{{ submission.admin_account.name|default:"Hisob topilmadi" }}</p>
             </div>
             <div>
@@ -48,14 +50,15 @@
         <!-- To'lov usuli bo'yicha tafsilotlar -->
         <div class="mt-6 pt-6 border-t border-slate-100">
             <h4 class="font-medium text-slate-700 mb-4">To'lov Usuli Bo'yicha Tafsilotlar</h4>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
                     <div class="flex items-center gap-2 mb-2">
                         <i class="ph ph-money text-blue-600 text-lg"></i>
                         <p class="text-sm font-medium text-blue-800">Naqd Pul</p>
                     </div>
                     <p class="text-xl font-bold text-blue-600">{{ submission.amount_cash|floatformat:0 }} UZS</p>
-                    <p class="text-xs text-blue-600 mt-1">{{ payment_method_stats.cash.count|default:0 }} tranzaksiya</p>
+                    <p class="text-xs text-blue-600 mt-1">{{ payment_method_stats.cash.count|default:0 }} tranzaksiya
+                    </p>
                 </div>
                 <div class="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div class="flex items-center gap-2 mb-2">
@@ -63,23 +66,17 @@
                         <p class="text-sm font-medium text-green-800">Plastik Karta</p>
                     </div>
                     <p class="text-xl font-bold text-green-600">{{ submission.amount_card|floatformat:0 }} UZS</p>
-                    <p class="text-xs text-green-600 mt-1">{{ payment_method_stats.card.count|default:0 }} tranzaksiya</p>
+                    <p class="text-xs text-green-600 mt-1">{{ payment_method_stats.card.count|default:0 }} tranzaksiya
+                    </p>
                 </div>
                 <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
                     <div class="flex items-center gap-2 mb-2">
-                        <i class="ph ph-bank text-purple-600 text-lg"></i>
+                        <i class="ph ph-contactless-payment text-purple-600 text-lg"></i>
                         <p class="text-sm font-medium text-purple-800">Terminal</p>
                     </div>
                     <p class="text-xl font-bold text-purple-600">{{ submission.amount_terminal|floatformat:0 }} UZS</p>
-                    <p class="text-xs text-purple-600 mt-1">{{ payment_method_stats.transfer.count|default:0 }} tranzaksiya</p>
-                </div>
-                <div class="bg-amber-50 p-4 rounded-lg border border-amber-200">
-                    <div class="flex items-center gap-2 mb-2">
-                        <i class="ph ph-globe text-amber-600 text-lg"></i>
-                        <p class="text-sm font-medium text-amber-800">Boshqa</p>
-                    </div>
-                    <p class="text-xl font-bold text-amber-600">{{ submission.amount_other|floatformat:0 }} UZS</p>
-                    <p class="text-xs text-amber-600 mt-1">{{ payment_method_stats.online.count|default:0 }} tranzaksiya</p>
+                    <p class="text-xs text-purple-600 mt-1">{{ payment_method_stats.terminal.count|default:0 }}
+                        tranzaksiya</p>
                 </div>
             </div>
         </div>
@@ -97,16 +94,22 @@
             <h3 class="font-semibold text-slate-700">Tranzaksiya Tarixi</h3>
             <p class="text-sm text-slate-500 mt-1">Topshirish davridagi barcha moliyaviy operatsiyalar</p>
         </div>
-        
+
         <!-- Tablar -->
         <div class="border-b border-slate-200">
             <div class="flex">
-                <button onclick="showTab('income')" id="tab-income" class="px-6 py-3 font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 transition">Kirim ({{ income_transactions.count }})</button>
-                <button onclick="showTab('expense')" id="tab-expense" class="px-6 py-3 font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 transition">Chiqim ({{ expense_transactions.count }})</button>
-                <button onclick="showTab('all')" id="tab-all" class="px-6 py-3 font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 transition">Barchasi ({{ period_transactions.count }})</button>
+                <button onclick="showTab('income')" id="tab-income"
+                    class="px-6 py-3 font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 transition">Kirim
+                    ({{ income_transactions.count }})</button>
+                <button onclick="showTab('expense')" id="tab-expense"
+                    class="px-6 py-3 font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 transition">Chiqim
+                    ({{ expense_transactions.count }})</button>
+                <button onclick="showTab('all')" id="tab-all"
+                    class="px-6 py-3 font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 transition">Barchasi
+                    ({{ period_transactions.count }})</button>
             </div>
         </div>
-        
+
         <!-- Tab Content -->
         <div class="p-4">
             <!-- Kirim Tab -->
@@ -132,8 +135,7 @@
                                     <span class="px-2 py-1 rounded-full text-xs font-medium
                                         {% if tx.payment_method == 'cash' %}bg-blue-500/20 text-blue-600
                                         {% elif tx.payment_method == 'card' %}bg-green-500/20 text-green-600
-                                        {% elif tx.payment_method == 'transfer' %}bg-purple-500/20 text-purple-600
-                                        {% else %}bg-amber-500/20 text-amber-600{% endif %}">
+                                        {% else %}bg-purple-500/20 text-purple-600{% endif %}">
                                         {{ tx.get_payment_method_display }}
                                     </span>
                                 </td>
@@ -141,8 +143,10 @@
                                 <td class="p-3 text-sm font-medium text-slate-700">
                                     {{ tx.student.get_full_name|default:"-" }}
                                 </td>
-                                <td class="p-3 text-sm text-slate-500">{{ tx.created_by.get_full_name|default:"-" }}</td>
-                                <td class="p-3 text-right font-medium text-emerald-600">+{{ tx.amount|floatformat:0 }}</td>
+                                <td class="p-3 text-sm text-slate-500">{{ tx.created_by.get_full_name|default:"-" }}
+                                </td>
+                                <td class="p-3 text-right font-medium text-emerald-600">+{{ tx.amount|floatformat:0 }}
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -155,7 +159,7 @@
                 </div>
                 {% endif %}
             </div>
-            
+
             <!-- Chiqim Tab -->
             <div id="content-expense" class="tab-content hidden">
                 {% if expense_transactions %}
@@ -175,8 +179,10 @@
                             <tr class="transition hover:bg-slate-50">
                                 <td class="p-3 text-sm text-slate-500">{{ tx.created_at|date:"d.m.Y H:i" }}</td>
                                 <td class="p-3 text-sm text-slate-600">{{ tx.category.name|default:"-" }}</td>
-                                <td class="p-3 text-sm text-slate-700 max-w-xs truncate">{{ tx.description|default:"-" }}</td>
-                                <td class="p-3 text-sm text-slate-500">{{ tx.created_by.get_full_name|default:"-" }}</td>
+                                <td class="p-3 text-sm text-slate-700 max-w-xs truncate">{{ tx.description|default:"-"
+                                    }}</td>
+                                <td class="p-3 text-sm text-slate-500">{{ tx.created_by.get_full_name|default:"-" }}
+                                </td>
                                 <td class="p-3 text-right font-medium text-rose-600">-{{ tx.amount|floatformat:0 }}</td>
                             </tr>
                             {% endfor %}
@@ -190,7 +196,7 @@
                 </div>
                 {% endif %}
             </div>
-            
+
             <!-- Barchasi Tab -->
             <div id="content-all" class="tab-content hidden">
                 {% if period_transactions %}
@@ -222,8 +228,8 @@
                                     <span class="px-2 py-1 rounded-full text-xs font-medium
                                         {% if tx.payment_method == 'cash' %}bg-blue-500/20 text-blue-600
                                         {% elif tx.payment_method == 'card' %}bg-green-500/20 text-green-600
-                                        {% elif tx.payment_method == 'transfer' %}bg-purple-500/20 text-purple-600
-                                        {% else %}bg-amber-500/20 text-amber-600{% endif %}">
+                                        {% else %}bg-purple-500/20 text-purple-600{% endif %}">
+
                                         {{ tx.get_payment_method_display|default:"-" }}
                                     </span>
                                 </td>
@@ -231,11 +237,13 @@
                                 <td class="p-3 text-sm font-medium text-slate-700">
                                     {{ tx.student.get_full_name|default:tx.staff.get_full_name|default:"-" }}
                                 </td>
-                                <td class="p-3 text-sm text-slate-500">{{ tx.created_by.get_full_name|default:"-" }}</td>
+                                <td class="p-3 text-sm text-slate-500">{{ tx.created_by.get_full_name|default:"-" }}
+                                </td>
                                 <td class="p-3 text-right font-medium
                                     {% if tx.transaction_type == 'income' %}text-emerald-600
                                     {% else %}text-rose-600{% endif %}">
-                                    {% if tx.transaction_type == 'income' %}+{% else %}-{% endif %}{{ tx.amount|floatformat:0 }}
+                                    {% if tx.transaction_type == 'income' %}+{% else %}-{% endif %}{{
+                                    tx.amount|floatformat:0 }}
                                 </td>
                             </tr>
                             {% endfor %}
@@ -251,29 +259,29 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         function showTab(tabName) {
             // Hide all content
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            
+
             // Remove active class from all tabs
             document.querySelectorAll('[id^="tab-"]').forEach(el => {
                 el.classList.remove('text-blue-600', 'border-blue-600');
                 el.classList.add('text-slate-500', 'border-transparent');
             });
-            
+
             // Show selected content
             document.getElementById('content-' + tabName).classList.remove('hidden');
-            
+
             // Add active class to selected tab
             const tabButton = document.getElementById('tab-' + tabName);
             tabButton.classList.remove('text-slate-500', 'border-transparent');
             tabButton.classList.add('text-blue-600', 'border-blue-600');
         }
-        
+
         // Show income tab by default
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             showTab('income');
         });
     </script>
@@ -288,7 +296,8 @@
             <div class="bg-white rounded-lg p-4 border border-blue-100">
                 <p class="text-sm text-slate-500">To'lov usullari jami</p>
                 <p class="text-2xl font-bold text-blue-600">
-                    {{ submission.amount_cash|add:submission.amount_card|add:submission.amount_terminal|add:submission.amount_other|floatformat:0 }} UZS
+                    {{ submission.amount_cash|add:submission.amount_card|add:submission.amount_terminal|floatformat:0 }}
+                    UZS
                 </p>
             </div>
             <div class="bg-white rounded-lg p-4 border border-blue-100">
@@ -304,24 +313,28 @@
         </div>
         <div class="text-sm text-slate-600 bg-blue-50 rounded-lg p-4">
             <i class="ph ph-info mr-2"></i>
-            Barcha tranzaksiyalarni ko'rib chiqing va to'lov usullari yig'indisi hisoblashingizdagi sof summaga mos kelishini tekshiring.
+            Barcha tranzaksiyalarni ko'rib chiqing va to'lov usullari yig'indisi hisoblashingizdagi sof summaga mos
+            kelishini tekshiring.
         </div>
     </div>
     {% endif %}
-    
+
     <!-- Approval Info & Actions -->
     {% if submission.status == 'pending' and can_approve_reject %}
     <div class="bg-white rounded-2xl p-6 border border-slate-200 space-y-4">
         <h3 class="font-semibold text-slate-700">Tasdiqlash</h3>
-        <p class="text-sm text-slate-500">Bu topshirishni tasdiqlash yoki rad etish. Tasdiqlangandan so'ng, pullar avtomatik ravishda kassalar o'rtasida o'tkaziladi.</p>
+        <p class="text-sm text-slate-500">Bu topshirishni tasdiqlash yoki rad etish. Tasdiqlangandan so'ng, pullar
+            avtomatik ravishda kassalar o'rtasida o'tkaziladi.</p>
         <div class="flex items-center gap-4 pt-4 border-t">
             <form action="{% url 'finance:approve_cash_submission' submission.pk %}" method="POST">
                 {% csrf_token %}
-                <button type="submit" class="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition">
+                <button type="submit"
+                    class="px-6 py-2 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition">
                     <i class="ph ph-check-circle"></i> Tasdiqlash
                 </button>
             </form>
-            <button type="button" onclick="document.getElementById('reject-modal').style.display='block'" class="px-6 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition">
+            <button type="button" onclick="document.getElementById('reject-modal').style.display='block'"
+                class="px-6 py-2 bg-rose-500 text-white rounded-lg hover:bg-rose-600 transition">
                 <i class="ph ph-x-circle"></i> Rad etish
             </button>
         </div>
@@ -332,16 +345,19 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
                 <p class="text-sm text-slate-400">Holat bo'yicha mas'ul</p>
-                <p class="font-medium text-slate-700">{% if submission.approved_by %}{{ submission.approved_by.get_full_name }}{% else %}Ma'lum emas{% endif %}</p>
+                <p class="font-medium text-slate-700">{% if submission.approved_by %}{{
+                    submission.approved_by.get_full_name }}{% else %}Ma'lum emas{% endif %}</p>
             </div>
             <div>
                 <p class="text-sm text-slate-400">Ko'rib chiqilgan vaqt</p>
-                <p class="font-medium text-slate-700">{% if submission.approved_at %}{{ submission.approved_at|date:"d.m.Y H:i" }}{% else %}-{% endif %}</p>
+                <p class="font-medium text-slate-700">{% if submission.approved_at %}{{
+                    submission.approved_at|date:"d.m.Y H:i" }}{% else %}-{% endif %}</p>
             </div>
             {% if submission.rejection_reason %}
             <div class="md:col-span-3">
                 <p class="text-sm text-slate-400">Rad etish sababi</p>
-                <p class="font-medium text-rose-600">{{ submission.rejection_reason|default:"Sabab ko'rsatilmagan" }}</p>
+                <p class="font-medium text-rose-600">{{ submission.rejection_reason|default:"Sabab ko'rsatilmagan" }}
+                </p>
             </div>
             {% endif %}
         </div>
@@ -351,14 +367,18 @@
 </div>
 
 <!-- Reject Modal -->
-<div id="reject-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center" style="display: none;">
+<div id="reject-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center"
+    style="display: none;">
     <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
         <h2 class="text-xl font-bold mb-4">Rad etish sababi</h2>
         <form action="{% url 'finance:reject_cash_submission' submission.pk %}" method="POST">
             {% csrf_token %}
-            <textarea name="reason" rows="4" class="w-full px-4 py-2 rounded-lg bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Sababni kiriting..." required></textarea>
+            <textarea name="reason" rows="4"
+                class="w-full px-4 py-2 rounded-lg bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="Sababni kiriting..." required></textarea>
             <div class="flex justify-end gap-4 mt-4">
-                <button type="button" onclick="document.getElementById('reject-modal').style.display='none'" class="px-6 py-2 bg-slate-100 text-slate-700 rounded-lg">Bekor qilish</button>
+                <button type="button" onclick="document.getElementById('reject-modal').style.display='none'"
+                    class="px-6 py-2 bg-slate-100 text-slate-700 rounded-lg">Bekor qilish</button>
                 <button type="submit" class="px-6 py-2 bg-rose-500 text-white rounded-lg">Rad etish</button>
             </div>
         </form>
