@@ -241,15 +241,13 @@
                     <td class="p-4 text-sm text-slate-600">{{ trans.category.name|default:"-" }}</td>
                     <td class="p-4 text-sm text-slate-600">
                         {% if trans.student %}
-                        <span class="px-2 py-0.5 text-xs rounded-full bg-indigo-100 text-indigo-600">{{
-                            trans.student.get_full_name }}</span>
+                        <span class="px-2 py-0.5 text-xs rounded-full bg-indigo-100 text-indigo-600">{{ trans.student.get_full_name }}</span>
                         {% else %}-{% endif %}
                     </td>
                     <td class="p-4 text-sm text-slate-500">{{ trans.description|default:"-"|truncatewords:10 }}</td>
                     <td
                         class="p-4 text-right font-bold {% if trans.transaction_type == 'income' %}text-emerald-600{% else %}text-rose-600{% endif %}">
-                        {% if trans.transaction_type == 'income' %}+{% else %}-{% endif %}{{ trans.amount|floatformat:0
-                        }}
+                        {% if trans.transaction_type == 'income' %}+{% else %}-{% endif %}{{ trans.amount|floatformat:0 }} UZS
                     </td>
                     <td class="p-4 text-center">
                         <span class="px-2.5 py-1 text-xs rounded-full font-medium
@@ -319,8 +317,7 @@
                 <tr class="transition hover:bg-slate-100">
                     <td class="p-4 text-sm text-slate-400">{{ sub.created_at|date:"d.m.Y" }}</td>
                     <td class="p-4 text-sm text-slate-600">
-                        {{ sub.get_period_type_display }} ({{ sub.period_start|date:"d.m" }} - {{
-                        sub.period_end|date:"d.m" }})
+                        {{ sub.get_period_type_display }} ({{ sub.period_start|date:"d.m" }} - {{ sub.period_end|date:"d.m" }})
                     </td>
                     <td class="p-4 text-right text-sm text-emerald-600">+{{ sub.total_income|floatformat:0 }}</td>
                     <td class="p-4 text-right text-sm text-rose-600">-{{ sub.total_expense|floatformat:0 }}</td>

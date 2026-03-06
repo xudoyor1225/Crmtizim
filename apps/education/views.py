@@ -189,11 +189,11 @@ def remove_student_from_group(request, pk, student_id):
     enrollment = get_object_or_404(GroupStudent, group=group, student_id=student_id)
     
     if request.method == 'POST':
-        enrollment.status = 'left'
-        enrollment.save()
-        log_user_action(request.user, 'UPDATE', 'GroupStudent', group.id, 
-                       f"{enrollment.student.first_name} chiqdi", request=request)
-        messages.warning(request, "O'quvchi guruhdan chiqarildi.")
+        student_name = enrollment.student.first_name
+        enrollment.delete()
+        log_user_action(request.user, 'DELETE', 'GroupStudent', group.id, 
+                       f"{student_name} guruhdan o'chirildi", request=request)
+        messages.warning(request, "O'quvchi guruhdan o'chirildi.")
     
     return redirect('group_detail', pk=pk)
 

@@ -8,12 +8,13 @@
 
     <!-- Sarlavha -->
     <div class="flex items-center justify-between">
-        <h1 class="text-3xl font-bold text-[#0F172A]">Xush kelibsiz, {{ request.user.first_name|default:"User" }}! 👋</h1>
+        <h1 class="text-3xl font-bold text-[#0F172A]">Xush kelibsiz, {{ request.user.first_name|default:"User" }}! 👋
+        </h1>
         <div class="text-base text-[#94A3B8]">Bugun: {% now "d F Y" %}</div>
     </div>
 
     <!-- STATISTIKA VIDJETLARI (Cards) -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
         <!-- O'quvchilar -->
         <div
@@ -42,19 +43,6 @@
             </div>
         </div>
 
-        <!-- Tushum -->
-        <div
-            class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-lg hover:shadow-emerald-500/8 hover:-translate-y-1 transition-all duration-300">
-            <div>
-                <p class="text-sm font-semibold text-[#94A3B8]">Oylik Tushum</p>
-                <p class="text-3xl font-bold mt-1 text-[#0F172A]">{{ monthly_income|default:"0" }}</p>
-                <span class="text-xs text-[#94A3B8]">UZS</span>
-            </div>
-            <div class="p-3 rounded-xl bg-emerald-100/60 text-emerald-600">
-                <i class="ph-fill ph-wallet text-2xl"></i>
-            </div>
-        </div>
-
         <!-- Qarzdorlik -->
         <div
             class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between hover:shadow-lg hover:shadow-rose-500/8 hover:-translate-y-1 transition-all duration-300">
@@ -75,7 +63,11 @@
         <!-- 💸 Accept Payment — PRIORITY (larger) -->
         <a href="{% url 'finance:add_income' %}" class="qa-card qa-payment">
             <span class="qa-card-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 256 256"><path d="M224,48H32A16,16,0,0,0,16,64V192a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48Zm0,16V88H32V64ZM32,192V104H224v88ZM208,168a8,8,0,0,1-8,8H168a8,8,0,0,1,0-16h32A8,8,0,0,1,208,168Zm-64,0a8,8,0,0,1-8,8H120a8,8,0,0,1,0-16h16A8,8,0,0,1,144,168Z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor"
+                    viewBox="0 0 256 256">
+                    <path
+                        d="M224,48H32A16,16,0,0,0,16,64V192a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48Zm0,16V88H32V64ZM32,192V104H224v88ZM208,168a8,8,0,0,1-8,8H168a8,8,0,0,1,0-16h32A8,8,0,0,1,208,168Zm-64,0a8,8,0,0,1-8,8H120a8,8,0,0,1,0-16h16A8,8,0,0,1,144,168Z" />
+                </svg>
             </span>
             <span class="qa-card-label">Kurs To'lovi</span>
             <span class="qa-card-ripple"></span>
@@ -83,7 +75,11 @@
         <!-- 👤 Add Student -->
         <a href="{% url 'users:student_create' %}" class="qa-card qa-student">
             <span class="qa-card-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M256,136a8,8,0,0,1-8,8H232v16a8,8,0,0,1-16,0V144H200a8,8,0,0,1,0-16h16V112a8,8,0,0,1,16,0v16h16A8,8,0,0,1,256,136ZM144,157.68a68,68,0,1,0-71.9,0C28.37,173.31,0,207.77,0,248a8,8,0,0,0,16,0c0-44.18,36.44-80,81.22-80S178.44,203.82,178.44,248a8,8,0,0,0,16,0C194.44,207.77,166.07,173.31,144,157.68ZM108.11,152a52,52,0,1,1,52-52A52.06,52.06,0,0,1,108.11,152Z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                    viewBox="0 0 256 256">
+                    <path
+                        d="M256,136a8,8,0,0,1-8,8H232v16a8,8,0,0,1-16,0V144H200a8,8,0,0,1,0-16h16V112a8,8,0,0,1,16,0v16h16A8,8,0,0,1,256,136ZM144,157.68a68,68,0,1,0-71.9,0C28.37,173.31,0,207.77,0,248a8,8,0,0,0,16,0c0-44.18,36.44-80,81.22-80S178.44,203.82,178.44,248a8,8,0,0,0,16,0C194.44,207.77,166.07,173.31,144,157.68ZM108.11,152a52,52,0,1,1,52-52A52.06,52.06,0,0,1,108.11,152Z" />
+                </svg>
             </span>
             <span class="qa-card-label">O'quvchi Qo'shish</span>
             <span class="qa-card-ripple"></span>
@@ -91,7 +87,11 @@
         <!-- 📅 Take Attendance -->
         <a href="{% url 'operations:take_attendance' %}" class="qa-card qa-attendance">
             <span class="qa-card-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,176H48V48H72v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24ZM173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                    viewBox="0 0 256 256">
+                    <path
+                        d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,176H48V48H72v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24ZM173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z" />
+                </svg>
             </span>
             <span class="qa-card-label">Davomat</span>
             <span class="qa-card-ripple"></span>
@@ -99,7 +99,11 @@
         <!-- 📉 Add Expense -->
         <a href="{% url 'finance:add_expense' %}" class="qa-card qa-expense">
             <span class="qa-card-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm40-88a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,128Z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                    viewBox="0 0 256 256">
+                    <path
+                        d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm40-88a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,128Z" />
+                </svg>
             </span>
             <span class="qa-card-label">Xarajat Qilish</span>
             <span class="qa-card-ripple"></span>
