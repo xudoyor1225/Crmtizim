@@ -84,6 +84,45 @@ def user_create(request):
     return render(request, 'users/user_form.html', {'form': form, 'title': "Yangi foydalanuvchi"})
 
 
+@login_required
+def admin_set_student_bonus(request):
+    """
+    Super Admin tomonidan o'quvchiga oylik to'lovdan chegirma/bonus belgilash.
+    """
+    if request.user.role != 'super_admin':
+        messages.error(request, "Bu amal uchun sizda huquq yo'q (Faqat Super Admin).")
+        return redirect('users:user_list')
+        
+    if request.method == 'POST':
+        student_id = request.POST.get('student_id')
+        bonus_amount_str = request.POST.get('bonus_amount', '0')
+        bonus_percentage_str = request.POST.get('bonus_percentage', '0')
+        
+        try:
+            student = User.objects.get(id=student_id, role='student', is_deleted=False)
+            
+            bonus_amount = float(bonus_amount_str)
+            bonus_percentage = int(bonus_percentage_str)
+            
+            # Chegaralarni tekshirish
+            if bonus_percentage > 100 or bonus_percentage < 0:
+                messages.error(request, "Bonus foizi 0 va 100 orasida bo'lishi kerak!")
+                return redirect('users:user_list')
+                
+            student.bonus_amount = bonus_amount
+            student.bonus_percentage = bonus_percentage
+            student.save(update_fields=['bonus_amount', 'bonus_percentage'])
+            
+            messages.success(request, f"{student.first_name} {student.last_name} uchun bonus saqlandi!")
+            
+        except User.DoesNotExist:
+            messages.error(request, "O'quvchi topilmadi.")
+        except ValueError:
+            messages.error(request, "Noto'g'ri raqam kiritildi.")
+            
+    return redirect('users:user_list')
+
+
 # ============================================
 # OTA-ONA QIDIRISH (AJAX)
 # ============================================

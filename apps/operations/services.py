@@ -24,12 +24,7 @@ def finish_lesson_logic(lesson_id, user):
         raise ValidationError("Bu dars allaqachon yakunlangan va pullar yechilgan.")
 
     # 1. Dars narxini aniqlaymiz (Kurs narxidan kelib chiqib yoki bitta dars narxi)
-    # Oddiylik uchun: Oylik narx / 12 ta dars deb olamiz (yoki soatbay)
-    # Hozircha statik: 50,000 so'm (Keyin Course modelidan olamiz)
-    lesson_price = 50000
-    if lesson.group.course.price > 0:
-        # Taxminiy hisob: Kurs narxi / 12 dars
-        lesson_price = lesson.group.course.price / 12
+    # (Bu qism student darajasiga tushirildi, sababi bonus har xil bo'lishi mumkin)
 
     # 2. Kategoriyani topamiz (Kurs to'lovi)
     category, _ = TransactionCategory.objects.get_or_create(
@@ -39,14 +34,33 @@ def finish_lesson_logic(lesson_id, user):
     )
 
     # 3. Davomatni tekshiramiz
-    attendances = Attendance.objects.filter(lesson=lesson)
+    attendances = Attendance.objects.filter(lesson=lesson).select_related('student')
 
     if not attendances.exists():
         raise ValidationError("Davomat qilinmagan! Avval o'quvchilarni belgilang.")
 
+    # Asosiy kurs narxi (Butun oy uchun)
+    base_course_price = 50000 * 12
+    if lesson.group.course.price > 0:
+        base_course_price = lesson.group.course.price
+
     for att in attendances:
         # Agar o'quvchi BOR bo'lsa yoki SABABSIZ yo'q bo'lsa -> Pul yechamiz
         if att.status in ['present', 'late', 'absent']:
+            # Dars narxini hisoblash, bonuslarni inobatga olgan holda
+            from decimal import Decimal
+            student_course_price = base_course_price
+            
+            # Foizli bonus
+            if att.student.bonus_percentage > 0:
+                student_course_price = student_course_price * (1 - (Decimal(att.student.bonus_percentage) / Decimal(100)))
+            
+            # Summa bonus
+            if att.student.bonus_amount > 0:
+                student_course_price = max(Decimal('0'), student_course_price - att.student.bonus_amount)
+                
+            lesson_price = student_course_price / 12
+
             # Tranzaksiya yaratamiz (Avtomatik tasdiqlangan holda)
             # Chunki bu real balansdan yechilyapti
 

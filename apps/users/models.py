@@ -52,8 +52,10 @@ class User(AbstractUser, TenantAwareModel):
 
     # 7. MOLIYA (O'quvchilar uchun)
     balance = models.DecimalField(max_digits=12, decimal_places=2, default=0, verbose_name="Hisob (Balans)")
+    bonus_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0, verbose_name="Tasdiqlangan Bonus summasi")
+    bonus_percentage = models.PositiveIntegerField(default=0, verbose_name="Bonus foizi (%)")
 
-    # 7. Organization Override (TenantAwareModeldan keladi, lekin SuperAdmin uchun bo'sh bo'lishi mumkin)
+    # 8. Organization Override (TenantAwareModeldan keladi, lekin SuperAdmin uchun bo'sh bo'lishi mumkin)
     organization = models.ForeignKey(
         'organizations.Organization',
         on_delete=models.CASCADE,
