@@ -18,16 +18,30 @@
     </div>
 
     <!-- Kassa Balansi -->
-    <div class="rounded-2xl p-6 bg-gradient-to-br from-[#4F46E5]/20 to-[#818CF8]/10 border border-[#94A3B8]/25">
-        <div class="flex items-center justify-between">
-            <div>
-                <p class="text-sm font-medium text-[#64748B]">Joriy Kassa Balansi</p>
-                <p class="text-3xl font-bold mt-1 text-[#4F46E5]">{{ balance|floatformat:0 }} UZS</p>
-            </div>
-            <div class="p-3 rounded-xl bg-[#4F46E5]/15">
-                <i class="ph-fill ph-wallet text-2xl text-[#4F46E5]"></i>
-            </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Naqd -->
+        <div class="rounded-2xl p-5 bg-emerald-50 border border-emerald-100 relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-16 h-16 bg-emerald-500/10 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+            <p class="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1 flex items-center gap-1.5"><i class="ph-fill ph-money"></i> Naqd pul</p>
+            <p class="text-2xl font-black text-emerald-900">{{ balance_cash|floatformat:0 }} UZS</p>
         </div>
+        <!-- Plastik -->
+        <div class="rounded-2xl p-5 bg-blue-50 border border-blue-100 relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-16 h-16 bg-blue-500/10 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+            <p class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-1 flex items-center gap-1.5"><i class="ph-fill ph-credit-card"></i> Plastik karta</p>
+            <p class="text-2xl font-black text-blue-900">{{ balance_card|floatformat:0 }} UZS</p>
+        </div>
+        <!-- Terminal -->
+        <div class="rounded-2xl p-5 bg-purple-50 border border-purple-100 relative overflow-hidden group">
+            <div class="absolute -right-4 -top-4 w-16 h-16 bg-purple-500/10 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+            <p class="text-xs font-bold text-purple-600 uppercase tracking-wider mb-1 flex items-center gap-1.5"><i class="ph-fill ph-device-mobile"></i> Terminal</p>
+            <p class="text-2xl font-black text-purple-900">{{ balance_terminal|floatformat:0 }} UZS</p>
+        </div>
+    </div>
+    
+    <div class="rounded-2xl p-4 bg-slate-50 border border-slate-200 mt-4 flex items-center justify-between">
+        <p class="text-sm font-semibold text-slate-600">Jami Topshirilmagan Balans:</p>
+        <p class="text-xl font-black text-slate-800">{{ balance|floatformat:0 }} UZS</p>
     </div>
 
     <!-- Form -->
@@ -52,6 +66,39 @@
                 <option value="" disabled>Asosiy kassa topilmadi</option>
                 {% endfor %}
             </select>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-3">Topshiriladigan To'lov Usullari *</label>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <label class="relative flex items-center p-3 rounded-xl border border-slate-200 bg-white cursor-pointer hover:bg-slate-50 transition-colors has-[:checked]:border-emerald-500 has-[:checked]:bg-emerald-50/50">
+                    <div class="flex items-center h-5">
+                        <input type="checkbox" name="payment_methods" value="cash" {% if balance_cash > 0 %}checked{% endif %} class="w-4 h-4 text-emerald-600 bg-gray-100 border-gray-300 rounded focus:ring-emerald-500">
+                    </div>
+                    <div class="ml-3 text-sm">
+                        <span class="font-medium text-slate-900 flex items-center gap-1.5"><i class="ph-fill ph-money text-emerald-500"></i> Naqd pul</span>
+                    </div>
+                </label>
+                
+                <label class="relative flex items-center p-3 rounded-xl border border-slate-200 bg-white cursor-pointer hover:bg-slate-50 transition-colors has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50/50">
+                    <div class="flex items-center h-5">
+                        <input type="checkbox" name="payment_methods" value="card" {% if balance_card > 0 %}checked{% endif %} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                    </div>
+                    <div class="ml-3 text-sm">
+                        <span class="font-medium text-slate-900 flex items-center gap-1.5"><i class="ph-fill ph-credit-card text-blue-500"></i> Plastik karta</span>
+                    </div>
+                </label>
+                
+                <label class="relative flex items-center p-3 rounded-xl border border-slate-200 bg-white cursor-pointer hover:bg-slate-50 transition-colors has-[:checked]:border-purple-500 has-[:checked]:bg-purple-50/50">
+                    <div class="flex items-center h-5">
+                        <input type="checkbox" name="payment_methods" value="terminal" {% if balance_terminal > 0 %}checked{% endif %} class="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500">
+                    </div>
+                    <div class="ml-3 text-sm">
+                        <span class="font-medium text-slate-900 flex items-center gap-1.5"><i class="ph-fill ph-device-mobile text-purple-500"></i> Terminal</span>
+                    </div>
+                </label>
+            </div>
+            <p class="text-xs text-slate-500 mt-2">Faqat belgilangan usullar bo'yicha yig'ilgan summalar asosiy kassaga o'tkaziladi.</p>
         </div>
 
         <div>

@@ -135,17 +135,14 @@
         <div class="liquid-glass gradient-bar p-3 sm:p-5 stagger-3">
             <div class="flex items-center justify-between">
                 <div class="min-w-0 flex-1">
-                    <p class="text-[10px] sm:text-xs font-semibold text-[#94A3B8] uppercase tracking-wider truncate">{{ period_label|default:"Oylik" }} Foyda</p>
+                    <p class="text-[10px] sm:text-xs font-semibold text-[#94A3B8] uppercase tracking-wider truncate">Asosiy Kassa</p>
                     <p
-                        class="text-lg sm:text-2xl font-bold {% if net_profit >= 0 %}text-emerald-600{% else %}text-rose-600{% endif %} mt-1 truncate">
-                        {{ net_profit|default:0|floatformat:0|intcomma }}</p>
-                    <div class="flex gap-1 sm:gap-1.5 mt-1 flex-wrap">
-                        <span class="text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 bg-emerald-50 text-emerald-700 rounded">+{{ period_income|default:0|floatformat:0|intcomma }}</span>
-                        <span class="text-[10px] sm:text-xs px-1 sm:px-1.5 py-0.5 bg-rose-50 text-rose-600 rounded">-{{ period_expense|default:0|floatformat:0|intcomma }}</span>
-                    </div>
+                        class="text-lg sm:text-2xl font-bold text-[#0F172A] mt-1 truncate">
+                        {{ main_kassa_balance|default:0|floatformat:0|intcomma }}</p>
+                    <p class="text-[10px] sm:text-xs text-[#64748B] font-medium mt-0.5">Umumiy qoldiq so'm</p>
                 </div>
                 <div class="w-8 h-8 sm:w-10 sm:h-10 bg-[#4F46E5]/10 text-[#0F172A] rounded-xl flex items-center justify-center flex-shrink-0 ml-2"><i
-                        class="ph-fill ph-chart-line-up text-sm sm:text-lg"></i></div>
+                        class="ph-fill ph-wallet text-sm sm:text-lg"></i></div>
             </div>
         </div>
         <a href="{% url 'users:user_list' %}?filter=debtors"

@@ -234,9 +234,14 @@ def admin_submit_cash(request):
     if request.method == 'POST':
         main_account_id = request.POST.get('main_account')
         notes = request.POST.get('notes', '')
+        payment_methods = request.POST.getlist('payment_methods')
 
         if not main_account_id:
             messages.error(request, "❌ Asosiy kassani tanlang!")
+            return redirect('finance:admin_cash_dashboard')
+
+        if not payment_methods:
+            messages.error(request, "❌ Kamida bitta to'lov usulini tanlang!")
             return redirect('finance:admin_cash_dashboard')
 
         main_account = get_object_or_404(Account, pk=main_account_id, organization=org)
@@ -246,12 +251,13 @@ def admin_submit_cash(request):
         period_start = today
         period_end = today
 
-        # TOPSHIRILMAGAN tranzaksiyalar (cash_submission yo'q bo'lganlar)
+        # TOPSHIRILMAGAN tranzaksiyalar (cash_submission yo'q bo'lganlar) - faqat tanlangan usullar bo'yicha
         unsubmitted_txs = Transaction.objects.filter(
             account=admin_account,
             is_deleted=False,
             status='confirmed',
             cash_submission__isnull=True,
+            payment_method__in=payment_methods,
         )
 
         total_income = unsubmitted_txs.filter(transaction_type='income').aggregate(t=Sum('amount'))['t'] or Decimal('0')
@@ -260,18 +266,17 @@ def admin_submit_cash(request):
         # To'lov usuli bo'yicha tafsilotlarni hisoblash (faqat 3 ta tur)
         # Kirim - Chiqim hisoblash har bir usul uchun
         amount_cash = (unsubmitted_txs.filter(transaction_type='income', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
-                      (unsubmitted_txs.filter(transaction_type='expense', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
+                      (unsubmitted_txs.filter(transaction_type='expense', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0')) if 'cash' in payment_methods else Decimal('0')
         amount_card = (unsubmitted_txs.filter(transaction_type='income', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
-                      (unsubmitted_txs.filter(transaction_type='expense', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
+                      (unsubmitted_txs.filter(transaction_type='expense', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0')) if 'card' in payment_methods else Decimal('0')
         amount_terminal = (unsubmitted_txs.filter(transaction_type='income', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
-                          (unsubmitted_txs.filter(transaction_type='expense', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
+                          (unsubmitted_txs.filter(transaction_type='expense', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0')) if 'terminal' in payment_methods else Decimal('0')
 
-        # Haqiqiy admin kassasi balansini topshirish summasi sifatida ishlatamiz
-        admin_account.refresh_from_db()
-        net_amount = admin_account.balance
+        # Tanlangan tranzaksiyalar yig'indisi
+        net_amount = amount_cash + amount_card + amount_terminal
 
         if unsubmitted_txs.count() == 0 and net_amount <= 0:
-            messages.warning(request, "⚠️ Topshirish uchun yangi tranzaksiyalar yoki mablag' yo'q!")
+            messages.warning(request, "⚠️ Tanlangan usullar bo'yicha topshirish uchun tranzaksiyalar yoki mablag' yo'q!")
             return redirect('finance:admin_cash_dashboard')
 
         try:
@@ -297,11 +302,10 @@ def admin_submit_cash(request):
                 # Barcha topshirilmagan tranzaksiyalarga cash_submission FK ni biriktirish
                 unsubmitted_txs.update(cash_submission=submission)
 
-                # Admin kassasi balansini 0 ga tushirish
+                # Admin kassasi balansidan ayriladi
                 admin_account.refresh_from_db()
-                if admin_account.balance != Decimal('0.00'):
-                    admin_account.balance = Decimal('0.00')
-                    admin_account.save(update_fields=['balance'])
+                admin_account.balance -= net_amount
+                admin_account.save(update_fields=['balance'])
         except DatabaseError as e:
             logger.error(f"Kassa topshirishda xatolik: {e}")
             messages.error(
@@ -338,13 +342,33 @@ def admin_submit_cash(request):
         except Exception as e:
             logger.error(f"Kassa topshirish bildirishnomalarini yuborishda xatolik: {e}")
 
-        messages.success(request, f"✅ Kassa topshirildi! Sof summa: {net_amount:,.0f} UZS. Balans 0 ga tushirildi.")
+        messages.success(request, f"✅ Kassa topshirildi! Sof summa: {net_amount:,.0f} UZS.")
         return redirect('finance:admin_cash_dashboard')
+
+    # Barcha topshirilmagan tranzaksiyalarni olish (balanslarni alohida ko'rsatish uchun)
+    all_unsubmitted_txs = Transaction.objects.filter(
+        account=admin_account,
+        is_deleted=False,
+        status='confirmed',
+        cash_submission__isnull=True,
+    )
+    
+    balance_cash = (all_unsubmitted_txs.filter(transaction_type='income', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
+                   (all_unsubmitted_txs.filter(transaction_type='expense', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
+    balance_card = (all_unsubmitted_txs.filter(transaction_type='income', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
+                   (all_unsubmitted_txs.filter(transaction_type='expense', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
+    balance_terminal = (all_unsubmitted_txs.filter(transaction_type='income', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
+                       (all_unsubmitted_txs.filter(transaction_type='expense', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
+
+    net_balance = balance_cash + balance_card + balance_terminal
 
     context = {
         'admin_account': admin_account,
         'main_accounts': main_accounts,
-        'balance': admin_account.balance,
+        'balance': net_balance,
+        'balance_cash': balance_cash,
+        'balance_card': balance_card,
+        'balance_terminal': balance_terminal,
         'now': timezone.now().date(),
     }
     return render(request, 'finance/admin_cash/submit_cash.html', context)
