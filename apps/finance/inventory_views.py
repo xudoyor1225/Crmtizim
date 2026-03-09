@@ -45,6 +45,16 @@ def supply_list(request):
     
     categories = SupplyCategory.objects.filter(organization=org, is_deleted=False)
     
+    # Kutilayotgan/Muddati o'tgan qarzlar
+    from django.utils import timezone
+    unpaid_debts = SupplyTransaction.objects.filter(
+        organization=org,
+        payment_method='qarz',
+        is_debt_paid=False
+    ).select_related('student', 'supply').order_by('due_date')
+    
+    today = timezone.now().date()
+    
     # O'quvchilar ro'yxati (chiqim modalida tanlash uchun)
     from apps.users.models import User as UserModel
     students = UserModel.objects.filter(
@@ -57,6 +67,8 @@ def supply_list(request):
         'supplies': supplies,
         'categories': categories,
         'students': students,
+        'unpaid_debts': unpaid_debts,
+        'today': today,
         'total_items': total_items,
         'low_stock_count': low_stock_count,
         'total_value': total_value,
@@ -131,8 +143,9 @@ def supply_remove_stock(request, supply_id):
             if quantity > 0 and quantity <= supply.quantity:
                 student = None
                 financial_tx = None
+                due_date_val = None
 
-                if action_type == 'student':
+                if action_type in ['student', 'student_debt']:
                     if not student_id:
                         messages.error(request, "Iltimos, o'quvchini tanlang!")
                         return redirect('finance:supply_list')
@@ -149,37 +162,50 @@ def supply_remove_stock(request, supply_id):
                     total_price = supply.unit_price * Decimal(str(quantity))
 
                     if total_price > 0:
-                        # Admin kassasini olish
-                        admin_account = _get_or_create_admin_account(request.user, org)
+                        if payment_method == 'qarz':
+                            # Qarzga berilganda
+                            due_date_str = request.POST.get('due_date')
+                            if not due_date_str:
+                                messages.error(request, "Qarzga berish uchun qaytarish sanasini kiriting!")
+                                return redirect('finance:supply_list')
+                            due_date_val = due_date_str
+                            
+                            # O'quvchining balansidan ayiramiz (qarzga botadi)
+                            student.balance -= total_price
+                            student.save(update_fields=['balance'])
+                            notes = notes or f"{supply.name} x{quantity} → {student.get_full_name()} (Qarzga, {due_date_str})"
+                        else:
+                            # Admin kassasini olish
+                            admin_account = _get_or_create_admin_account(request.user, org)
 
-                        # Kirim tranzaksiyasi yaratish (mahsulot sotish)
-                        cat, _ = TransactionCategory.objects.get_or_create(
-                            organization=org,
-                            name='Mahsulot sotish',
-                            transaction_type='income',
-                            defaults={'organization': org}
-                        )
+                            # Kirim tranzaksiyasi yaratish (mahsulot sotish)
+                            cat, _ = TransactionCategory.objects.get_or_create(
+                                organization=org,
+                                name='Mahsulot sotish',
+                                transaction_type='income',
+                                defaults={'organization': org}
+                            )
 
-                        financial_tx = Transaction.objects.create(
-                            organization=org,
-                            account=admin_account,
-                            category=cat,
-                            student=student,
-                            amount=total_price,
-                            transaction_type='income',
-                            payment_method=payment_method,
-                            description=f"Mahsulot sotish: {supply.name} x{quantity} → {student.get_full_name()}",
-                            status='pending',
-                            created_by=request.user,
-                        )
+                            financial_tx = Transaction.objects.create(
+                                organization=org,
+                                account=admin_account,
+                                category=cat,
+                                student=student,
+                                amount=total_price,
+                                transaction_type='income',
+                                payment_method=payment_method,
+                                description=f"Mahsulot sotish: {supply.name} x{quantity} → {student.get_full_name()}",
+                                status='pending',
+                                created_by=request.user,
+                            )
 
-                        # Avtomatik tasdiqlash
-                        try:
-                            confirm_service(financial_tx.id, request.user)
-                        except Exception as e:
-                            messages.warning(request, f"Tranzaksiya yaratildi, lekin tasdiqlanmadi: {e}")
+                            # Avtomatik tasdiqlash
+                            try:
+                                confirm_service(financial_tx.id, request.user)
+                            except Exception as e:
+                                messages.warning(request, f"Tranzaksiya yaratildi, lekin tasdiqlanmadi: {e}")
 
-                        notes = notes or f"{supply.name} x{quantity} → {student.get_full_name()} ({payment_method})"
+                            notes = notes or f"{supply.name} x{quantity} → {student.get_full_name()} ({payment_method})"
 
                 # Ombordan chiqim
                 supply_tx = SupplyTransaction.objects.create(
@@ -191,14 +217,9 @@ def supply_remove_stock(request, supply_id):
                     organization=org,
                     student=student,
                     payment_method=payment_method if student else None,
+                    due_date=due_date_val if action_type in ['student', 'student_debt'] else None,
                     financial_transaction=financial_tx,
                 )
-                
-                # Exlicitly decrease the supply quantity and save
-                supply.quantity -= quantity
-                if supply.quantity < 0:
-                    supply.quantity = 0
-                supply.save()
                 
                 log_user_action(request.user, 'CREATE', 'SupplyTransaction', 
                                None, f"{supply.name}: -{quantity}", request=request)
@@ -260,6 +281,72 @@ def asset_list(request):
 # =============================================
 # SUPPLY CRUD (Sklad materiallari)
 # =============================================
+
+@login_required
+def supply_pay_debt(request, pk):
+    """Qarzga berilgan material pulini to'lash (qarzni uzish)"""
+    if request.user.role not in ['super_admin', 'owner', 'admin']:
+        messages.error(request, "Ruxsat yo'q!")
+        return redirect('finance:supply_list')
+        
+    org = request.user.organization
+    tx = get_object_or_404(SupplyTransaction, pk=pk, organization=org, payment_method='qarz', is_debt_paid=False)
+    
+    if request.method == 'POST':
+        from .models import Transaction, TransactionCategory, Account
+        from .admin_cash_views import _get_or_create_admin_account
+        from .services import confirm_transaction as confirm_service
+        from decimal import Decimal
+        
+        payment_method = request.POST.get('payment_method', 'cash')
+        
+        # Admin kassasini olish
+        admin_account = _get_or_create_admin_account(request.user, org)
+
+        # Mahsulot narxini hisoblash
+        total_price = tx.supply.unit_price * Decimal(str(tx.quantity))
+        
+        # O'quvchining balansini tiklaymiz (qarz to'landi)
+        student = tx.student
+        student.balance += total_price
+        student.save(update_fields=['balance'])
+        
+        # Kassaga kirim qilamiz
+        cat, _ = TransactionCategory.objects.get_or_create(
+            organization=org,
+            name='Qarzni qaytarish (Material)',
+            transaction_type='income',
+            defaults={'organization': org}
+        )
+
+        financial_tx = Transaction.objects.create(
+            organization=org,
+            account=admin_account,
+            category=cat,
+            student=student,
+            amount=total_price,
+            transaction_type='income',
+            payment_method=payment_method,
+            description=f"Qarz to'landi (M: {tx.supply.name} x{tx.quantity}): {student.get_full_name()}",
+            status='pending',
+            created_by=request.user,
+        )
+
+        # Avtomatik tasdiqlash
+        try:
+            confirm_service(financial_tx.id, request.user)
+        except Exception as e:
+            messages.warning(request, f"Tranzaksiya yaratildi, lekin tasdiqlanmadi: {e}")
+            
+        # Qarz to'landi deb belgilash
+        tx.is_debt_paid = True
+        tx.financial_transaction = financial_tx
+        tx.save(update_fields=['is_debt_paid', 'financial_transaction'])
+        
+        messages.success(request, f"✅ Qarz to'landi: {total_price:,.0f} UZS kassaga kirim qilindi!")
+        
+    return redirect('finance:supply_list')
+
 
 @login_required
 def supply_detail(request, pk):

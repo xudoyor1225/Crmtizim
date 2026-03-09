@@ -124,6 +124,7 @@ class SupplyTransaction(TenantAwareModel):
         ('cash', 'Naqd pul'),
         ('card', 'Plastik karta'),
         ('terminal', 'Terminal'),
+        ('qarz', 'Qarzga'),
     )
     
     supply = models.ForeignKey(Supply, on_delete=models.CASCADE, related_name='transactions')
@@ -149,6 +150,10 @@ class SupplyTransaction(TenantAwareModel):
     # Audit
     performed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='supply_transactions')
     notes = models.CharField(max_length=255, blank=True, verbose_name="Izoh")
+    
+    # Qarzga sotish (Credit Sales)
+    due_date = models.DateField(null=True, blank=True, verbose_name="Qaytarish sanasi")
+    is_debt_paid = models.BooleanField(default=False, verbose_name="Qarz to'landimi?")
     
     class Meta:
         db_table = 'supply_transactions'

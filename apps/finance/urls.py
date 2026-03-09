@@ -65,6 +65,7 @@ urlpatterns = [
     path('supplies/add/', inventory_views.supply_create, name='supply_create'),
     path('supplies/<int:pk>/edit/', inventory_views.supply_edit, name='supply_edit'),
     path('supplies/<int:pk>/delete/', inventory_views.supply_delete, name='supply_delete'),
+    path('supplies/<int:pk>/pay-debt/', inventory_views.supply_pay_debt, name='supply_pay_debt'),
     path('supplies/<int:pk>/', inventory_views.supply_detail, name='supply_detail'),
     path('supplies/<int:supply_id>/stock-in/', inventory_views.supply_add_stock, name='supply_add_stock'),
     path('supplies/<int:supply_id>/stock-out/', inventory_views.supply_remove_stock, name='supply_remove_stock'),
