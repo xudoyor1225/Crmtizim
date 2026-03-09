@@ -42,11 +42,11 @@
                     <th class="p-4 text-left">Davr</th>
                     <th class="p-4 text-left">Admin Kassa</th>
                     <th class="p-4 text-left">Asosiy Kassa</th>
-                    <th class="p-4 text-right">Kirim</th>
-                    <th class="p-4 text-right">Chiqim</th>
-                    <th class="p-4 text-right">Sof Summa</th>
+                    <th class="p-4 text-right">Naqd</th>
+                    <th class="p-4 text-right">Plastik</th>
+                    <th class="p-4 text-right">Terminal</th>
+                    <th class="p-4 text-right">Jami</th>
                     <th class="p-4 text-center">Holat</th>
-                    <th class="p-4 text-center">Batafsil</th>
                     <th class="p-4 text-right">Amallar</th>
                 </tr>
             </thead>
@@ -61,8 +61,9 @@
                     </td>
                     <td class="p-4 text-sm text-slate-600">{{ sub.admin_account.name|default:"Hisob topilmadi" }}</td>
                     <td class="p-4 text-sm text-slate-600">{{ sub.main_account.name|default:"Asosiy kassa" }}</td>
-                    <td class="p-4 text-right text-sm text-emerald-600">+{{ sub.total_income|floatformat:0 }}</td>
-                    <td class="p-4 text-right text-sm text-rose-600">-{{ sub.total_expense|floatformat:0 }}</td>
+                    <td class="p-4 text-right text-sm text-emerald-600">{{ sub.amount_cash|floatformat:0 }}</td>
+                    <td class="p-4 text-right text-sm text-blue-600">{{ sub.amount_card|floatformat:0 }}</td>
+                    <td class="p-4 text-right text-sm text-purple-600">{{ sub.amount_terminal|floatformat:0 }}</td>
                     <td class="p-4 text-right font-bold text-slate-700">{{ sub.net_amount|floatformat:0 }}</td>
                     <td class="p-4 text-center">
                         <span class="px-2.5 py-1 text-xs rounded-full font-medium
@@ -71,12 +72,6 @@
                             {% else %}bg-rose-500/20 text-rose-600{% endif %}">
                             {{ sub.get_status_display }}
                         </span>
-                    </td>
-                    <td class="p-4 text-center">
-                        <a href="{% url 'finance:cash_submission_detail' sub.pk %}" 
-                           class="px-3 py-1.5 bg-blue-500/10 text-blue-600 rounded-lg hover:bg-blue-500/20 transition text-sm font-medium">
-                            <i class="ph ph-eye mr-1"></i> Batafsil
-                        </a>
                     </td>
                     <td class="p-4 text-right">
                         {% if sub.status == 'pending' %}
@@ -111,7 +106,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="11" class="p-12 text-center">
+                    <td colspan="10" class="p-12 text-center">
                         <i class="ph ph-hand-coins text-5xl mb-4 text-slate-600"></i>
                         <p class="text-slate-500">Kassa topshirishlar topilmadi</p>
                     </td>
