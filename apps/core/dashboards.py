@@ -130,6 +130,12 @@ def super_admin_dashboard(request):
     
     net_profit = period_income - period_expense
     
+    # Umumiy asosiy (main) kassalar qoldig'i
+    accounts_qs = Account.objects.filter(is_deleted=False)
+    if request.organization:
+        accounts_qs = accounts_qs.filter(organization=request.organization)
+    main_kassa_balance = accounts_qs.aggregate(total=Sum('balance'))['total'] or 0
+    
     # ====== KUNLIK XARAJATLAR TAQSIMOTI ======
     daily_expenses = Transaction.objects.filter(
         transaction_type='expense',
@@ -251,6 +257,7 @@ def super_admin_dashboard(request):
         'period_income': period_income,
         'period_expense': period_expense,
         'net_profit': net_profit,
+        'main_kassa_balance': main_kassa_balance,
         'daily_expenses': daily_expenses,
         
         # Qarzdorlik

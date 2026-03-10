@@ -82,13 +82,14 @@ class StudentPaymentForm(forms.ModelForm):
 
 
 class AdminCashTransactionForm(forms.ModelForm):
-    """Admin kassa kirim-chiqim formasi (faqat kategoriya, summa, izoh)."""
+    """Admin kassa kirim-chiqim formasi (kategoriya, summa, to'lov usuli, izoh)."""
     class Meta:
         model = Transaction
-        fields = ['category', 'amount', 'description']
+        fields = ['category', 'amount', 'payment_method', 'description']
         widgets = {
             'category': forms.Select(attrs={'class': INPUT_CLASSES}),
             'amount': forms.NumberInput(attrs={'class': INPUT_CLASSES, 'placeholder': 'Summa', 'min': '0'}),
+            'payment_method': forms.Select(attrs={'class': INPUT_CLASSES}),
             'description': forms.Textarea(attrs={'class': INPUT_CLASSES, 'rows': 3, 'placeholder': 'Izoh...'}),
         }
 

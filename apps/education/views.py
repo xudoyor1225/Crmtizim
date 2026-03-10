@@ -97,7 +97,7 @@ def group_list(request):
         groups = groups.filter(teacher=request.user)
     
     groups = groups.annotate(
-        student_count=Count('students', filter=Q(students__status='active'))
+        student_count=Count('students', filter=Q(students__status='active', students__is_deleted=False))
     )
     return render(request, 'education/group_list.html', {'groups': groups})
 
@@ -131,7 +131,7 @@ def group_detail(request, pk):
     group = get_object_or_404(Group, pk=pk, organization=org, is_deleted=False)
     
     # Guruhdagi o'quvchilar
-    enrollments = GroupStudent.objects.filter(group=group).select_related('student')
+    enrollments = GroupStudent.objects.filter(group=group, is_deleted=False).select_related('student')
     
     # Qo'shish mumkin bo'lgan o'quvchilar
     enrolled_ids = enrollments.values_list('student_id', flat=True)
@@ -162,8 +162,19 @@ def add_student_to_group(request, pk):
         if student_id:
             student = get_object_or_404(User, pk=student_id, organization=org, role='student')
             
-            # Tekshirish - allaqachon a'zo emasmi
-            if not GroupStudent.objects.filter(group=group, student=student).exists():
+            # Tekshirish - allaqachon a'zo emasmi, yoki o'chirilganmi
+            existing = GroupStudent.objects.filter(group=group, student=student).first()
+            if existing:
+                if getattr(existing, 'is_deleted', False):
+                    existing.is_deleted = False
+                    existing.status = 'active'
+                    existing.save()
+                    log_user_action(request.user, 'RESTORE', 'GroupStudent', group.id, 
+                                   f"{student.first_name} -> {group.name}", request=request)
+                    messages.success(request, f"{student.first_name} guruhga qayta qo'shildi!")
+                else:
+                    messages.warning(request, "Bu o'quvchi allaqachon guruhda!")
+            else:
                 GroupStudent.objects.create(
                     organization=org,
                     group=group,
@@ -173,8 +184,6 @@ def add_student_to_group(request, pk):
                 log_user_action(request.user, 'CREATE', 'GroupStudent', group.id, 
                                f"{student.first_name} -> {group.name}", request=request)
                 messages.success(request, f"{student.first_name} guruhga qo'shildi!")
-            else:
-                messages.warning(request, "Bu o'quvchi allaqachon guruhda!")
     
     return redirect('group_detail', pk=pk)
 
@@ -186,14 +195,14 @@ def remove_student_from_group(request, pk, student_id):
     org = request.organization
     group = get_object_or_404(Group, pk=pk, organization=org, is_deleted=False)
     
-    enrollment = get_object_or_404(GroupStudent, group=group, student_id=student_id)
+    enrollment = get_object_or_404(GroupStudent, group=group, student_id=student_id, is_deleted=False)
     
     if request.method == 'POST':
-        enrollment.status = 'left'
-        enrollment.save()
-        log_user_action(request.user, 'UPDATE', 'GroupStudent', group.id, 
-                       f"{enrollment.student.first_name} chiqdi", request=request)
-        messages.warning(request, "O'quvchi guruhdan chiqarildi.")
+        student_name = enrollment.student.first_name
+        enrollment.delete()
+        log_user_action(request.user, 'DELETE', 'GroupStudent', group.id, 
+                       f"{student_name} guruhdan o'chirildi", request=request)
+        messages.warning(request, "O'quvchi guruhdan o'chirildi.")
     
     return redirect('group_detail', pk=pk)
 

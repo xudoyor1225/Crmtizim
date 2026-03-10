@@ -119,14 +119,41 @@ class SupplyTransaction(TenantAwareModel):
         ('in', 'Kirim'),
         ('out', 'Chiqim'),
     )
+
+    PAYMENT_METHOD_CHOICES = (
+        ('cash', 'Naqd pul'),
+        ('card', 'Plastik karta'),
+        ('terminal', 'Terminal'),
+        ('qarz', 'Qarzga'),
+    )
     
     supply = models.ForeignKey(Supply, on_delete=models.CASCADE, related_name='transactions')
     transaction_type = models.CharField(max_length=10, choices=TYPE_CHOICES, verbose_name="Turi")
     quantity = models.PositiveIntegerField(verbose_name="Miqdor")
     
+    # O'quvchiga biriktirish (sotuv/berish)
+    student = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True,
+        limit_choices_to={'role': 'student'},
+        related_name='supply_received', verbose_name="O'quvchi"
+    )
+    payment_method = models.CharField(
+        max_length=20, choices=PAYMENT_METHOD_CHOICES,
+        null=True, blank=True, verbose_name="To'lov usuli"
+    )
+    # Moliyaviy tranzaksiyaga bog'lash
+    financial_transaction = models.ForeignKey(
+        'finance.Transaction', on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='supply_transactions', verbose_name="Moliyaviy tranzaksiya"
+    )
+    
     # Audit
     performed_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='supply_transactions')
     notes = models.CharField(max_length=255, blank=True, verbose_name="Izoh")
+    
+    # Qarzga sotish (Credit Sales)
+    due_date = models.DateField(null=True, blank=True, verbose_name="Qaytarish sanasi")
+    is_debt_paid = models.BooleanField(default=False, verbose_name="Qarz to'landimi?")
     
     class Meta:
         db_table = 'supply_transactions'

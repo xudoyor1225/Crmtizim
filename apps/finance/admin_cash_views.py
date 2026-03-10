@@ -48,20 +48,34 @@ def admin_cash_dashboard(request):
     user = request.user
     admin_account = _get_or_create_admin_account(user, org)
 
-    # Admin kassasidagi tranzaksiyalar (admin yaratgan + admin kassasiga tushgan)
+    # Admin kassasidagi joriy sessiya tranzaksiyalari (topshirilmagan)
     transactions = Transaction.objects.filter(
         account=admin_account,
         is_deleted=False,
-    ).select_related('category', 'student', 'created_by', 'confirmed_by').order_by('-created_at')[:50]
+        cash_submission__isnull=True,
+    ).select_related('category', 'student', 'created_by', 'confirmed_by', 'cash_submission').order_by('-created_at')[:50]
 
     # Statistika
     confirmed_txs = Transaction.objects.filter(
         account=admin_account,
         is_deleted=False,
-        status='confirmed',
+        status='confirmed'
     )
-    total_income = confirmed_txs.filter(transaction_type='income').aggregate(t=Sum('amount'))['t'] or 0
-    total_expense = confirmed_txs.filter(transaction_type='expense').aggregate(t=Sum('amount'))['t'] or 0
+    
+    # Kassa topshirilgandan keyin barchasi 0 ga tushishi uchun
+    # faqat topshirilmagan tranzaksiyalarni hisobga olamiz
+    unsubmitted_txs = confirmed_txs.filter(cash_submission__isnull=True)
+    
+    total_income = unsubmitted_txs.filter(transaction_type='income').aggregate(t=Sum('amount'))['t'] or 0
+    total_expense = unsubmitted_txs.filter(transaction_type='expense').aggregate(t=Sum('amount'))['t'] or 0
+
+    # To'lov usuli bo'yicha balanslar (topshirilmagan tranzaksiyalar)
+    balance_cash = (unsubmitted_txs.filter(transaction_type='income', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
+                   (unsubmitted_txs.filter(transaction_type='expense', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
+    balance_card = (unsubmitted_txs.filter(transaction_type='income', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
+                   (unsubmitted_txs.filter(transaction_type='expense', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
+    balance_terminal = (unsubmitted_txs.filter(transaction_type='income', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
+                       (unsubmitted_txs.filter(transaction_type='expense', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
 
     # Kutilayotgan o'quvchi to'lovlari (barcha pending student payments)
     pending_qs = Transaction.objects.filter(
@@ -86,12 +100,19 @@ def admin_cash_dashboard(request):
         logger.error(f"CashSubmission so'rovida xatolik (dashboard): {e}")
         submissions = []
 
+    # Joriy (topshirilmagan) umumiy balans
+    net_balance = balance_cash + balance_card + balance_terminal
+
     context = {
         'admin_account': admin_account,
         'transactions': transactions,
         'total_income': total_income,
         'total_expense': total_expense,
         'balance': admin_account.balance,
+        'net_balance': net_balance,
+        'balance_cash': balance_cash,
+        'balance_card': balance_card,
+        'balance_terminal': balance_terminal,
         'submissions': submissions,
         'pending_student_payments': pending_student_payments,
         'pending_count': pending_student_payments.count(),
@@ -211,42 +232,51 @@ def admin_submit_cash(request):
     ).exclude(pk=admin_account.pk)
 
     if request.method == 'POST':
-        period_type = request.POST.get('period_type', 'weekly')
         main_account_id = request.POST.get('main_account')
         notes = request.POST.get('notes', '')
+        payment_methods = request.POST.getlist('payment_methods')
 
         if not main_account_id:
             messages.error(request, "❌ Asosiy kassani tanlang!")
             return redirect('finance:admin_cash_dashboard')
 
+        if not payment_methods:
+            messages.error(request, "❌ Kamida bitta to'lov usulini tanlang!")
+            return redirect('finance:admin_cash_dashboard')
+
         main_account = get_object_or_404(Account, pk=main_account_id, organization=org)
 
-        # Davr hisoblash
+        # Faqat bugungi kun uchun
         today = timezone.now().date()
-        if period_type == 'weekly':
-            period_start = today - timedelta(days=7)
-        else:
-            period_start = today - timedelta(days=30)
+        period_start = today
         period_end = today
 
-        # Davr ichidagi tranzaksiyalar
-        period_txs = Transaction.objects.filter(
+        # TOPSHIRILMAGAN tranzaksiyalar (cash_submission yo'q bo'lganlar) - faqat tanlangan usullar bo'yicha
+        unsubmitted_txs = Transaction.objects.filter(
             account=admin_account,
             is_deleted=False,
             status='confirmed',
-            created_at__date__gte=period_start,
-            created_at__date__lte=period_end,
+            cash_submission__isnull=True,
+            payment_method__in=payment_methods,
         )
 
-        total_income = period_txs.filter(transaction_type='income').aggregate(t=Sum('amount'))['t'] or Decimal('0')
-        total_expense = period_txs.filter(transaction_type='expense').aggregate(t=Sum('amount'))['t'] or Decimal('0')
+        total_income = unsubmitted_txs.filter(transaction_type='income').aggregate(t=Sum('amount'))['t'] or Decimal('0')
+        total_expense = unsubmitted_txs.filter(transaction_type='expense').aggregate(t=Sum('amount'))['t'] or Decimal('0')
+        
+        # To'lov usuli bo'yicha tafsilotlarni hisoblash (faqat 3 ta tur)
+        # Kirim - Chiqim hisoblash har bir usul uchun
+        amount_cash = (unsubmitted_txs.filter(transaction_type='income', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
+                      (unsubmitted_txs.filter(transaction_type='expense', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0')) if 'cash' in payment_methods else Decimal('0')
+        amount_card = (unsubmitted_txs.filter(transaction_type='income', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
+                      (unsubmitted_txs.filter(transaction_type='expense', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0')) if 'card' in payment_methods else Decimal('0')
+        amount_terminal = (unsubmitted_txs.filter(transaction_type='income', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
+                          (unsubmitted_txs.filter(transaction_type='expense', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0')) if 'terminal' in payment_methods else Decimal('0')
 
-        # Haqiqiy admin kassasi balansini topshirish summasi sifatida ishlatamiz
-        admin_account.refresh_from_db()
-        net_amount = admin_account.balance
+        # Tanlangan tranzaksiyalar yig'indisi
+        net_amount = amount_cash + amount_card + amount_terminal
 
-        if net_amount <= 0:
-            messages.warning(request, "⚠️ Kassada topshirish uchun mablag' yo'q!")
+        if unsubmitted_txs.count() == 0 and net_amount <= 0:
+            messages.warning(request, "⚠️ Tanlangan usullar bo'yicha topshirish uchun tranzaksiyalar yoki mablag' yo'q!")
             return redirect('finance:admin_cash_dashboard')
 
         try:
@@ -259,15 +289,22 @@ def admin_submit_cash(request):
                     total_income=total_income,
                     total_expense=total_expense,
                     net_amount=net_amount,
-                    period_type=period_type,
+                    amount_cash=amount_cash,
+                    amount_card=amount_card,
+                    amount_terminal=amount_terminal,
+                    period_type='daily',
                     period_start=period_start,
                     period_end=period_end,
                     notes=notes,
                     status='pending',
                 )
 
-                # Admin kassasi balansini 0 ga tushirish
-                admin_account.balance = Decimal('0.00')
+                # Barcha topshirilmagan tranzaksiyalarga cash_submission FK ni biriktirish
+                unsubmitted_txs.update(cash_submission=submission)
+
+                # Admin kassasi balansidan ayriladi
+                admin_account.refresh_from_db()
+                admin_account.balance -= net_amount
                 admin_account.save(update_fields=['balance'])
         except DatabaseError as e:
             logger.error(f"Kassa topshirishda xatolik: {e}")
@@ -297,7 +334,7 @@ def admin_submit_cash(request):
                     title="Yangi kassa topshirish",
                     message=(
                         f"{user.get_full_name()} kassa topshirish so'rovini yubordi. "
-                        f"Davr: {submission.period_start.strftime('%d.%m.%Y')} - {submission.period_end.strftime('%d.%m.%Y')}. "
+                        f"Sana: {submission.period_start.strftime('%d.%m.%Y')}. "
                         f"Sof summa: {net_amount:,.0f} so'm"
                     ),
                     notification_type='system'
@@ -305,13 +342,34 @@ def admin_submit_cash(request):
         except Exception as e:
             logger.error(f"Kassa topshirish bildirishnomalarini yuborishda xatolik: {e}")
 
-        messages.success(request, f"✅ Kassa topshirildi! Sof summa: {net_amount:,.0f} UZS. Balans 0 ga tushirildi.")
+        messages.success(request, f"✅ Kassa topshirildi! Sof summa: {net_amount:,.0f} UZS.")
         return redirect('finance:admin_cash_dashboard')
+
+    # Barcha topshirilmagan tranzaksiyalarni olish (balanslarni alohida ko'rsatish uchun)
+    all_unsubmitted_txs = Transaction.objects.filter(
+        account=admin_account,
+        is_deleted=False,
+        status='confirmed',
+        cash_submission__isnull=True,
+    )
+    
+    balance_cash = (all_unsubmitted_txs.filter(transaction_type='income', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
+                   (all_unsubmitted_txs.filter(transaction_type='expense', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
+    balance_card = (all_unsubmitted_txs.filter(transaction_type='income', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
+                   (all_unsubmitted_txs.filter(transaction_type='expense', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
+    balance_terminal = (all_unsubmitted_txs.filter(transaction_type='income', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
+                       (all_unsubmitted_txs.filter(transaction_type='expense', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
+
+    net_balance = balance_cash + balance_card + balance_terminal
 
     context = {
         'admin_account': admin_account,
         'main_accounts': main_accounts,
-        'balance': admin_account.balance,
+        'balance': net_balance,
+        'balance_cash': balance_cash,
+        'balance_card': balance_card,
+        'balance_terminal': balance_terminal,
+        'now': timezone.now().date(),
     }
     return render(request, 'finance/admin_cash/submit_cash.html', context)
 
@@ -599,18 +657,28 @@ def admin_add_course_payment(request):
             category = TransactionCategory.objects.filter(pk=category_id).first()
 
         # Tranzaksiya yaratish - admin kassasiga tushadi
-        tx = Transaction.objects.create(
-            organization=org,
-            account=admin_account,
-            category=category,
-            student=student,
-            amount=amount_decimal,
-            transaction_type='income',
-            payment_method=payment_method,
-            description=description or f"Kurs to'lovi: {student.get_full_name()}",
-            status='pending',
-            created_by=user,
-        )
+        tx_data = {
+            'organization': org,
+            'account': admin_account,
+            'category': category,
+            'student': student,
+            'amount': amount_decimal,
+            'transaction_type': 'income',
+            'payment_method': payment_method,
+            'description': description or f"Kurs to'lovi: {student.get_full_name()}",
+            'status': 'pending',
+            'created_by': user,
+        }
+
+        # Chek fayllarini qo'shish
+        receipt_image = request.FILES.get('receipt_image')
+        receipt_file = request.FILES.get('receipt_file')
+        if receipt_image:
+            tx_data['receipt_image'] = receipt_image
+        if receipt_file:
+            tx_data['receipt_file'] = receipt_file
+
+        tx = Transaction.objects.create(**tx_data)
 
         # Admin o'zi yaratgani uchun avtomatik tasdiqlash
         try:
@@ -631,3 +699,209 @@ def admin_add_course_payment(request):
         'admin_account': admin_account,
     }
     return render(request, 'finance/admin_cash/course_payment_form.html', context)
+
+
+@login_required
+@permission_required('finance', 'view')
+def cash_submission_detail(request, pk):
+    """Kassa topshirish tafsilotlari - to'lov usuli bo'yicha tafsilotlar va tranzaksiya tarixi."""
+    org = request.organization
+    user = request.user
+    
+    # Faqat o'z topshirishlarini ko'rish yoki ruxsat bo'lsa
+    qs = CashSubmission.objects.filter(is_deleted=False)
+    if org:
+        qs = qs.filter(organization=org)
+    
+    if user.role == 'admin' and not check_permission(user, 'finance', 'view'):
+        qs = qs.filter(admin_user=user)
+    
+    submission = get_object_or_404(qs.select_related(
+        'admin_user', 'admin_account', 'main_account', 'approved_by', 'organization'
+    ), pk=pk)
+    
+    # FK orqali shu topshirishga bog'langan tranzaksiyalarni olish
+    period_transactions = Transaction.objects.filter(
+        is_deleted=False,
+        cash_submission=submission,
+    ).select_related(
+        'category', 'student', 'staff', 'created_by', 'confirmed_by'
+    ).order_by('-created_at')
+    
+    # Agar FK bo'yicha hech narsa topilmasa — eski usul bilan (backwards compat)
+    if not period_transactions.exists():
+        period_transactions = Transaction.objects.filter(
+            is_deleted=False,
+            created_at__date__gte=submission.period_start,
+            created_at__date__lte=submission.period_end,
+            account=submission.admin_account
+        ).select_related(
+            'category', 'student', 'staff', 'created_by', 'confirmed_by'
+        ).order_by('-created_at')
+    
+    # Kirim va chiqimlarni ajratish
+    income_transactions = period_transactions.filter(transaction_type='income')
+    expense_transactions = period_transactions.filter(transaction_type='expense')
+    
+    # To'lov usuli bo'yicha statistika (faqat 3 ta tur)
+    payment_method_stats = {}
+    for method in ['cash', 'card', 'terminal']:
+        method_transactions = period_transactions.filter(payment_method=method)
+        total = method_transactions.aggregate(t=Sum('amount'))['t'] or Decimal('0')
+        payment_method_stats[method] = {
+            'total': total,
+            'count': method_transactions.count(),
+            'transactions': method_transactions
+        }
+    
+    context = {
+        'submission': submission,
+        'period_transactions': period_transactions,
+        'income_transactions': income_transactions,
+        'expense_transactions': expense_transactions,
+        'payment_method_stats': payment_method_stats,
+        'can_approve_reject': check_permission(user, 'finance', 'edit'),
+    }
+    return render(request, 'finance/admin_cash/submission_detail.html', context)
+
+
+# ============================================
+# ADMIN - Tranzaksiyalarni tahrirlash va o'chirish
+# ============================================
+
+@login_required
+@permission_required('admin_finance', 'edit')
+def admin_edit_transaction(request, pk):
+    """Admin kassasidagi tranzaksiyani tahrirlash.
+    Faqat kassa topshirilmagan bo'lsa ishlaydi."""
+    from .forms import AdminCashTransactionForm
+    org = request.organization
+    user = request.user
+    admin_account = _get_or_create_admin_account(user, org)
+
+    tx = get_object_or_404(Transaction, pk=pk, account=admin_account, is_deleted=False)
+
+    # Kassa topshirilganmi?
+    if tx.cash_submission is not None:
+        messages.error(request, "❌ Bu tranzaksiya kassa topshirilgandan keyin o'zgartirib bo'lmaydi!")
+        return redirect('finance:admin_cash_dashboard')
+
+    old_amount = tx.amount
+    old_type = tx.transaction_type
+
+    if request.method == 'POST':
+        new_amount = request.POST.get('amount')
+        new_category_id = request.POST.get('category')
+        new_payment_method = request.POST.get('payment_method', tx.payment_method)
+        new_description = request.POST.get('description', tx.description)
+
+        try:
+            new_amount = Decimal(str(new_amount).replace(',', '').replace(' ', ''))
+            if new_amount <= 0:
+                raise ValueError()
+        except (ValueError, ArithmeticError, TypeError):
+            messages.error(request, "Noto'g'ri summa!")
+            return redirect('finance:admin_edit_transaction', pk=pk)
+
+        with transaction.atomic():
+            # Agar tasdiqlangan bo'lsa — balansni teskari yurgizib, qayta hisoblash
+            if tx.status == 'confirmed':
+                is_supply_sale = getattr(tx.category, 'name', '') == 'Mahsulot sotish'
+                
+                # Eski summani qaytarish
+                if old_type == 'income':
+                    admin_account.balance -= old_amount
+                    if tx.student and not is_supply_sale:
+                        tx.student.balance -= old_amount
+                        tx.student.save(update_fields=['balance'])
+                elif old_type == 'expense':
+                    admin_account.balance += old_amount
+
+                # Yangi kategoriya tekshiriladi
+                new_cat = TransactionCategory.objects.filter(pk=new_category_id).first() if new_category_id else tx.category
+                is_new_supply_sale = getattr(new_cat, 'name', '') == 'Mahsulot sotish'
+
+                # Yangi summani qo'shish
+                if old_type == 'income':
+                    admin_account.balance += new_amount
+                    if tx.student and not is_new_supply_sale:
+                        tx.student.balance += new_amount
+                        tx.student.save(update_fields=['balance'])
+                elif old_type == 'expense':
+                    admin_account.balance -= new_amount
+
+                admin_account.save(update_fields=['balance'])
+
+            # Tranzaksiyani yangilash (signal ni bypass qilish uchun update_fields)
+            tx.amount = new_amount
+            tx.payment_method = new_payment_method
+            tx.description = new_description
+            if new_category_id:
+                tx.category_id = new_category_id
+            tx.save(update_fields=['amount', 'payment_method', 'description', 'category_id', 'updated_at'])
+
+        log_user_action(user, 'UPDATE', 'Transaction', tx.id,
+                        f"Tranzaksiya tahrirlandi: {old_amount} → {new_amount}", request=request)
+        messages.success(request, f"✅ Tranzaksiya yangilandi: {new_amount:,.0f} UZS")
+        return redirect('finance:admin_cash_dashboard')
+
+    # GET — tahrirlash formasi
+    categories = TransactionCategory.objects.filter(
+        is_deleted=False, transaction_type=tx.transaction_type
+    )
+    if org:
+        categories = categories.filter(organization=org)
+
+    context = {
+        'tx': tx,
+        'categories': categories,
+        'payment_methods': Transaction.PAYMENT_METHOD_CHOICES,
+    }
+    return render(request, 'finance/admin_cash/transaction_edit.html', context)
+
+
+@login_required
+@permission_required('admin_finance', 'edit')
+@require_POST
+def admin_delete_transaction(request, pk):
+    """Admin kassasidagi tranzaksiyani o'chirish (soft delete).
+    Faqat kassa topshirilmagan bo'lsa ishlaydi."""
+    org = request.organization
+    user = request.user
+    admin_account = _get_or_create_admin_account(user, org)
+
+    tx = get_object_or_404(Transaction, pk=pk, account=admin_account, is_deleted=False)
+
+    # Kassa topshirilganmi?
+    if tx.cash_submission is not None:
+        messages.error(request, "❌ Bu tranzaksiya kassa topshirilgandan keyin o'chirib bo'lmaydi!")
+        return redirect('finance:admin_cash_dashboard')
+
+    with transaction.atomic():
+        # Agar tasdiqlangan bo'lsa — balanslarni teskari yurgizish
+        if tx.status == 'confirmed':
+            if tx.transaction_type == 'income':
+                admin_account.balance -= tx.amount
+                is_supply_sale = getattr(tx.category, 'name', '') == 'Mahsulot sotish'
+                if tx.student and not is_supply_sale:
+                    tx.student.balance -= tx.amount
+                    tx.student.save(update_fields=['balance'])
+            elif tx.transaction_type == 'expense':
+                admin_account.balance += tx.amount
+            elif tx.transaction_type == 'refund':
+                admin_account.balance += tx.amount
+                if tx.student:
+                    tx.student.balance += tx.amount
+                    tx.student.save(update_fields=['balance'])
+            admin_account.save(update_fields=['balance'])
+
+        # Soft delete
+        tx.is_deleted = True
+        tx.deleted_at = timezone.now()
+        tx.save(update_fields=['is_deleted', 'deleted_at', 'updated_at'])
+
+    log_user_action(user, 'DELETE', 'Transaction', tx.id,
+                    f"Tranzaksiya o'chirildi: {tx.amount:,.0f} ({tx.get_transaction_type_display()})",
+                    request=request)
+    messages.success(request, f"🗑️ Tranzaksiya o'chirildi va balanslar yangilandi.")
+    return redirect('finance:admin_cash_dashboard')

@@ -80,12 +80,12 @@
 
     <!-- FILTERLAR -->
     <div class="glass-panel rounded-xl border border-slate-100 p-4">
-        <form method="GET" class="flex flex-wrap items-center gap-4">
+        <form method="GET" class="flex flex-wrap items-center gap-4" id="searchForm">
             <!-- Qidiruv -->
             <div class="flex-1 min-w-[200px]">
                 <div class="relative">
                     <input type="text" name="q" value="{{ current_search|default:'' }}"
-                        placeholder="   Ism, telefon bo'yicha qidirish..."
+                        placeholder="   Ism, telefon bo'yicha qidirish..." id="searchInput"
                         class="w-full pl-10 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 focus:ring-2 focus:ring-[#4F46E5]/30 focus:outline-none">
                     <i class="ph ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
                 </div>
@@ -230,6 +230,13 @@
                                     <i class="ph ph-money"></i>
                                 </a>
                                 {% endif %}
+                                {% if request.user.role == 'super_admin' %}
+                                <button type="button" onclick="openBonusModal('{{ user.id }}', '{{ user.first_name }} {{ user.last_name }}', '{{ user.bonus_amount|floatformat:0 }}', '{{ user.bonus_percentage }}')"
+                                    class="p-2 rounded-lg transition {% if user.bonus_amount > 0 or user.bonus_percentage > 0 %}bg-amber-50 text-amber-600{% else %}bg-slate-100 text-slate-500 hover:bg-amber-50 hover:text-amber-600{% endif %}"
+                                    title="Bonus: {% if user.bonus_amount > 0 %}{{ user.bonus_amount|floatformat:0 }} UZS{% elif user.bonus_percentage > 0 %}{{ user.bonus_percentage }}%{% else %}Berish{% endif %}">
+                                    <i class="ph ph-gift text-lg"></i>
+                                </button>
+                                {% endif %}
                                 {% endif %}
 
                                 {% has_permission 'users' 'delete' as can_delete %}
@@ -299,4 +306,142 @@
         {% endif %}
     </div>
 </div>
+
+<!-- BONUS MODAL -->
+<div id="bonusModal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeBonusModal()"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white rounded-2xl shadow-xl p-6">
+        <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold text-slate-800" id="bonusModalTitle">Bonus Berish</h3>
+            <button type="button" onclick="closeBonusModal()" class="text-slate-400 hover:text-slate-600 transition">
+                <i class="ph ph-x text-xl"></i>
+            </button>
+        </div>
+        
+        <form method="POST" action="{% url 'users:admin_set_student_bonus' %}">
+            {% csrf_token %}
+            <input type="hidden" name="student_id" id="bonusStudentId">
+            
+            <div class="space-y-5">
+                <!-- Bonus turi -->
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-2">Bonus turi</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="bonus_type" value="amount" class="peer sr-only" checked onchange="toggleBonusType()">
+                            <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-amber-500 peer-checked:bg-amber-50 hover:bg-slate-50 transition flex items-center justify-center gap-2">
+                                <i class="ph ph-money text-lg peer-checked:text-amber-600"></i>
+                                <span class="text-sm font-medium text-slate-600 peer-checked:text-amber-700">Summada</span>
+                            </div>
+                        </label>
+                        <label class="relative cursor-pointer">
+                            <input type="radio" name="bonus_type" value="percentage" class="peer sr-only" onchange="toggleBonusType()">
+                            <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-amber-500 peer-checked:bg-amber-50 hover:bg-slate-50 transition flex items-center justify-center gap-2">
+                                <i class="ph ph-percent text-lg peer-checked:text-amber-600"></i>
+                                <span class="text-sm font-medium text-slate-600 peer-checked:text-amber-700">Foizda</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="bonusAmountContainer">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Chegirma summasi <span class="text-slate-400 font-normal">(UZS)</span></label>
+                    <input type="number" name="bonus_amount" id="bonusAmountInput" value="0" min="0" step="1000"
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 outline-none transition">
+                    <p class="text-xs text-slate-500 mt-2 flex items-start gap-1">
+                        <i class="ph ph-info mt-0.5"></i>
+                        Bu summa o'quvchining har darsiga yoziladigan to'lovdan ayirib boriladi.
+                    </p>
+                </div>
+                
+                <div id="bonusPercentageContainer" class="hidden">
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Chegirma foizi <span class="text-slate-400 font-normal">(%)</span></label>
+                    <input type="number" name="bonus_percentage" id="bonusPercentageInput" value="0" min="0" max="100"
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 outline-none transition">
+                    <p class="text-xs text-slate-500 mt-2 flex items-start gap-1">
+                        <i class="ph ph-info mt-0.5"></i>
+                        O'quvchi butun oy uchun faqat qolgan foizini to'laydi (masalan: 10 yozsangiz, 10% chegirma bo'ladi va 90% narxlanadi).
+                    </p>
+                </div>
+            </div>
+            
+            <div class="mt-8 flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                <button type="button" onclick="closeBonusModal()"
+                    class="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition">Bekor qilish</button>
+                <button type="submit"
+                    class="px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 shadow-md shadow-amber-500/20 text-white rounded-xl font-medium hover:from-amber-600 hover:to-orange-600 transition">
+                    Saqlash
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Real-time search (Debounce)
+    let searchTimeout = null;
+    const searchInput = document.getElementById('searchInput');
+    const searchForm = document.getElementById('searchForm');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            if (searchTimeout) clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchForm.submit();
+            }, 500); // 500ms kutiladi
+        });
+        
+        // Kursor inputning oxiriga borishi uchun (reload bo'lganda)
+        const val = searchInput.value;
+        searchInput.focus();
+        searchInput.value = '';
+        searchInput.value = val;
+    }
+
+    // Bonus Modal
+    function openBonusModal(studentId, studentName, currentBonusAmount, currentBonusPercentage) {
+        document.getElementById('bonusStudentId').value = studentId;
+        document.getElementById('bonusModalTitle').innerText = studentName + " uchun Bonus";
+        
+        const amountInput = document.getElementById('bonusAmountInput');
+        const percentInput = document.getElementById('bonusPercentageInput');
+        const amountRadio = document.querySelector('input[name="bonus_type"][value="amount"]');
+        const percentRadio = document.querySelector('input[name="bonus_type"][value="percentage"]');
+
+        amountInput.value = currentBonusAmount || 0;
+        percentInput.value = currentBonusPercentage || 0;
+        
+        if (parseInt(currentBonusPercentage) > 0) {
+            percentRadio.checked = true;
+        } else {
+            amountRadio.checked = true;
+        }
+        
+        toggleBonusType();
+        document.getElementById('bonusModal').classList.remove('hidden');
+    }
+    
+    function toggleBonusType() {
+        const type = document.querySelector('input[name="bonus_type"]:checked').value;
+        const amountContainer = document.getElementById('bonusAmountContainer');
+        const percentContainer = document.getElementById('bonusPercentageContainer');
+        const amountInput = document.getElementById('bonusAmountInput');
+        const percentInput = document.getElementById('bonusPercentageInput');
+        
+        if (type === 'amount') {
+            amountContainer.classList.remove('hidden');
+            percentContainer.classList.add('hidden');
+            percentInput.value = '0'; // reset percentage
+        } else {
+            percentContainer.classList.remove('hidden');
+            amountContainer.classList.add('hidden');
+            amountInput.value = '0'; // reset amount
+        }
+    }
+
+    function closeBonusModal() {
+        document.getElementById('bonusModal').classList.add('hidden');
+    }
+</script>
+
 {% endblock %}

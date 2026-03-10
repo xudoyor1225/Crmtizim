@@ -620,12 +620,13 @@ def teacher_ratings(request):
         teachers = User.objects.filter(organization=org, role='teacher', is_deleted=False)
 
     teachers = teachers.annotate(
-        group_count=Count('teaching_groups', filter=Q(teaching_groups__status='active')),
+        group_count=Count('teaching_groups', filter=Q(teaching_groups__status='active'), distinct=True),
         student_count=Count(
-            'teaching_groups__students',
-            filter=Q(teaching_groups__status='active', teaching_groups__students__status='active')
+            'teaching_groups__students__student',
+            filter=Q(teaching_groups__status='active', teaching_groups__students__status='active'),
+            distinct=True
         ),
-        lesson_count=Count('lesson', filter=Q(lesson__status='finished')),
+        lesson_count=Count('lesson', filter=Q(lesson__status='finished'), distinct=True),
     ).order_by('-student_count')
     
     # O'qituvchilar ma'lumotlarini to'plash
