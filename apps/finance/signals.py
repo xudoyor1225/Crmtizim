@@ -105,6 +105,12 @@ def update_balances_on_transaction(sender, instance, created, **kwargs):
         # Xodim oyligi - kassadan chiqadi
         account.balance -= instance.amount
 
+    elif instance.transaction_type == 'monthly_fee':
+        # Oylik abonent to'lovi yechish - kassaga ta'sir qilmaydi, faqat o'quvchidan yechiladi
+        if instance.student:
+            instance.student.balance -= instance.amount
+            instance.student.save(update_fields=['balance'])
+
     elif instance.transaction_type == 'transfer':
         # O'tkazma logikasi (agar kerak bo'lsa)
         pass

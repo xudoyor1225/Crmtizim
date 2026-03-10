@@ -1,0 +1,15 @@
+﻿
+--- Checking GS: 20, Student: Test, Org: Smart Edu Test ---
+Returned: Already billed
+
+--- Checking GS: 18, Student: seymonbek, Org: Smart Edu Test ---
+All checks passed! Signal WOULD have created the transaction.
+
+--- Checking GS: 17, Student: abdusharif, Org: Smart Edu Test ---
+Returned: Already billed
+
+--- Checking GS: 16, Student: sd, Org: Smart Edu Test ---
+Returned: Already billed
+
+--- Checking GS: 15, Student: Xudoyorrr, Org: Smart Edu Test ---
+Returned: Already billed

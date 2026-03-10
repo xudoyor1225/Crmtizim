@@ -66,6 +66,7 @@ class Transaction(TenantAwareModel):
         ('transfer', 'O\'tkazma'),
         ('salary', 'Oylik to\'lov'),
         ('refund', 'Pul qaytarish'),
+        ('monthly_fee', 'Oylik kurs to\'lovi (Abonent)'),
     )
 
     STATUS_CHOICES = (
@@ -220,3 +221,24 @@ class CashSubmission(TenantAwareModel):
         ordering = ['-created_at']
         verbose_name = "Kassa topshirish"
         verbose_name_plural = "Kassa topshirishlar"
+
+
+class MonthlyFeeLog(TenantAwareModel):
+    """
+    Har oyda avtomatik to'lov yechish jarayoni logi.
+    Har bir tashkilot uchun har oyda bitta log yaratiladi.
+    """
+    billing_month = models.DateField(verbose_name="Hisob kitob oyi (Y-M-01)")
+    is_processed = models.BooleanField(default=False, verbose_name="Yechildimi?")
+    processed_at = models.DateTimeField(null=True, blank=True, verbose_name="Qachon yechildi")
+    total_students_billed = models.PositiveIntegerField(default=0, verbose_name="Qancha o'quvchidan yechildi")
+    total_amount_billed = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Umumiy summa")
+
+    def __str__(self):
+        return f"{self.organization} - {self.billing_month} ({'Bajarildi' if self.is_processed else 'Kutilmoqda'})"
+
+    class Meta:
+        db_table = 'finance_monthly_fee_logs'
+        unique_together = ('organization', 'billing_month')
+        verbose_name = "Oylik to'lov hisoboti"
+        verbose_name_plural = "Oylik to'lov hisobotlari"
