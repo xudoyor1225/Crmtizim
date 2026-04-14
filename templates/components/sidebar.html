@@ -237,9 +237,23 @@
     <span>Sozlamalar</span>
 </a>
 
+<a href="{% url 'hardware:face_id_settings' %}" @click="closeSidebar && closeSidebar()"
+    class="sidebar-link flex items-center gap-3 min-h-[48px] {% if 'face-id' in request.path %}active{% endif %}">
+    <i class="ph-fill ph-fingerprint text-xl"></i>
+    <span>Hikvision Face ID</span>
+</a>
+
 <a href="{% url 'core:history_list' %}" @click="closeSidebar && closeSidebar()"
     class="sidebar-link flex items-center gap-3 min-h-[48px] {% if 'history' in request.path %}active{% endif %}">
     <i class="ph-fill ph-clock-counter-clockwise text-xl"></i>
     <span>Tarix</span>
 </a>
+
+{% if request.user.role == 'super_admin' %}
+<a href="{% url 'core:backup_center' %}" @click="closeSidebar && closeSidebar()"
+    class="sidebar-link flex items-center gap-3 min-h-[48px] {% if 'backup-center' in request.path %}active{% endif %}">
+    <i class="ph-fill ph-database text-xl"></i>
+    <span>Backup Center</span>
+</a>
+{% endif %}
 {% endif %}

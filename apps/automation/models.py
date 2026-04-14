@@ -50,3 +50,7 @@ class NotificationLog(TenantAwareModel):
     class Meta:
         db_table = 'notification_logs'
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['recipient', 'created_at']),
+            models.Index(fields=['recipient', 'status', 'created_at']),
+        ]

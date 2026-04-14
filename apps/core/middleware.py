@@ -2,10 +2,12 @@ import threading
 from django.utils.deprecation import MiddlewareMixin
 from django.apps import apps
 from django.conf import settings
+from django.core.cache import cache
 from asgiref.sync import sync_to_async, iscoroutinefunction
 import asyncio
 
 _thread_locals = threading.local()
+_MISSING = '__tenant_missing__'
 
 def get_current_organization():
     return getattr(_thread_locals, 'organization', None)
@@ -43,6 +45,16 @@ def _get_organization_sync(subdomain):
             return None
 
 
+def _get_cached_organization(subdomain):
+    cache_key = f"tenant:organization:{subdomain}"
+    cached = cache.get(cache_key, _MISSING)
+    if cached == _MISSING:
+        organization = _get_organization_sync(subdomain)
+        cache.set(cache_key, organization if organization is not None else None, 300)
+        return organization
+    return cached
+
+
 class TenantMiddleware:
     """
     Multi-tenant middleware - WSGI va ASGI uchun mos.
@@ -63,7 +75,7 @@ class TenantMiddleware:
         subdomain = host.split('.')[0]
 
         # sync_to_async bilan ORM operatsiyasini bajarish
-        request.organization = await sync_to_async(_get_organization_sync)(subdomain)
+        request.organization = await sync_to_async(_get_cached_organization)(subdomain)
         _thread_locals.organization = request.organization
 
         response = await self.get_response(request)
@@ -74,7 +86,7 @@ class TenantMiddleware:
         host = request.get_host().split(':')[0]
         subdomain = host.split('.')[0]
 
-        request.organization = _get_organization_sync(subdomain)
+        request.organization = _get_cached_organization(subdomain)
         _thread_locals.organization = request.organization
 
         response = self.get_response(request)

@@ -116,8 +116,8 @@
             <div class="p-4 border-t border-white/10 bg-[#0F172A]">
                 <div class="flex items-center gap-3">
                     <div
-                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#4F46E5] to-[#818CF8] text-white flex items-center justify-center font-bold shadow-md">
-                        {{ request.user.first_name|first }}
+                        class="w-10 h-10 rounded-xl overflow-hidden bg-gradient-to-br from-[#4F46E5] to-[#818CF8] text-white flex items-center justify-center font-bold shadow-md">
+                        <img src="{{ request.user.avatar_url }}" alt="{{ request.user.full_name|default:'User' }}" class="w-full h-full object-cover">
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-semibold truncate text-white">{{ request.user.first_name }}</p>

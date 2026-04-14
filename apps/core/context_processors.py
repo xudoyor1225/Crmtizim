@@ -1,3 +1,18 @@
+from django.core.cache import cache
+
+
+NOTIFICATIONS_CACHE_TIMEOUT = 60
+
+
+def get_notifications_cache_key(user_id):
+    return f"core:notifications:{user_id}"
+
+
+def invalidate_user_notifications_cache(user_id):
+    if user_id:
+        cache.delete(get_notifications_cache_key(user_id))
+
+
 def tenant_context(request):
     """
     Barcha shablonlarga 'organization' o'zgaruvchisini qo'shadi.
@@ -75,23 +90,28 @@ def notifications_context(request):
     try:
         from apps.automation.models import NotificationLog
 
-        # Foydalanuvchining oxirgi 10 ta bildirishnomasini olish
-        notifications = NotificationLog.objects.filter(
+        cache_key = get_notifications_cache_key(request.user.pk)
+        cached_context = cache.get(cache_key)
+        if cached_context is not None:
+            return cached_context
+
+        notifications_qs = NotificationLog.objects.filter(
             recipient=request.user,
             is_deleted=False
-        ).select_related('template').order_by('-created_at')[:10]
+        )
 
-        # O'qilmagan bildirishnomalar soni
-        unread_count = NotificationLog.objects.filter(
-            recipient=request.user,
-            is_deleted=False,
-            status='sent'
-        ).count()
+        notifications = list(
+            notifications_qs.select_related('template').order_by('-created_at')[:10]
+        )
+        unread_count = notifications_qs.filter(status='sent').count()
 
-        return {
+        context = {
             'notifications': notifications,
             'unread_notifications_count': unread_count
         }
+        cache.set(cache_key, context, NOTIFICATIONS_CACHE_TIMEOUT)
+
+        return context
     except Exception:
         return {
             'notifications': [],

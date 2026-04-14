@@ -5,10 +5,9 @@
 {% block content %}
 <div class="max-w-2xl mx-auto space-y-6">
 
-    <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-slate-800">{{ title }} 👤</h1>
+            <h1 class="text-2xl font-bold text-slate-800">{{ title }}</h1>
             <p class="text-slate-400">Foydalanuvchi ma'lumotlarini kiriting</p>
         </div>
         <a href="{% url 'users:user_list' %}"
@@ -17,7 +16,6 @@
         </a>
     </div>
 
-    <!-- Form Card -->
     <div class="rounded-2xl p-6 bg-white border border-slate-200">
 
         {% if form.errors %}
@@ -33,7 +31,7 @@
 
         <form method="post" enctype="multipart/form-data" class="space-y-5">
             {% csrf_token %}
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                     <label class="block text-sm font-medium text-slate-600 mb-2">Ism *</label>
@@ -80,11 +78,40 @@
                 </div>
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-slate-600 mb-2">Parol {% if not form.instance.pk %}*{% else %}(Agar o'zgartirsangiz){% endif %}</label>
-                <input type="password" name="password"
-                    class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/30 focus:border-[#4F46E5]"
-                    placeholder="••••••••" {% if not form.instance.pk %}required{% endif %}>
+            <div class="grid grid-cols-1 md:grid-cols-[220px_minmax(0,1fr)] gap-5 items-start">
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <p class="text-sm font-medium text-slate-600 mb-3">Profil rasmi</p>
+                    <div class="w-36 h-36 mx-auto rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm">
+                        <img id="avatarPreview" src="{{ form.instance.avatar_url }}" alt="{{ form.instance.full_name|default:'Foydalanuvchi' }}" class="w-full h-full object-cover">
+                    </div>
+                    <p class="text-xs text-slate-500 mt-3 text-center">Rasm bo'lmasa default avatar ko'rsatiladi</p>
+                </div>
+
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-2">
+                            Parol {% if not form.instance.pk %}*{% else %}(Agar o'zgartirsangiz){% endif %}
+                        </label>
+                        <input type="password" name="password"
+                            class="w-full px-4 py-3 rounded-xl border bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/30 focus:border-[#4F46E5]"
+                            placeholder="********" {% if not form.instance.pk %}required{% endif %}>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-2">
+                            {% if form.instance.avatar %}Rasmni o'zgartirish{% else %}Rasm yuklash{% endif %}
+                        </label>
+                        {{ form.avatar }}
+                        <label for="id_avatar"
+                            class="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-slate-200 bg-white text-slate-700 font-medium cursor-pointer hover:bg-slate-50 transition">
+                            <i class="ph ph-upload-simple text-lg"></i>
+                            <span id="avatarActionLabel">{% if form.instance.avatar %}Rasmni o'zgartirish{% else %}Rasm yuklash{% endif %}</span>
+                        </label>
+                        <p id="avatarFileName" class="mt-2 text-xs text-slate-500">
+                            {% if form.instance.avatar %}Joriy rasm yuklangan{% else %}PNG, JPG, WEBP tavsiya etiladi{% endif %}
+                        </p>
+                    </div>
+                </div>
             </div>
 
             <div class="flex items-center gap-3 pt-2">
@@ -94,7 +121,6 @@
                 <label for="is_active" class="text-sm text-slate-600">Aktiv foydalanuvchi</label>
             </div>
 
-            <!-- Submit -->
             <div class="flex justify-end gap-3 pt-6 border-t border-slate-200">
                 <a href="{% url 'users:user_list' %}"
                     class="px-6 py-3 rounded-xl font-medium transition bg-slate-100 text-slate-600 hover:bg-slate-200">
@@ -108,4 +134,35 @@
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const avatarInput = document.getElementById('id_avatar');
+    const avatarPreview = document.getElementById('avatarPreview');
+    const avatarFileName = document.getElementById('avatarFileName');
+    const avatarActionLabel = document.getElementById('avatarActionLabel');
+
+    if (!avatarInput || !avatarPreview) {
+        return;
+    }
+
+    avatarInput.addEventListener('change', function (event) {
+        const file = event.target.files && event.target.files[0];
+        if (!file) {
+            return;
+        }
+
+        avatarFileName.textContent = `Tanlangan fayl: ${file.name}`;
+        avatarActionLabel.textContent = "Rasmni o'zgartirish";
+
+        const reader = new FileReader();
+        reader.onload = function (loadEvent) {
+            avatarPreview.src = loadEvent.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+});
+</script>
 {% endblock %}

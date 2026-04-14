@@ -242,6 +242,42 @@
             </div>
         </div>
 
+        <!-- Hikvision Face ID -->
+        <div class="glass-panel rounded-2xl border border-slate-100 p-6 hover:shadow-lg transition">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center">
+                    <i class="ph-fill ph-fingerprint text-white text-2xl"></i>
+                </div>
+                <span class="px-3 py-1 bg-sky-100 text-sky-700 text-xs font-bold rounded-full">
+                    {{ stats.face_id_users_count|default:0 }} sync user
+                </span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-2">Hikvision Face ID</h3>
+            <p class="text-sm text-slate-500 mb-4">
+                Desktop agent, user bog'lanishlari va kelish-ketish eventlari
+            </p>
+            {% if not stats.face_id_ready %}
+            <div class="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-800">
+                Face ID jadvallari hali tayyor emas. `python manage.py migrate` kerak.
+            </div>
+            {% endif %}
+            <div class="space-y-2">
+                <a href="{% url 'hardware:face_id_settings' %}"
+                    class="flex items-center justify-between px-4 py-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition">
+                    <span class="text-sm font-medium text-slate-700">
+                        <i class="ph ph-fingerprint mr-2"></i>Face ID boshqaruvi
+                    </span>
+                    <i class="ph ph-caret-right text-slate-400"></i>
+                </a>
+                <div class="flex items-center justify-between px-4 py-3 bg-slate-50 rounded-lg">
+                    <span class="text-sm font-medium text-slate-700">
+                        <i class="ph ph-clock-counter-clockwise mr-2"></i>Qabul qilingan eventlar
+                    </span>
+                    <span class="text-sm font-semibold text-slate-800">{{ stats.face_id_events_count|default:0 }}</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Tizim Sozlamalari -->
         {% if request.user.role == 'super_admin' or request.user.role == 'owner' %}
         <div class="glass-panel rounded-2xl border border-slate-100 p-6 hover:shadow-lg transition">
@@ -281,6 +317,32 @@
                     <i class="ph ph-caret-right text-slate-400"></i>
                 </a>
                 {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if request.user.role == 'super_admin' %}
+        <div class="glass-panel rounded-2xl border border-slate-100 p-6 hover:shadow-lg transition">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center">
+                    <i class="ph-fill ph-database text-white text-2xl"></i>
+                </div>
+                <span class="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-bold rounded-full">
+                    Super Admin
+                </span>
+            </div>
+            <h3 class="text-lg font-bold text-slate-800 mb-2">Backup Center</h3>
+            <p class="text-sm text-slate-500 mb-4">
+                Telegram token, backup vaqtlari va qo'lda backup olish boshqaruvi
+            </p>
+            <div class="space-y-2">
+                <a href="{% url 'core:backup_center' %}"
+                    class="flex items-center justify-between px-4 py-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition">
+                    <span class="text-sm font-medium text-slate-700">
+                        <i class="ph ph-database mr-2"></i>Backup boshqaruvi
+                    </span>
+                    <i class="ph ph-caret-right text-slate-400"></i>
+                </a>
             </div>
         </div>
         {% endif %}

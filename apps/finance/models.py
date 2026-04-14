@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.db import models
 from apps.core.models import TenantAwareModel
 from apps.users.models import User
@@ -96,6 +98,15 @@ class Transaction(TenantAwareModel):
         ('card', 'Plastik karta'),
         ('terminal', 'Terminal'),
     )
+    PAYMENT_METHOD_ALIASES = {
+        'transfer': 'terminal',
+        'online': 'terminal',
+    }
+    PAYMENT_METHOD_GROUPS = {
+        'cash': ('cash',),
+        'card': ('card',),
+        'terminal': ('terminal', 'transfer', 'online'),
+    }
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, default='cash', 
                                       verbose_name="To'lov usuli")
 
@@ -140,11 +151,40 @@ class Transaction(TenantAwareModel):
     def __str__(self):
         return f"{self.get_transaction_type_display()} - {self.amount:,.0f}"
 
+    @classmethod
+    def normalize_payment_method(cls, payment_method):
+        if not payment_method:
+            return 'cash'
+        return cls.PAYMENT_METHOD_ALIASES.get(payment_method, payment_method)
+
+    @classmethod
+    def payment_method_values(cls, payment_method):
+        normalized = cls.normalize_payment_method(payment_method)
+        return cls.PAYMENT_METHOD_GROUPS.get(normalized, (normalized,))
+
+    @classmethod
+    def non_cash_payment_values(cls):
+        values = []
+        for method in ('card', 'terminal'):
+            values.extend(cls.payment_method_values(method))
+        return tuple(dict.fromkeys(values))
+
+    def save(self, *args, **kwargs):
+        self.payment_method = self.normalize_payment_method(self.payment_method)
+        return super().save(*args, **kwargs)
+
     class Meta:
         db_table = 'finance_transactions'
         ordering = ['-created_at']
         verbose_name = "Tranzaksiya"
         verbose_name_plural = "Tranzaksiyalar"
+        indexes = [
+            models.Index(fields=['organization', 'status', 'transaction_type']),
+            models.Index(fields=['organization', 'created_at']),
+            models.Index(fields=['student', 'transaction_type', 'status']),
+            models.Index(fields=['account', 'status', 'cash_submission']),
+            models.Index(fields=['organization', 'receipt_verified', 'status', 'payment_method']),
+        ]
 
 
 class CashSubmission(TenantAwareModel):
@@ -213,14 +253,26 @@ class CashSubmission(TenantAwareModel):
     approved_at = models.DateTimeField(null=True, blank=True, verbose_name="Tasdiqlash vaqti")
     rejection_reason = models.TextField(blank=True, verbose_name="Rad etish sababi")
 
+    def __init__(self, *args, **kwargs):
+        self._legacy_amount_other = Decimal(str(kwargs.pop('amount_other', 0) or 0))
+        super().__init__(*args, **kwargs)
+
     def __str__(self):
         return f"{self.admin_user} - {self.get_period_type_display()} ({self.period_start} - {self.period_end})"
+
+    @property
+    def amount_other(self):
+        return self._legacy_amount_other
 
     class Meta:
         db_table = 'finance_cash_submissions'
         ordering = ['-created_at']
         verbose_name = "Kassa topshirish"
         verbose_name_plural = "Kassa topshirishlar"
+        indexes = [
+            models.Index(fields=['admin_user', 'status', 'created_at']),
+            models.Index(fields=['organization', 'status', 'period_end']),
+        ]
 
 
 class MonthlyFeeLog(TenantAwareModel):

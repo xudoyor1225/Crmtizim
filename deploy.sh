@@ -1,30 +1,25 @@
 #!/bin/bash
+set -e
 
-echo "🚀 Starting deployment..."
+echo "Starting deployment..."
 
-# Git pull
-echo "📥 Pulling latest code..."
+echo "Pulling latest code..."
 git pull origin main
 
-# Activate virtual environment
-source venv/bin/activate
+echo "Activating virtual environment..."
+source .venv/bin/activate
 
-# Install/Update dependencies
-echo "📦 Installing dependencies..."
-pip install -r requirements/base.txt
+echo "Installing production dependencies..."
+pip install -r requirements/production.txt
 
-# Run migrations (uses settings from .env via python-decouple)
-echo "🗄️ Running migrations..."
-python manage.py showmigrations --list 2>/dev/null | grep '\[ \]' && echo "⚠️ Pending migrations found!"
-python manage.py migrate
+echo "Applying migrations..."
+python manage.py migrate --settings=config.settings.production
 
-# Collect static files
-echo "📁 Collecting static files..."
-python manage.py collectstatic --noinput
+echo "Collecting static files..."
+python manage.py collectstatic --noinput --settings=config.settings.production
 
-# Restart services
-echo "🔄 Restarting services..."
+echo "Restarting services..."
 sudo systemctl restart gunicorn
 sudo systemctl restart nginx
 
-echo "✅ Deployment completed!"
+echo "Deployment completed."

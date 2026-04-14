@@ -44,6 +44,11 @@ class Lesson(TenantAwareModel):
         ordering = ['-date', '-start_time']
         verbose_name = "Dars"
         verbose_name_plural = "Darslar"
+        indexes = [
+            models.Index(fields=['organization', 'date']),
+            models.Index(fields=['teacher', 'date']),
+            models.Index(fields=['group', 'date']),
+        ]
 
 
 class Attendance(TenantAwareModel):

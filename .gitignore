@@ -56,6 +56,7 @@ staticfiles/
 # Backup files
 *.bak
 *.backup
+backups/
 sqlite_backup.json
 
 # Logs
@@ -97,3 +98,14 @@ tmp/
 temp/
 *.tmp
 *.temp
+
+# Local helper/debug files
+debug*.txt
+process_log*.txt
+davron.txt
+schema.yml
+check_*.py
+fix_*.py
+create_test_data.py
+apply_migration.py
+test_*.py

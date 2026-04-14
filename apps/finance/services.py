@@ -74,14 +74,14 @@ def approve_cash_submission(submission_id, user):
             organization=submission.organization,
             account=submission.main_account,
             amount=transfer_amount,
-            transaction_type='income',
+            transaction_type='transfer',
             description=f"Kassa topshirish: {submission.admin_user.get_full_name()} "
                         f"({submission.get_period_type_display()}: {submission.period_start} - {submission.period_end})",
             status='confirmed',
             created_by=submission.admin_user,
             confirmed_by=user,
             confirmed_at=timezone.now(),
-            payment_method='transfer',
+            payment_method='cash',
         )
 
     # Submission statusini yangilash

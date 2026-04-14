@@ -2,12 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models import Q, Sum
+from django.db.models import Count, Q, Sum
 from django.db import transaction
 from django.http import Http404, JsonResponse
 from .models import User, ParentStudent
 from .forms import UserForm, StudentForm, TeacherForm, StaffForm
 from apps.core.permissions import permission_required, check_permission
+from apps.hardware.services import build_student_presence_map
 
 
 @login_required
@@ -41,11 +42,14 @@ def user_list(request, role=None):
     if request.user.role != 'super_admin' and request.user.organization:
         base_qs = base_qs.filter(organization=request.user.organization)
 
-    total_students = base_qs.filter(role='student', is_active=True).count()
-    debtors_count = base_qs.filter(role='student', balance__lt=0).count()
-
-    debt_agg = base_qs.filter(role='student', balance__lt=0).aggregate(total=Sum('balance'))
-    total_debt = abs(debt_agg['total'] or 0)
+    user_stats = base_qs.aggregate(
+        total_students=Count('id', filter=Q(role='student', is_active=True)),
+        debtors_count=Count('id', filter=Q(role='student', balance__lt=0)),
+        total_debt=Sum('balance', filter=Q(role='student', balance__lt=0)),
+    )
+    total_students = user_stats['total_students'] or 0
+    debtors_count = user_stats['debtors_count'] or 0
+    total_debt = abs(user_stats['total_debt'] or 0)
 
     paginator = Paginator(users, 25)
     page = request.GET.get('page', 1)
@@ -68,7 +72,7 @@ def user_list(request, role=None):
 @permission_required('users', 'create')
 def user_create(request):
     if request.method == 'POST':
-        form = UserForm(request.POST)
+        form = UserForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save(commit=False)
 
@@ -345,10 +349,12 @@ def user_detail(request, pk):
 
     # Ota-ona ma'lumotlari (o'quvchi uchun)
     parent_relations = []
+    student_presence = None
     if user.role == 'student':
         parent_relations = ParentStudent.objects.filter(
             student=user
         ).select_related('parent')
+        student_presence = build_student_presence_map([user.id]).get(user.id)
 
     # Farzandlar (ota-ona uchun)
     children_relations = []
@@ -361,6 +367,7 @@ def user_detail(request, pk):
         'detail_user': user,
         'parent_relations': parent_relations,
         'children_relations': children_relations,
+        'student_presence': student_presence,
     }
     return render(request, 'users/user_detail.html', context)
 
@@ -370,7 +377,7 @@ def user_detail(request, pk):
 def user_update(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
-        form = UserForm(request.POST, instance=user)
+        form = UserForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
             messages.success(request, "Ma'lumotlar yangilandi.")

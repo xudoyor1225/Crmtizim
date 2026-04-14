@@ -363,6 +363,12 @@ class AdminCashViewTest(TestCase):
             name="Boshqa chiqim",
             transaction_type="expense"
         )
+        Account.objects.create(
+            organization=self.org,
+            name="Admin Kassa - Admin View",
+            account_type="cash",
+            balance=Decimal("100000.00"),
+        )
         self.client.login(phone="998907771111", password="test123")
         response = self.client.post(reverse('finance:admin_add_expense'), {
             'category': expense_cat.pk,

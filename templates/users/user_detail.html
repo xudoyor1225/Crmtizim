@@ -33,11 +33,7 @@
     <div class="glass-panel rounded-2xl border border-slate-100 p-6">
         <div class="flex items-center gap-5">
             <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#4F46E5] to-[#818CF8] flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-[#4F46E5]/25 overflow-hidden">
-                {% if detail_user.avatar %}
-                <img src="{{ detail_user.avatar.url }}" class="w-full h-full object-cover">
-                {% else %}
-                {{ detail_user.first_name|first|default:"?" }}
-                {% endif %}
+                <img src="{{ detail_user.avatar_url }}" alt="{{ detail_user.full_name|default:'Foydalanuvchi' }}" class="w-full h-full object-cover">
             </div>
             <div class="flex-1">
                 <h2 class="text-2xl font-bold text-slate-800">{{ detail_user.first_name }} {{ detail_user.last_name }}</h2>
@@ -214,6 +210,60 @@
                 </a>
             </div>
             {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if detail_user.role == 'student' and student_presence %}
+    <div class="glass-panel rounded-2xl border border-slate-100 p-6">
+        <h3 class="text-lg font-semibold text-slate-800 flex items-center gap-2 pb-3 border-b border-slate-200 mb-4">
+            <i class="ph ph-fingerprint text-sky-500"></i> Davomat va kelish-ketish
+        </h3>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
+            <div class="p-4 bg-rose-50 border border-rose-200 rounded-xl">
+                <p class="text-xs text-rose-500 uppercase font-semibold">Qoldirilgan darslar</p>
+                <p class="mt-2 text-2xl font-bold text-rose-600">{{ student_presence.missed_lessons_count }}</p>
+            </div>
+            <div class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
+                <p class="text-xs text-emerald-500 uppercase font-semibold">Bugun keldi</p>
+                <p class="mt-2 text-2xl font-bold text-emerald-600">
+                    {% if student_presence.today_presence and student_presence.today_presence.check_in_at %}{{ student_presence.today_presence.check_in_at|date:"H:i" }}{% else %}—{% endif %}
+                </p>
+            </div>
+            <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                <p class="text-xs text-amber-500 uppercase font-semibold">Bugun ketdi</p>
+                <p class="mt-2 text-2xl font-bold text-amber-600">
+                    {% if student_presence.today_presence and student_presence.today_presence.check_out_at %}{{ student_presence.today_presence.check_out_at|date:"H:i" }}{% else %}—{% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="text-left text-xs uppercase tracking-wide text-slate-500 border-b border-slate-100">
+                        <th class="py-3 font-semibold">Sana</th>
+                        <th class="py-3 font-semibold">Keldi</th>
+                        <th class="py-3 font-semibold">Ketdi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in student_presence.recent_face_logs %}
+                    <tr class="border-b border-slate-100">
+                        <td class="py-3 font-medium text-slate-800">{{ log.date|date:"d.m.Y" }}</td>
+                        <td class="py-3 text-emerald-700 font-semibold">
+                            {% if log.check_in_at %}Keldi {{ log.check_in_at|date:"H:i" }}{% else %}—{% endif %}
+                        </td>
+                        <td class="py-3 text-amber-700 font-semibold">
+                            {% if log.check_out_at %}Ketdi {{ log.check_out_at|date:"H:i" }}{% else %}—{% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="py-6 text-center text-slate-500">Kelish-ketish ma'lumoti hali yo'q</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
     {% endif %}

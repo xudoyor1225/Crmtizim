@@ -155,11 +155,7 @@
                             <div class="flex items-center gap-3">
                                 <div
                                     class="w-10 h-10 rounded-full bg-gradient-to-br from-[#4F46E5] to-[#818CF8] flex items-center justify-center text-white font-bold overflow-hidden">
-                                    {% if user.avatar %}
-                                    <img src="{{ user.avatar.url }}" class="w-full h-full object-cover">
-                                    {% else %}
-                                    {{ user.first_name|first|default:"?" }}
-                                    {% endif %}
+                                    <img src="{{ user.avatar_url }}" alt="{{ user.full_name|default:'Foydalanuvchi' }}" class="w-full h-full object-cover">
                                 </div>
                                 <div>
                                     <a href="{% url 'users:user_detail' user.id %}" class="font-semibold text-slate-800 hover:text-[#4F46E5] transition">{{ user.first_name }}

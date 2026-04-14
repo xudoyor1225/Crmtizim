@@ -97,6 +97,7 @@ class AdminCashTransactionForm(forms.ModelForm):
         organization = kwargs.pop('organization', None)
         transaction_type = kwargs.pop('transaction_type', None)
         super().__init__(*args, **kwargs)
+        self.fields['payment_method'].required = False
 
         if organization and transaction_type:
             self.fields['category'].queryset = TransactionCategory.objects.filter(
@@ -107,3 +108,6 @@ class AdminCashTransactionForm(forms.ModelForm):
 
         if not self.fields['category'].queryset.exists():
             self.fields['category'].help_text = "Diqqat: Hozircha kategoriya yo'q. Avval kategoriya qo'shing."
+
+    def clean_payment_method(self):
+        return self.cleaned_data.get('payment_method') or 'cash'

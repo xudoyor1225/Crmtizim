@@ -4,7 +4,8 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from django.db.models import Sum, Q
+from django.db.models import Count, Sum, Q
+from django.db.models.functions import TruncDate
 from decimal import Decimal, InvalidOperation
 from datetime import timedelta
 import logging
@@ -51,8 +52,12 @@ def transaction_list(request):
 
     # Statistika
     stats_qs = transactions.filter(status='confirmed')
-    income = stats_qs.filter(transaction_type='income').aggregate(t=Sum('amount'))['t'] or 0
-    expense = stats_qs.filter(transaction_type='expense').aggregate(t=Sum('amount'))['t'] or 0
+    stats = stats_qs.aggregate(
+        income=Sum('amount', filter=Q(transaction_type='income')),
+        expense=Sum('amount', filter=Q(transaction_type='expense')),
+    )
+    income = stats['income'] or 0
+    expense = stats['expense'] or 0
 
     # Optimallashtirilgan load
     transactions = transactions.select_related(
@@ -260,7 +265,9 @@ def reject_transaction(request, pk):
 @permission_required('finance', 'view')
 def student_payments(request, student_id):
     student = get_object_or_404(User, pk=student_id)
-    payments = Transaction.objects.filter(student=student).order_by('-created_at')
+    payments = Transaction.objects.filter(student=student).select_related(
+        'account', 'category', 'created_by', 'confirmed_by'
+    ).order_by('-created_at')
     total = payments.filter(transaction_type='income', status='confirmed').aggregate(s=Sum('amount'))['s'] or 0
     return render(request, 'finance/student_payments.html', {'student': student, 'payments': payments, 'total_paid': total})
 
@@ -289,15 +296,15 @@ def add_student_payment(request, student_id):
 @permission_required('finance', 'view')
 def finance_report(request):
     """Moliyaviy hisobot - kirim, chiqim, foyda statistikasi"""
-    from datetime import timedelta
-    from django.db.models.functions import TruncDate
-    from django.db.models import Count
 
     org = request.organization
     today = timezone.now().date()
 
     # Davr tanlash (default: 30 kun)
-    days = int(request.GET.get('days', 30))
+    try:
+        days = max(1, int(request.GET.get('days', 30)))
+    except (TypeError, ValueError):
+        days = 30
     start_date = today - timedelta(days=days)
     end_date = today
 
@@ -312,17 +319,30 @@ def finance_report(request):
         transactions = transactions.filter(organization=org)
 
     # Umumiy statistika
-    total_income = transactions.filter(transaction_type='income').aggregate(t=Sum('amount'))['t'] or 0
-    total_expense = transactions.filter(transaction_type='expense').aggregate(t=Sum('amount'))['t'] or 0
+    totals = transactions.aggregate(
+        total_income=Sum('amount', filter=Q(transaction_type='income')),
+        total_expense=Sum('amount', filter=Q(transaction_type='expense')),
+    )
+    total_income = totals['total_income'] or 0
+    total_expense = totals['total_expense'] or 0
     net_profit = total_income - total_expense
 
     # Kunlik statistika (grafik uchun)
+    daily_totals = {
+        row['day']: row
+        for row in transactions.annotate(
+            day=TruncDate('created_at')
+        ).values('day').annotate(
+            income=Sum('amount', filter=Q(transaction_type='income')),
+            expense=Sum('amount', filter=Q(transaction_type='expense')),
+        )
+    }
     daily_stats = []
     for i in range(days):
         day = start_date + timedelta(days=i)
-        day_txs = transactions.filter(created_at__date=day)
-        income = day_txs.filter(transaction_type='income').aggregate(t=Sum('amount'))['t'] or 0
-        expense = day_txs.filter(transaction_type='expense').aggregate(t=Sum('amount'))['t'] or 0
+        row = daily_totals.get(day, {})
+        income = row.get('income') or 0
+        expense = row.get('expense') or 0
         daily_stats.append({
             'date': day,
             'income': income,
@@ -388,8 +408,12 @@ def pending_receipts(request):
         txs = txs.filter(organization=org)
     txs = txs.select_related('student', 'created_by', 'category', 'account')
 
-    pending_count = txs.count()
-    pending_sum = txs.aggregate(t=Sum('amount'))['t'] or 0
+    pending_stats = txs.aggregate(
+        pending_count=Count('id'),
+        pending_sum=Sum('amount'),
+    )
+    pending_count = pending_stats['pending_count'] or 0
+    pending_sum = pending_stats['pending_sum'] or 0
 
     return render(request, 'finance/pending_receipts.html', {
         'pending_receipts': txs,

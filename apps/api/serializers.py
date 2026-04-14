@@ -130,6 +130,12 @@ class ChildAttendanceSerializer(serializers.ModelSerializer):
         ]
 
 
+class FacePresenceLogSerializer(serializers.Serializer):
+    date = serializers.DateField()
+    check_in_at = serializers.DateTimeField(allow_null=True)
+    check_out_at = serializers.DateTimeField(allow_null=True)
+
+
 class ChildDetailSerializer(serializers.Serializer):
     """Farzand haqida to'liq ma'lumot."""
     child = UserSerializer()
@@ -140,6 +146,9 @@ class ChildDetailSerializer(serializers.Serializer):
     balance = serializers.DecimalField(max_digits=12, decimal_places=2)
     has_debt = serializers.BooleanField()
     xp = serializers.IntegerField()
+    missed_lessons_count = serializers.IntegerField()
+    today_presence = FacePresenceLogSerializer(allow_null=True)
+    recent_face_logs = FacePresenceLogSerializer(many=True)
     recent_attendance = ChildAttendanceSerializer(many=True)
 
 
@@ -171,6 +180,8 @@ class StudentStatsSerializer(serializers.Serializer):
     total_xp = serializers.IntegerField()
     coin_balance = serializers.IntegerField()
     balance = serializers.DecimalField(max_digits=12, decimal_places=2)
+    missed_lessons_count = serializers.IntegerField()
+    late_lessons_count = serializers.IntegerField()
 
 
 class StudentDashboardSerializer(serializers.Serializer):
@@ -180,6 +191,8 @@ class StudentDashboardSerializer(serializers.Serializer):
     today_lessons = LessonSerializer(many=True)
     upcoming_lessons = LessonSerializer(many=True)
     recent_attendance = AttendanceSerializer(many=True)
+    today_presence = FacePresenceLogSerializer(allow_null=True)
+    recent_face_logs = FacePresenceLogSerializer(many=True)
     recent_payments = PaymentSerializer(many=True)
     chart_labels = serializers.ListField(child=serializers.CharField())
     chart_data = serializers.ListField(child=serializers.IntegerField())

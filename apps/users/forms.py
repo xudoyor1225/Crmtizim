@@ -1,20 +1,30 @@
 from django import forms
 from apps.users.models import User, ParentStudent
 from apps.core.permissions import check_permission
+from apps.users.services import compress_avatar
 
 
-class UserForm(forms.ModelForm):
+class AvatarCompressionMixin:
+    def clean_avatar(self):
+        uploaded_avatar = self.files.get('avatar')
+        if uploaded_avatar:
+            return compress_avatar(uploaded_avatar)
+        return self.cleaned_data.get('avatar')
+
+
+class UserForm(AvatarCompressionMixin, forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, required=False, label="Parol")
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'phone', 'role', 'branch', 'password', 'is_active']
+        fields = ['first_name', 'last_name', 'phone', 'role', 'branch', 'avatar', 'password', 'is_active']
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Ismi', 'required': True}),
             'last_name': forms.TextInput(attrs={'class': 'form-input', 'placeholder': 'Familiyasi', 'required': True}),
             'phone': forms.TextInput(attrs={'class': 'form-input', 'placeholder': '998901234567', 'required': True}),
             'role': forms.Select(attrs={'class': 'form-select'}),
             'branch': forms.Select(attrs={'class': 'form-select'}),
+            'avatar': forms.FileInput(attrs={'class': 'hidden', 'accept': 'image/*', 'id': 'id_avatar'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-checkbox'}),
         }
 
@@ -31,7 +41,7 @@ class UserForm(forms.ModelForm):
 # ============================================
 # O'QUVCHI FORMASI (Majburiy Ota-Ona bilan)
 # ============================================
-class StudentForm(forms.ModelForm):
+class StudentForm(AvatarCompressionMixin, forms.ModelForm):
     """O'quvchi qo'shish formasi - ota-ona va manzil majburiy"""
     
     # Parol
@@ -135,7 +145,7 @@ class StudentForm(forms.ModelForm):
 # ============================================
 # O'QITUVCHI FORMASI
 # ============================================
-class TeacherForm(forms.ModelForm):
+class TeacherForm(AvatarCompressionMixin, forms.ModelForm):
     """O'qituvchi qo'shish formasi - to'liq ma'lumotlar"""
     
     # Parol
@@ -261,7 +271,7 @@ STAFF_ROLE_CHOICES = [
 ]
 
 
-class StaffForm(forms.ModelForm):
+class StaffForm(AvatarCompressionMixin, forms.ModelForm):
     """Xodim qo'shish formasi - rol va ruxsatlar bilan"""
 
     password = forms.CharField(

@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_POST
+from django.core.exceptions import ValidationError
 from django.db.models import Sum, Q
 from django.db import transaction, DatabaseError
 from django.utils import timezone
@@ -40,11 +41,22 @@ def _get_or_create_admin_account(user, org):
     return account
 
 
+def _payment_method_queryset(queryset, method):
+    return queryset.filter(payment_method__in=Transaction.payment_method_values(method))
+
+
+def _payment_method_net_amount(queryset, method):
+    method_qs = _payment_method_queryset(queryset, method)
+    income = method_qs.filter(transaction_type='income').aggregate(t=Sum('amount'))['t'] or Decimal('0')
+    expense = method_qs.filter(transaction_type='expense').aggregate(t=Sum('amount'))['t'] or Decimal('0')
+    return income - expense
+
+
 @login_required
 @permission_required('admin_finance', 'view')
 def admin_cash_dashboard(request):
     """Administrator kassasi - kirim chiqim dashboard."""
-    org = request.organization
+    org = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
     user = request.user
     admin_account = _get_or_create_admin_account(user, org)
 
@@ -70,12 +82,9 @@ def admin_cash_dashboard(request):
     total_expense = unsubmitted_txs.filter(transaction_type='expense').aggregate(t=Sum('amount'))['t'] or 0
 
     # To'lov usuli bo'yicha balanslar (topshirilmagan tranzaksiyalar)
-    balance_cash = (unsubmitted_txs.filter(transaction_type='income', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
-                   (unsubmitted_txs.filter(transaction_type='expense', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
-    balance_card = (unsubmitted_txs.filter(transaction_type='income', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
-                   (unsubmitted_txs.filter(transaction_type='expense', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
-    balance_terminal = (unsubmitted_txs.filter(transaction_type='income', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
-                       (unsubmitted_txs.filter(transaction_type='expense', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
+    balance_cash = _payment_method_net_amount(unsubmitted_txs, 'cash')
+    balance_card = _payment_method_net_amount(unsubmitted_txs, 'card')
+    balance_terminal = _payment_method_net_amount(unsubmitted_txs, 'terminal')
 
     # Kutilayotgan o'quvchi to'lovlari (barcha pending student payments)
     pending_qs = Transaction.objects.filter(
@@ -125,23 +134,29 @@ def admin_cash_dashboard(request):
 def admin_add_income(request):
     """Admin kassasiga kirim qo'shish."""
     from .forms import AdminCashTransactionForm
-    org = request.organization
+    org = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
     user = request.user
     admin_account = _get_or_create_admin_account(user, org)
 
     if request.method == 'POST':
         form = AdminCashTransactionForm(request.POST, organization=org, transaction_type='income')
         if form.is_valid():
-            t = form.save(commit=False)
-            t.organization = org
-            t.account = admin_account
-            t.transaction_type = 'income'
-            t.created_by = user
-            t.status = 'pending'
-            t.save()
-            log_user_action(user, 'CREATE', 'Transaction', t.id, str(t), request=request)
-            messages.success(request, "Kirim qo'shildi, tasdiqlash kutilmoqda.")
-            return redirect('finance:admin_cash_dashboard')
+            try:
+                with transaction.atomic():
+                    t = form.save(commit=False)
+                    t.organization = org
+                    t.account = admin_account
+                    t.transaction_type = 'income'
+                    t.created_by = user
+                    t.status = 'pending'
+                    t.save()
+                    confirm_service(t.id, user)
+
+                log_user_action(user, 'CREATE', 'Transaction', t.id, str(t), request=request)
+                messages.success(request, "Kirim qo'shildi va darhol tasdiqlandi.")
+                return redirect('finance:admin_cash_dashboard')
+            except ValidationError as exc:
+                form.add_error(None, exc.message)
     else:
         form = AdminCashTransactionForm(organization=org, transaction_type='income')
 
@@ -155,23 +170,29 @@ def admin_add_income(request):
 def admin_add_expense(request):
     """Admin kassasidan chiqim qo'shish."""
     from .forms import AdminCashTransactionForm
-    org = request.organization
+    org = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
     user = request.user
     admin_account = _get_or_create_admin_account(user, org)
 
     if request.method == 'POST':
         form = AdminCashTransactionForm(request.POST, organization=org, transaction_type='expense')
         if form.is_valid():
-            t = form.save(commit=False)
-            t.organization = org
-            t.account = admin_account
-            t.transaction_type = 'expense'
-            t.created_by = user
-            t.status = 'pending'
-            t.save()
-            log_user_action(user, 'CREATE', 'Transaction', t.id, str(t), request=request)
-            messages.success(request, "Chiqim qo'shildi, tasdiqlash kutilmoqda.")
-            return redirect('finance:admin_cash_dashboard')
+            try:
+                with transaction.atomic():
+                    t = form.save(commit=False)
+                    t.organization = org
+                    t.account = admin_account
+                    t.transaction_type = 'expense'
+                    t.created_by = user
+                    t.status = 'pending'
+                    t.save()
+                    confirm_service(t.id, user)
+
+                log_user_action(user, 'CREATE', 'Transaction', t.id, str(t), request=request)
+                messages.success(request, "Chiqim qo'shildi va darhol tasdiqlandi.")
+                return redirect('finance:admin_cash_dashboard')
+            except ValidationError as exc:
+                form.add_error(None, exc.message)
     else:
         form = AdminCashTransactionForm(organization=org, transaction_type='expense')
 
@@ -184,7 +205,7 @@ def admin_add_expense(request):
 @permission_required('admin_finance', 'view')
 def admin_cash_history(request):
     """Admin kassasi tarixi."""
-    org = request.organization
+    org = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
     user = request.user
     admin_account = _get_or_create_admin_account(user, org)
 
@@ -221,7 +242,7 @@ def admin_cash_history(request):
 @permission_required('admin_finance', 'create')
 def admin_submit_cash(request):
     """Admin kassasini asosiy kassaga topshirish."""
-    org = request.organization
+    org = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
     user = request.user
     admin_account = _get_or_create_admin_account(user, org)
 
@@ -245,6 +266,10 @@ def admin_submit_cash(request):
             return redirect('finance:admin_cash_dashboard')
 
         main_account = get_object_or_404(Account, pk=main_account_id, organization=org)
+        normalized_methods = {Transaction.normalize_payment_method(method) for method in payment_methods}
+        selected_method_values = []
+        for method in normalized_methods:
+            selected_method_values.extend(Transaction.payment_method_values(method))
 
         # Faqat bugungi kun uchun
         today = timezone.now().date()
@@ -257,7 +282,7 @@ def admin_submit_cash(request):
             is_deleted=False,
             status='confirmed',
             cash_submission__isnull=True,
-            payment_method__in=payment_methods,
+            payment_method__in=tuple(dict.fromkeys(selected_method_values)),
         )
 
         total_income = unsubmitted_txs.filter(transaction_type='income').aggregate(t=Sum('amount'))['t'] or Decimal('0')
@@ -265,12 +290,9 @@ def admin_submit_cash(request):
         
         # To'lov usuli bo'yicha tafsilotlarni hisoblash (faqat 3 ta tur)
         # Kirim - Chiqim hisoblash har bir usul uchun
-        amount_cash = (unsubmitted_txs.filter(transaction_type='income', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
-                      (unsubmitted_txs.filter(transaction_type='expense', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0')) if 'cash' in payment_methods else Decimal('0')
-        amount_card = (unsubmitted_txs.filter(transaction_type='income', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
-                      (unsubmitted_txs.filter(transaction_type='expense', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0')) if 'card' in payment_methods else Decimal('0')
-        amount_terminal = (unsubmitted_txs.filter(transaction_type='income', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
-                          (unsubmitted_txs.filter(transaction_type='expense', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0')) if 'terminal' in payment_methods else Decimal('0')
+        amount_cash = _payment_method_net_amount(unsubmitted_txs, 'cash') if 'cash' in normalized_methods else Decimal('0')
+        amount_card = _payment_method_net_amount(unsubmitted_txs, 'card') if 'card' in normalized_methods else Decimal('0')
+        amount_terminal = _payment_method_net_amount(unsubmitted_txs, 'terminal') if 'terminal' in normalized_methods else Decimal('0')
 
         # Tanlangan tranzaksiyalar yig'indisi
         net_amount = amount_cash + amount_card + amount_terminal
@@ -353,12 +375,9 @@ def admin_submit_cash(request):
         cash_submission__isnull=True,
     )
     
-    balance_cash = (all_unsubmitted_txs.filter(transaction_type='income', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
-                   (all_unsubmitted_txs.filter(transaction_type='expense', payment_method='cash').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
-    balance_card = (all_unsubmitted_txs.filter(transaction_type='income', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
-                   (all_unsubmitted_txs.filter(transaction_type='expense', payment_method='card').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
-    balance_terminal = (all_unsubmitted_txs.filter(transaction_type='income', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0')) - \
-                       (all_unsubmitted_txs.filter(transaction_type='expense', payment_method='terminal').aggregate(t=Sum('amount'))['t'] or Decimal('0'))
+    balance_cash = _payment_method_net_amount(all_unsubmitted_txs, 'cash')
+    balance_card = _payment_method_net_amount(all_unsubmitted_txs, 'card')
+    balance_terminal = _payment_method_net_amount(all_unsubmitted_txs, 'terminal')
 
     net_balance = balance_cash + balance_card + balance_terminal
 
@@ -390,7 +409,7 @@ def cash_submission_list(request):
             return redirect(referer)
         return redirect('dashboard')
 
-    org = request.organization
+    org = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
     status_filter = request.GET.get('status', '')
 
     try:
@@ -438,7 +457,7 @@ def approve_cash_submission(request, pk):
 @require_POST
 def reject_cash_submission(request, pk):
     """Kassa topshirishni rad etish."""
-    org = request.organization
+    org = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
     qs = CashSubmission.objects.filter(is_deleted=False)
     if org:
         qs = qs.filter(organization=org)
@@ -497,7 +516,7 @@ def reject_cash_submission(request, pk):
 @permission_required('admin_finance', 'view')
 def admin_student_payments(request):
     """Admin uchun o'quvchi to'lovlari ro'yxati - tasdiqlash/rad etish."""
-    org = request.organization
+    org = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
     status_filter = request.GET.get('status', 'pending')
     search = request.GET.get('search', '')
 
@@ -544,7 +563,7 @@ def admin_student_payments(request):
 @require_POST
 def admin_confirm_student_payment(request, pk):
     """O'quvchi to'lovini tasdiqlash va admin kassasiga o'tkazish."""
-    org = request.organization
+    org = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
     user = request.user
 
     qs = Transaction.objects.filter(pk=pk)
@@ -577,7 +596,7 @@ def admin_confirm_student_payment(request, pk):
 @require_POST
 def admin_reject_student_payment(request, pk):
     """O'quvchi to'lovini rad etish."""
-    org = request.organization
+    org = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
 
     qs = Transaction.objects.filter(pk=pk)
     if org:
@@ -609,7 +628,7 @@ def admin_reject_student_payment(request, pk):
 @permission_required('admin_finance', 'create')
 def admin_add_course_payment(request):
     """Admin o'quvchi uchun kurs to'lovini qo'shish (admin kassasiga tushadi)."""
-    org = request.organization
+    org = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
     user = request.user
     admin_account = _get_or_create_admin_account(user, org)
 
@@ -705,7 +724,7 @@ def admin_add_course_payment(request):
 @permission_required('finance', 'view')
 def cash_submission_detail(request, pk):
     """Kassa topshirish tafsilotlari - to'lov usuli bo'yicha tafsilotlar va tranzaksiya tarixi."""
-    org = request.organization
+    org = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
     user = request.user
     
     # Faqat o'z topshirishlarini ko'rish yoki ruxsat bo'lsa
@@ -746,7 +765,7 @@ def cash_submission_detail(request, pk):
     # To'lov usuli bo'yicha statistika (faqat 3 ta tur)
     payment_method_stats = {}
     for method in ['cash', 'card', 'terminal']:
-        method_transactions = period_transactions.filter(payment_method=method)
+        method_transactions = _payment_method_queryset(period_transactions, method)
         total = method_transactions.aggregate(t=Sum('amount'))['t'] or Decimal('0')
         payment_method_stats[method] = {
             'total': total,
@@ -775,7 +794,7 @@ def admin_edit_transaction(request, pk):
     """Admin kassasidagi tranzaksiyani tahrirlash.
     Faqat kassa topshirilmagan bo'lsa ishlaydi."""
     from .forms import AdminCashTransactionForm
-    org = request.organization
+    org = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
     user = request.user
     admin_account = _get_or_create_admin_account(user, org)
 
@@ -838,6 +857,7 @@ def admin_edit_transaction(request, pk):
             tx.description = new_description
             if new_category_id:
                 tx.category_id = new_category_id
+            tx._bypass_confirmed_edit_lock = True
             tx.save(update_fields=['amount', 'payment_method', 'description', 'category_id', 'updated_at'])
 
         log_user_action(user, 'UPDATE', 'Transaction', tx.id,
@@ -866,7 +886,7 @@ def admin_edit_transaction(request, pk):
 def admin_delete_transaction(request, pk):
     """Admin kassasidagi tranzaksiyani o'chirish (soft delete).
     Faqat kassa topshirilmagan bo'lsa ishlaydi."""
-    org = request.organization
+    org = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
     user = request.user
     admin_account = _get_or_create_admin_account(user, org)
 

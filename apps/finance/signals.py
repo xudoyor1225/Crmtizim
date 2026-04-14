@@ -17,6 +17,7 @@ def prevent_edit_confirmed_transaction(sender, instance, **kwargs):
     if instance.pk:  # Mavjud obyekt (yangi emas)
         try:
             old_transaction = Transaction.objects.get(pk=instance.pk)
+            instance._previous_transaction = old_transaction
 
             # Agar kassa topshirilgan bo'lsa, hech qanday muhim o'zgarish mumkin emas
             if old_transaction.cash_submission_id is not None:
@@ -32,11 +33,13 @@ def prevent_edit_confirmed_transaction(sender, instance, **kwargs):
             # Agar status confirmed bo'lsa, muhim maydonlarni o'zgartirish mumkin emas
             # (faqat admin_edit_transaction orqali balanslarni qayta hisoblash bilan)
             if old_transaction.status == 'confirmed':
-                # update_fields ishlatilganda signal ni bypass qilish
-                if hasattr(instance, '_update_fields_set'):
-                    return  # update_fields orqali saqlanyapti, ruxsat
-                    
-                critical_fields = ['transaction_type', 'account', 'student', 'staff']
+                if getattr(instance, '_bypass_confirmed_edit_lock', False):
+                    return
+
+                critical_fields = [
+                    'amount', 'transaction_type', 'account', 'student',
+                    'staff', 'payment_method', 'category',
+                ]
 
                 for field in critical_fields:
                     old_value = getattr(old_transaction, field)
@@ -67,11 +70,18 @@ def update_balances_on_transaction(sender, instance, created, **kwargs):
     if instance.status != 'confirmed' or instance.is_deleted:
         return
 
-    # Update qilinganda balansni qayta-qayta qo'shmaslik uchun tekshiruv
-    # (Faqatgina yangi creat qilinganda yoki status/amount o'zgarganda ishlasin)
+    previous_transaction = getattr(instance, '_previous_transaction', None)
     if not created:
-        update_fields = kwargs.get('update_fields')
-        if update_fields and 'status' not in update_fields and 'amount' not in update_fields:
+        if previous_transaction is None:
+            try:
+                previous_transaction = Transaction.objects.get(pk=instance.pk)
+            except Transaction.DoesNotExist:
+                previous_transaction = None
+
+        # Faqat pending -> confirmed o'tishida balanslar signal orqali yangilanadi.
+        if previous_transaction and previous_transaction.status == 'confirmed':
+            return
+        if previous_transaction and previous_transaction.status != 'confirmed' and instance.status != 'confirmed':
             return
 
     # Kassa balansini yangilash
@@ -112,8 +122,8 @@ def update_balances_on_transaction(sender, instance, created, **kwargs):
             instance.student.save(update_fields=['balance'])
 
     elif instance.transaction_type == 'transfer':
-        # O'tkazma logikasi (agar kerak bo'lsa)
-        pass
+        # Internal transfer log'lari destination account balansini oshiradi.
+        account.balance += instance.amount
 
     account.save(update_fields=['balance'])
 

@@ -36,6 +36,7 @@ urlpatterns = [
     path('finance/', include('apps.finance.urls')),
     path('automation/', include('apps.automation.urls')),
     path('core/', include('apps.core.urls')),
+    path('', include('apps.hardware.urls')),
 ]
 
 # Media fayllar uchun

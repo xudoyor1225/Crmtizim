@@ -4,7 +4,8 @@ Umumiy, Ota-ona va O'quvchi endpointlari.
 """
 from datetime import timedelta
 
-from django.db.models import Sum
+from django.db.models import Avg, Count, F, Q, Sum, Window
+from django.db.models.functions import RowNumber
 from django.utils import timezone
 from rest_framework import viewsets, permissions, generics, status
 from rest_framework.response import Response
@@ -17,6 +18,7 @@ from apps.education.models import GroupStudent
 from apps.operations.models import Lesson, Attendance
 from apps.operations.shop import ShopItem
 from apps.finance.models import Transaction
+from apps.hardware.services import build_student_presence_map
 
 from .permissions import IsParent, IsStudent
 from .serializers import (
@@ -95,8 +97,6 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
 def _build_child_data(child):
     """Bitta farzand uchun dashboard ma'lumotlarini yig'adi."""
-    from django.db.models import Avg, Count, Q
-
     enrollments = GroupStudent.objects.filter(
         student=child, status='active',
     ).select_related('group', 'group__course', 'group__teacher', 'group__room')
@@ -115,17 +115,94 @@ def _build_child_data(child):
     recent_attendance = Attendance.objects.filter(
         student=child,
     ).select_related('lesson', 'lesson__group').order_by('-lesson__date')[:5]
+    presence_summary = build_student_presence_map([child.id]).get(child.id, {})
 
     return {
         'child': child,
+        'relation_type': '',
         'enrollments': enrollments,
         'attendance_rate': round(att_rate, 1),
         'avg_grade': round(float(avg_grade), 1),
         'balance': child.balance,
         'has_debt': child.balance < 0,
         'xp': stats['total_xp'] or 0,
+        'missed_lessons_count': presence_summary.get('missed_lessons_count', 0),
+        'today_presence': presence_summary.get('today_presence'),
+        'recent_face_logs': presence_summary.get('recent_face_logs', []),
         'recent_attendance': recent_attendance,
     }
+
+
+def _build_children_payload(relations):
+    relations = list(relations)
+    if not relations:
+        return []
+
+    child_ids = [relation.student_id for relation in relations]
+    student_presence_map = build_student_presence_map(child_ids)
+
+    enrollments_map = {child_id: [] for child_id in child_ids}
+    for enrollment in GroupStudent.objects.filter(
+        student_id__in=child_ids,
+        status='active',
+    ).select_related('group', 'group__course', 'group__teacher', 'group__room'):
+        enrollments_map.setdefault(enrollment.student_id, []).append(enrollment)
+
+    stats_map = {
+        row['student_id']: row
+        for row in Attendance.objects.filter(
+            student_id__in=child_ids,
+        ).values('student_id').annotate(
+            total_att=Count('id'),
+            present=Count('id', filter=Q(status='present')),
+            avg_grade=Avg('grade'),
+            total_xp=Sum('xp_points'),
+        )
+    }
+
+    recent_attendance_map = {child_id: [] for child_id in child_ids}
+    for attendance in Attendance.objects.filter(
+        student_id__in=child_ids,
+    ).annotate(
+        row_number=Window(
+            expression=RowNumber(),
+            partition_by=[F('student_id')],
+            order_by=[F('lesson__date').desc(), F('id').desc()],
+        )
+    ).filter(
+        row_number__lte=5,
+    ).select_related(
+        'lesson', 'lesson__group',
+    ).order_by(
+        'student_id', '-lesson__date', '-id',
+    ):
+        recent_attendance_map.setdefault(attendance.student_id, []).append(attendance)
+
+    children = []
+    for relation in relations:
+        child = relation.student
+        stats = stats_map.get(child.id, {})
+        total_att = stats.get('total_att') or 0
+        present = stats.get('present') or 0
+        att_rate = (present / total_att * 100) if total_att > 0 else 0
+        avg_grade = stats.get('avg_grade') or 0
+
+        children.append({
+            'child': child,
+            'relation_type': relation.get_relation_type_display(),
+            'enrollments': enrollments_map.get(child.id, []),
+            'attendance_rate': round(att_rate, 1),
+            'avg_grade': round(float(avg_grade), 1),
+            'balance': child.balance,
+            'has_debt': child.balance < 0,
+            'xp': stats.get('total_xp') or 0,
+            'missed_lessons_count': student_presence_map.get(child.id, {}).get('missed_lessons_count', 0),
+            'today_presence': student_presence_map.get(child.id, {}).get('today_presence'),
+            'recent_face_logs': student_presence_map.get(child.id, {}).get('recent_face_logs', []),
+            'recent_attendance': recent_attendance_map.get(child.id, []),
+        })
+
+    return children
 
 
 class ParentDashboardView(APIView):
@@ -142,11 +219,7 @@ class ParentDashboardView(APIView):
             parent=parent,
         ).select_related('student')
 
-        children = []
-        for relation in relations:
-            data = _build_child_data(relation.student)
-            data['relation_type'] = relation.get_relation_type_display()
-            children.append(data)
+        children = _build_children_payload(relations)
 
         total_debt = sum(
             abs(c['balance']) for c in children if c['has_debt']
@@ -174,11 +247,7 @@ class ParentChildrenListView(APIView):
             parent=request.user,
         ).select_related('student')
 
-        children = []
-        for relation in relations:
-            data = _build_child_data(relation.student)
-            data['relation_type'] = relation.get_relation_type_display()
-            children.append(data)
+        children = _build_children_payload(relations)
 
         serializer = ChildDetailSerializer(children, many=True)
         return Response(serializer.data)
@@ -258,8 +327,6 @@ class ParentChildPaymentsView(generics.ListAPIView):
 
 def _build_student_stats(student):
     """O'quvchi statistikasini hisoblaydi."""
-    from django.db.models import Avg, Count, Q
-
     stats = Attendance.objects.filter(student=student).aggregate(
         total_lessons=Count('id'),
         present_count=Count('id', filter=Q(status='present')),
@@ -275,6 +342,7 @@ def _build_student_stats(student):
     coin_balance = total_xp
     if hasattr(student, 'profile_data') and student.profile_data:
         coin_balance = student.profile_data.get('xp', total_xp)
+    presence_summary = build_student_presence_map([student.id]).get(student.id, {})
 
     return {
         'attendance_rate': round(attendance_rate, 1),
@@ -282,28 +350,35 @@ def _build_student_stats(student):
         'total_xp': total_xp,
         'coin_balance': coin_balance,
         'balance': student.balance,
+        'missed_lessons_count': presence_summary.get('missed_lessons_count', 0),
+        'late_lessons_count': presence_summary.get('late_lessons_count', 0),
     }
 
 
 def _build_leaderboard(student):
     """Tashkilot bo'yicha XP reytingi."""
     org = student.organization
-    all_ranked = User.objects.filter(
+    if not org:
+        return [], 0
+
+    ranked_students = User.objects.filter(
         role='student',
         organization=org,
         is_active=True,
         is_deleted=False,
     ).annotate(
         xp_total=Sum('lesson_attendances__xp_points'),
-    ).exclude(xp_total__isnull=True).order_by('-xp_total')
+    ).exclude(
+        xp_total__isnull=True,
+    ).annotate(
+        rank=Window(
+            expression=RowNumber(),
+            order_by=[F('xp_total').desc(), F('id').asc()],
+        )
+    ).order_by('rank')
 
-    leaderboard = all_ranked[:10]
-
-    student_rank = 0
-    for i, s in enumerate(all_ranked, 1):
-        if s.id == student.id:
-            student_rank = i
-            break
+    leaderboard = list(ranked_students[:10])
+    student_rank = ranked_students.filter(id=student.id).values_list('rank', flat=True).first() or 0
 
     return leaderboard, student_rank
 
@@ -326,16 +401,16 @@ class StudentDashboardView(APIView):
         ).select_related(
             'group', 'group__course', 'group__teacher', 'group__room',
         )
-        my_groups = [e.group for e in enrollments]
+        group_ids = enrollments.values_list('group_id', flat=True)
 
         # Bugungi darslar
         today_lessons = Lesson.objects.filter(
-            group__in=my_groups, date=today,
+            group_id__in=group_ids, date=today,
         ).select_related('group', 'teacher', 'room').order_by('start_time')
 
         # Keyingi darslar
         upcoming_lessons = Lesson.objects.filter(
-            group__in=my_groups, date__gt=today,
+            group_id__in=group_ids, date__gt=today,
         ).select_related('group', 'teacher', 'room').order_by(
             'date', 'start_time',
         )[:10]
@@ -344,6 +419,7 @@ class StudentDashboardView(APIView):
         recent_attendance = Attendance.objects.filter(
             student=student,
         ).select_related('lesson', 'lesson__group').order_by('-lesson__date')[:20]
+        presence_summary = build_student_presence_map([student.id]).get(student.id, {})
 
         # Statistikalar
         stats = _build_student_stats(student)
@@ -351,7 +427,7 @@ class StudentDashboardView(APIView):
         # To'lovlar
         payments = Transaction.objects.filter(
             student=student,
-        ).order_by('-created_at')[:10]
+        ).select_related('account', 'category', 'confirmed_by').order_by('-created_at')[:10]
 
         # Chart Data (So'nggi 10 ta baho - DB darajasida)
         grade_history = list(
@@ -380,6 +456,8 @@ class StudentDashboardView(APIView):
             'today_lessons': today_lessons,
             'upcoming_lessons': upcoming_lessons,
             'recent_attendance': recent_attendance,
+            'today_presence': presence_summary.get('today_presence'),
+            'recent_face_logs': presence_summary.get('recent_face_logs', []),
             'recent_payments': payments,
             'chart_labels': chart_labels,
             'chart_data': chart_data,
@@ -404,7 +482,7 @@ class StudentEnrollmentsView(generics.ListAPIView):
             student=self.request.user, status='active',
         ).select_related(
             'group', 'group__course', 'group__teacher', 'group__room',
-        )
+        ).order_by('-joined_at', '-id')
 
 
 @extend_schema(tags=["O'quvchi"], summary='Bugungi darslar', description="O'quvchining bugungi kun uchun rejalashtirilgan darslari.")

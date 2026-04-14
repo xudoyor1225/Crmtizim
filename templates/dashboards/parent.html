@@ -46,11 +46,15 @@
                 </div>
                 <div class="text-center">
                     <p class="text-xs text-[#94A3B8] uppercase font-semibold">O'rt. baho</p>
-                    <span class="text-xs font-bold text-amber-600 bg-amber-50/80 px-2 py-0.5 rounded-full">#{{ student_rank }}</span>
+                    <p class="text-lg font-bold text-amber-600">{{ data.avg_grade }}</p>
                 </div>
                 <div class="text-center">
                     <p class="text-xs text-[#94A3B8] uppercase font-semibold">XP</p>
                     <p class="text-lg font-bold text-purple-600">{{ data.xp }}</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-xs text-[#94A3B8] uppercase font-semibold">Qoldirilgan</p>
+                    <p class="text-lg font-bold text-rose-600">{{ data.missed_lessons_count }}</p>
                 </div>
                 <div class="text-center">
                     <p class="text-xs text-[#94A3B8] uppercase font-semibold">Balans</p>
@@ -62,7 +66,7 @@
         </div>
 
         <!-- Farzand Guruhlari + Davomat -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
             <!-- Guruhlar -->
             <div>
                 <h4 class="text-sm font-bold text-[#0F172A] mb-2 flex items-center gap-1.5">
@@ -106,6 +110,43 @@
                     </div>
                     {% empty %}
                     <p class="text-[#94A3B8] text-xs text-center py-3">Ma'lumot yo'q</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-bold text-[#0F172A] mb-2 flex items-center gap-1.5">
+                    <i class="ph-fill ph-fingerprint text-[#64748B]"></i> Markazga kelish
+                </h4>
+                <div class="mb-3 p-3 liquid-glass rounded-xl">
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                            <p class="text-[#94A3B8] uppercase font-semibold">Bugun keldi</p>
+                            <p class="mt-1 font-bold text-emerald-700">
+                                {% if data.today_presence and data.today_presence.check_in_at %}{{ data.today_presence.check_in_at|date:"H:i" }}{% else %}—{% endif %}
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-[#94A3B8] uppercase font-semibold">Bugun ketdi</p>
+                            <p class="mt-1 font-bold text-amber-700">
+                                {% if data.today_presence and data.today_presence.check_out_at %}{{ data.today_presence.check_out_at|date:"H:i" }}{% else %}—{% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    {% for log in data.recent_face_logs %}
+                    <div class="flex items-center justify-between p-2.5 liquid-glass rounded-xl text-xs">
+                        <span class="font-medium text-[#0F172A]">{{ log.date|date:"d.m.Y" }}</span>
+                        <span class="text-emerald-700 font-bold">
+                            {% if log.check_in_at %}Keldi {{ log.check_in_at|date:"H:i" }}{% else %}—{% endif %}
+                        </span>
+                        <span class="text-amber-700 font-bold">
+                            {% if log.check_out_at %}Ketdi {{ log.check_out_at|date:"H:i" }}{% else %}—{% endif %}
+                        </span>
+                    </div>
+                    {% empty %}
+                    <p class="text-[#94A3B8] text-xs text-center py-3">Kelish-ketish ma'lumoti yo'q</p>
                     {% endfor %}
                 </div>
             </div>

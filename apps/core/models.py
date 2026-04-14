@@ -148,3 +148,104 @@ class AuditLog(models.Model):
         else:
             ip = request.META.get('REMOTE_ADDR')
         return ip
+
+
+class BackupConfiguration(BaseModel):
+    SCHEDULE_TYPE_CHOICES = (
+        ('manual', "Faqat qo'lda"),
+        ('interval', 'Har N soatda'),
+        ('daily', 'Har kuni aniq vaqtda'),
+    )
+    LAST_STATUS_CHOICES = (
+        ('never', 'Hali ishga tushmagan'),
+        ('success', 'Muvaffaqiyatli'),
+        ('failed', 'Xatolik bilan tugagan'),
+    )
+
+    name = models.CharField(max_length=100, default='Asosiy backup sozlamasi', verbose_name='Nomi')
+    is_enabled = models.BooleanField(default=False, verbose_name='Avtomatik backup yoqilgan')
+    telegram_bot_token = models.CharField(max_length=255, blank=True, verbose_name='Telegram bot token')
+    telegram_chat_id = models.CharField(max_length=64, blank=True, verbose_name='Telegram chat ID')
+    auto_detect_chat = models.BooleanField(default=True, verbose_name='Chat ID ni avtomatik topish')
+    schedule_type = models.CharField(
+        max_length=20,
+        choices=SCHEDULE_TYPE_CHOICES,
+        default='manual',
+        verbose_name='Backup rejimi',
+    )
+    interval_hours = models.PositiveIntegerField(default=24, verbose_name='Interval (soat)')
+    daily_time = models.TimeField(null=True, blank=True, verbose_name='Kunlik backup vaqti')
+    retention_days = models.PositiveIntegerField(default=30, verbose_name='Backup saqlash kunlari')
+    last_run_at = models.DateTimeField(null=True, blank=True, verbose_name='Oxirgi ishga tushgan vaqt')
+    next_run_at = models.DateTimeField(null=True, blank=True, verbose_name='Keyingi backup vaqti')
+    last_status = models.CharField(
+        max_length=20,
+        choices=LAST_STATUS_CHOICES,
+        default='never',
+        verbose_name='Oxirgi holat',
+    )
+    last_message = models.TextField(blank=True, verbose_name='Oxirgi xabar')
+    updated_by = models.ForeignKey(
+        'users.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='backup_config_updates',
+        verbose_name='Kim yangiladi',
+    )
+
+    class Meta:
+        db_table = 'backup_configurations'
+        verbose_name = 'Backup sozlamasi'
+        verbose_name_plural = 'Backup sozlamalari'
+
+    def __str__(self):
+        return self.name
+
+
+class BackupRunLog(BaseModel):
+    STATUS_CHOICES = (
+        ('success', 'Muvaffaqiyatli'),
+        ('failed', 'Xatolik'),
+    )
+    TRIGGER_SOURCE_CHOICES = (
+        ('manual', "Qo'lda"),
+        ('schedule', 'Jadval bo`yicha'),
+    )
+
+    configuration = models.ForeignKey(
+        BackupConfiguration,
+        on_delete=models.CASCADE,
+        related_name='run_logs',
+        verbose_name='Sozlama',
+    )
+    triggered_by = models.ForeignKey(
+        'users.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='backup_runs',
+        verbose_name='Kim ishga tushirdi',
+    )
+    trigger_source = models.CharField(
+        max_length=20,
+        choices=TRIGGER_SOURCE_CHOICES,
+        default='manual',
+        verbose_name='Ishga tushish turi',
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, verbose_name='Holati')
+    backup_file_name = models.CharField(max_length=255, blank=True, verbose_name='Backup fayl nomi')
+    file_size_bytes = models.BigIntegerField(default=0, verbose_name='Fayl hajmi')
+    sent_to_telegram = models.BooleanField(default=False, verbose_name='Telegramga yuborildimi')
+    message = models.TextField(blank=True, verbose_name='Natija xabari')
+    started_at = models.DateTimeField(default=timezone.now, verbose_name='Boshlangan vaqt')
+    completed_at = models.DateTimeField(null=True, blank=True, verbose_name='Tugagan vaqt')
+
+    class Meta:
+        db_table = 'backup_run_logs'
+        verbose_name = 'Backup log'
+        verbose_name_plural = 'Backup loglari'
+        ordering = ['-started_at']
+
+    def __str__(self):
+        return f"{self.get_status_display()} - {self.started_at:%Y-%m-%d %H:%M}"

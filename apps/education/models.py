@@ -118,6 +118,10 @@ class GroupStudent(TenantAwareModel):
         unique_together = ('group', 'student')
         verbose_name = "Guruh a'zosi"
         verbose_name_plural = "Guruh a'zolari"
+        indexes = [
+            models.Index(fields=['student', 'status']),
+            models.Index(fields=['group', 'status']),
+        ]
 
 
 # LMS Materials - added at bottom to avoid circular imports

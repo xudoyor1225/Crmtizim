@@ -1,6 +1,7 @@
 """
 Parent va Student API endpointlari uchun testlar.
 """
+from datetime import datetime
 from datetime import timedelta
 from decimal import Decimal
 
@@ -14,6 +15,7 @@ from apps.organizations.models import Organization, Branch
 from apps.education.models import Course, Group, GroupStudent, Room
 from apps.operations.models import Lesson, Attendance
 from apps.finance.models import Transaction, Account, TransactionCategory
+from apps.hardware.models import FaceIDEvent, FaceIDIntegration, FaceIDUserBinding
 
 
 class BaseAPITestCase(TestCase):
@@ -102,6 +104,16 @@ class BaseAPITestCase(TestCase):
             parent=self.parent, student=self.student,
             relation_type='father', is_main_contact=True,
         )
+        self.face_integration = FaceIDIntegration.objects.create(
+            organization=self.org,
+            agent_enabled=True,
+        )
+        self.face_binding = FaceIDUserBinding.objects.create(
+            organization=self.org,
+            user=self.student,
+            face_id_code='STU-1001',
+            sync_enabled=True,
+        )
 
         # Admin (ruxsatsiz kirish testi uchun)
         self.admin_user = User.objects.create_user(
@@ -122,6 +134,13 @@ class ParentDashboardAPITest(BaseAPITestCase):
 
     def test_parent_dashboard_returns_children(self):
         """Dashboard farzandlar ro'yxatini qaytarishi kerak."""
+        FaceIDEvent.objects.create(
+            organization=self.org,
+            user=self.student,
+            face_id_code='STU-1001',
+            event_type='CHECK_IN',
+            occurred_at=timezone.now().replace(hour=8, minute=55, second=0, microsecond=0),
+        )
         self.client.force_authenticate(user=self.parent)
         response = self.client.get('/api/parent/dashboard/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -132,6 +151,8 @@ class ParentDashboardAPITest(BaseAPITestCase):
         self.assertEqual(child['child']['first_name'], 'Jasur')
         self.assertEqual(child['relation_type'], 'Otasi')
         self.assertTrue(child['has_debt'])
+        self.assertIn('today_presence', child)
+        self.assertIn('recent_face_logs', child)
 
     def test_parent_dashboard_debt_calculation(self):
         """Umumiy qarzdorlik to'g'ri hisoblanishi kerak."""
@@ -236,6 +257,21 @@ class StudentDashboardAPITest(BaseAPITestCase):
 
     def test_student_dashboard(self):
         """Dashboard barcha kerakli ma'lumotlarni qaytarishi kerak."""
+        today = timezone.localdate()
+        FaceIDEvent.objects.create(
+            organization=self.org,
+            user=self.student,
+            face_id_code='STU-1001',
+            event_type='CHECK_IN',
+            occurred_at=timezone.make_aware(datetime.combine(today, datetime.min.time().replace(hour=8, minute=55))),
+        )
+        FaceIDEvent.objects.create(
+            organization=self.org,
+            user=self.student,
+            face_id_code='STU-1001',
+            event_type='CHECK_OUT',
+            occurred_at=timezone.make_aware(datetime.combine(today, datetime.min.time().replace(hour=18, minute=5))),
+        )
         self.client.force_authenticate(user=self.student)
         response = self.client.get('/api/student/dashboard/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -245,22 +281,40 @@ class StudentDashboardAPITest(BaseAPITestCase):
         self.assertIn('today_lessons', data)
         self.assertIn('upcoming_lessons', data)
         self.assertIn('recent_attendance', data)
+        self.assertIn('today_presence', data)
+        self.assertIn('recent_face_logs', data)
         self.assertIn('chart_labels', data)
         self.assertIn('chart_data', data)
         self.assertIn('leaderboard', data)
         self.assertIn('student_rank', data)
         self.assertIn('shop_items_count', data)
+        self.assertIsNotNone(data['today_presence'])
+        self.assertEqual(data['today_presence']['check_in_at'][11:16], '08:55')
+        self.assertEqual(data['today_presence']['check_out_at'][11:16], '18:05')
 
     def test_student_dashboard_stats(self):
         """Statistikalar to'g'ri hisoblanishi kerak."""
+        missed_lesson = Lesson.objects.create(
+            organization=self.org, group=self.group,
+            teacher=self.teacher, room=self.room,
+            date=timezone.now().date() - timedelta(days=1),
+            start_time='10:00', end_time='11:30',
+            topic='Unit 0', status='finished',
+        )
+        Attendance.objects.create(
+            organization=self.org, lesson=missed_lesson,
+            student=self.student, status='absent',
+            grade=None, xp_points=0,
+        )
         self.client.force_authenticate(user=self.student)
         response = self.client.get('/api/student/dashboard/')
         data = response.json()
         stats = data['stats']
-        self.assertEqual(stats['attendance_rate'], 100.0)
+        self.assertEqual(stats['attendance_rate'], 50.0)
         self.assertEqual(stats['avg_grade'], 85.0)
         self.assertEqual(stats['total_xp'], 10)
         self.assertEqual(Decimal(stats['balance']), Decimal('-150000.00'))
+        self.assertEqual(stats['missed_lessons_count'], 1)
 
     def test_student_dashboard_unauthenticated(self):
         """Autentifikatsiyasiz kirish mumkin emas."""

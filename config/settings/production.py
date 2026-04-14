@@ -21,41 +21,33 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
 # Logging
+# Productionda diskka ko'p log yozishni o'chiramiz.
+# Faqat muhim xatolar process managerga console orqali chiqadi.
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-    },
     'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': BASE_DIR / 'logs' / 'django.log',
-            'maxBytes': 1024 * 1024 * 10,  # 10 MB
-            'backupCount': 5,
-            'formatter': 'verbose',
+        'null': {
+            'class': 'logging.NullHandler',
         },
-        'error_file': {
+        'console_error': {
+            'class': 'logging.StreamHandler',
             'level': 'ERROR',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': BASE_DIR / 'logs' / 'errors.log',
-            'maxBytes': 1024 * 1024 * 10,  # 10 MB
-            'backupCount': 5,
-            'formatter': 'verbose',
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': True,
+            'handlers': ['null'],
+            'level': 'ERROR',
+            'propagate': False,
         },
         'django.request': {
-            'handlers': ['error_file'],
+            'handlers': ['console_error'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'apps': {
+            'handlers': ['null'],
             'level': 'ERROR',
             'propagate': False,
         },

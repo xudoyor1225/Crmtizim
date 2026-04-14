@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from .dashboards import role_based_dashboard
+from .context_processors import invalidate_user_notifications_cache
 
 
 @login_required
@@ -58,6 +59,7 @@ def notification_read(request, pk):
         if notification.status == 'sent':
             notification.status = 'read'
             notification.save(update_fields=['status'])
+            invalidate_user_notifications_cache(request.user.pk)
     except NotificationLog.DoesNotExist:
         pass
 
@@ -79,6 +81,7 @@ def notifications_mark_all_read(request):
         recipient=request.user,
         status='sent'
     ).update(status='read')
+    invalidate_user_notifications_cache(request.user.pk)
 
     messages.success(request, "Barcha bildirishnomalar o'qildi deb belgilandi")
     return redirect('core:notifications')

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.templatetags.static import static
 from apps.core.models import TenantAwareModel
 from .managers import CustomUserManager
 
@@ -70,7 +71,22 @@ class User(AbstractUser, TenantAwareModel):
 
     @property
     def full_name(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.first_name} {self.last_name}".strip()
+
+    @property
+    def initials(self):
+        initials = f"{(self.first_name or '')[:1]}{(self.last_name or '')[:1]}".strip().upper()
+        if initials:
+            return initials
+        if self.phone:
+            return self.phone[:1]
+        return "?"
+
+    @property
+    def avatar_url(self):
+        if self.avatar and getattr(self.avatar, 'url', None):
+            return self.avatar.url
+        return static('img/default-avatar.svg')
 
     def has_module_permission(self, module: str, action: str = 'view') -> bool:
         """

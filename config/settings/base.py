@@ -2,13 +2,34 @@ import os
 from pathlib import Path
 from decouple import config, Csv
 
+
+def config_bool(key, default=False):
+    """
+    Environment qiymatini bool ga xavfsiz aylantiradi.
+    Ba'zi deploy muhitlarida DEBUG kabi qiymatlar `release`/`production`
+    ko'rinishida kelishi mumkin, shuning uchun ValueError chiqarmaymiz.
+    """
+    raw_value = config(key, default=default)
+
+    if isinstance(raw_value, bool):
+        return raw_value
+    if raw_value is None:
+        return default
+
+    value = str(raw_value).strip().lower()
+    if value in {'1', 'true', 'yes', 'on', 'debug', 'development', 'dev'}:
+        return True
+    if value in {'0', 'false', 'no', 'off', 'release', 'production', 'prod'}:
+        return False
+    return bool(default)
+
 # 1. PATHS
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # 2. SECURITY
 # .env faylidan o'qiladi
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-dev-key-only-for-local-testing-change-this')
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config_bool('DEBUG', default=True)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='13.39.83.160,localhost,127.0.0.1', cast=Csv())
 
 # Development uchun async ORM ruxsat berish
@@ -47,6 +68,7 @@ INSTALLED_APPS = [
     'apps.finance',
     'apps.operations',
     'apps.automation',
+    'apps.hardware',
 ]
 
 MIDDLEWARE = [
@@ -92,7 +114,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # 4. DATABASE
 # PostgreSQL yoki SQLite tanlash
-USE_POSTGRES = config('USE_POSTGRES', default=False, cast=bool)
+USE_POSTGRES = config_bool('USE_POSTGRES', default=False)
 
 if USE_POSTGRES:
     # PostgreSQL sozlamalari
@@ -145,6 +167,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # 8. AUTOMATION
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', '')
+TELEGRAM_BACKUP_CHAT_ID = os.getenv('TELEGRAM_BACKUP_CHAT_ID', '')
+
+# Backup sozlamalari
+BACKUP_DIR = BASE_DIR / 'backups'
+if not os.path.exists(BACKUP_DIR):
+    os.makedirs(BACKUP_DIR)
+BACKUP_CENTER_REAUTH_MINUTES = 15
 
 # --- YANGI SOZLAMALAR (Script orqali) ---
 
@@ -175,6 +204,13 @@ SPECTACULAR_SETTINGS = {
         {'name': 'Tranzaksiyalar', 'description': "To'lovlar va tranzaksiyalar"},
         {'name': 'Ota-ona', 'description': "Ota-ona paneli - farzandlar, davomat, to'lovlar"},
         {'name': "O'quvchi", 'description': "O'quvchi paneli - darslar, davomat, reyting"},
+        {
+            'name': 'Hikvision Face ID',
+            'description': (
+                "Hikvision Face ID qurilmasi bilan integratsiya. "
+                "Desktop agent `x-device-token` header orqali user sync, history sync va live event yuboradi."
+            ),
+        },
     ],
     'SWAGGER_UI_SETTINGS': {
         'deepLinking': True,
@@ -182,6 +218,8 @@ SPECTACULAR_SETTINGS = {
         'displayOperationId': False,
         'filter': True,
         'docExpansion': 'list',
+        'tagsSorter': 'alpha',
+        'operationsSorter': 'alpha',
     },
     'COMPONENT_SPLIT_REQUEST': True,
     'PREPROCESSING_HOOKS': ['apps.api.spectacular_hooks.custom_preprocessing_hook'],
@@ -191,7 +229,7 @@ SPECTACULAR_SETTINGS = {
 # REDIS & CELERY CONFIGURATION
 # ============================================
 REDIS_URL = config('REDIS_URL', default='redis://localhost:6379/0')
-USE_REDIS = config('USE_REDIS', default=False, cast=bool)
+USE_REDIS = config_bool('USE_REDIS', default=False)
 
 # Cache sozlamalari
 if USE_REDIS:
@@ -240,6 +278,10 @@ CELERY_BEAT_SCHEDULE = {
     'send-daily-reminders': {
         'task': 'apps.automation.tasks.send_daily_reminders',
         'schedule': 60 * 60 * 24,  # Har 24 soatda
+    },
+    'process-scheduled-backups': {
+        'task': 'apps.core.tasks.process_scheduled_backups',
+        'schedule': 300,
     },
 }
 
