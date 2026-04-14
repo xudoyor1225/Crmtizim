@@ -1,4 +1,5 @@
 import gzip
+import glob
 import os
 import shutil
 import subprocess
@@ -6,6 +7,45 @@ import subprocess
 from django.conf import settings
 from django.core.management import call_command
 from django.utils import timezone
+
+
+def resolve_pg_dump_path():
+    """
+    pg_dump executable yo'lini topadi.
+    Avval env/settings override, keyin PATH, keyin keng tarqalgan Linux yo'llari tekshiriladi.
+    """
+    configured_path = getattr(settings, 'PG_DUMP_PATH', '') or os.getenv('PG_DUMP_PATH', '')
+    if configured_path:
+        if os.path.isfile(configured_path):
+            return configured_path
+        resolved_from_path = shutil.which(configured_path)
+        if resolved_from_path:
+            return resolved_from_path
+
+    resolved = shutil.which('pg_dump')
+    if resolved:
+        return resolved
+
+    common_candidates = [
+        '/usr/bin/pg_dump',
+        '/usr/local/bin/pg_dump',
+        '/bin/pg_dump',
+    ]
+    for pattern in (
+        '/usr/lib/postgresql/*/bin/pg_dump',
+        '/opt/homebrew/opt/libpq/bin/pg_dump',
+        '/opt/local/lib/postgresql*/bin/pg_dump',
+    ):
+        common_candidates.extend(glob.glob(pattern))
+
+    for candidate in common_candidates:
+        if os.path.isfile(candidate):
+            return candidate
+
+    raise RuntimeError(
+        "pg_dump topilmadi. Serverga PostgreSQL client o'rnating yoki .env ga "
+        "PG_DUMP_PATH=/pg_dump/to'liq/yo'li qiymatini yozing."
+    )
 
 
 def create_backup_file():
@@ -24,8 +64,9 @@ def create_backup_file():
         backup_file = os.path.join(backup_dir, f"backup_{timestamp}.sql")
         env = os.environ.copy()
         env['PGPASSWORD'] = db_settings.get('PASSWORD', '')
+        pg_dump_path = resolve_pg_dump_path()
         command = [
-            'pg_dump',
+            pg_dump_path,
             '-h', db_settings.get('HOST', 'localhost'),
             '-p', str(db_settings.get('PORT', '5432')),
             '-U', db_settings.get('USER', 'postgres'),
