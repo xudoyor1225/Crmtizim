@@ -32,38 +32,14 @@
                         Keldi: {{ my_attendance.check_in|time:"H:i" }}
                         {% if my_attendance.check_out %} · Ketdi: {{ my_attendance.check_out|time:"H:i" }}{% endif %}
                     {% else %}
-                        Bugun hali belgilanmagan
+                        Bugun hali Face ID orqali belgilanmagan
                     {% endif %}
                 </p>
             </div>
         </div>
-        <div class="flex gap-2">
-            {% if not my_attendance or not my_attendance.check_in %}
-            <form action="{% url 'finance:staff_check_in' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="staff_id" value="{{ request.user.id }}">
-                <input type="hidden" name="next" value="{% url 'dashboard' %}">
-                <button type="submit"
-                    class="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg text-xs font-medium transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/25">
-                    <i class="ph-fill ph-sign-in"></i> Keldim
-                </button>
-            </form>
-            {% elif not my_attendance.check_out %}
-            <form action="{% url 'finance:staff_check_out' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="staff_id" value="{{ request.user.id }}">
-                <input type="hidden" name="next" value="{% url 'dashboard' %}">
-                <button type="submit"
-                    class="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#4F46E5] to-[#818CF8] text-white rounded-lg text-xs font-medium transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#4F46E5]/25">
-                    <i class="ph-fill ph-sign-out"></i> Ketdim
-                </button>
-            </form>
-            {% else %}
-            <span class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-lg text-xs font-medium">
-                <i class="ph-fill ph-check-circle"></i> Tugallangan
-            </span>
-            {% endif %}
-        </div>
+        <span class="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-xs font-medium">
+            <i class="ph-fill ph-fingerprint"></i> Face ID orqali avtomatik
+        </span>
     </div>
 
     <!-- Stats + KPI -->

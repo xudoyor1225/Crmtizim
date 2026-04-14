@@ -10,6 +10,7 @@ from types import SimpleNamespace
 from apps.core.permissions import permission_required
 from apps.hardware.models import FaceIDEvent, FaceIDIntegration, FaceIDUserBinding, generate_device_token
 from apps.hardware.services import get_event_type_label
+from apps.organizations.models import Organization
 from apps.users.models import User
 
 
@@ -17,7 +18,30 @@ FACE_ID_TABS = {'overview', 'users', 'api', 'events'}
 
 
 def _get_organization_from_request(request):
-    return getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
+    organization = getattr(request, 'organization', None) or getattr(request.user, 'organization', None)
+    if organization is not None:
+        return organization
+
+    owned_organization = getattr(request.user, 'owned_organization', None)
+    if owned_organization is not None:
+        request.organization = owned_organization
+        return owned_organization
+
+    if request.user.role == 'super_admin':
+        requested_org_id = request.GET.get('org', '').strip()
+        active_orgs = Organization.objects.filter(is_active=True, is_deleted=False).order_by('id')
+        if requested_org_id.isdigit():
+            selected_org = active_orgs.filter(id=int(requested_org_id)).first()
+            if selected_org is not None:
+                request.organization = selected_org
+                return selected_org
+
+        fallback_org = active_orgs.first()
+        if fallback_org is not None:
+            request.organization = fallback_org
+            return fallback_org
+
+    return None
 
 
 def _get_or_create_integration(organization):

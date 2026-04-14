@@ -204,12 +204,6 @@
     <span>Oyliklar</span>
 </a>
 
-<a href="{% url 'finance:staff_attendance_list' %}" @click="closeSidebar && closeSidebar()"
-    class="sidebar-link flex items-center gap-3 min-h-[48px] {% if 'hr' in request.path %}active{% endif %}">
-    <i class="ph-fill ph-fingerprint text-xl"></i>
-    <span>HR Davomat</span>
-</a>
-
 <a href="{% url 'finance:supply_list' %}" @click="closeSidebar && closeSidebar()"
     class="sidebar-link flex items-center gap-3 min-h-[48px] {% if 'supplies' in request.path %}active{% endif %}">
     <i class="ph-fill ph-package text-xl"></i>

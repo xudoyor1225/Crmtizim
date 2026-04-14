@@ -55,11 +55,6 @@ urlpatterns = [
     path('payroll/<int:pk>/approve/', payroll_views.approve_payroll, name='approve_payroll'),
     path('payroll/<int:pk>/pay/', payroll_views.pay_salary, name='pay_salary'),
     
-    # Staff Attendance (HR)
-    path('hr/attendance/', payroll_views.staff_attendance_list, name='staff_attendance_list'),
-    path('hr/check-in/', payroll_views.staff_check_in, name='staff_check_in'),
-    path('hr/check-out/', payroll_views.staff_check_out, name='staff_check_out'),
-    
     # Inventory (Sklad)
     path('supplies/', inventory_views.supply_list, name='supply_list'),
     path('supplies/add/', inventory_views.supply_create, name='supply_create'),
