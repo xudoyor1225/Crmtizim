@@ -31,7 +31,7 @@ def create_system_notification(recipient, title: str, message: str, notification
             status='sent'
         )
 
-        logger.info(f"System notification created for {recipient}: {title}")
+        logger.debug(f"System notification created for {recipient}: {title}")
         return notification
 
     except Exception as e:
@@ -106,7 +106,7 @@ def send_template_notification(user, template_code: str, context: dict = None):
             status=status
         )
         
-        logger.info(f"Notification sent [{template.message_type}] to {user.phone}: {message_body[:50]}...")
+        logger.debug(f"Notification sent [{template.message_type}] to {user.phone}: {message_body[:50]}...")
         return True
 
     except Exception as e:
@@ -154,7 +154,7 @@ def _send_sms(user, message: str) -> str:
         sms_enabled = getattr(settings, 'SMS_ENABLED', False)
 
         if not sms_enabled:
-            logger.info(f"SMS disabled. Would send to {user.phone}: {message[:50]}...")
+            logger.debug(f"SMS disabled. Would send to {user.phone}: {message[:50]}...")
             return 'sent'
 
         # TODO: SMS provider API chaqirish

@@ -5,11 +5,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import OperationalError, ProgrammingError
+from django.core.cache import cache
 
 from apps.finance.models import TransactionCategory, Account
 from apps.hardware.models import FaceIDEvent, FaceIDUserBinding
 from apps.users.models import User
 from apps.organizations.models import Organization
+
+SETTINGS_STATS_CACHE_TIMEOUT = 300
 
 
 def _get_face_id_stats(org):
@@ -39,15 +42,17 @@ def settings_index(request):
     """Asosiy sozlamalar sahifasi"""
     org = request.user.organization
     user = request.user
-    face_id_stats = _get_face_id_stats(org)
-
-    # Statistika
-    stats = {
-        'categories_count': TransactionCategory.objects.filter(organization=org).count() if org else 0,
-        'accounts_count': Account.objects.filter(organization=org, is_deleted=False).count() if org else 0,
-        'users_count': User.objects.filter(organization=org, is_deleted=False).count() if org else 0,
-    }
-    stats.update(face_id_stats)
+    cache_key = f"core:settings_stats:{org.id if org else 'none'}"
+    stats = cache.get(cache_key)
+    if stats is None:
+        face_id_stats = _get_face_id_stats(org)
+        stats = {
+            'categories_count': TransactionCategory.objects.filter(organization=org).count() if org else 0,
+            'accounts_count': Account.objects.filter(organization=org, is_deleted=False).count() if org else 0,
+            'users_count': User.objects.filter(organization=org, is_deleted=False).count() if org else 0,
+        }
+        stats.update(face_id_stats)
+        cache.set(cache_key, stats, SETTINGS_STATS_CACHE_TIMEOUT)
 
     context = {
         'stats': stats,

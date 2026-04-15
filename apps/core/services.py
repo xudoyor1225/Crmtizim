@@ -18,16 +18,22 @@ def calculate_student_stats(student):
     
     # Davomat
     attendances = Attendance.objects.filter(student=student)
-    total_lessons = attendances.count()
-    present_count = attendances.filter(status='present').count()
-    late_count = attendances.filter(status='late').count()
-    absent_count = attendances.filter(status='absent').count()
+    attendance_stats = attendances.aggregate(
+        total_lessons=Count('id'),
+        present_count=Count('id', filter=Q(status='present')),
+        late_count=Count('id', filter=Q(status='late')),
+        absent_count=Count('id', filter=Q(status='absent')),
+        avg_grade=Avg('grade'),
+    )
+    total_lessons = attendance_stats['total_lessons'] or 0
+    present_count = attendance_stats['present_count'] or 0
+    late_count = attendance_stats['late_count'] or 0
+    absent_count = attendance_stats['absent_count'] or 0
     
     attendance_rate = (present_count / total_lessons * 100) if total_lessons > 0 else 0
     
     # Baholar
-    grades = attendances.exclude(grade__isnull=True).values_list('grade', flat=True)
-    avg_grade = sum(grades) / len(grades) if grades else 0
+    avg_grade = attendance_stats['avg_grade'] or 0
     
     # XP
     xp = student.profile_data.get('xp', 0)
@@ -94,15 +100,17 @@ def calculate_teacher_stats(teacher, month=None):
         lesson__date__gte=month,
         lesson__date__lt=next_month
     )
-    if attendances.exists():
-        present = attendances.filter(status='present').count()
-        attendance_rate = (present / attendances.count()) * 100
-    else:
-        attendance_rate = 0
-    
+    attendance_stats = attendances.aggregate(
+        total_records=Count('id'),
+        present=Count('id', filter=Q(status='present')),
+        avg_grade=Avg('grade'),
+    )
+    total_records = attendance_stats['total_records'] or 0
+    present = attendance_stats['present'] or 0
+    attendance_rate = (present / total_records) * 100 if total_records > 0 else 0
+
     # O'rtacha baho
-    grades = attendances.exclude(grade__isnull=True).values_list('grade', flat=True)
-    avg_grade = sum(grades) / len(grades) if grades else 0
+    avg_grade = attendance_stats['avg_grade'] or 0
     
     return {
         'groups_count': groups.count(),
@@ -147,7 +155,12 @@ def calculate_organization_stats(organization, period='month'):
     
     # Lidlar
     leads = Lead.objects.filter(organization=organization, created_at__date__gte=start_date)
-    won_leads = leads.filter(stage__stage_type='won')
+    lead_counts = leads.aggregate(
+        leads_count=Count('id'),
+        won_leads=Count('id', filter=Q(stage__stage_type='won')),
+    )
+    leads_count = lead_counts['leads_count'] or 0
+    won_leads_count = lead_counts['won_leads'] or 0
     
     # Moliya
     transactions = Transaction.objects.filter(
@@ -168,9 +181,9 @@ def calculate_organization_stats(organization, period='month'):
         'students_count': students.count(),
         'teachers_count': teachers.count(),
         'active_groups': active_groups.count(),
-        'leads_count': leads.count(),
-        'won_leads': won_leads.count(),
-        'conversion_rate': round((won_leads.count() / leads.count() * 100) if leads.count() > 0 else 0, 1),
+        'leads_count': leads_count,
+        'won_leads': won_leads_count,
+        'conversion_rate': round((won_leads_count / leads_count * 100) if leads_count > 0 else 0, 1),
         'total_income': income,
         'total_expense': expense,
         'net_profit': income - expense,

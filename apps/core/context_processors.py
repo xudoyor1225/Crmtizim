@@ -2,6 +2,7 @@ from django.core.cache import cache
 
 
 NOTIFICATIONS_CACHE_TIMEOUT = 60
+PERMISSIONS_CACHE_TIMEOUT = 300
 
 
 def get_notifications_cache_key(user_id):
@@ -33,14 +34,22 @@ def user_permissions_context(request):
         }
 
     user = request.user
+    user_updated_at = getattr(user, 'updated_at', None)
+    cache_version = int(user_updated_at.timestamp()) if user_updated_at else 'static'
+    cache_key = f"core:user_permissions:{user.pk}:{cache_version}"
+    cached_context = cache.get(cache_key)
+    if cached_context is not None:
+        return cached_context
 
     # Super admin va owner - hamma narsaga ruxsat
     if user.role in ['super_admin', 'owner']:
         allowed_modules = ['dashboard', 'users', 'education', 'finance', 'crm', 'operations', 'reports', 'settings', 'automation']
-        return {
+        context = {
             'user_modules': allowed_modules,
             'full_access': True,
         }
+        cache.set(cache_key, context, PERMISSIONS_CACHE_TIMEOUT)
+        return context
 
     # Admin, staff va boshqa rollar uchun permissions dan tekshirish
     allowed_modules = ['dashboard']  # Hammaga dashboard
@@ -48,18 +57,22 @@ def user_permissions_context(request):
     # Agar permissions bo'sh bo'lsa va admin bo'lsa - hamma narsaga ruxsat
     if user.role == 'admin' and not user.permissions:
         allowed_modules = ['dashboard', 'users', 'education', 'finance', 'crm', 'operations', 'reports', 'settings', 'automation', 'admin_finance']
-        return {
+        context = {
             'user_modules': allowed_modules,
             'full_access': True,
         }
+        cache.set(cache_key, context, PERMISSIONS_CACHE_TIMEOUT)
+        return context
 
     # O'qituvchi - default modullar
     if user.role == 'teacher' and not user.permissions:
         allowed_modules = ['dashboard', 'operations', 'education']
-        return {
+        context = {
             'user_modules': allowed_modules,
             'full_access': False,
         }
+        cache.set(cache_key, context, PERMISSIONS_CACHE_TIMEOUT)
+        return context
 
     # Permissions dan tekshirish
     if user.permissions:
@@ -71,10 +84,12 @@ def user_permissions_context(request):
     if user.role == 'admin' and 'admin_finance' not in allowed_modules:
         allowed_modules.append('admin_finance')
 
-    return {
+    context = {
         'user_modules': allowed_modules,
         'full_access': False,
     }
+    cache.set(cache_key, context, PERMISSIONS_CACHE_TIMEOUT)
+    return context
 
 
 def notifications_context(request):

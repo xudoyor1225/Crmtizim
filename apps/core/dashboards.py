@@ -20,6 +20,8 @@ from apps.operations.models import Lesson, Attendance
 from apps.finance.models import Transaction, Account
 from apps.hardware.services import build_student_presence_map
 
+DASHBOARD_CACHE_TIMEOUT = 60
+
 
 def get_date_range(days=30):
     """So'nggi N kun uchun sana oralig'ini qaytaradi."""
@@ -51,6 +53,11 @@ def _dashboard_response(request, template_name, context):
     if not hasattr(request, 'META'):
         return context
     return render(request, template_name, context)
+
+
+def _dashboard_cache_key(name, *parts):
+    normalized = [str(part if part is not None else 'none') for part in parts]
+    return f"dashboard:{name}:{':'.join(normalized)}"
 
 
 def _build_student_leaderboard(organization, student_id=None):
@@ -189,10 +196,15 @@ def super_admin_dashboard(request):
     from apps.finance.inventory import Supply
     from apps.finance.payroll import StaffAttendance
     
+    period = request.GET.get('period', 'monthly')
+    cache_key = _dashboard_cache_key('super_admin', request.user.pk, period)
+    cached_context = cache.get(cache_key)
+    if cached_context is not None:
+        return _dashboard_response(request, 'dashboards/super_admin.html', cached_context)
+
     today = timezone.now().date()
     
     # ====== HAFTALIK/OYLIK TOGGLE ======
-    period = request.GET.get('period', 'monthly')
     if period == 'weekly':
         start_date, end_date = get_date_range(7)
         period_label = "Haftalik"
@@ -434,6 +446,7 @@ def super_admin_dashboard(request):
         'my_attendance': my_attendance,
     }
     
+    cache.set(cache_key, context, DASHBOARD_CACHE_TIMEOUT)
     return _dashboard_response(request, 'dashboards/super_admin.html', context)
 
 
@@ -444,6 +457,10 @@ def admin_dashboard(request):
     """
     org = request.user.organization
     today = timezone.now().date()
+    cache_key = _dashboard_cache_key('admin', request.user.pk, getattr(org, 'pk', None), today.isoformat())
+    cached_context = cache.get(cache_key)
+    if cached_context is not None:
+        return _dashboard_response(request, 'dashboards/admin.html', cached_context)
     
     user_stats = User.objects.filter(organization=org).aggregate(
         total_students=Count('id', filter=Q(role='student', is_active=True, is_deleted=False)),
@@ -545,6 +562,7 @@ def admin_dashboard(request):
         'pending_receipts_list': pending_receipts_list,
     }
     
+    cache.set(cache_key, context, DASHBOARD_CACHE_TIMEOUT)
     return _dashboard_response(request, 'dashboards/admin.html', context)
 
 
@@ -559,6 +577,10 @@ def teacher_dashboard(request):
     teacher = request.user
     today = timezone.now().date()
     start_of_month = today.replace(day=1)
+    cache_key = _dashboard_cache_key('teacher', teacher.pk, today.isoformat())
+    cached_context = cache.get(cache_key)
+    if cached_context is not None:
+        return _dashboard_response(request, 'dashboards/teacher.html', cached_context)
     
     # Mening guruhlarim
     my_groups = Group.objects.filter(
@@ -660,6 +682,7 @@ def teacher_dashboard(request):
         'my_attendance': my_attendance,
     }
     
+    cache.set(cache_key, context, DASHBOARD_CACHE_TIMEOUT)
     return _dashboard_response(request, 'dashboards/teacher.html', context)
 
 
@@ -673,6 +696,10 @@ def student_dashboard(request):
     
     student = request.user
     today = timezone.now().date()
+    cache_key = _dashboard_cache_key('student', student.pk, today.isoformat())
+    cached_context = cache.get(cache_key)
+    if cached_context is not None:
+        return _dashboard_response(request, 'dashboards/student.html', cached_context)
     
     # Mening guruhlarim
     my_enrollments = list(GroupStudent.objects.filter(
@@ -772,6 +799,7 @@ def student_dashboard(request):
         'shop_items_count': shop_items_count,
     }
     
+    cache.set(cache_key, context, DASHBOARD_CACHE_TIMEOUT)
     return _dashboard_response(request, 'dashboards/student.html', context)
 
 
@@ -782,6 +810,10 @@ def parent_dashboard(request):
     """
     parent = request.user
     today = timezone.now().date()
+    cache_key = _dashboard_cache_key('parent', parent.pk, today.isoformat())
+    cached_context = cache.get(cache_key)
+    if cached_context is not None:
+        return _dashboard_response(request, 'dashboards/parent.html', cached_context)
     
     children_data = _build_parent_dashboard_data(parent)
     
@@ -796,6 +828,7 @@ def parent_dashboard(request):
         'has_any_debt': has_any_debt,
     }
     
+    cache.set(cache_key, context, DASHBOARD_CACHE_TIMEOUT)
     return _dashboard_response(request, 'dashboards/parent.html', context)
 
 
@@ -807,6 +840,10 @@ def staff_dashboard(request):
     user = request.user
     today = timezone.now().date()
     org = user.organization
+    cache_key = _dashboard_cache_key('staff', user.pk, getattr(org, 'pk', None), today.isoformat())
+    cached_context = cache.get(cache_key)
+    if cached_context is not None:
+        return _dashboard_response(request, 'dashboards/staff.html', cached_context)
     
     # Bugungi darslar (tashkilot bo'yicha)
     today_lessons_count = 0
@@ -831,4 +868,5 @@ def staff_dashboard(request):
         'total_students_count': total_students_count,
         'active_groups_count': active_groups_count,
     }
+    cache.set(cache_key, context, DASHBOARD_CACHE_TIMEOUT)
     return _dashboard_response(request, 'dashboards/staff.html', context)

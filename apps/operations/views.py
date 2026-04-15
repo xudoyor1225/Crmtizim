@@ -52,17 +52,20 @@ def get_lessons_data(user, org, date_filter, group_filter, status_filter):
     if status_filter:
         lessons = lessons.filter(status=status_filter)
     
-    lessons = lessons.select_related('group', 'teacher', 'room').prefetch_related('attendances').order_by('start_time')
+    lessons = lessons.select_related('group', 'teacher', 'room').annotate(
+        attendance_count=Count('attendances', distinct=True),
+        present_count=Count('attendances', filter=Q(attendances__status='present'), distinct=True),
+    ).order_by('start_time')
     
     # Davomat olinganligini tekshirish
     lessons_data = []
     for lesson in lessons:
-        attendance_count = lesson.attendances.count()
+        attendance_count = lesson.attendance_count
         lessons_data.append({
             'lesson': lesson,
             'attendance_taken': attendance_count > 0,
             'attendance_count': attendance_count,
-            'present_count': lesson.attendances.filter(status='present').count(),
+            'present_count': lesson.present_count,
         })
     
     return lessons_data, list(lessons)
@@ -114,14 +117,17 @@ def lesson_list(request):
     if status_filter:
         lessons = lessons.filter(status=status_filter)
 
-    lessons = lessons.select_related('group', 'teacher', 'room').prefetch_related('attendances').order_by('start_time')
+    lessons = lessons.select_related('group', 'teacher', 'room').annotate(
+        attendance_count=Count('attendances', distinct=True),
+        present_count=Count('attendances', filter=Q(attendances__status='present'), distinct=True),
+    ).order_by('start_time')
 
     # Davomat olinganligini tekshirish
     lessons_data = []
     attendance_taken_count = 0
     ongoing_count = 0
     for lesson in lessons:
-        attendance_count = lesson.attendances.count()
+        attendance_count = lesson.attendance_count
         if attendance_count > 0:
             attendance_taken_count += 1
         if lesson.status == 'started':
@@ -130,7 +136,7 @@ def lesson_list(request):
             'lesson': lesson,
             'attendance_taken': attendance_count > 0,
             'attendance_count': attendance_count,
-            'present_count': lesson.attendances.filter(status='present').count(),
+            'present_count': lesson.present_count,
         })
 
     # Guruhlar filter uchun
@@ -320,8 +326,12 @@ def lesson_detail(request, pk):
             ) / 5, 1)
 
     # Davomat statistikasi
-    present_count = attendances.filter(status='present').count()
-    total_students = attendances.count()
+    attendance_stats = attendances.aggregate(
+        present_count=Count('id', filter=Q(status='present')),
+        total_students=Count('id'),
+    )
+    present_count = attendance_stats['present_count'] or 0
+    total_students = attendance_stats['total_students'] or 0
 
     context = {
         'lesson': lesson,

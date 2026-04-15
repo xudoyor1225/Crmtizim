@@ -80,6 +80,40 @@ def detect_latest_telegram_chat_id(bot_token):
     raise RuntimeError("Bot bilan hali chat ochilmagan. Botga avval /start yuboring.")
 
 
+def _parse_telegram_response(response, default_message):
+    try:
+        payload = response.json()
+    except ValueError:
+        payload = None
+
+    if response.ok and payload and payload.get('ok'):
+        return payload
+
+    description = ''
+    if payload:
+        description = payload.get('description') or ''
+    if not description:
+        description = (response.text or '').strip()
+    if not description:
+        description = default_message
+
+    lowered = description.lower()
+    if 'chat not found' in lowered:
+        description = (
+            "Telegram chat topilmadi. Botga avval /start yuboring yoki to'g'ri chat ID kiriting."
+        )
+    elif 'bot was blocked by the user' in lowered:
+        description = "Bot foydalanuvchi tomonidan bloklangan. Telegramda botni unblock qiling."
+    elif 'user is deactivated' in lowered:
+        description = "Telegram user deaktiv qilingan yoki yaroqsiz chat ID berilgan."
+    elif 'message caption is too long' in lowered:
+        description = "Telegram caption juda uzun. Qisqaroq xabar bilan qayta urinib ko'ring."
+    elif 'entity too large' in lowered or 'request entity too large' in lowered or 'file is too big' in lowered:
+        description = "Backup fayl juda katta. Fayl hajmini kamaytiring yoki boshqa kanalga yuboring."
+
+    raise RuntimeError(description)
+
+
 def send_backup_to_telegram(file_path, bot_token, chat_id='', auto_detect_chat=True):
     if not bot_token:
         return {
@@ -116,10 +150,7 @@ def send_backup_to_telegram(file_path, bot_token, chat_id='', auto_detect_chat=T
             files={'document': backup_file},
             timeout=60,
         )
-    response.raise_for_status()
-    payload = response.json()
-    if not payload.get('ok'):
-        raise RuntimeError(payload.get('description') or "Telegram sendDocument xatosi.")
+    _parse_telegram_response(response, "Telegram sendDocument xatosi.")
 
     return {
         'sent': True,

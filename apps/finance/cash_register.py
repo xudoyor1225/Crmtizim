@@ -66,12 +66,12 @@ class CashRegisterSession(TenantAwareModel):
         if self.closed_at:
             transactions = transactions.filter(created_at__lte=self.closed_at)
         
-        self.total_income = sum(
-            t.amount for t in transactions if t.transaction_type in ['income']
+        totals = transactions.aggregate(
+            total_income=models.Sum('amount', filter=models.Q(transaction_type='income')),
+            total_expense=models.Sum('amount', filter=models.Q(transaction_type__in=['expense', 'salary', 'refund'])),
         )
-        self.total_expense = sum(
-            t.amount for t in transactions if t.transaction_type in ['expense', 'salary', 'refund']
-        )
+        self.total_income = totals['total_income'] or 0
+        self.total_expense = totals['total_expense'] or 0
         
         self.expected_balance = self.opening_balance + self.total_income - self.total_expense
         return self.expected_balance
@@ -162,11 +162,13 @@ class DailyReport(TenantAwareModel):
         attendances = Attendance.objects.filter(
             lesson__in=lessons
         )
-        if attendances.exists():
-            present = attendances.filter(status='present').count()
-            attendance_rate = (present / attendances.count()) * 100
-        else:
-            attendance_rate = 0
+        attendance_stats = attendances.aggregate(
+            total=Count('id'),
+            present=Count('id', filter=models.Q(status='present')),
+        )
+        total_attendances = attendance_stats['total'] or 0
+        present = attendance_stats['present'] or 0
+        attendance_rate = (present / total_attendances) * 100 if total_attendances > 0 else 0
         
         # Yangi o'quvchilar
         new_students = User.objects.filter(

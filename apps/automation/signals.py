@@ -47,7 +47,7 @@ def user_created_notification(sender, instance, created, **kwargs):
                 notification_type='system'
             )
 
-        logger.info(f"User created notification sent for: {instance.phone}")
+        logger.debug(f"User created notification sent for: {instance.phone}")
 
     except Exception as e:
         logger.error(f"Error in user_created_notification: {e}")
@@ -85,7 +85,7 @@ def attendance_notification(sender, instance, created, **kwargs):
                     }
                 )
 
-        logger.info(f"Attendance notification sent for student: {student.phone}")
+        logger.debug(f"Attendance notification sent for student: {student.phone}")
 
     except Exception as e:
         logger.error(f"Error in attendance_notification: {e}")
@@ -173,7 +173,7 @@ def payment_notification(sender, instance, created, **kwargs):
                     }
                 )
 
-        logger.info(f"Payment notification sent for: {student.phone}, amount: {instance.amount}")
+        logger.debug(f"Payment notification sent for: {student.phone}, amount: {instance.amount}")
 
     except Exception as e:
         logger.error(f"Error in payment_notification: {e}")
@@ -202,7 +202,7 @@ def lead_created_notification(sender, instance, created, **kwargs):
                 notification_type='system'
             )
 
-        logger.info(f"Lead notification sent for: {instance.full_name}")
+        logger.debug(f"Lead notification sent for: {instance.full_name}")
 
     except Exception as e:
         logger.error(f"Error in lead_created_notification: {e}")

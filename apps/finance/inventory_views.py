@@ -2,6 +2,7 @@
 Resurslar (Inventory) uchun view'lar.
 Sarf materiallar va aktivlarni boshqarish.
 """
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -9,6 +10,8 @@ from django.db.models import Sum, Q, F
 
 from apps.finance.inventory import Supply, SupplyCategory, SupplyTransaction, Asset, AssetCategory
 from apps.core.audit import log_user_action
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
@@ -125,11 +128,6 @@ def supply_remove_stock(request, supply_id):
         from .models import Transaction, TransactionCategory, Account
         from .admin_cash_views import _get_or_create_admin_account
         from .services import confirm_transaction as confirm_service
-        import traceback
-
-        print(f"[OMBORXONA DEBUG] POST received for supply={supply.name} (id={supply_id})")
-        print(f"[OMBORXONA DEBUG] POST data: {dict(request.POST)}")
-        print(f"[OMBORXONA DEBUG] Supply quantity BEFORE: {supply.quantity}")
 
         try:
             quantity = int(request.POST.get('quantity', 0))
@@ -137,9 +135,7 @@ def supply_remove_stock(request, supply_id):
             action_type = request.POST.get('action_type', 'simple')  # 'simple' yoki 'student'
             student_id = request.POST.get('student_id')
             payment_method = request.POST.get('payment_method', 'cash')
-            
-            print(f"[OMBORXONA DEBUG] quantity={quantity}, action_type={action_type}, supply.quantity={supply.quantity}")
-            
+
             if quantity > 0 and quantity <= supply.quantity:
                 student = None
                 financial_tx = None
@@ -235,7 +231,7 @@ def supply_remove_stock(request, supply_id):
             else:
                 messages.error(request, f"Yetarli miqdor yo'q! Omborda faqat {supply.quantity} {supply.unit} bor.")
         except Exception as e:
-            traceback.print_exc()
+            logger.exception("Ombor chiqimida xatolik yuz berdi")
             messages.error(request, f"❌ Xatolik yuz berdi: {e}")
         
     return redirect('finance:supply_list')
