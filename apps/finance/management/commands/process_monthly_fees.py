@@ -1,33 +1,23 @@
 import logging
 from datetime import date
-from decimal import Decimal, ROUND_UP
+from decimal import Decimal
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
 from apps.education.models import GroupStudent
-from apps.finance.models import Transaction, TransactionCategory, Account, MonthlyFeeLog
+from apps.finance.models import Transaction, TransactionCategory, Account, MonthlyFeeCharge, MonthlyFeeLog
+from apps.finance.services import (
+    _collect_legacy_monthly_fee_rows,
+    _get_legacy_monthly_fee_amount,
+    build_monthly_fee_description,
+    calculate_price_with_bonus,
+)
 from apps.users.models import User
 from apps.organizations.models import Organization
 
 logger = logging.getLogger(__name__)
-
-
-def calculate_price_with_bonus(base_price, student):
-    """
-    Kurs narxidan bonusni ayirib, yakuniy narxni qaytaradi.
-    Avval foiz bonus, keyin summa bonus chegiriladi.
-    """
-    final_price = base_price
-
-    if student.bonus_percentage > 0:
-        final_price = final_price * (1 - (Decimal(student.bonus_percentage) / Decimal(100)))
-
-    if student.bonus_amount > 0:
-        final_price = max(Decimal('0'), final_price - student.bonus_amount)
-
-    return final_price.quantize(Decimal('1'), rounding=ROUND_UP)
 
 
 class Command(BaseCommand):
@@ -104,10 +94,22 @@ class Command(BaseCommand):
         # 4. Har bir guruh-student uchun to'lov
         total_amount = Decimal('0')
         billed_students = set()
+        existing_charge_map = {
+            (charge.organization_id, charge.student_id, charge.group_id): charge
+            for charge in MonthlyFeeCharge.objects.filter(
+                organization=org,
+                billing_month=billing_month,
+            )
+        }
+        legacy_rows = _collect_legacy_monthly_fee_rows(
+            billing_month,
+            list(active_gs.values_list('student_id', flat=True)),
+        )
 
         for gs in active_gs:
             student = gs.student
-            course = gs.group.course
+            group = gs.group
+            course = group.course
 
             base_price = course.price if course.price > 0 else Decimal('0')
             if base_price == 0:
@@ -118,6 +120,15 @@ class Command(BaseCommand):
             if final_price <= 0:
                 continue
 
+            existing_charge = existing_charge_map.get((org.id, student.id, group.id))
+            legacy_amount = _get_legacy_monthly_fee_amount(legacy_rows, student.id, group, billing_month)
+            already_billed_amount = existing_charge.amount if existing_charge else legacy_amount
+            final_price -= already_billed_amount
+            if final_price <= 0:
+                continue
+
+            description = build_monthly_fee_description(group, billing_month, final_price, suffix="avtomatik to'lov")
+
             # Tranzaksiya yaratamiz (monthly_fee - kassaga ta'sir qilmaydi)
             new_trans = Transaction(
                 organization=org,
@@ -127,16 +138,36 @@ class Command(BaseCommand):
                 amount=final_price,
                 transaction_type='monthly_fee',
                 status='confirmed',
-                created_by=system_user,
-                confirmed_by=system_user,
+                created_by=system_user or student,
+                confirmed_by=system_user or student,
                 confirmed_at=timezone.now(),
-                description=(
-                    f"{gs.group.name} - {billing_month.strftime('%Y-%m')} oyi uchun "
-                    f"avtomatik to'lov ({final_price:,.0f} UZS)"
-                )
+                description=description,
             )
             new_trans.is_auto_billing = True
             new_trans.save()
+            if existing_charge:
+                existing_charge.transaction = new_trans
+                existing_charge.amount = already_billed_amount + final_price
+                existing_charge.charge_source = 'auto_month_start'
+                existing_charge.charged_by = system_user or student
+                existing_charge.charged_at = timezone.now()
+                existing_charge.description = description
+                existing_charge.save(
+                    update_fields=['transaction', 'amount', 'charge_source', 'charged_by', 'charged_at', 'description']
+                )
+            else:
+                MonthlyFeeCharge.objects.create(
+                    organization=org,
+                    billing_month=billing_month,
+                    student=student,
+                    group=group,
+                    transaction=new_trans,
+                    amount=already_billed_amount + final_price,
+                    charge_source='auto_month_start',
+                    charged_by=system_user or student,
+                    charged_at=timezone.now(),
+                    description=description,
+                )
 
             total_amount += final_price
             billed_students.add(student.id)

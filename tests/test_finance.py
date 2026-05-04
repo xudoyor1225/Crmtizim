@@ -361,3 +361,46 @@ class QuickPaymentSuperAdminTestCase(TestCase):
         self.assertTrue(Transaction.objects.filter(
             student=self.student, amount=Decimal('500000')
         ).exists())
+
+    def test_super_admin_can_reset_all_student_balances(self):
+        """Super admin barcha student balanslarini 0 ga tushira olishi kerak"""
+        self.student.balance = Decimal("-250000.00")
+        self.student.save(update_fields=['balance'])
+        other_student = User.objects.create_user(
+            phone="998904443333",
+            password="test123",
+            first_name="Second",
+            last_name="Student",
+            role="student",
+            organization=self.org,
+            branch=self.branch,
+            balance=Decimal("120000.00"),
+        )
+
+        response = self.client.post(reverse('finance:reset_student_balances'), {
+            'password': 'test123',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertTrue(data['success'])
+        self.assertEqual(data['result']['updated_count'], 2)
+        self.student.refresh_from_db()
+        other_student.refresh_from_db()
+        self.assertEqual(self.student.balance, Decimal("0.00"))
+        self.assertEqual(other_student.balance, Decimal("0.00"))
+
+    def test_reset_student_balances_requires_correct_password(self):
+        """Parol noto'g'ri bo'lsa balans o'zgarmasligi kerak"""
+        self.student.balance = Decimal("-250000.00")
+        self.student.save(update_fields=['balance'])
+
+        response = self.client.post(reverse('finance:reset_student_balances'), {
+            'password': 'wrong-password',
+        })
+
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.content)
+        self.assertFalse(data['success'])
+        self.student.refresh_from_db()
+        self.assertEqual(self.student.balance, Decimal("-250000.00"))

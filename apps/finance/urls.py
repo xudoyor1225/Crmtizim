@@ -27,6 +27,8 @@ urlpatterns = [
     path('transactions/<int:pk>/confirm/', views.confirm_transaction, name='confirm_transaction'),
     path('transactions/<int:pk>/reject/', views.reject_transaction, name='reject_transaction'),
     path('transactions/quick-payment/', views.quick_payment, name='quick_payment'),
+    path('transactions/monthly-fee-run/', views.monthly_fee_run, name='monthly_fee_run'),
+    path('transactions/reset-student-balances/', views.reset_student_balances, name='reset_student_balances'),
     
     # Export (PDF/Excel)
     path('transactions/export/excel/', export_views.export_transactions_excel, name='export_transactions_excel'),

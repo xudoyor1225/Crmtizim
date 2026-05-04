@@ -6,6 +6,7 @@ Cache bilan optimizatsiya qilingan.
 import json
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.db import DatabaseError, connection
 from django.db.models import Avg, F, Q, Sum, Count, Window
 from django.db.models.functions import RowNumber
 from django.utils import timezone
@@ -17,7 +18,7 @@ from apps.organizations.models import Organization, Branch
 from apps.crm.models import Lead, Stage
 from apps.education.models import Course, Group, GroupStudent
 from apps.operations.models import Lesson, Attendance
-from apps.finance.models import Transaction, Account
+from apps.finance.models import Transaction, Account, MonthlyFeeCharge, MonthlyFeeRun
 from apps.hardware.services import build_student_presence_map
 
 DASHBOARD_CACHE_TIMEOUT = 60
@@ -58,6 +59,25 @@ def _dashboard_response(request, template_name, context):
 def _dashboard_cache_key(name, *parts):
     normalized = [str(part if part is not None else 'none') for part in parts]
     return f"dashboard:{name}:{':'.join(normalized)}"
+
+
+def _monthly_fee_tables_exist():
+    cache_key = 'dashboard:monthly_fee_tables_exist'
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    try:
+        table_names = connection.introspection.table_names()
+        exists = (
+            MonthlyFeeCharge._meta.db_table in table_names
+            and MonthlyFeeRun._meta.db_table in table_names
+        )
+    except DatabaseError:
+        exists = False
+
+    cache.set(cache_key, exists, 300 if exists else 5)
+    return exists
 
 
 def _build_student_leaderboard(organization, student_id=None):
@@ -271,6 +291,29 @@ def super_admin_dashboard(request):
     main_kassa_balance = account_balance_stats['total'] or 0
     main_cash_balance = account_balance_stats['main_cash_balance'] or 0
     admin_cash_balance = account_balance_stats['admin_cash_balance'] or 0
+
+    billing_month = today.replace(day=1)
+    current_month_fee_amount = 0
+    current_month_fee_students = 0
+    current_month_fee_charges = 0
+    recent_monthly_fee_runs = []
+    if _monthly_fee_tables_exist():
+        try:
+            monthly_fee_stats = MonthlyFeeCharge.objects.filter(
+                billing_month=billing_month
+            ).aggregate(
+                total_amount=Sum('amount'),
+                total_students=Count('student', distinct=True),
+                total_charges=Count('id'),
+            )
+            current_month_fee_amount = monthly_fee_stats['total_amount'] or 0
+            current_month_fee_students = monthly_fee_stats['total_students'] or 0
+            current_month_fee_charges = monthly_fee_stats['total_charges'] or 0
+            recent_monthly_fee_runs = list(
+                MonthlyFeeRun.objects.select_related('triggered_by', 'target_student').order_by('-triggered_at')[:6]
+            )
+        except DatabaseError:
+            cache.delete('dashboard:monthly_fee_tables_exist')
     
     # ====== KUNLIK XARAJATLAR TAQSIMOTI ======
     daily_expenses = Transaction.objects.filter(
@@ -406,6 +449,11 @@ def super_admin_dashboard(request):
         'main_cash_balance': main_cash_balance,
         'admin_cash_balance': admin_cash_balance,
         'daily_expenses': daily_expenses,
+        'monthly_fee_default_month': billing_month.strftime('%Y-%m'),
+        'current_month_fee_amount': current_month_fee_amount,
+        'current_month_fee_students': current_month_fee_students,
+        'current_month_fee_charges': current_month_fee_charges,
+        'recent_monthly_fee_runs': recent_monthly_fee_runs,
         
         # Qarzdorlik
         'total_debt': total_debt,

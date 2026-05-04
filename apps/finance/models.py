@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.db import models
+from django.utils import timezone
 from apps.core.models import TenantAwareModel
 from apps.users.models import User
 from apps.core.validators import validate_receipt_file, FileSizeValidator
@@ -272,6 +273,135 @@ class CashSubmission(TenantAwareModel):
         indexes = [
             models.Index(fields=['admin_user', 'status', 'created_at']),
             models.Index(fields=['organization', 'status', 'period_end']),
+        ]
+
+
+class MonthlyFeeRun(TenantAwareModel):
+    """
+    Super admin yoki avtomatika tomonidan ishga tushirilgan kurs puli yechish jarayoni logi.
+    """
+    RUN_TYPE_CHOICES = (
+        ('single', "Bitta o'quvchi"),
+        ('bulk', "Barcha o'quvchilar"),
+    )
+    STATUS_CHOICES = (
+        ('completed', 'Bajarildi'),
+        ('partial', 'Qisman bajarildi'),
+        ('skipped', "Yangi yechish topilmadi"),
+        ('failed', 'Xatolik'),
+    )
+
+    billing_month = models.DateField(verbose_name="Hisob-kitob oyi (Y-M-01)")
+    run_type = models.CharField(max_length=20, choices=RUN_TYPE_CHOICES, verbose_name="Ishga tushirish turi")
+    triggered_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='triggered_monthly_fee_runs',
+        verbose_name="Kim ishga tushirdi",
+    )
+    target_student = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='targeted_monthly_fee_runs',
+        limit_choices_to={'role': 'student'},
+        verbose_name="Tanlangan o'quvchi",
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='completed', verbose_name="Holati")
+    total_students_processed = models.PositiveIntegerField(default=0, verbose_name="Qamrab olingan o'quvchilar")
+    total_charges_created = models.PositiveIntegerField(default=0, verbose_name="Yangi yechilgan kurslar")
+    skipped_existing_count = models.PositiveIntegerField(default=0, verbose_name="Oldin yechilgan kurslar")
+    total_amount_deducted = models.DecimalField(max_digits=15, decimal_places=2, default=0, verbose_name="Jami yechilgan summa")
+    password_verified_at = models.DateTimeField(null=True, blank=True, verbose_name="Parol tasdiqlangan vaqt")
+    triggered_at = models.DateTimeField(default=timezone.now, verbose_name="Bosilgan vaqt")
+    notes = models.TextField(blank=True, verbose_name="Izoh")
+    summary = models.JSONField(default=dict, blank=True, verbose_name="Qo'shimcha xulosa")
+
+    def __str__(self):
+        return f"{self.get_run_type_display()} - {self.billing_month:%Y-%m} - {self.get_status_display()}"
+
+    class Meta:
+        db_table = 'finance_monthly_fee_runs'
+        ordering = ['-triggered_at', '-created_at']
+        verbose_name = "Kurs puli yechish jurnali"
+        verbose_name_plural = "Kurs puli yechish jurnallari"
+        indexes = [
+            models.Index(fields=['organization', 'billing_month', 'run_type']),
+            models.Index(fields=['triggered_by', 'triggered_at']),
+            models.Index(fields=['status', 'triggered_at']),
+        ]
+
+
+class MonthlyFeeCharge(TenantAwareModel):
+    """
+    Har bir student-guruh-oy kesimidagi kurs puli yechishning yagona yozuvi.
+    Shu jadval takroriy yechib yuborishni oldini oladi.
+    """
+    SOURCE_CHOICES = (
+        ('manual_single', "Qo'lda - bitta o'quvchi"),
+        ('manual_bulk', "Qo'lda - barcha o'quvchilar"),
+        ('auto_month_start', 'Avtomatik - oy boshida'),
+        ('auto_mid_month', "Avtomatik - oy o'rtasida"),
+    )
+
+    billing_month = models.DateField(verbose_name="Hisob-kitob oyi (Y-M-01)")
+    run = models.ForeignKey(
+        'MonthlyFeeRun',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='charges',
+        verbose_name="Jarayon logi",
+    )
+    student = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='monthly_fee_charges',
+        limit_choices_to={'role': 'student'},
+        verbose_name="O'quvchi",
+    )
+    group = models.ForeignKey(
+        'education.Group',
+        on_delete=models.CASCADE,
+        related_name='monthly_fee_charges',
+        verbose_name="Guruh",
+    )
+    transaction = models.ForeignKey(
+        Transaction,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='monthly_fee_charges',
+        verbose_name="Yaratilgan tranzaksiya",
+    )
+    amount = models.DecimalField(max_digits=15, decimal_places=2, verbose_name="Yechilgan summa")
+    charge_source = models.CharField(max_length=30, choices=SOURCE_CHOICES, verbose_name="Manba")
+    charged_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='performed_monthly_fee_charges',
+        verbose_name="Kim yechdi",
+    )
+    charged_at = models.DateTimeField(default=timezone.now, verbose_name="Yechilgan vaqt")
+    description = models.TextField(blank=True, verbose_name="Izoh")
+
+    def __str__(self):
+        return f"{self.student} - {self.group} - {self.billing_month:%Y-%m}"
+
+    class Meta:
+        db_table = 'finance_monthly_fee_charges'
+        verbose_name = "Kurs puli yechish yozuvi"
+        verbose_name_plural = "Kurs puli yechish yozuvlari"
+        unique_together = ('organization', 'billing_month', 'student', 'group')
+        indexes = [
+            models.Index(fields=['organization', 'billing_month']),
+            models.Index(fields=['student', 'billing_month']),
+            models.Index(fields=['run', 'charged_at']),
         ]
 
 

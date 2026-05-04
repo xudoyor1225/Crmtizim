@@ -12,7 +12,8 @@ import logging
 from .models import Account, Transaction, TransactionCategory
 from apps.users.models import User
 from apps.core.audit import log_user_action
-from apps.core.permissions import permission_required, check_permission
+from apps.core.permissions import permission_required, check_permission, role_required
+from .services import execute_manual_monthly_fee_run, normalize_billing_month, reset_all_student_balances
 
 logger = logging.getLogger(__name__)
 
@@ -499,3 +500,95 @@ def quick_payment(request):
     except Exception:
         logger.exception("Quick payment da kutilmagan xatolik")
         return JsonResponse({'success': False, 'error': "Xatolik yuz berdi. Iltimos qayta urinib ko'ring."}, status=500)
+
+
+@login_required
+@role_required('super_admin')
+@require_POST
+def monthly_fee_run(request):
+    """
+    Super admin uchun qo'lda kurs puli yechish.
+    """
+    run_type = request.POST.get('run_type', 'bulk')
+    student_id = request.POST.get('student_id')
+    password = request.POST.get('password', '')
+
+    try:
+        billing_month = normalize_billing_month(request.POST.get('billing_month'))
+    except Exception as exc:
+        return JsonResponse({'success': False, 'error': str(exc)}, status=400)
+
+    target_student = None
+    if run_type == 'single':
+        if not student_id:
+            return JsonResponse({'success': False, 'error': "O'quvchini tanlang."}, status=400)
+        target_student = User.objects.filter(
+            pk=student_id,
+            role='student',
+            is_active=True,
+            is_deleted=False,
+        ).first()
+        if not target_student:
+            return JsonResponse({'success': False, 'error': "O'quvchi topilmadi."}, status=404)
+
+    try:
+        run = execute_manual_monthly_fee_run(
+            triggered_by=request.user,
+            billing_month=billing_month,
+            run_type=run_type,
+            password=password,
+            target_student=target_student,
+            request=request,
+        )
+    except Exception as exc:
+        return JsonResponse({'success': False, 'error': str(exc)}, status=400)
+
+    return JsonResponse({
+        'success': True,
+        'message': run.notes or "Kurs puli yechish yakunlandi.",
+        'run': {
+            'id': run.id,
+            'status': run.status,
+            'billing_month': run.billing_month.strftime('%Y-%m'),
+            'run_type': run.run_type,
+            'total_students_processed': run.total_students_processed,
+            'total_charges_created': run.total_charges_created,
+            'skipped_existing_count': run.skipped_existing_count,
+            'total_amount_deducted': float(run.total_amount_deducted),
+            'triggered_at': timezone.localtime(run.triggered_at).strftime('%d.%m.%Y %H:%M'),
+            'summary': run.summary,
+        },
+    })
+
+
+@login_required
+@role_required('super_admin')
+@require_POST
+def reset_student_balances(request):
+    """
+    Super admin barcha student balanslarini 0 ga tushiradi.
+    """
+    password = request.POST.get('password', '')
+
+    try:
+        result = reset_all_student_balances(
+            triggered_by=request.user,
+            password=password,
+            request=request,
+        )
+    except Exception as exc:
+        return JsonResponse({'success': False, 'error': str(exc)}, status=400)
+
+    return JsonResponse({
+        'success': True,
+        'message': f"{result['updated_count']} ta student balansi 0 ga tushirildi.",
+        'result': {
+            'total_students': result['total_students'],
+            'updated_count': result['updated_count'],
+            'students_with_balance': result['students_with_balance'],
+            'debt_amount': float(result['debt_amount']),
+            'credit_amount': float(result['credit_amount']),
+            'net_balance': float(result['net_balance']),
+            'reset_at': timezone.localtime(result['reset_at']).strftime('%d.%m.%Y %H:%M'),
+        },
+    })

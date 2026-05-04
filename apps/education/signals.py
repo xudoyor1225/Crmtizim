@@ -6,24 +6,9 @@ from decimal import Decimal, ROUND_UP
 import calendar
 
 from apps.education.models import GroupStudent
-from apps.finance.models import MonthlyFeeLog, TransactionCategory, Account, Transaction
+from apps.finance.models import MonthlyFeeCharge, MonthlyFeeLog, TransactionCategory, Account, Transaction
+from apps.finance.services import build_monthly_fee_description, calculate_price_with_bonus
 from apps.users.models import User
-
-
-def calculate_price_with_bonus(base_price, student):
-    """
-    Kurs narxidan bonusni ayirib, yakuniy narxni qaytaradi.
-    Avval foiz bonus, keyin summa bonus chegiriladi.
-    """
-    final_price = base_price
-
-    if student.bonus_percentage > 0:
-        final_price = final_price * (1 - (Decimal(student.bonus_percentage) / Decimal(100)))
-
-    if student.bonus_amount > 0:
-        final_price = max(Decimal('0'), final_price - student.bonus_amount)
-
-    return final_price.quantize(Decimal('1'), rounding=ROUND_UP)
 
 
 def calculate_proportional_price(full_price, join_day, total_days_in_month):
@@ -94,14 +79,11 @@ def bill_mid_month_enrollment(sender, instance, created, **kwargs):
         return
 
     # Takroriy yechib olmaslik uchun tekshiruv
-    desc_search = f"{group.name} - {billing_month.strftime('%Y-%m')} oyi uchun"
-    already_billed = Transaction.objects.filter(
-        student=student,
+    already_billed = MonthlyFeeCharge.objects.filter(
         organization=org,
-        transaction_type='monthly_fee',
-        description__contains=desc_search,
-        created_at__year=today.year,
-        created_at__month=today.month
+        billing_month=billing_month,
+        student=student,
+        group=group,
     ).exists()
 
     if already_billed:
@@ -137,6 +119,16 @@ def bill_mid_month_enrollment(sender, instance, created, **kwargs):
 
     # 6. Tranzaksiya yaratamiz (monthly_fee - kassaga ta'sir qilmaydi)
     remaining_days = total_days - today.day + 1
+    description = build_monthly_fee_description(
+        group,
+        billing_month,
+        final_price,
+        suffix=(
+            f"to'lov (Oy o'rtasida qo'shildi: {remaining_days}/{total_days} kun, "
+            f"to'liq narx: {full_monthly_price:,.0f} UZS)"
+        ),
+    )
+
     new_trans = Transaction(
         organization=org,
         account=virtual_account,
@@ -148,12 +140,21 @@ def bill_mid_month_enrollment(sender, instance, created, **kwargs):
         created_by=system_user or student,
         confirmed_by=system_user or student,
         confirmed_at=timezone.now(),
-        description=(
-            f"{group.name} - {billing_month.strftime('%Y-%m')} oyi uchun to'lov "
-            f"(Oy o'rtasida qo'shildi: {remaining_days}/{total_days} kun, "
-            f"to'liq narx: {full_monthly_price:,.0f} UZS)"
-        )
+        description=description,
     )
     new_trans.is_auto_billing = True
     new_trans.save()
+
+    MonthlyFeeCharge.objects.create(
+        organization=org,
+        billing_month=billing_month,
+        student=student,
+        group=group,
+        transaction=new_trans,
+        amount=final_price,
+        charge_source='auto_mid_month',
+        charged_by=system_user or student,
+        charged_at=timezone.now(),
+        description=description,
+    )
     # Balans signal orqali avtomatik kamayadi
